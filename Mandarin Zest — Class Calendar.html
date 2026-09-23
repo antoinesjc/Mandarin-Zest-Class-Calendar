@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mandarin Zest — Class Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #211f1a;
+    --paper: #f7f2e7;
+    --jade: #3f6d5e;
+    --jade-soft: #dde6e1;
+    --seal: #a63d2f;
+    --sand-soft: #ecdfc2;
+    --sky-soft: #e4e9dc;
+    --line: #d9d0bc;
+    --muted: #7a7364;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #f1ede2;
+      --paper: #1c1a15;
+      --jade: #8fb8a8;
+      --jade-soft: #26332d;
+      --seal: #d97a68;
+      --sand-soft: #33301f;
+      --sky-soft: #262b21;
+      --line: #3a362a;
+      --muted: #a39c88;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #f1ede2;
+    --paper: #1c1a15;
+    --jade: #8fb8a8;
+    --jade-soft: #26332d;
+    --seal: #d97a68;
+    --sand-soft: #33301f;
+    --sky-soft: #262b21;
+    --line: #3a362a;
+    --muted: #a39c88;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 28px 16px 40px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .head-title { display: flex; align-items: baseline; gap: 10px; }
+  .head-title .cn {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--seal);
+  }
+  .head-title .en {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 500;
+    font-size: 21px;
+  }
+  .nav { display: flex; align-items: center; gap: 6px; }
+  .nav button {
+    font-family: inherit;
+    font-size: 15px;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    width: 34px; height: 34px;
+    cursor: pointer;
+  }
+  .nav button:hover { border-color: var(--jade); color: var(--jade); }
+  .nav button:focus-visible { outline: 2px solid var(--jade); outline-offset: 1px; }
+  .nav .today-btn {
+    width: auto; padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .dow {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 8px 4px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .cell {
+    min-height: 96px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cell.empty { background: repeating-linear-gradient(135deg, transparent, transparent 8px, var(--line) 8px, var(--line) 9px); opacity: 0.35; }
+  .daynum {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    align-self: flex-start;
+  }
+  .cell.is-today .daynum {
+    color: var(--paper);
+    background: var(--seal);
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .pill {
+    font-size: 11px;
+    line-height: 1.3;
+    padding: 3px 5px;
+    cursor: default;
+  }
+  .pill .t { font-weight: 700; display: block; }
+  .pill .lvl { font-weight: 500; opacity: 0.8; }
+  .pill .times { display: block; color: var(--muted); font-size: 10px; margin-top: 1px; }
+  .more-btn {
+    font-size: 10px;
+    color: var(--jade);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    font-family: inherit;
+  }
+  .pill {
+    border-left: 3px solid var(--cat, var(--jade));
+    background: color-mix(in srgb, var(--cat, var(--jade)) 16%, var(--paper));
+  }
+  .pill .t { color: var(--cat, var(--ink)); }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    margin-top: 16px; font-size: 12px; color: var(--muted);
+  }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; display: inline-block; }
+
+  .empty-month {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 30px 0 6px;
+  }
+
+  @media (max-width: 640px) {
+    .cell { min-height: 74px; padding: 4px; }
+    .pill { font-size: 10px; }
+    .head-title .en { font-size: 17px; }
+    .head-title .cn { font-size: 20px; }
+    .dow { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="head-title">
+      <span class="cn" id="cnMonth">十月</span>
+      <span class="en" id="enMonth">October 2026</span>
+    </div>
+    <div class="nav">
+      <button id="prevBtn" aria-label="Previous month">&#8592;</button>
+      <button class="today-btn" id="todayBtn">Today</button>
+      <button id="nextBtn" aria-label="Next month">&#8594;</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty-month" id="emptyMsg" style="display:none;">No sessions scheduled yet for this month. Check back soon.</div>
+
+  <div class="legend" id="legend"></div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT YOUR COLORS HERE.
+   Change any hex code below and both the calendar pills and the
+   legend update automatically — nothing else to touch.
+   To rename a category, change its "label". To add a brand new
+   category, copy a line and give it a new key (e.g. "culture"),
+   then use that key as the "cat" on any event further down.
+   ============================================================ */
+const CATEGORIES = {
+  advanced:     { label: "Advanced",       color: "#3f6d5e" },
+  intermediate: { label: "Intermediate",   color: "#4f7a94" },
+  beginner:     { label: "Beginner",       color: "#b98a3d" },
+  native:       { label: "Native Teacher", color: "#a63d2f" },
+  character:    { label: "Character Focus", color: "#7d5a8c" },
+};
+
+/* ============================================================
+   EDIT YOUR SESSIONS HERE.
+   Add one object per session to the EVENTS array below.
+
+   date  : "YYYY-MM-DD"
+   title : session name, e.g. "Advanced Chinese"
+   level : e.g. "HSK 4-6" (optional, leave "" to omit)
+   times : array of {flag: "eu"|"us", time: "7pm CET"} — as many as you like
+   cat   : one of the keys from CATEGORIES above
+           (controls the color, see the legend in the page)
+
+   To add a new month, just add more events with that month's dates.
+   Nothing else needs to change — the calendar reads whichever
+   month is currently shown and pulls in matching events automatically.
+   ============================================================ */
+
+const EVENTS = [
+  { date: "2026-09-01", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-09-01", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-09-04", title: "Animals!", level: "HSK 1-3", cat: "character",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+
+  { date: "2026-09-07", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-09-08", title: "MZ Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-09-11", title: "Dumplings!", level: "HSK 1-3", cat: "character",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-09-12", title: "Native Teacher Conversation", level: "HSK 1-2", cat: "native",
+    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
+
+  { date: "2026-09-13", title: "Taiwanese Bopomofo Alphabet", level: "", cat: "character",
+    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
+  { date: "2026-09-14", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-09-15", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-09-18", title: "Holidays!", level: "HSK 1-3", cat: "character",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-09-19", title: "Native Teacher Conversation", level: "HSK 3-4", cat: "native",
+    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
+
+  { date: "2026-09-21", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-09-22", title: "MZ Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
+    times: [{flag:"us", time:"7pm ET"}] },
+  { date: "2026-09-28", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+
+  { date: "2026-10-01", title: "Holidays!", level: "HSK 1-3", cat: "character",
+    times: [{flag:"eu", time:"11am CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-10-02", title: "Native Teacher Conversation", level: "HSK 1-2", cat: "native",
+    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
+
+  { date: "2026-10-05", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-10-05", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-10-08", title: "Geography of China Game!", level: "", cat: "character",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+
+  { date: "2026-10-11", title: "Tips on Learning Chinese Characters", level: "", cat: "character",
+    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
+  { date: "2026-10-12", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-10-12", title: "Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
+    times: [{flag:"us", time:"7pm ET"}] },
+  { date: "2026-10-15", title: "Animals!", level: "HSK 1-3", cat: "character",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+
+  { date: "2026-10-19", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-10-19", title: "Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
+    times: [{flag:"us", time:"7pm ET"}] },
+
+  { date: "2026-10-26", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
+    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
+  { date: "2026-10-26", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
+    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
+  { date: "2026-10-31", title: "Native Teacher Conversation", level: "HSK 3-4", cat: "native",
+    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
+];
+
+// Which month opens first when the page loads (0 = January).
+let viewYear = 2026;
+let viewMonth = 9; // October
+
+const FLAG = { eu: "\u{1F1EA}\u{1F1FA}", us: "\u{1F1FA}\u{1F1F8}" };
+const CN_MONTHS = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+const EN_MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function pad(n){ return String(n).padStart(2,"0"); }
+
+function render(){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  document.getElementById("cnMonth").textContent = CN_MONTHS[viewMonth];
+  document.getElementById("enMonth").textContent = EN_MONTHS[viewMonth] + " " + viewYear;
+
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
+    const el = document.createElement("div");
+    el.className = "dow";
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDow = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const todayStr = new Date().toISOString().slice(0,10);
+  let hasAny = false;
+
+  for (let i = 0; i < firstDow; i++) {
+    const el = document.createElement("div");
+    el.className = "cell empty";
+    grid.appendChild(el);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${viewYear}-${pad(viewMonth+1)}-${pad(day)}`;
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    if (dateStr === todayStr) cell.classList.add("is-today");
+
+    const num = document.createElement("div");
+    num.className = "daynum";
+    num.textContent = day;
+    cell.appendChild(num);
+
+    const dayEvents = EVENTS.filter(e => e.date === dateStr);
+    if (dayEvents.length) hasAny = true;
+
+    const shown = dayEvents.slice(0, 2);
+    shown.forEach(ev => cell.appendChild(buildPill(ev)));
+
+    if (dayEvents.length > 2) {
+      const extra = dayEvents.slice(2);
+      const btn = document.createElement("button");
+      btn.className = "more-btn";
+      btn.textContent = `+${extra.length} more`;
+      btn.addEventListener("click", () => {
+        extra.forEach(ev => cell.insertBefore(buildPill(ev), btn));
+        btn.remove();
+      });
+      cell.appendChild(btn);
+    }
+
+    grid.appendChild(cell);
+  }
+
+  document.getElementById("emptyMsg").style.display = hasAny ? "none" : "block";
+}
+
+function buildPill(ev){
+  const pill = document.createElement("div");
+  pill.className = "pill";
+  const cat = CATEGORIES[ev.cat];
+  if (cat) pill.style.setProperty("--cat", cat.color);
+  const timesHtml = (ev.times || []).map(t => `${FLAG[t.flag] || ""} ${t.time}`).join(" · ");
+  pill.innerHTML =
+    `<span class="t">${ev.title}${ev.level ? ` <span class="lvl">(${ev.level})</span>` : ""}</span>` +
+    (timesHtml ? `<span class="times">${timesHtml}</span>` : "");
+  return pill;
+}
+
+function renderLegend(){
+  const legend = document.getElementById("legend");
+  legend.innerHTML = Object.values(CATEGORIES).map(c =>
+    `<span><i class="swatch" style="background:color-mix(in srgb, ${c.color} 30%, var(--paper));border-left:3px solid ${c.color}"></i>${c.label}</span>`
+  ).join("");
+}
+renderLegend();
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+  viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+  render();
+});
+document.getElementById("nextBtn").addEventListener("click", () => {
+  viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+  render();
+});
+document.getElementById("todayBtn").addEventListener("click", () => {
+  const now = new Date();
+  viewYear = now.getFullYear(); viewMonth = now.getMonth();
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
