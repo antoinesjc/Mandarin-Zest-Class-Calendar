@@ -61,7 +61,7 @@ HIDE_TAGS = {"hide", "private"}
 # on the trial page. Nothing else from the description is ever read, and no
 # links come from it: the booking link lives in trial.html.
 TRIAL_RE = re.compile(r"(?<![\w#])#trial\b", re.I)
-TOPIC_RE = re.compile(r"^\s*topic\s*:\s*(.+)$", re.I | re.M)
+TOPIC_RE = re.compile(r"^\s*(?:#trial\b[\s,.:;-]*)?topic\s*:\s*(.+)$", re.I | re.M)
 
 
 def description_text(raw: str) -> str:
