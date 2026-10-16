@@ -9,8 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
+    color-scheme: light;
     --ink: #211f1a;
-    --paper: #f7f2e7;
+    --paper: #ffffff;
     --jade: #3f6d5e;
     --jade-soft: #dde6e1;
     --seal: #a63d2f;
@@ -21,30 +22,6 @@
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ink: #f1ede2;
-      --paper: #1c1a15;
-      --jade: #8fb8a8;
-      --jade-soft: #26332d;
-      --seal: #d97a68;
-      --sand-soft: #33301f;
-      --sky-soft: #262b21;
-      --line: #3a362a;
-      --muted: #a39c88;
-    }
-  }
-  :root[data-theme="dark"] {
-    --ink: #f1ede2;
-    --paper: #1c1a15;
-    --jade: #8fb8a8;
-    --jade-soft: #26332d;
-    --seal: #d97a68;
-    --sand-soft: #33301f;
-    --sky-soft: #262b21;
-    --line: #3a362a;
-    --muted: #a39c88;
   }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   * { box-sizing: border-box; }
