@@ -56,6 +56,35 @@ URL_RE = re.compile(r"(https?://\S+|www\.\S+|\b[\w.-]+\.(?:com|google\.com|meet|
 LEVEL_RE = re.compile(r"\(?\s*\b(HSK|TOCFL)\s*(\d)(?:\s*[-–~]\s*(\d))?\s*\)?", re.I)
 TAG_RE = re.compile(r"#(\w+)")
 HIDE_TAGS = {"hide", "private"}
+TRIAL_TAG = "trial"
+
+# Trial sessions only: two optional lines in the event description.
+#   Topic: <one line shown on the trial page>
+#   Book: https://buy.stripe.com/...   (the session's own Stripe payment link)
+# Nothing else from the description is ever read. The booking link must be a
+# Stripe payment link; any other link (Meet included) is ignored.
+STRIPE_LINK_RE = re.compile(r"https://buy\.stripe\.com/[A-Za-z0-9_]+")
+TOPIC_RE = re.compile(r"^\s*topic\s*:\s*(.+)$", re.I | re.M)
+
+
+def description_text(raw: str) -> str:
+    """Google sends descriptions as HTML: turn breaks into newlines, drop tags."""
+    text = re.sub(r"<\s*br\s*/?>|</p>|</div>|</li>", "\n", raw or "", flags=re.I)
+    text = re.sub(r"<[^>]+>", "", text)
+    return (text.replace("&nbsp;", " ").replace("&amp;", "&")
+                .replace("&lt;", "<").replace("&gt;", ">").replace("&#39;", "'").replace("&quot;", '"'))
+
+
+def trial_details(raw_description: str):
+    """Return (topic, book_url) from a trial session's description."""
+    text = description_text(raw_description)
+    topic = ""
+    m = TOPIC_RE.search(text)
+    if m:
+        topic = URL_RE.sub("", m.group(1))
+        topic = re.sub(r"\s{2,}", " ", topic).strip()[:200]
+    m = STRIPE_LINK_RE.search(raw_description or "")
+    return topic, (m.group(0) if m else "")
 
 
 def fetch_ics(url: str) -> bytes:
@@ -152,7 +181,7 @@ def build(ics_bytes: bytes):
             start_utc = ""
 
         # ALLOWLIST: these are the only fields that ever leave the feed.
-        out.append({
+        item = {
             "date": day.isoformat(),
             "title": title,
             "level": level,
@@ -160,7 +189,11 @@ def build(ics_bytes: bytes):
             "times": times,
             "start": start_utc,
             "_sort": sort_key,
-        })
+        }
+        if TRIAL_TAG in tags:
+            topic, book = trial_details(str(ev.get("DESCRIPTION", "")))
+            item.update({"trial": True, "topic": topic, "book": book})
+        out.append(item)
 
     out.sort(key=lambda e: (e["_sort"], e["title"]))
     for e in out:
@@ -184,8 +217,12 @@ def main():
 
     events = build(data)
 
-    # Final safety net: refuse to publish anything that still looks like a link.
-    blob = json.dumps(events)
+    # Final safety net: refuse to publish anything that still looks like a link,
+    # except a trial's Stripe booking link in its own "book" field.
+    for e in events:
+        if e.get("book") and not STRIPE_LINK_RE.fullmatch(e["book"]):
+            sys.exit("Refusing to write events.json: a booking link is not a Stripe link.")
+    blob = json.dumps([{k: v for k, v in e.items() if k != "book"} for e in events])
     if re.search(r"meet\.google|https?://|zoom\.us", blob, re.I):
         sys.exit("Refusing to write events.json: a link slipped through.")
 

@@ -40,6 +40,22 @@ To keep an event off the public calendar, add `#hide` to its title or set
 its visibility to *Private* in Google Calendar. Cancelled events are
 skipped automatically.
 
+### Trial sessions
+
+Add `#trial` to the session name, and these two lines to the event
+description:
+
+```
+Topic: Tips for learning and remembering characters
+Book: https://buy.stripe.com/...
+```
+
+The trial page then shows the next 2 trial sessions automatically. Only the
+`Topic:` line and a Stripe payment link are read from the description;
+everything else in it (Meet links included) is ignored. No `Book:` link yet =
+the card says "Booking opens soon". To close bookings when the 5 seats are
+gone, set the Stripe payment link to stop after 5 payments.
+
 Times are shown in Europe (CET/CEST) and US Eastern time. Sessions that
 fall overnight in Europe are listed under the US date with only the US time.
 
@@ -54,6 +70,8 @@ fall overnight in Europe are listed under the US date with only the US time.
 - `pricing.html`: the Monthly / Yearly membership cards for the club page,
   with the Stripe links (they open in a new tab). Edit prices and bullets
   directly in the file.
+- `trial.html`: the upcoming `#trial` sessions as booking cards, for the
+  trial page (price at the top of its script).
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.

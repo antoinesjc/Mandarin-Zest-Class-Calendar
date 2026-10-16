@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Club trial sessions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
+<style>
+  /* Shows the upcoming sessions tagged #trial in Google Calendar.
+     Options in the URL: ?count=2 (how many, default 2) */
+  :root {
+    --ink: #2a2420;
+    --muted: #5c4f47;
+    --green: #1b6f1b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', 'Noto Serif SC', system-ui, sans-serif; color: var(--ink); padding: 16px 16px 8px; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 20px;
+    border-top: 6px solid var(--cat, #6b6559);
+    padding: 26px 28px;
+    box-shadow: 0 1px 0 #efe2d9, 0 8px 24px rgba(42, 36, 32, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .lvl { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: #f1ece8; color: var(--muted); }
+  .seats { font-size: 13px; font-weight: 700; color: #a8431a; }
+  h3 { margin: 0; font-size: 23px; font-weight: 800; line-height: 1.2; }
+  .when { display: flex; flex-direction: column; gap: 3px; font-size: 16px; }
+  .when span { color: var(--muted); font-size: 15px; }
+  .topic { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 6px; flex-wrap: wrap; }
+  .price { font-size: 28px; font-weight: 800; }
+  .btn {
+    background: var(--green);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 13px 26px;
+    border-radius: 999px;
+  }
+  .btn:hover { background: #145514; }
+  .btn:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .soon { font-size: 15px; font-weight: 600; color: var(--muted); }
+  .empty {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .empty strong { display: block; color: var(--ink); font-size: 20px; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div id="root" aria-live="polite"></div>
+
+<script>
+// Price shown on each card. Change it here if the trial price changes.
+const PRICE = "US$2.50";
+const SEATS = "5 seats";
+
+const CAT_COLORS = {
+  advanced: "#3f6d5e", intermediate: "#4f7a94", beginner: "#b98a3d",
+  native: "#a63d2f", character: "#7d5a8c", general: "#6b6559",
+};
+
+const params = new URLSearchParams(location.search);
+const COUNT = Math.min(6, Math.max(1, parseInt(params.get("count"), 10) || 2));
+const root = document.getElementById("root");
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+
+function reportHeight() {
+  const h = Math.ceil(root.getBoundingClientRect().bottom + 24);
+  try { parent.postMessage({ mzTrialHeight: h }, "*"); } catch (e) {}
+}
+window.addEventListener("resize", reportHeight);
+if (document.fonts) document.fonts.ready.then(reportHeight);
+
+function card(ev) {
+  const c = el("div", "card");
+  c.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.general);
+
+  const top = el("div", "top");
+  top.appendChild(el("span", "lvl", ev.level || "All levels"));
+  top.appendChild(el("span", "seats", SEATS));
+  c.appendChild(top);
+
+  c.appendChild(el("h3", null, ev.title));
+
+  const when = el("div", "when");
+  const d = new Date(ev.start || ev.date + "T12:00:00");
+  when.appendChild(el("strong", null, d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" })));
+  if (ev.start) {
+    const local = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    const both = (ev.times || []).map(t => t.time).join(" / ");
+    when.appendChild(el("span", null, local + " your time" + (both ? " (" + both + ")" : "")));
+  }
+  c.appendChild(when);
+
+  if (ev.topic) c.appendChild(el("p", "topic", ev.topic));
+
+  const bottom = el("div", "bottom");
+  bottom.appendChild(el("span", "price", PRICE));
+  if (ev.book && /^https:\/\/buy\.stripe\.com\//.test(ev.book)) {
+    const a = el("a", "btn", "Book my seat");
+    a.href = ev.book;
+    a.target = "_blank";
+    a.rel = "noopener";
+    bottom.appendChild(a);
+  } else {
+    bottom.appendChild(el("span", "soon", "Booking opens soon"));
+  }
+  c.appendChild(bottom);
+  return c;
+}
+
+function render(events) {
+  const now = new Date();
+  const trials = events
+    .filter(ev => ev.trial && new Date(ev.start || ev.date + "T23:59:00") > now)
+    .sort((a, b) => new Date(a.start || a.date) - new Date(b.start || b.date))
+    .slice(0, COUNT);
+
+  if (!trials.length) {
+    const box = el("div", "empty");
+    box.appendChild(el("strong", null, "New trial dates coming soon"));
+    box.appendChild(document.createTextNode("We run 2 trial sessions every month. Check back in a few days."));
+    root.appendChild(box);
+  } else {
+    const wrap = el("div", "cards");
+    trials.forEach(ev => wrap.appendChild(card(ev)));
+    root.appendChild(wrap);
+  }
+  reportHeight();
+}
+
+fetch("events.json", { cache: "no-cache" })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(data => render(Array.isArray(data.events) ? data.events : []))
+  .catch(() => render([]));
+</script>
+</body>
+</html>
