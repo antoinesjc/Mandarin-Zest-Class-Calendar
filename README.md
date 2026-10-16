@@ -47,9 +47,9 @@ fall overnight in Europe are listed under the US date with only the US time.
 
 - `Mandarin Zest — Class Calendar.html`: the page (colours and category
   names are at the top of its script).
-- `next-sessions.html`: a small strip showing the next 3 sessions in the
+- `next-sessions.html`: a small strip showing the next session in the
   visitor's own time zone, for the club landing page. Options in the URL:
-  `?count=4` (1 to 6 sessions), `&bg=f8dacd` (background colour; default
+  `?count=3` (1 to 6 sessions, default 1), `&bg=f8dacd` (background colour; default
   transparent).
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.

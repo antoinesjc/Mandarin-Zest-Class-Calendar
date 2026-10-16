@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /* Options via the URL, e.g. next-sessions.html?count=4&bg=f8dacd
-       count : how many sessions to show (1-6, default 3)
+       count : how many sessions to show (1-6, default 1)
        bg    : background colour as hex without # (default: transparent) */
   :root {
     --ink: #2a2420;
@@ -70,7 +70,7 @@
 </head>
 <body>
 <div class="strip" id="strip" aria-live="polite">
-  <span class="label">Next sessions</span>
+  <span class="label" id="label">Next session</span>
 </div>
 
 <script>
@@ -85,7 +85,8 @@ const CAT_COLORS = {
 };
 
 const params = new URLSearchParams(location.search);
-const COUNT = Math.min(6, Math.max(1, parseInt(params.get("count"), 10) || 3));
+const COUNT = Math.min(6, Math.max(1, parseInt(params.get("count"), 10) || 1));
+if (COUNT > 1) document.getElementById("label").textContent = "Next sessions";
 const BG = params.get("bg");
 if (BG && /^[0-9a-fA-F]{3,8}$/.test(BG)) document.body.style.background = "#" + BG;
 
