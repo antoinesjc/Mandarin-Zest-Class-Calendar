@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your free Mandarin Zest beginner guides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* To replace a PDF, upload the new file to the downloads/ folder with the
+     same name. Titles and page counts are edited directly below. */
+  :root { --ink: #2a2420; --muted: #5c4f47; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: var(--ink); padding: 8px; }
+  .grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 1px 0 #efe2d9, 0 8px 24px rgba(42, 36, 32, 0.06);
+    display: flex;
+    gap: 22px;
+    align-items: center;
+  }
+  .cover {
+    flex: 0 0 120px;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(42, 36, 32, 0.16);
+    aspect-ratio: 595 / 842;
+  }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .step { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; }
+  .step.green { color: #1b5e1b; }
+  .step.orange { color: #a8431a; }
+  h2 { margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2; }
+  .what { margin: 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
+  .meta { font-size: 13px; color: var(--muted); }
+  .btn {
+    align-self: flex-start;
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 12px 20px;
+    border-radius: 999px;
+  }
+  .btn.green { background: #1b6f1b; color: #fff; }
+  .btn.green:hover { background: #145514; }
+  .btn.orange { background: #f37a48; color: var(--ink); font-weight: 800; }
+  .btn.orange:hover { background: #e2632f; }
+  .btn:focus-visible, .cover:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  @media (max-width: 420px) {
+    .card { flex-direction: column; align-items: flex-start; }
+    .cover { flex-basis: auto; width: 140px; }
+  }
+</style>
+</head>
+<body>
+<div class="grid" id="grid">
+
+  <div class="card">
+    <a class="cover" href="downloads/Mandarin-Zest-Beginners-Roadmap.pdf" download target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      <img src="downloads/cover-roadmap.jpg" alt="">
+    </a>
+    <div class="info">
+      <div class="step green">STEP 1 · READ FIRST</div>
+      <h2>How to Start Learning Mandarin Chinese</h2>
+      <p class="what">A complete beginner's roadmap: what to learn, in what order, with a 90-day plan.</p>
+      <div class="meta">PDF · 16 pages</div>
+      <a class="btn green" href="downloads/Mandarin-Zest-Beginners-Roadmap.pdf" download target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
+        Download the roadmap
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <a class="cover" href="downloads/Mandarin-Zest-First-Steps-Workbook.pdf" download target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      <img src="downloads/cover-workbook.jpg" alt="">
+    </a>
+    <div class="info">
+      <div class="step orange">STEP 2 · PRACTISE</div>
+      <h2>Your First Steps in Mandarin Chinese</h2>
+      <p class="what">A workbook for your first sessions: pinyin and tones, 20 characters to write, and your first dialogue.</p>
+      <div class="meta">PDF · 15 pages · printable</div>
+      <a class="btn orange" href="downloads/Mandarin-Zest-First-Steps-Workbook.pdf" download target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
+        Download the workbook
+      </a>
+    </div>
+  </div>
+
+</div>
+<script>
+  // Tell the page embedding us how tall we are, so the frame fits on phones.
+  function reportHeight() {
+    var h = Math.ceil(document.getElementById("grid").getBoundingClientRect().bottom + 12);
+    try { parent.postMessage({ mzDownloadsHeight: h }, "*"); } catch (e) {}
+  }
+  window.addEventListener("load", reportHeight);
+  window.addEventListener("resize", reportHeight);
+  if (document.fonts) document.fonts.ready.then(reportHeight);
+</script>
+</body>
+</html>

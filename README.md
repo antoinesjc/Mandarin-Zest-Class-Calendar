@@ -78,6 +78,9 @@ fall overnight in Europe are listed under the US date with only the US time.
 - `hsk1-offer.html`: the HSK 1 Bundle offer with the NEWCOMER2026 code, for
   the Start Here thank-you page (all links open in a new tab; text, price and
   code are edited directly in the file).
+- `downloads.html` + `downloads/`: the two free beginner PDFs and their
+  covers, for the Start Here thank-you page. To update a PDF, upload the new
+  file into `downloads/` with the same name.
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.
