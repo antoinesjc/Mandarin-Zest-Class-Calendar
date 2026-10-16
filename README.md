@@ -51,6 +51,9 @@ fall overnight in Europe are listed under the US date with only the US time.
   visitor's own time zone, for the club landing page. Options in the URL:
   `?count=3` (1 to 6 sessions, default 1), `&bg=f8dacd` (background colour; default
   transparent).
+- `pricing.html`: the Monthly / Yearly membership cards for the club page,
+  with the Stripe links (they open in a new tab). Edit prices and bullets
+  directly in the file.
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.
