@@ -2,13 +2,13 @@
  "events": [
   {
    "date": "2026-09-01",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
+   "title": "MZ Club Advanced Session",
+   "level": "",
    "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "7pm CET"
+     "time": "7pm CEST"
     },
     {
      "flag": "us",
@@ -18,13 +18,13 @@
   },
   {
    "date": "2026-09-01",
-   "title": "HSK Review + Listening Practice",
+   "title": "MZ Club - HSK Review + Listening Practice",
    "level": "HSK 3-4",
    "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -34,13 +34,13 @@
   },
   {
    "date": "2026-09-04",
-   "title": "Animals!",
+   "title": "MZ Club - Animals!",
    "level": "HSK 1-3",
-   "cat": "character",
+   "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -50,13 +50,13 @@
   },
   {
    "date": "2026-09-07",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
+   "title": "MZ Club Advanced Session",
+   "level": "",
    "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "7pm CET"
+     "time": "7pm CEST"
     },
     {
      "flag": "us",
@@ -66,13 +66,13 @@
   },
   {
    "date": "2026-09-08",
-   "title": "MZ Vocab + Reading Practice",
+   "title": "MZ Club - MZ Vocab + Reading Practice",
    "level": "HSK 1-4",
    "cat": "beginner",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -82,13 +82,13 @@
   },
   {
    "date": "2026-09-11",
-   "title": "Dumplings!",
+   "title": "MZ Club - Dumplings!",
    "level": "HSK 1-3",
-   "cat": "character",
+   "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -98,13 +98,13 @@
   },
   {
    "date": "2026-09-12",
-   "title": "Native Teacher Conversation",
-   "level": "HSK 1-2",
+   "title": "MZ Club Native Teacher Conversation （）",
+   "level": "HSK 1-3",
    "cat": "native",
    "times": [
     {
      "flag": "eu",
-     "time": "4pm CET"
+     "time": "4pm CEST"
     },
     {
      "flag": "us",
@@ -114,13 +114,13 @@
   },
   {
    "date": "2026-09-13",
-   "title": "Taiwanese Bopomofo Alphabet",
+   "title": "Session on Taiwanese Bopomofo Alphabet",
    "level": "",
    "cat": "character",
    "times": [
     {
      "flag": "eu",
-     "time": "4pm CET"
+     "time": "4pm CEST"
     },
     {
      "flag": "us",
@@ -130,13 +130,13 @@
   },
   {
    "date": "2026-09-14",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
+   "title": "MZ Club Advanced Session",
+   "level": "",
    "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "7pm CET"
+     "time": "7pm CEST"
     },
     {
      "flag": "us",
@@ -146,29 +146,13 @@
   },
   {
    "date": "2026-09-15",
-   "title": "HSK Review + Listening Practice",
+   "title": "MZ Club - HSK Review + Listening Practice",
    "level": "HSK 3-4",
    "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
-    },
-    {
-     "flag": "us",
-     "time": "5pm ET"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-18",
-   "title": "Holidays!",
-   "level": "HSK 1-3",
-   "cat": "character",
-   "times": [
-    {
-     "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -178,13 +162,13 @@
   },
   {
    "date": "2026-09-19",
-   "title": "Native Teacher Conversation",
-   "level": "HSK 3-4",
+   "title": "MZ Club Native Teacher Conversation（）",
+   "level": "HSK 3-5",
    "cat": "native",
    "times": [
     {
      "flag": "eu",
-     "time": "4pm CET"
+     "time": "4pm CEST"
     },
     {
      "flag": "us",
@@ -194,13 +178,13 @@
   },
   {
    "date": "2026-09-21",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
+   "title": "MZ Club Advanced Session",
+   "level": "",
    "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "7pm CET"
+     "time": "7pm CEST"
     },
     {
      "flag": "us",
@@ -210,7 +194,7 @@
   },
   {
    "date": "2026-09-22",
-   "title": "MZ Vocab + Reading Practice",
+   "title": "MZ Club - MZ Vocab + Reading Practice",
    "level": "HSK 1-4",
    "cat": "beginner",
    "times": [
@@ -222,13 +206,13 @@
   },
   {
    "date": "2026-09-28",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
+   "title": "MZ Club Advanced Session",
+   "level": "",
    "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "7pm CET"
+     "time": "7pm CEST"
     },
     {
      "flag": "us",
@@ -238,13 +222,13 @@
   },
   {
    "date": "2026-10-02",
-   "title": "Holidays!",
-   "level": "HSK 1-3",
-   "cat": "beginner",
+   "title": "MZ Club - Holidays!",
+   "level": "HSK 1-4",
+   "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11am CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -254,13 +238,13 @@
   },
   {
    "date": "2026-10-03",
-   "title": "Native Teacher Conversation",
-   "level": "HSK 1-2",
+   "title": "MZ Club Native Conversation",
+   "level": "HSK 2-3",
    "cat": "native",
    "times": [
     {
      "flag": "eu",
-     "time": "4pm CET"
+     "time": "4pm CEST"
     },
     {
      "flag": "us",
@@ -270,13 +254,13 @@
   },
   {
    "date": "2026-10-05",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
+   "title": "MZ Club Advanced Session",
+   "level": "",
    "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "7pm CET"
+     "time": "7pm CEST"
     },
     {
      "flag": "us",
@@ -286,13 +270,13 @@
   },
   {
    "date": "2026-10-05",
-   "title": "HSK Review + Listening Practice",
-   "level": "HSK 3-4",
+   "title": "MZ Club - HSK Review + Listening Practice",
+   "level": "HSK 2-4",
    "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -302,13 +286,13 @@
   },
   {
    "date": "2026-10-08",
-   "title": "Geography of China Game!",
-   "level": "",
-   "cat": "beginner",
+   "title": "MZ Club - Geography of China Game!",
+   "level": "HSK 1-4",
+   "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -318,41 +302,29 @@
   },
   {
    "date": "2026-10-12",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
-   "cat": "advanced",
-   "times": [
-    {
-     "flag": "eu",
-     "time": "7pm CET"
-    },
-    {
-     "flag": "us",
-     "time": "1pm ET"
-    }
-   ]
-  },
-  {
-   "date": "2026-10-12",
-   "title": "Vocab + Reading Practice",
-   "level": "HSK 1-4",
+   "title": "MZ Club - MZ Vocab + Reading Practice",
+   "level": "HSK 2-4",
    "cat": "beginner",
    "times": [
     {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
      "flag": "us",
-     "time": "7pm ET"
+     "time": "5pm ET"
     }
    ]
   },
   {
    "date": "2026-10-15",
-   "title": "Animals!",
-   "level": "HSK 1-3",
-   "cat": "beginner",
+   "title": "MZ Club - Animals!",
+   "level": "HSK 1-4",
+   "cat": "intermediate",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "11pm CEST"
     },
     {
      "flag": "us",
@@ -368,7 +340,7 @@
    "times": [
     {
      "flag": "eu",
-     "time": "2pm CET"
+     "time": "2pm CEST"
     },
     {
      "flag": "us",
@@ -378,41 +350,13 @@
   },
   {
    "date": "2026-10-19",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
+   "title": "MZ Club Advanced Session",
+   "level": "",
    "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "7pm CET"
-    },
-    {
-     "flag": "us",
-     "time": "1pm ET"
-    }
-   ]
-  },
-  {
-   "date": "2026-10-19",
-   "title": "Vocab + Reading Practice",
-   "level": "HSK 1-4",
-   "cat": "beginner",
-   "times": [
-    {
-     "flag": "us",
-     "time": "7pm ET"
-    }
-   ]
-  },
-  {
-   "date": "2026-10-26",
-   "title": "Advanced Chinese",
-   "level": "HSK 4-6",
-   "cat": "advanced",
-   "times": [
-    {
-     "flag": "eu",
-     "time": "7pm CET"
+     "time": "7pm CEST"
     },
     {
      "flag": "us",
@@ -422,33 +366,209 @@
   },
   {
    "date": "2026-10-26",
-   "title": "HSK Review + Listening Practice",
-   "level": "HSK 3-4",
-   "cat": "intermediate",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
    "times": [
     {
      "flag": "eu",
-     "time": "11pm CET"
+     "time": "7pm CET"
     },
     {
      "flag": "us",
-     "time": "5pm ET"
+     "time": "2pm ET"
     }
    ]
   },
   {
    "date": "2026-10-31",
-   "title": "Native Teacher Conversation",
-   "level": "HSK 3-4",
+   "title": "MZ Club Native Conversation",
+   "level": "HSK 2-3",
    "cat": "native",
    "times": [
     {
      "flag": "eu",
-     "time": "4pm CET"
+     "time": "3pm CET"
     },
     {
      "flag": "us",
      "time": "10am ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-02",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-15",
+   "title": "MZ Club Native Conversation",
+   "level": "",
+   "cat": "native",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-16",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-23",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-29",
+   "title": "MZ Club Native Conversation",
+   "level": "",
+   "cat": "native",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-30",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-12-07",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-12-14",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-12-21",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
+    }
+   ]
+  },
+  {
+   "date": "2026-12-28",
+   "title": "MZ Club Advanced Session",
+   "level": "",
+   "cat": "advanced",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "7pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "1pm ET"
     }
    ]
   }
