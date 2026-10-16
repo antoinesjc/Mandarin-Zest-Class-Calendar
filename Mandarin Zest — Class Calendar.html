@@ -218,96 +218,21 @@ const CATEGORIES = {
   beginner:     { label: "Beginner",       color: "#b98a3d" },
   native:       { label: "Native Teacher", color: "#a63d2f" },
   character:    { label: "Character Focus", color: "#7d5a8c" },
+  general:      { label: "Open Topic",     color: "#6b6559" },
 };
 
 /* ============================================================
-   EDIT YOUR SESSIONS HERE.
-   Add one object per session to the EVENTS array below.
-
-   date  : "YYYY-MM-DD"
-   title : session name, e.g. "Advanced Chinese"
-   level : e.g. "HSK 4-6" (optional, leave "" to omit)
-   times : array of {flag: "eu"|"us", time: "7pm CET"} — as many as you like
-   cat   : one of the keys from CATEGORIES above
-           (controls the color, see the legend in the page)
-
-   To add a new month, just add more events with that month's dates.
-   Nothing else needs to change — the calendar reads whichever
-   month is currently shown and pulls in matching events automatically.
+   SESSIONS ARE NO LONGER TYPED HERE.
+   They come from events.json, which a GitHub Action rebuilds every
+   6 hours from the private Google Calendar (Meet links stripped).
+   Hosts just add sessions to Google Calendar. See README.md.
    ============================================================ */
+let EVENTS = [];
 
-const EVENTS = [
-  { date: "2026-09-01", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-09-01", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-09-04", title: "Animals!", level: "HSK 1-3", cat: "character",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-
-  { date: "2026-09-07", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-09-08", title: "MZ Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-09-11", title: "Dumplings!", level: "HSK 1-3", cat: "character",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-09-12", title: "Native Teacher Conversation", level: "HSK 1-2", cat: "native",
-    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
-
-  { date: "2026-09-13", title: "Taiwanese Bopomofo Alphabet", level: "", cat: "character",
-    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
-  { date: "2026-09-14", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-09-15", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-09-18", title: "Holidays!", level: "HSK 1-3", cat: "character",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-09-19", title: "Native Teacher Conversation", level: "HSK 3-4", cat: "native",
-    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
-
-  { date: "2026-09-21", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-09-22", title: "MZ Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
-    times: [{flag:"us", time:"7pm ET"}] },
-  { date: "2026-09-28", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-
-  { date: "2026-10-02", title: "Holidays!", level: "HSK 1-3", cat: "beginner",
-    times: [{flag:"eu", time:"11am CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-10-03", title: "Native Teacher Conversation", level: "HSK 1-2", cat: "native",
-    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
-
-  { date: "2026-10-05", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-10-05", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-10-08", title: "Geography of China Game!", level: "", cat: "beginner",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-
-  { date: "2026-10-18", title: "Tips on Learning Chinese Characters", level: "", cat: "character",
-    times: [{flag:"eu", time:"2pm CET"}, {flag:"us", time:"8am ET"}] },
-  { date: "2026-10-12", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-10-12", title: "Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
-    times: [{flag:"us", time:"7pm ET"}] },
-  { date: "2026-10-15", title: "Animals!", level: "HSK 1-3", cat: "beginner",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-
-  { date: "2026-10-19", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-10-19", title: "Vocab + Reading Practice", level: "HSK 1-4", cat: "beginner",
-    times: [{flag:"us", time:"7pm ET"}] },
-
-  { date: "2026-10-26", title: "Advanced Chinese", level: "HSK 4-6", cat: "advanced",
-    times: [{flag:"eu", time:"7pm CET"}, {flag:"us", time:"1pm ET"}] },
-  { date: "2026-10-26", title: "HSK Review + Listening Practice", level: "HSK 3-4", cat: "intermediate",
-    times: [{flag:"eu", time:"11pm CET"}, {flag:"us", time:"5pm ET"}] },
-  { date: "2026-10-31", title: "Native Teacher Conversation", level: "HSK 3-4", cat: "native",
-    times: [{flag:"eu", time:"4pm CET"}, {flag:"us", time:"10am ET"}] },
-];
-
-// Which month opens first when the page loads (0 = January).
-let viewYear = 2026;
-let viewMonth = 9; // October
+// Open on the current month.
+const _now = new Date();
+let viewYear = _now.getFullYear();
+let viewMonth = _now.getMonth();
 
 const FLAG = { eu: "\u{1F1EA}\u{1F1FA}", us: "\u{1F1FA}\u{1F1F8}" };
 const CN_MONTHS = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
@@ -330,7 +255,7 @@ function render(){
 
   const firstDow = new Date(viewYear, viewMonth, 1).getDay();
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const todayStr = new Date().toISOString().slice(0,10);
+  const todayStr = `${_now.getFullYear()}-${pad(_now.getMonth()+1)}-${pad(_now.getDate())}`;
   let hasAny = false;
 
   for (let i = 0; i < firstDow; i++) {
@@ -374,14 +299,18 @@ function render(){
   document.getElementById("emptyMsg").style.display = hasAny ? "none" : "block";
 }
 
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
 function buildPill(ev){
   const pill = document.createElement("div");
   pill.className = "pill";
   const cat = CATEGORIES[ev.cat];
   if (cat) pill.style.setProperty("--cat", cat.color);
-  const timesHtml = (ev.times || []).map(t => `${FLAG[t.flag] || ""} ${t.time}`).join(" · ");
+  const timesHtml = (ev.times || []).map(t => `${FLAG[t.flag] || ""} ${esc(t.time)}`).join(" · ");
   pill.innerHTML =
-    `<span class="t">${ev.title}${ev.level ? ` <span class="lvl">(${ev.level})</span>` : ""}</span>` +
+    `<span class="t">${esc(ev.title)}${ev.level ? ` <span class="lvl">(${esc(ev.level)})</span>` : ""}</span>` +
     (timesHtml ? `<span class="times">${timesHtml}</span>` : "");
   return pill;
 }
@@ -409,6 +338,14 @@ document.getElementById("todayBtn").addEventListener("click", () => {
 });
 
 render();
+fetch("events.json", { cache: "no-cache" })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(data => { EVENTS = Array.isArray(data.events) ? data.events : []; render(); })
+  .catch(() => {
+    const msg = document.getElementById("emptyMsg");
+    msg.textContent = "The session calendar couldn't load right now. Please refresh in a moment.";
+    msg.style.display = "block";
+  });
 </script>
 </body>
 </html>
