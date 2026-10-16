@@ -101,7 +101,7 @@ def clean_title(raw: str):
         text = text[: m.start()] + text[m.end():]
 
     text = re.sub(r"^\s*MZ\s*Club\b[\s:\-–·|]*", "", text, flags=re.I)  # "MZ Club - ..." prefix
-    text = re.sub(r"\(\s*\)", "", text)            # empty brackets left behind
+    text = re.sub(r"[(（]\s*[)）]", "", text)        # empty brackets left behind (incl. full-width)
     text = re.sub(r"\s{2,}", " ", text).strip(" -–·|,")
     return text.strip(), level, tags
 
