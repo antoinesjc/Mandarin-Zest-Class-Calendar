@@ -229,10 +229,13 @@ const CATEGORIES = {
    ============================================================ */
 let EVENTS = [];
 
-// Open on the current month.
+// Open on the current month, or on next month if today is the last day
+// of the month (so visitors see the upcoming sessions).
 const _now = new Date();
+const _isLastDay = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate() + 1).getDate() === 1;
 let viewYear = _now.getFullYear();
-let viewMonth = _now.getMonth();
+let viewMonth = _now.getMonth() + (_isLastDay ? 1 : 0);
+if (viewMonth > 11) { viewMonth = 0; viewYear++; }
 
 const FLAG = { eu: "\u{1F1EA}\u{1F1FA}", us: "\u{1F1FA}\u{1F1F8}" };
 const CN_MONTHS = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
