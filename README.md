@@ -81,6 +81,8 @@ fall overnight in Europe are listed under the US date with only the US time.
 - `downloads.html` + `downloads/`: the two free beginner PDFs and their
   covers, for the Start Here thank-you page. To update a PDF, upload the new
   file into `downloads/` with the same name.
+- `whats-inside.html`: the two free guides with covers and contents (no
+  download buttons), for the Start Here page above the email form.
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.

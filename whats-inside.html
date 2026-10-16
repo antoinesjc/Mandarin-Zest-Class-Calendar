@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's inside the free beginner guides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* EDIT TEXT DIRECTLY IN THE HTML BELOW. Covers come from downloads/. */
+  :root { --ink: #2a2420; --muted: #5c4f47; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: var(--ink); padding: 8px; }
+  .grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 26px;
+    box-shadow: 0 1px 0 #efe2d9, 0 8px 24px rgba(42, 36, 32, 0.06);
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+  }
+  .cover {
+    flex: 0 0 128px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(42, 36, 32, 0.16);
+    aspect-ratio: 595 / 842;
+  }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .tag { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+  .tag.green { color: #1b5e1b; }
+  .tag.orange { color: #a8431a; }
+  h3 { margin: 0; font-size: 21px; font-weight: 800; line-height: 1.2; }
+  .what { margin: 0; font-size: 15px; line-height: 1.45; color: var(--muted); }
+  ul { margin: 2px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; font-size: 15px; line-height: 1.4; }
+  li { display: flex; gap: 8px; align-items: flex-start; }
+  li svg { flex: 0 0 auto; margin-top: 2px; }
+  .meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  @media (max-width: 440px) {
+    .card { flex-direction: column; }
+    .cover { flex-basis: auto; width: 130px; }
+  }
+</style>
+</head>
+<body>
+<div class="grid" id="grid">
+
+  <div class="card">
+    <div class="cover"><img src="downloads/cover-roadmap.jpg" alt="Cover of How to Start Learning Mandarin Chinese"></div>
+    <div class="info">
+      <div class="tag green">THE ROADMAP</div>
+      <h3>How to Start Learning Mandarin Chinese</h3>
+      <p class="what">A complete beginner's roadmap, from zero to your first real conversation.</p>
+      <ul>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>A week-by-week plan for your first 3 months</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Simplified or Traditional: how to choose</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>The tools and materials to gather first</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>The habits that keep you from quitting</li>
+      </ul>
+      <div class="meta">PDF · 16 pages</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="cover"><img src="downloads/cover-workbook.jpg" alt="Cover of Your First Steps in Mandarin Chinese"></div>
+    <div class="info">
+      <div class="tag orange">THE WORKBOOK</div>
+      <h3>Your First Steps in Mandarin Chinese</h3>
+      <p class="what">Your very first session with Mandarin. No prior knowledge needed.</p>
+      <ul>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Pinyin made simple: every sound and all five tones</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>20 essential characters with practice grids</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Your first dialogue, using only what you learned</li>
+      </ul>
+      <div class="meta">PDF · 15 pages · printable</div>
+    </div>
+  </div>
+
+</div>
+<script>
+  function reportHeight() {
+    var h = Math.ceil(document.getElementById("grid").getBoundingClientRect().bottom + 12);
+    try { parent.postMessage({ mzInsideHeight: h }, "*"); } catch (e) {}
+  }
+  window.addEventListener("load", reportHeight);
+  window.addEventListener("resize", reportHeight);
+  if (document.fonts) document.fonts.ready.then(reportHeight);
+</script>
+</body>
+</html>
