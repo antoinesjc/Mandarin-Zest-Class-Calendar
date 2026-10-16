@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Club next sessions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Options via the URL, e.g. next-sessions.html?count=4&bg=f8dacd
+       count : how many sessions to show (1-6, default 3)
+       bg    : background colour as hex without # (default: transparent) */
+  :root {
+    --ink: #2a2420;
+    --muted: #6b5a50;
+    --chip: rgba(255, 255, 255, 0.65);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--ink);
+    padding: 12px 16px;
+  }
+  .strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+  }
+  .label {
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .session {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--chip);
+    border-radius: 999px;
+    padding: 8px 16px 8px 12px;
+    font-size: 14px;
+    line-height: 1.25;
+    min-width: 0;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    flex: 0 0 auto;
+    background: var(--cat, #6b6559);
+  }
+  .when { font-weight: 700; white-space: nowrap; }
+  .what { min-width: 0; }
+  .lvl { color: var(--muted); }
+  .note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .empty { font-size: 14px; color: var(--muted); }
+  @media (max-width: 640px) {
+    .strip { flex-direction: column; align-items: stretch; }
+    .session { border-radius: 14px; }
+    .note { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="strip" id="strip" aria-live="polite">
+  <span class="label">Next sessions</span>
+</div>
+
+<script>
+// Same colours as the session calendar.
+const CAT_COLORS = {
+  advanced: "#3f6d5e",
+  intermediate: "#4f7a94",
+  beginner: "#b98a3d",
+  native: "#a63d2f",
+  character: "#7d5a8c",
+  general: "#6b6559",
+};
+
+const params = new URLSearchParams(location.search);
+const COUNT = Math.min(6, Math.max(1, parseInt(params.get("count"), 10) || 3));
+const BG = params.get("bg");
+if (BG && /^[0-9a-fA-F]{3,8}$/.test(BG)) document.body.style.background = "#" + BG;
+
+const strip = document.getElementById("strip");
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+
+// Tell the page embedding us how tall we are, so the iframe fits on phones.
+function reportHeight() {
+  try {
+    parent.postMessage({ mzNextSessionsHeight: document.documentElement.scrollHeight }, "*");
+  } catch (e) {}
+}
+window.addEventListener("resize", reportHeight);
+
+function startOf(ev) {
+  if (ev.start) return new Date(ev.start);
+  // Older entries without an exact time: treat as the end of that day.
+  return new Date(ev.date + "T23:59:00");
+}
+
+function formatWhen(ev) {
+  const d = startOf(ev);
+  const day = d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+  if (!ev.start) return day;
+  const time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  return `${day} · ${time}`;
+}
+
+function render(events) {
+  const now = new Date();
+  const upcoming = events
+    .filter(ev => startOf(ev) > now)
+    .sort((a, b) => startOf(a) - startOf(b))
+    .slice(0, COUNT);
+
+  if (!upcoming.length) {
+    strip.appendChild(el("span", "empty", "New sessions are being scheduled. Check back soon."));
+    reportHeight();
+    return;
+  }
+
+  upcoming.forEach(ev => {
+    const item = el("div", "session");
+    const dot = el("span", "dot");
+    dot.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.general);
+    dot.setAttribute("aria-hidden", "true");
+    const text = el("span", "what");
+    text.appendChild(el("span", "when", formatWhen(ev)));
+    text.appendChild(document.createTextNode("  " + ev.title));
+    if (ev.level) text.appendChild(el("span", "lvl", " (" + ev.level + ")"));
+    item.appendChild(dot);
+    item.appendChild(text);
+    strip.appendChild(item);
+  });
+
+  if (upcoming.some(ev => ev.start)) strip.appendChild(el("span", "note", "Times in your time zone"));
+  reportHeight();
+}
+
+fetch("events.json", { cache: "no-cache" })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(data => render(Array.isArray(data.events) ? data.events : []))
+  .catch(() => {
+    strip.appendChild(el("span", "empty", "See the full calendar below."));
+    reportHeight();
+  });
+</script>
+</body>
+</html>

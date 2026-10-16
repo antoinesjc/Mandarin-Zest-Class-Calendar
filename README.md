@@ -24,7 +24,8 @@ settings screen and paste the new one into the GitHub secret.
 
 ## For hosts: how to name sessions
 
-Write the session name with the level in brackets, for example:
+Write the session name with the level in brackets. A leading "MZ Club" is
+removed automatically. For example:
 
 - `Advanced Chinese (HSK 4-6)`
 - `Vocab + Reading Practice (HSK 1-4)`
@@ -46,6 +47,10 @@ fall overnight in Europe are listed under the US date with only the US time.
 
 - `Mandarin Zest — Class Calendar.html`: the page (colours and category
   names are at the top of its script).
+- `next-sessions.html`: a small strip showing the next 3 sessions in the
+  visitor's own time zone, for the club landing page. Options in the URL:
+  `?count=4` (1 to 6 sessions), `&bg=f8dacd` (background colour; default
+  transparent).
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.

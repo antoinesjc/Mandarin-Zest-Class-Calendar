@@ -77,6 +77,7 @@ def clean_title(raw: str):
         level = f"{name} {lo}-{hi}" if hi else f"{name} {lo}"
         text = text[: m.start()] + text[m.end():]
 
+    text = re.sub(r"^\s*MZ\s*Club\b[\s:\-–·|]*", "", text, flags=re.I)  # "MZ Club - ..." prefix
     text = re.sub(r"\(\s*\)", "", text)            # empty brackets left behind
     text = re.sub(r"\s{2,}", " ", text).strip(" -–·|,")
     return text.strip(), level, tags
@@ -144,9 +145,11 @@ def build(ics_bytes: bytes):
                     {"flag": "us", "time": f"{fmt_clock(us)} ET"},
                 ]
             sort_key = eu.isoformat()
+            start_utc = dtstart.astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%SZ")
         else:                                    # all-day event
             day = dtstart
             sort_key = day.isoformat()
+            start_utc = ""
 
         # ALLOWLIST: these are the only fields that ever leave the feed.
         out.append({
@@ -155,6 +158,7 @@ def build(ics_bytes: bytes):
             "level": level,
             "cat": pick_category(title, level, tags),
             "times": times,
+            "start": start_utc,
             "_sort": sort_key,
         })
 
