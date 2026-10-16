@@ -75,6 +75,9 @@ fall overnight in Europe are listed under the US date with only the US time.
   directly in the file.
 - `trial.html`: the upcoming `#trial` sessions as booking cards, for the
   trial page (price and Stripe link at the top of its script).
+- `hsk1-offer.html`: the HSK 1 Bundle offer with the NEWCOMER2026 code, for
+  the Start Here thank-you page (all links open in a new tab; text, price and
+  code are edited directly in the file).
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.
