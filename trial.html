@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
 <style>
-  /* Shows the upcoming sessions tagged #trial in Google Calendar.
+  /* Shows the upcoming sessions with #trial in their Google Calendar description.
      Options in the URL: ?count=2 (how many, default 2) */
   :root {
     --ink: #2a2420;
@@ -74,8 +74,9 @@
 <div id="root" aria-live="polite"></div>
 
 <script>
-// Price shown on each card. Change it here if the trial price changes.
+// Price and booking link for every trial session. Change them here.
 const PRICE = "US$2.50";
+const BOOK_URL = "https://buy.stripe.com/cNi6oH94B8Dj6DCf0x6oo0k";
 const SEATS = "5 seats";
 
 const CAT_COLORS = {
@@ -126,15 +127,14 @@ function card(ev) {
 
   const bottom = el("div", "bottom");
   bottom.appendChild(el("span", "price", PRICE));
-  if (ev.book && /^https:\/\/buy\.stripe\.com\//.test(ev.book)) {
-    const a = el("a", "btn", "Book my seat");
-    a.href = ev.book;
-    a.target = "_blank";
-    a.rel = "noopener";
-    bottom.appendChild(a);
-  } else {
-    bottom.appendChild(el("span", "soon", "Booking opens soon"));
-  }
+  // client_reference_id tells you in Stripe which session was booked,
+  // e.g. "trial-2026-11-08-1300-utc".
+  const ref = "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : "");
+  const a = el("a", "btn", "Book my seat");
+  a.href = BOOK_URL + "?client_reference_id=" + encodeURIComponent(ref);
+  a.target = "_blank";
+  a.rel = "noopener";
+  bottom.appendChild(a);
   c.appendChild(bottom);
   return c;
 }
