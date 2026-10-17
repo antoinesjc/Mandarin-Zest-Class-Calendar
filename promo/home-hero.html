@@ -57,16 +57,10 @@
   @keyframes nudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
   .hint.gone { opacity: 0; }
 
-  /* little sparkles */
-  .spark { position: absolute; font-family: 'Noto Sans SC', sans-serif; font-weight: 700; color: #228b22; opacity: 0; animation: drift 7s ease-in-out infinite; pointer-events: none; }
-  .s1 { left: 24px; top: 70px; font-size: 22px; animation-delay: 0s; }
-  .s2 { left: 316px; top: 196px; font-size: 18px; color: #f37a48; animation-delay: 2.3s; }
-  .s3 { left: 40px; top: 230px; font-size: 20px; animation-delay: 4.6s; }
 
   /* hearts that pop out on tap */
   .pop { position: absolute; z-index: 23; font-size: 20px; pointer-events: none; animation: pop .9s ease-out forwards; }
   @keyframes pop { 0% { opacity: 0; transform: translate(0,0) scale(.4); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), -70px) scale(1.1); } }
-  @keyframes drift { 0% { opacity: 0; transform: translateY(10px); } 15%, 60% { opacity: .55; } 100% { opacity: 0; transform: translateY(-24px); } }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -77,9 +71,6 @@
 <div class="stage" id="stage">
   <div class="tilt" id="tilt">
     <div class="blob" aria-hidden="true"></div>
-    <span class="spark s1" aria-hidden="true">学</span>
-    <span class="spark s2" aria-hidden="true">好</span>
-    <span class="spark s3" aria-hidden="true">中</span>
 
     <div class="bubble" id="bubble" aria-live="polite">
       <span class="zh" id="zh">你好！</span><span class="py" id="py">nǐ hǎo</span><span class="en" id="en">Hello!</span>
