@@ -8,37 +8,71 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
 <style>
-  /* EDIT TEXT AND LINKS DIRECTLY IN THE HTML BELOW. */
+  /* Fills whatever height the frame has. EDIT TEXT AND LINKS DIRECTLY IN THE HTML BELOW. */
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: transparent; }
-  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 4px; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #fff; padding: 4px; }
   .banner {
-    max-width: 820px; margin: 0 auto; border-radius: 20px; padding: 26px 28px;
-    display: flex; gap: 26px; align-items: center;
+    min-height: 100%; max-width: 820px; margin: 0 auto; border-radius: 20px; padding: 26px 28px;
+    display: flex; gap: 26px; align-items: center; background: #2a2420;
   }
-  .visual { flex: 0 0 150px; height: 150px; position: relative; }
   .text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
-  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #f8dacd; }
   h3 { margin: 0; font-size: 24px; font-weight: 800; line-height: 1.2; }
-  p { margin: 0; font-size: 15px; line-height: 1.5; }
+  p { margin: 0; font-size: 15px; line-height: 1.5; color: #e6ddd6; }
   .actions { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center; margin-top: 4px; }
-  .btn { text-decoration: none; font-weight: 800; font-size: 16px; padding: 13px 22px; border-radius: 999px; }
-  .btn:focus-visible, .code:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
-  .side { font-size: 14px; }
-  .banner { background: #2a2420; color: #fff; }
-  .visual { border-radius: 14px; background: #3a322c; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 18px; }
-  .bubble { font-family: 'Noto Serif SC', serif; font-size: 17px; font-weight: 700; padding: 7px 12px; }
-  .b1 { align-self: flex-start; background: #f37a48; color: #2a2420; border-radius: 14px 14px 14px 4px; }
-  .b2 { align-self: flex-end; background: #fff; color: #2a2420; border-radius: 14px 14px 4px 14px; }
-  .b3 { align-self: flex-start; background: #9fd89f; color: #173f17; border-radius: 14px 14px 14px 4px; }
-  .eyebrow { color: #f8dacd; }
-  p { color: #e6ddd6; }
-  .side { color: #d9cec6; }
-  .btn { background: #f37a48; color: #2a2420; }
+  .btn {
+    position: relative; overflow: hidden; white-space: nowrap;
+    text-decoration: none; font-weight: 800; font-size: 16px; padding: 13px 22px; border-radius: 999px;
+    background: #f37a48; color: #2a2420;
+  }
   .btn:hover { background: #e2632f; }
-  @media (max-width: 560px) {
-    .banner { flex-direction: column; align-items: flex-start; padding: 22px; gap: 18px; }
+  .btn:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .btn::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+    animation: shine 5s ease-in-out infinite 3s;
+  }
+  @keyframes shine { 0%, 75% { left: -60%; } 100% { left: 130%; } }
+  .side { font-size: 14px; color: #d9cec6; }
+  .short { display: none; }
+
+  /* chat: bubbles pop in one after another, hold, then start again */
+  .visual {
+    flex: 0 0 150px; min-height: 150px; align-self: stretch; border-radius: 14px; background: #3a322c;
+    display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 18px;
+  }
+  .bubble {
+    font-family: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif; font-size: 17px; font-weight: 700;
+    padding: 7px 12px; line-height: 1.2; white-space: nowrap;
+    opacity: 0; animation: pop 7s infinite both;
+  }
+  .b1 { align-self: flex-start; background: #f37a48; color: #2a2420; border-radius: 14px 14px 14px 4px; transform-origin: bottom left; animation-delay: .3s; }
+  .b2 { align-self: flex-end; background: #fff; color: #2a2420; border-radius: 14px 14px 4px 14px; transform-origin: bottom right; animation-name: pop2; animation-delay: .3s; }
+  .b3 { align-self: flex-start; background: #9fd89f; color: #173f17; border-radius: 14px 14px 14px 4px; transform-origin: bottom left; animation-name: pop3; animation-delay: .3s; }
+  @keyframes pop  { 0% { opacity: 0; transform: scale(.4) translateY(8px); } 4% { opacity: 1; transform: scale(1.08); } 7%, 82% { opacity: 1; transform: scale(1); } 90%, 100% { opacity: 0; transform: scale(.95) translateY(-4px); } }
+  @keyframes pop2 { 0%, 14% { opacity: 0; transform: scale(.4) translateY(8px); } 18% { opacity: 1; transform: scale(1.08); } 21%, 82% { opacity: 1; transform: scale(1); } 90%, 100% { opacity: 0; transform: scale(.95) translateY(-4px); } }
+  @keyframes pop3 { 0%, 28% { opacity: 0; transform: scale(.4) translateY(8px); } 32% { opacity: 1; transform: scale(1.08); } 35%, 82% { opacity: 1; transform: scale(1); } 90%, 100% { opacity: 0; transform: scale(.95) translateY(-4px); } }
+
+  /* narrow: the chat becomes a strip above the text */
+  @media (max-width: 640px) {
+    .banner { flex-direction: column; align-items: stretch; padding: 18px 20px; gap: 14px; justify-content: center; }
+    .visual { flex: none; min-height: 0; align-self: stretch; height: auto; flex-direction: row; justify-content: flex-start; align-items: center; gap: 8px; padding: 10px 12px; }
+    .bubble { font-size: 15px; padding: 6px 10px; }
+    .b2 { align-self: center; }
+    .b1, .b3 { align-self: center; }
     h3 { font-size: 21px; }
+    p { font-size: 14px; line-height: 1.45; }
+    .long { display: none; } .short { display: inline; }
+    .btn { font-size: 15px; padding: 11px 18px; }
+  }
+  @media (max-width: 300px) {
+    .bubble { font-size: 13px; padding: 5px 8px; }
+    .visual { gap: 6px; padding: 8px 10px; }
+    .side { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bubble, .btn::after { animation: none !important; opacity: 1; }
   }
 </style>
 </head>
@@ -47,27 +81,18 @@
   <div class="visual" aria-hidden="true">
     <span class="bubble b1">你好！</span>
     <span class="bubble b2">你好！</span>
-    <span class="bubble b3">加油</span>
+    <span class="bubble b3">加油！</span>
   </div>
   <div class="text">
     <div class="eyebrow">MANDARIN ZEST CLUB</div>
     <h3>Reading is good. Speaking is better.</h3>
-    <p>Live 45-minute speaking sessions every week for all levels, plus a new workbook every month. From US$20 a month.</p>
+    <p><span class="long">Live 45-minute speaking sessions every week for all levels, plus a new workbook every month. From US$20 a month.</span><span class="short">Live speaking sessions every week, for all levels. From US$20 a month.</span></p>
     <div class="actions">
       <a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Discover the Club</a>
       <span class="side">Try a session first for US$2.50</span>
     </div>
   </div>
 </div>
-<script>
-  function reportHeight() {
-    var h = Math.ceil(document.querySelector(".banner").getBoundingClientRect().bottom + 6);
-    try { parent.postMessage({ mzBanner: "club", height: h }, "*"); } catch (e) {}
-  }
-  window.addEventListener("load", reportHeight);
-  window.addEventListener("resize", reportHeight);
-  if (document.fonts) document.fonts.ready.then(reportHeight);
 
-</script>
 </body>
 </html>
