@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Textbook Chinese vs. Taiwan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@500;700&family=Noto+Sans+SC:wght@500&display=swap" rel="stylesheet">
+<style>
+  /* Desktop: 4 cards in a row. Phones: a swipeable row. Same height everywhere (use 220px). */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 6px 4px 10px; }
+
+  .row {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
+    max-width: 1120px; margin: 0 auto;
+  }
+  .card {
+    background: #fff; border-radius: 18px; padding: 18px 18px 16px;
+    box-shadow: 0 1px 0 #efe2d9, 0 6px 18px rgba(42,36,32,0.07);
+    display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  }
+  .what { font-size: 13px; font-weight: 700; color: #6b5a50; line-height: 1.3; }
+  .line { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
+  .tag { font-size: 12px; color: #8a7d74; padding-bottom: 3px; white-space: nowrap; }
+  .tag.tw { font-weight: 700; color: #1b5e1b; }
+  .word { text-align: right; line-height: 1.1; }
+  .zh { display: block; font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
+  .old .zh { font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 20px; color: #8a7d74; text-decoration: line-through; text-decoration-color: rgba(168,67,26,.7); }
+  .new .zh { font-size: 26px; font-weight: 700; color: #173f17; }
+  .py { display: block; font-size: 12px; color: #8a7d74; margin-top: 3px; }
+  .new .py { color: #1b5e1b; font-weight: 600; }
+  .old .txt { font-size: 15px; color: #8a7d74; text-decoration: line-through; }
+  .divider { height: 1px; background: #f1e6df; }
+
+  /* phones and narrow columns: swipe */
+  @media (max-width: 920px) {
+    body { padding: 6px 0 10px; }
+    .row {
+      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding: 2px 16px 8px; scroll-padding-left: 16px; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .row::-webkit-scrollbar { display: none; }
+    .card { flex: 0 0 72%; max-width: 240px; scroll-snap-align: start; }
+    .row::after { content: ""; flex: 0 0 4px; }
+  }
+  .hint { display: none; }
+  @media (max-width: 920px) {
+    .hint { display: flex; justify-content: center; gap: 6px; margin-top: 4px; }
+    .hint i { width: 6px; height: 6px; border-radius: 50%; background: #e3d3c9; }
+    .hint i.on { background: #f37a48; width: 16px; border-radius: 3px; }
+  }
+</style>
+</head>
+<body>
+<div class="row" id="row">
+
+  <div class="card">
+    <div class="what">Taking the subway</div>
+    <div class="line"><span class="tag">Textbook</span><span class="word old"><span class="zh">地铁</span><span class="py">dìtiě</span></span></div>
+    <div class="divider"></div>
+    <div class="line"><span class="tag tw">In Taiwan</span><span class="word new"><span class="zh">捷運</span><span class="py">jiéyùn</span></span></div>
+  </div>
+
+  <div class="card">
+    <div class="what">Hailing a taxi</div>
+    <div class="line"><span class="tag">Textbook</span><span class="word old"><span class="zh">出租车</span><span class="py">chūzūchē</span></span></div>
+    <div class="divider"></div>
+    <div class="line"><span class="tag tw">In Taiwan</span><span class="word new"><span class="zh">計程車</span><span class="py">jìchéngchē</span></span></div>
+  </div>
+
+  <div class="card">
+    <div class="what">Ordering potatoes (not peanuts)</div>
+    <div class="line"><span class="tag">Textbook</span><span class="word old"><span class="zh">土豆</span><span class="py">tǔdòu</span></span></div>
+    <div class="divider"></div>
+    <div class="line"><span class="tag tw">In Taiwan</span><span class="word new"><span class="zh">馬鈴薯</span><span class="py">mǎlíngshǔ</span></span></div>
+  </div>
+
+  <div class="card">
+    <div class="what">Reading the menu</div>
+    <div class="line"><span class="tag">Textbook</span><span class="word old"><span class="txt">Pinyin, simplified</span></span></div>
+    <div class="divider"></div>
+    <div class="line"><span class="tag tw">In Taiwan</span><span class="word new"><span class="zh">ㄅㄆㄇ · 繁體</span><span class="py">Zhuyin, traditional</span></span></div>
+  </div>
+
+</div>
+<div class="hint" id="hint" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+<script>
+  // Move the little dots under the cards as people swipe (phones only).
+  (function () {
+    var row = document.getElementById("row"), dots = document.querySelectorAll("#hint i");
+    row.addEventListener("scroll", function () {
+      var cards = row.querySelectorAll(".card"), w = cards[0].getBoundingClientRect().width + 12;
+      var i = Math.min(cards.length - 1, Math.round(row.scrollLeft / w));
+      if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 4) i = cards.length - 1;
+      dots.forEach(function (d, k) { d.className = k === i ? "on" : ""; });
+    }, { passive: true });
+  })();
+</script>
+</body>
+</html>

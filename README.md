@@ -91,6 +91,8 @@ fall overnight in Europe are listed under the US date with only the US time.
 - `promo/club.html` and `promo/bootcamps.html`: animated promo cards with
   the mascot, linking to the club page and the bootcamps page. They fill
   any frame height (use 300px); no resize script needed.
+- `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
+  bootcamp page (4 in a row on desktop, swipeable on phones; use a 220px frame).
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.
