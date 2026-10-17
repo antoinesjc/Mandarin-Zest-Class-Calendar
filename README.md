@@ -85,7 +85,9 @@ fall overnight in Europe are listed under the US date with only the US time.
   download buttons), for the Start Here page above the email form.
 - `banners/`: article banners for SEO posts: `shop.html` (WELCOME01),
   `club.html`, `start-here.html` and `characters-guide.html` (WELCOME01).
-  All links open in a new tab.
+  All links open in a new tab. `banners/snippets/` holds frame-free
+  versions to paste straight into an Odoo Embed Code block (they always
+  display in full, but text changes must be made in each article).
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.

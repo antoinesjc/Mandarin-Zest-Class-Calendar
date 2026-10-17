@@ -1,0 +1,45 @@
+<div class="mzb-shop">
+<style>
+.mzb-shop{font-family:'Outfit',system-ui,-apple-system,sans-serif;margin:28px 0}
+.mzb-shop *{box-sizing:border-box}
+.mzb-shop .mzb-box{border-radius:20px;padding:24px;display:flex;flex-wrap:wrap;gap:20px 26px;align-items:center}
+.mzb-shop .mzb-text{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.mzb-shop .mzb-eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;margin:0}
+.mzb-shop .mzb-title{margin:0;font-size:24px;font-weight:800;line-height:1.2}
+.mzb-shop .mzb-desc{margin:0;font-size:15px;line-height:1.5}
+.mzb-shop .mzb-actions{display:flex;flex-wrap:wrap;gap:12px 14px;align-items:center;margin-top:2px}
+.mzb-shop .mzb-side{font-size:14px}
+.mzb-shop a.mzb-btn,.mzb-shop a.mzb-btn:visited{text-decoration:none;font-weight:800;font-size:16px;padding:13px 22px;border-radius:999px;display:inline-block;line-height:1.2}
+.mzb-shop a.mzb-btn:hover{text-decoration:none}
+.mzb-shop .mzb-code{background:#fff;border:2px dashed #1b6f1b;border-radius:10px;padding:6px 12px;display:flex;flex-direction:column;text-align:left;cursor:pointer;font-family:inherit;color:#173f17;line-height:1.25}
+.mzb-shop .mzb-code small{font-size:11px;font-weight:700;color:#1b5e1b}
+.mzb-shop .mzb-code strong{font-size:18px;font-weight:800;letter-spacing:.05em}
+.mzb-shop .mzb-box{background:#fdf1ea}
+.mzb-shop .mzb-fan{flex:0 0 210px;width:210px;height:160px;position:relative;display:block;margin-left:4px}
+.mzb-shop .mzb-fan span{position:absolute;top:10px;width:92px;height:135px;border-radius:6px;overflow:hidden;box-shadow:0 6px 16px rgba(42,36,32,.22)}
+.mzb-shop .mzb-fan img{width:100%;height:100%;object-fit:cover;display:block;margin:0;max-width:none}
+.mzb-shop .mzb-fan .c1{left:0;transform:rotate(-9deg)}
+.mzb-shop .mzb-fan .c2{left:38px;top:4px;transform:rotate(-3deg)}
+.mzb-shop .mzb-fan .c3{left:76px;top:4px;transform:rotate(3deg)}
+.mzb-shop .mzb-fan .c4{left:114px;transform:rotate(9deg)}
+.mzb-shop .mzb-eyebrow{color:#a8431a}
+.mzb-shop .mzb-title{color:#2a2420}
+.mzb-shop .mzb-desc{color:#5c4f47}
+.mzb-shop a.mzb-btn,.mzb-shop a.mzb-btn:visited,.mzb-shop a.mzb-btn:hover{background:#f37a48;color:#2a2420}
+</style>
+<div class="mzb-box">
+  <a class="mzb-fan" href="https://www.mandarinzest.com/shop" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span class="c1"><img src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/banners/cover-tocfl1.jpg" alt=""></span><span class="c2"><img src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/banners/cover-hsk3.jpg" alt=""></span><span class="c3"><img src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/banners/cover-hsk2.jpg" alt=""></span><span class="c4"><img src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/banners/cover-hsk1.jpg" alt=""></span></a>
+  <div class="mzb-text">
+    <p class="mzb-eyebrow">MANDARIN ZEST MATERIALS</p>
+    <p class="mzb-title">Study with materials made for learners</p>
+    <p class="mzb-desc">Textbooks, workbooks and graded readers for HSK and TOCFL, from your first characters to advanced reading.</p>
+    <div class="mzb-actions">
+      <button class="mzb-code" type="button" data-code="WELCOME01" aria-label="Copy the code WELCOME01"><small>10% OFF · TAP TO COPY</small><strong>WELCOME01</strong></button>
+      <a class="mzb-btn" href="https://www.mandarinzest.com/shop" target="_blank" rel="noopener">Browse the shop</a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){document.querySelectorAll('.mzb-shop .mzb-code').forEach(function(el){if(el.dataset.ready)return;el.dataset.ready=1;el.addEventListener('click',function(){var s=el.querySelector('small'),t=s.textContent;try{navigator.clipboard.writeText(el.dataset.code).then(function(){s.textContent='COPIED!';setTimeout(function(){s.textContent=t;},1800);});}catch(e){}});});})();
+</script>
+</div>
