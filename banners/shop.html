@@ -26,8 +26,15 @@
   .btn:focus-visible, .code:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
   .side { font-size: 14px; }
   .banner { background: #fdf1ea; }
-  .visual { border-radius: 14px; overflow: hidden; background: #f8dacd; display: block; }
-  .visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .visual { flex: 0 0 210px; width: 210px; height: 160px; display: block; margin-left: 4px; }
+  .cover { position: absolute; top: 10px; width: 92px; height: 135px; border-radius: 6px; overflow: hidden; box-shadow: 0 6px 16px rgba(42,36,32,0.22); transition: transform 0.2s; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .c1 { left: 0;    transform: rotate(-9deg); }
+  .c2 { left: 38px; transform: rotate(-3deg); top: 4px; }
+  .c3 { left: 76px; transform: rotate(3deg);  top: 4px; }
+  .c4 { left: 114px; transform: rotate(9deg); }
+  .visual:hover .c1 { transform: rotate(-12deg) translateX(-4px); }
+  .visual:hover .c4 { transform: rotate(12deg) translateX(4px); }
   .eyebrow { color: #a8431a; }
   p { color: #5c4f47; }
   .code { background: #fff; border: 2px dashed #1b6f1b; border-radius: 10px; padding: 6px 12px; display: flex; flex-direction: column; text-align: left; cursor: pointer; font-family: inherit; color: #2a2420; }
@@ -38,13 +45,17 @@
   @media (max-width: 560px) {
     .banner { flex-direction: column; align-items: flex-start; padding: 22px; gap: 18px; }
     h3 { font-size: 21px; }
+    .visual { flex: 0 0 auto; }
   }
 </style>
 </head>
 <body>
 <div class="banner">
   <a class="visual" href="https://www.mandarinzest.com/shop" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-    <img src="https://www.mandarinzest.com/web/image/product.template/16/image_512" alt="">
+    <span class="cover c1"><img src="cover-tocfl1.jpg" alt=""></span>
+    <span class="cover c2"><img src="cover-hsk3.jpg" alt=""></span>
+    <span class="cover c3"><img src="cover-hsk2.jpg" alt=""></span>
+    <span class="cover c4"><img src="cover-hsk1.jpg" alt=""></span>
   </a>
   <div class="text">
     <div class="eyebrow">MANDARIN ZEST MATERIALS</div>
