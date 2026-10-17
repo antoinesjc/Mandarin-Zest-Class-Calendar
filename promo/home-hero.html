@@ -3,86 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mandarin Zest: books and mascot</title>
+<title>Mandarin Zest: mascot</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
 <style>
-  /* A 480x400 scene that scales to fit any frame. Transparent background:
+  /* A 360x400 scene that scales to fit any frame. Transparent background:
      it takes the colour of the section it sits in. */
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
   body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; display: flex; align-items: center; justify-content: center; }
 
-  .stage { position: relative; width: 480px; height: 400px; flex: none; transform-origin: center center; }
-  .tilt { position: absolute; inset: 0; transition: transform .25s ease-out; transform-style: preserve-3d; }
+  .stage { position: relative; width: 360px; height: 400px; flex: none; transform-origin: center center; }
+  .tilt { position: absolute; inset: 0; transition: transform .25s ease-out; }
 
-  /* soft blob behind everything */
-  .blob { position: absolute; left: 40px; top: 50px; width: 400px; height: 320px; border-radius: 48% 52% 45% 55% / 55% 45% 55% 45%; background: #f8dacd; animation: morph 12s ease-in-out infinite; }
+  /* soft blob behind the mascot */
+  .blob { position: absolute; left: 30px; top: 110px; width: 300px; height: 250px; border-radius: 48% 52% 45% 55% / 55% 45% 55% 45%; background: #f8dacd; animation: morph 12s ease-in-out infinite; }
   @keyframes morph { 0%,100% { border-radius: 48% 52% 45% 55% / 55% 45% 55% 45%; } 50% { border-radius: 55% 45% 52% 48% / 45% 55% 45% 55%; } }
 
-  /* book covers */
-  .book {
-    position: absolute; width: 132px; height: 194px; border-radius: 9px; overflow: visible; display: block;
-    box-shadow: 0 12px 26px rgba(42,36,32,.22); cursor: pointer; text-decoration: none;
-    transition: transform .3s cubic-bezier(.2,.8,.3,1.3), box-shadow .3s; outline: none;
-    animation: float 6s ease-in-out infinite;
-  }
-  .book img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 9px; }
-  .b1 { left: 14px;  top: 86px;  --r: -12deg; animation-delay: -1s; z-index: 1; }
-  .b2 { left: 72px;  top: 62px;  --r: -5deg;  animation-delay: -3s; z-index: 2; }
-  .b3 { left: 130px; top: 70px;  --r: 3deg;   animation-delay: -2s; z-index: 3; }
-  .b4 { left: 188px; top: 92px;  --r: 10deg;  animation-delay: -4s; z-index: 4; }
-  .book { transform: rotate(var(--r)); }
-  @keyframes float { 0%,100% { translate: 0 0; } 50% { translate: 0 -8px; } }
-  .book:hover, .book:focus-visible, .book.peek {
-    transform: rotate(0deg) translateY(-26px) scale(1.08); z-index: 10;
-    box-shadow: 0 22px 40px rgba(42,36,32,.28); animation-play-state: paused;
-  }
-  .book:focus-visible { box-shadow: 0 0 0 4px #4f7a94, 0 22px 40px rgba(42,36,32,.28); }
-  .tag {
-    position: absolute; left: 50%; bottom: -16px; transform: translate(-50%, 6px); white-space: nowrap;
-    background: #2a2420; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 11px; border-radius: 999px;
-    opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none;
-  }
-  .tag b { color: #f8a77f; font-weight: 800; }
-  .book:hover .tag, .book:focus-visible .tag, .book.peek .tag { opacity: 1; transform: translate(-50%, 0); }
-
-  /* mascot + speech bubble */
+  /* mascot */
   .mascot {
-    position: absolute; right: 6px; bottom: 6px; width: 172px; z-index: 20; cursor: pointer;
+    position: absolute; left: 66px; bottom: 40px; width: 220px; z-index: 20; cursor: pointer;
     background: none; border: 0; padding: 0; animation: bob 3.2s ease-in-out infinite; transform-origin: bottom center;
+    -webkit-tap-highlight-color: transparent;
   }
   .mascot img { width: 100%; display: block; pointer-events: none; }
   .mascot:focus-visible { outline: 3px solid #4f7a94; outline-offset: 4px; border-radius: 20px; }
-  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-7px) rotate(2deg); } }
+  .mascot:hover { filter: drop-shadow(0 6px 10px rgba(42,36,32,.15)); }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
   .mascot.boing { animation: boing .5s cubic-bezier(.3,1.6,.5,1); }
   @keyframes boing { 0% { transform: scale(1); } 30% { transform: scale(1.12, .9); } 60% { transform: scale(.95, 1.06); } 100% { transform: scale(1); } }
 
+  /* speech bubble */
   .bubble {
-    position: absolute; right: 10px; bottom: 214px; z-index: 21; min-width: 128px;
-    background: #fff; border-radius: 18px 18px 18px 4px; padding: 10px 14px 9px;
+    position: absolute; left: 176px; bottom: 262px; z-index: 21; min-width: 140px;
+    background: #fff; border-radius: 20px 20px 20px 4px; padding: 11px 16px 10px;
     box-shadow: 0 10px 22px rgba(42,36,32,.16); text-align: center;
     transform-origin: bottom left; transition: transform .25s cubic-bezier(.3,1.6,.5,1), opacity .2s;
   }
   .bubble.swap { transform: scale(.6); opacity: 0; }
-  .zh { display: block; font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.1; color: #2a2420; }
-  .py { display: block; font-size: 13px; font-weight: 700; color: #c4521f; margin-top: 3px; }
-  .en { display: block; font-size: 12px; color: #6b5a50; margin-top: 1px; }
+  .zh { display: block; font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 30px; font-weight: 700; line-height: 1.1; color: #2a2420; }
+  .py { display: block; font-size: 14px; font-weight: 700; color: #c4521f; margin-top: 3px; }
+  .en { display: block; font-size: 13px; color: #6b5a50; margin-top: 1px; }
 
+  /* "tap me!" hint */
   .hint {
-    position: absolute; right: 54px; bottom: 0; z-index: 22; font-size: 12px; font-weight: 700; color: #a8431a;
-    background: rgba(255,255,255,.85); padding: 4px 10px; border-radius: 999px; transition: opacity .4s;
-    animation: nudge 2s ease-in-out infinite;
+    position: absolute; left: 0; right: 0; bottom: 6px; margin: 0 auto; width: max-content; z-index: 22;
+    font-size: 14px; font-weight: 800; color: #a8431a;
+    background: #fff; padding: 6px 14px; border-radius: 999px; box-shadow: 0 6px 14px rgba(42,36,32,.12);
+    transition: opacity .4s; animation: nudge 1.6s ease-in-out infinite; pointer-events: none;
   }
-  @keyframes nudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  .hint::before { content: ""; position: absolute; left: 50%; top: -6px; margin-left: -6px; border: 6px solid transparent; border-top: 0; border-bottom-color: #fff; }
+  @keyframes nudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
   .hint.gone { opacity: 0; }
 
   /* little sparkles */
-  .spark { position: absolute; font-family: 'Noto Sans SC', sans-serif; font-weight: 700; color: #228b22; opacity: .0; animation: drift 7s ease-in-out infinite; pointer-events: none; }
-  .s1 { left: 30px; top: 20px; font-size: 22px; animation-delay: 0s; }
-  .s2 { left: 300px; top: 10px; font-size: 18px; color: #f37a48; animation-delay: 2.3s; }
-  .s3 { left: 400px; top: 120px; font-size: 20px; animation-delay: 4.6s; }
+  .spark { position: absolute; font-family: 'Noto Sans SC', sans-serif; font-weight: 700; color: #228b22; opacity: 0; animation: drift 7s ease-in-out infinite; pointer-events: none; }
+  .s1 { left: 24px; top: 70px; font-size: 22px; animation-delay: 0s; }
+  .s2 { left: 316px; top: 196px; font-size: 18px; color: #f37a48; animation-delay: 2.3s; }
+  .s3 { left: 40px; top: 230px; font-size: 20px; animation-delay: 4.6s; }
+
+  /* hearts that pop out on tap */
+  .pop { position: absolute; z-index: 23; font-size: 20px; pointer-events: none; animation: pop .9s ease-out forwards; }
+  @keyframes pop { 0% { opacity: 0; transform: translate(0,0) scale(.4); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), -70px) scale(1.1); } }
   @keyframes drift { 0% { opacity: 0; transform: translateY(10px); } 15%, 60% { opacity: .55; } 100% { opacity: 0; transform: translateY(-24px); } }
 
   @media (prefers-reduced-motion: reduce) {
@@ -97,15 +80,6 @@
     <span class="spark s1" aria-hidden="true">学</span>
     <span class="spark s2" aria-hidden="true">好</span>
     <span class="spark s3" aria-hidden="true">中</span>
-
-    <a class="book b1" href="https://www.mandarinzest.com/shop/textbooks-3/tocfl-novice-1-beginner-mandarin-one-real-conversation-at-a-time-60" target="_blank" rel="noopener" aria-label="TOCFL Novice 1 textbook, US$15">
-      <img src="../banners/cover-tocfl1.jpg" alt=""><span class="tag">TOCFL Novice 1 · <b>US$15</b></span></a>
-    <a class="book b2" href="https://www.mandarinzest.com/shop/textbooks-3/new-hsk-3-your-chinese-journey-just-got-more-interesting-49" target="_blank" rel="noopener" aria-label="New HSK 3 textbook, US$19">
-      <img src="../banners/cover-hsk3.jpg" alt=""><span class="tag">New HSK 3 · <b>US$19</b></span></a>
-    <a class="book b3" href="https://www.mandarinzest.com/shop/textbooks-3/new-hsk-2-the-beginner-days-are-over-let-the-adventure-begin-32" target="_blank" rel="noopener" aria-label="New HSK 2 textbook, US$17">
-      <img src="../banners/cover-hsk2.jpg" alt=""><span class="tag">New HSK 2 · <b>US$17</b></span></a>
-    <a class="book b4" href="https://www.mandarinzest.com/shop/textbooks-3/new-hsk-1-a-comprehensive-introduction-to-the-chinese-language-10" target="_blank" rel="noopener" aria-label="New HSK 1 textbook, US$15">
-      <img src="../banners/cover-hsk1.jpg" alt=""><span class="tag">New HSK 1 · <b>US$15</b></span></a>
 
     <div class="bubble" id="bubble" aria-live="polite">
       <span class="zh" id="zh">你好！</span><span class="py" id="py">nǐ hǎo</span><span class="en" id="en">Hello!</span>
@@ -131,12 +105,12 @@
 
   var stage = document.getElementById("stage"), tilt = document.getElementById("tilt");
   var bubble = document.getElementById("bubble"), mascot = document.getElementById("mascot"), hint = document.getElementById("hint");
-  var i = 0, timer;
+  var i = 0, timer, taps = 0;
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Scale the scene to fit the frame.
   function fit() {
-    var s = Math.min(window.innerWidth / 480, window.innerHeight / 400);
+    var s = Math.min(window.innerWidth / 360, window.innerHeight / 400);
     stage.style.transform = "scale(" + Math.max(0.3, s) + ")";
   }
   window.addEventListener("resize", fit); fit();
@@ -154,9 +128,26 @@
   function auto() { clearInterval(timer); if (!reduce) timer = setInterval(function () { say(i + 1); }, 3200); }
   auto();
 
+  function hearts() {
+    if (reduce) return;
+    var icons = ["❤", "✨", "🍊"];
+    for (var k = 0; k < 3; k++) {
+      var h = document.createElement("span");
+      h.className = "pop"; h.setAttribute("aria-hidden", "true");
+      h.textContent = icons[(taps + k) % icons.length];
+      h.style.left = (150 + k * 26) + "px"; h.style.top = "150px";
+      h.style.setProperty("--dx", ((k - 1) * 28) + "px");
+      h.style.animationDelay = (k * 0.08) + "s";
+      tilt.appendChild(h);
+      setTimeout(function (el) { el.remove(); }, 1200, h);
+    }
+  }
+
   mascot.addEventListener("click", function () {
+    taps++;
     say(i + 1); auto();
     hint.classList.add("gone");
+    hearts();
     mascot.classList.remove("boing"); void mascot.offsetWidth; mascot.classList.add("boing");
     setTimeout(function () { mascot.classList.remove("boing"); }, 520);
   });
@@ -169,19 +160,6 @@
     });
     document.addEventListener("mouseleave", function () { tilt.style.transform = ""; });
   }
-
-  // On touch screens, the first tap on a book shows its label; the second opens it.
-  var lastPointer = "mouse";
-  document.addEventListener("pointerdown", function (e) { lastPointer = e.pointerType; }, true);
-  document.querySelectorAll(".book").forEach(function (b) {
-    b.addEventListener("click", function (e) {
-      if (lastPointer === "touch" && !b.classList.contains("peek")) {
-        e.preventDefault();
-        document.querySelectorAll(".book.peek").forEach(function (o) { o.classList.remove("peek"); });
-        b.classList.add("peek");
-      }
-    });
-  });
 </script>
 </body>
 </html>

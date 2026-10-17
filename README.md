@@ -91,9 +91,9 @@ fall overnight in Europe are listed under the US date with only the US time.
 - `promo/club.html` and `promo/bootcamps.html`: animated promo cards with
   the mascot, linking to the club page and the bootcamps page. They fill
   any frame height (use 300px); no resize script needed.
-- `promo/home-hero.html`: animated homepage hero visual (textbook covers that lift
-  and link to the shop, mascot with a speech bubble that changes when tapped).
-  Transparent background; scales to any frame (use about 480x400).
+- `promo/home-hero.html`: animated homepage hero visual (the mascot with a
+  "tap me!" hint and a speech bubble that changes when tapped).
+  Transparent background; scales to any frame (use about 360x400).
 - `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
   bootcamp page (4 in a row on desktop, swipeable on phones; use a 220px frame).
 - `taiwan-agenda.html`: the Taiwanese bootcamp agenda by weekend, with no dates
