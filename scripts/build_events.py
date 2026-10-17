@@ -123,7 +123,8 @@ def clean_title(raw: str):
         level = f"{name} {lo}-{hi}" if hi else f"{name} {lo}"
         text = text[: m.start()] + text[m.end():]
 
-    text = re.sub(r"^\s*MZ(?:\s*Club)?\b[\s:\-–·|]*", "", text, flags=re.I)  # "MZ Club - ..." / "MZ ..." prefix
+    for _ in range(3):  # "MZ Club - ...", "MZ ...", even "MZ Club MZ ..."
+        text = re.sub(r"^\s*MZ(?:\s*Club)?\b[\s:\-–·|]*", "", text, flags=re.I)
     text = re.sub(r"[(（]\s*(?:HSK|TOCFL)?\s*$", "", text, flags=re.I)   # dangling "(HSK" at the end
     text = re.sub(r"[(（]\s*[)）]", "", text)        # empty brackets left behind (incl. full-width)
     text = re.sub(r"\s{2,}", " ", text).strip(" -–·|,")
