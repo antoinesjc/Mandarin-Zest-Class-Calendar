@@ -1,3 +1,13 @@
-<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;background:#fffaf6">
-<iframe id="mz-downloads" src="http://localhost:8772/downloads.html" title="Download your guides" style="width:100%;height:300px;border:0;display:block"></iframe>
-<script>window.addEventListener("message",function(e){if(e.data&&e.data.mzDownloadsHeight)document.getElementById("mz-downloads").style.height=e.data.mzDownloadsHeight+"px";});</script></body></html>
+<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:20px;background:#fff;font-family:sans-serif;max-width:760px">
+<p>Article text above…</p>
+<iframe class="mz-banner" data-banner="shop" src="banners/shop.html" title="Mandarin Zest materials" allow="clipboard-write" style="width:100%;height:220px;border:0;display:block"></iframe>
+<p>More article text…</p>
+<iframe class="mz-banner" data-banner="club" src="banners/club.html" title="Mandarin Zest Club" style="width:100%;height:220px;border:0;display:block"></iframe>
+<p>More article text…</p>
+<iframe class="mz-banner" data-banner="start" src="banners/start-here.html" title="New to Chinese? Start here" style="width:100%;height:220px;border:0;display:block"></iframe>
+<script>
+window.addEventListener("message", function (e) {
+  if (!e.data || !e.data.mzBanner) return;
+  document.querySelectorAll('iframe[data-banner="' + e.data.mzBanner + '"]').forEach(function (f) { f.style.height = e.data.height + "px"; });
+});
+</script></body></html>

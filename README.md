@@ -83,6 +83,8 @@ fall overnight in Europe are listed under the US date with only the US time.
   file into `downloads/` with the same name.
 - `whats-inside.html`: the two free guides with covers and contents (no
   download buttons), for the Start Here page above the email form.
+- `banners/`: article banners for SEO posts: `shop.html` (WELCOME01),
+  `club.html` and `start-here.html`. All links open in a new tab.
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.

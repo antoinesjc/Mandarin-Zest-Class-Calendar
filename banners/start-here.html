@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New to Chinese? Start here</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* EDIT TEXT AND LINKS DIRECTLY IN THE HTML BELOW. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 4px; }
+  .banner {
+    max-width: 820px; margin: 0 auto; border-radius: 20px; padding: 26px 28px;
+    display: flex; gap: 26px; align-items: center;
+  }
+  .visual { flex: 0 0 150px; height: 150px; position: relative; }
+  .text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; }
+  h3 { margin: 0; font-size: 24px; font-weight: 800; line-height: 1.2; }
+  p { margin: 0; font-size: 15px; line-height: 1.5; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center; margin-top: 4px; }
+  .btn { text-decoration: none; font-weight: 800; font-size: 16px; padding: 13px 22px; border-radius: 999px; }
+  .btn:focus-visible, .code:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .side { font-size: 14px; }
+  .banner { background: #e0f4e0; }
+  .visual { display: block; }
+  .cover { position: absolute; width: 92px; height: 130px; border-radius: 7px; overflow: hidden; box-shadow: 0 6px 14px rgba(42,36,32,0.18); }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .c1 { left: 6px; top: 8px; transform: rotate(-6deg); }
+  .c2 { left: 52px; top: 14px; transform: rotate(5deg); }
+  .eyebrow { color: #1b5e1b; }
+  h3 { color: #173f17; }
+  p, .side { color: #2c4a2c; }
+  .btn { background: #1b6f1b; color: #fff; font-weight: 700; }
+  .btn:hover { background: #145514; }
+  @media (max-width: 560px) {
+    .banner { flex-direction: column; align-items: flex-start; padding: 22px; gap: 18px; }
+    h3 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+<div class="banner">
+  <a class="visual" href="https://www.mandarinzest.com/new-to-chinese-start-here" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+    <span class="cover c1"><img src="../downloads/cover-roadmap.jpg" alt=""></span>
+    <span class="cover c2"><img src="../downloads/cover-workbook.jpg" alt=""></span>
+  </a>
+  <div class="text">
+    <div class="eyebrow">FREE FOR BEGINNERS</div>
+    <h3>New to Chinese? Start here.</h3>
+    <p>Get our free 90-day roadmap and beginner workbook: what to learn first, in what order, and your first 20 characters.</p>
+    <div class="actions">
+      <a class="btn" href="https://www.mandarinzest.com/new-to-chinese-start-here" target="_blank" rel="noopener">Get the free guides</a>
+      <span class="side">2 PDFs · direct download</span>
+    </div>
+  </div>
+</div>
+<script>
+  function reportHeight() {
+    var h = Math.ceil(document.querySelector(".banner").getBoundingClientRect().bottom + 6);
+    try { parent.postMessage({ mzBanner: "start", height: h }, "*"); } catch (e) {}
+  }
+  window.addEventListener("load", reportHeight);
+  window.addEventListener("resize", reportHeight);
+  if (document.fonts) document.fonts.ready.then(reportHeight);
+
+</script>
+</body>
+</html>
