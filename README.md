@@ -100,6 +100,9 @@ fall overnight in Europe are listed under the US date with only the US time.
 - `reviews.html`: learner reviews sliding in from the side in an endless loop
   (pauses on hover or tap). Edit the REVIEWS list at the bottom of the file;
   `club: true` makes a green Club card. Use a 250px frame.
+- `our-story.html`: the founders' story as a timeline for the About us page
+  (10 years ago → 2020 → 2024 → 2026), no title. The line draws itself when
+  it scrolls into view; swipeable on phones. Use a 300px frame.
 - `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
   bootcamp page (4 in a row on desktop, swipeable on phones; use a 220px frame).
 - `taiwan-agenda.html`: the Taiwanese bootcamp agenda by weekend, with no dates
