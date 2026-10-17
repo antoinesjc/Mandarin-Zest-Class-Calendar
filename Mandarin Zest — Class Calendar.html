@@ -172,9 +172,16 @@ const CATEGORIES = {
   general:      { label: "Open Topic",      color: "#6b6559" },
 };
 
-// Trial sessions (marked #trial in Google Calendar) link here, in a new tab.
+// The orange "Try it" tag on trial sessions (marked #trial in Google Calendar) opens this page, in a new tab.
 const TRIAL_URL = "https://www.mandarinzest.com/mandarin-zest-club-trial-session";
 const TRIAL_PRICE = "US$2.50";
+// The "Join as a trial" button goes straight to Stripe checkout (same link as trial.html).
+const TRIAL_PAY_URL = "https://buy.stripe.com/cNi6oH94B8Dj6DCf0x6oo0k";
+// Tells you in Stripe which session was booked, e.g. "trial-2026-11-08T13-00-utc".
+function trialPayLink(ev) {
+  const ref = "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : "");
+  return TRIAL_PAY_URL + "?client_reference_id=" + encodeURIComponent(ref);
+}
 
 // Time zones offered in the menu (the visitor's own zone is always added on top).
 const ZONES = [
@@ -281,7 +288,7 @@ function detailsHtml(ev, compact) {
   if (ev.topic && !isTopicDup) h += `<div class="topic">${esc(ev.topic)}</div>`;
   if (ev.about) h += `<p class="about">${esc(ev.about)}</p>`;
   if (ev.host) h += `<div class="host">Host: ${esc(ev.host)}</div>`;
-  if (ev.trial) h += `<a class="cta" href="${TRIAL_URL}" target="_blank" rel="noopener">Join as a trial · ${TRIAL_PRICE} ↗</a>`;
+  if (ev.trial) h += `<a class="cta" href="${esc(trialPayLink(ev))}" target="_blank" rel="noopener">Join as a trial · ${TRIAL_PRICE} ↗</a>`;
   h += `<div class="note">Club members: your link is in the Google Calendar invite.</div>`;
   return h;
 }
