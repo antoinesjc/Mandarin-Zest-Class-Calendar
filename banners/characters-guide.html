@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unlocking Chinese Characters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* EDIT TEXT AND LINKS DIRECTLY IN THE HTML BELOW. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 4px; }
+  .banner {
+    max-width: 820px; margin: 0 auto; border-radius: 20px; padding: 26px 28px;
+    display: flex; gap: 26px; align-items: center;
+  }
+  .visual { flex: 0 0 150px; height: 150px; position: relative; }
+  .text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; }
+  h3 { margin: 0; font-size: 24px; font-weight: 800; line-height: 1.2; }
+  p { margin: 0; font-size: 15px; line-height: 1.5; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center; margin-top: 4px; }
+  .btn { text-decoration: none; font-weight: 800; font-size: 16px; padding: 13px 22px; border-radius: 999px; }
+  .btn:focus-visible, .code:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .side { font-size: 14px; }
+  .banner { background: #e6f4e3; }
+  .visual { flex: 0 0 150px; width: 150px; height: 184px; display: block; }
+  .visual img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 14px; }
+  .eyebrow { color: #1b5e1b; }
+  h3 { color: #173f17; }
+  p { color: #2c4a2c; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { background: #fff; border-radius: 999px; padding: 4px 11px; font-size: 13px; font-weight: 600; color: #2c4a2c; }
+  .price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .old { font-size: 16px; color: #5c6e5c; text-decoration: line-through; }
+  .new { font-size: 24px; font-weight: 800; color: #173f17; }
+  .with { font-size: 13px; color: #2c4a2c; }
+  .code { background: #fff; border: 2px dashed #1b6f1b; border-radius: 10px; padding: 6px 12px; display: flex; flex-direction: column; text-align: left; cursor: pointer; font-family: inherit; color: #2a2420; }
+  .code small { font-size: 11px; font-weight: 700; color: #1b5e1b; }
+  .code strong { font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: #173f17; }
+  .btn { background: #f37a48; color: #2a2420; }
+  .btn:hover { background: #e2632f; }
+  @media (max-width: 560px) {
+    .banner { flex-direction: column; align-items: flex-start; padding: 22px; gap: 18px; }
+    h3 { font-size: 21px; }
+    .visual { flex: 0 0 auto; }
+  }
+</style>
+</head>
+<body>
+<div class="banner">
+  <a class="visual" href="https://www.mandarinzest.com/shop/textbooks-3/unlocking-chinese-characters-a-guide-on-understanding-the-chinese-writing-system-26" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+    <img src="cover-characters.jpg" alt="">
+  </a>
+  <div class="text">
+    <div class="eyebrow">BEST SELLER · GUIDE</div>
+    <h3>Unlocking Chinese Characters</h3>
+    <p>Stop memorizing randomly. Understand how characters work: their history, the six types, radicals and components, and stroke order.</p>
+    <div class="chips">
+      <span class="chip">80-page guide</span><span class="chip">5 bonus resources</span><span class="chip">Instant download</span>
+    </div>
+    <div class="price"><span class="old">US$19</span><span class="new">US$17.10</span><span class="with">with your code</span></div>
+    <div class="actions">
+      <button class="code" id="code" type="button" aria-label="Copy the code WELCOME01">
+        <small id="codeLabel">10% OFF · TAP TO COPY</small>
+        <strong>WELCOME01</strong>
+      </button>
+      <a class="btn" href="https://www.mandarinzest.com/shop/textbooks-3/unlocking-chinese-characters-a-guide-on-understanding-the-chinese-writing-system-26" target="_blank" rel="noopener">Get the guide</a>
+    </div>
+  </div>
+</div>
+<script>
+  function reportHeight() {
+    var h = Math.ceil(document.querySelector(".banner").getBoundingClientRect().bottom + 6);
+    try { parent.postMessage({ mzBanner: "characters", height: h }, "*"); } catch (e) {}
+  }
+  window.addEventListener("load", reportHeight);
+  window.addEventListener("resize", reportHeight);
+  if (document.fonts) document.fonts.ready.then(reportHeight);
+  var label = document.getElementById("codeLabel");
+  document.getElementById("code").addEventListener("click", function () {
+    try {
+      navigator.clipboard.writeText("WELCOME01").then(function () {
+        label.textContent = "COPIED!";
+        setTimeout(function () { label.textContent = "10% OFF · TAP TO COPY"; }, 1800);
+      }, function () {});
+    } catch (e) {}
+  });
+</script>
+</body>
+</html>
