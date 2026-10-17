@@ -6,323 +6,409 @@
 <title>Mandarin Zest — Class Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+  /* Club session calendar. Times are shown in the visitor's own time zone.
+     Desktop/tablet: month grid, hover (or tap) a session to see details.
+     Phones: list of the month's sessions, tap to expand. Use a 960px frame. */
   :root {
     color-scheme: light;
-    --ink: #211f1a;
-    --paper: #ffffff;
-    --jade: #3f6d5e;
-    --jade-soft: #dde6e1;
-    --seal: #a63d2f;
-    --sand-soft: #ecdfc2;
-    --sky-soft: #e4e9dc;
-    --line: #d9d0bc;
-    --muted: #7a7364;
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --ink: #2a2420; --muted: #6b5a50; --soft: #8a7d74; --line: #efe3db;
+    --orange: #f37a48; --peach: #fdf1ea; --green: #1b6f1b; --mint: #e0f4e0;
   }
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    padding: 28px 16px 40px;
-  }
-  .wrap { max-width: 900px; margin: 0 auto; }
+  html, body { margin: 0; background: #fff; }
+  body { color: var(--ink); font-family: 'Outfit', system-ui, -apple-system, sans-serif; padding: 16px 16px 20px; }
+  .wrap { max-width: 1160px; margin: 0 auto; }
 
-  .head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 14px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
+  /* header */
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; margin-bottom: 12px; }
+  .nav { display: flex; align-items: center; gap: 10px; }
+  .month { font-size: 30px; font-weight: 800; min-width: 220px; text-align: center; }
+  .round, .today-btn {
+    font-family: inherit; color: var(--ink); background: #fff; border: 1.5px solid #e3d3c9; cursor: pointer;
+    height: 42px; transition: border-color .15s, background .15s;
   }
-  .head-title { display: flex; align-items: baseline; gap: 10px; }
-  .head-title .cn {
-    font-family: 'Noto Serif TC', serif;
-    font-weight: 700;
-    font-size: 26px;
-    color: var(--seal);
-  }
-  .head-title .en {
-    font-family: 'Noto Serif TC', serif;
-    font-weight: 500;
-    font-size: 21px;
-  }
-  .nav { display: flex; align-items: center; gap: 6px; }
-  .nav button {
-    font-family: inherit;
-    font-size: 15px;
-    background: none;
-    border: 1px solid var(--line);
-    color: var(--ink);
-    width: 34px; height: 34px;
-    cursor: pointer;
-  }
-  .nav button:hover { border-color: var(--jade); color: var(--jade); }
-  .nav button:focus-visible { outline: 2px solid var(--jade); outline-offset: 1px; }
-  .nav .today-btn {
-    width: auto; padding: 0 12px;
-    font-size: 13px;
+  .round { width: 42px; border-radius: 50%; font-size: 20px; line-height: 1; }
+  .today-btn { border-radius: 999px; padding: 0 16px; font-size: 14px; font-weight: 700; }
+  .round:hover, .today-btn:hover { border-color: var(--orange); background: var(--peach); }
+  button:focus-visible, select:focus-visible, .card:focus-visible, a:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
+
+  .tz { display: inline-flex; align-items: center; gap: 8px; background: var(--mint); color: #173f17; border-radius: 999px; padding: 0 6px 0 14px; height: 42px; font-size: 14px; font-weight: 700; }
+  .tz svg { flex: none; }
+  .tz select {
+    font-family: inherit; font-size: 14px; font-weight: 700; color: #173f17; background: #fff; border: 0; border-radius: 999px;
+    height: 32px; padding: 0 10px; cursor: pointer; max-width: 300px;
   }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    border-top: 1px solid var(--line);
-    border-left: 1px solid var(--line);
-  }
-  .dow {
-    text-align: center;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    padding: 8px 4px;
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .cell {
-    min-height: 96px;
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .cell.empty { background: repeating-linear-gradient(135deg, transparent, transparent 8px, var(--line) 8px, var(--line) 9px); opacity: 0.35; }
-  .daynum {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--muted);
-    align-self: flex-start;
-  }
-  .cell.is-today .daynum {
-    color: var(--paper);
-    background: var(--seal);
-    width: 20px; height: 20px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px;
-  }
-  .pill {
-    font-size: 11px;
-    line-height: 1.3;
-    padding: 3px 5px;
-    cursor: default;
-  }
-  .pill .t { font-weight: 700; display: block; }
-  .pill .lvl { font-weight: 500; opacity: 0.8; }
-  .pill .times { display: block; color: var(--muted); font-size: 10px; margin-top: 1px; }
-  .more-btn {
-    font-size: 10px;
-    color: var(--jade);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    padding: 0;
-    font-family: inherit;
-  }
-  .pill {
-    border-left: 3px solid var(--cat, var(--jade));
-    background: color-mix(in srgb, var(--cat, var(--jade)) 16%, var(--paper));
-  }
-  .pill .t { color: var(--cat, var(--ink)); }
+  /* month grid */
+  .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .dow { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--soft); padding: 0 6px 8px; }
+  .cell { min-height: 104px; border-top: 1px solid var(--line); padding: 5px 4px 7px; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .cell.out { background: #fcf9f7; }
+  .cell.out .num { color: #cfc3ba; }
+  .cell.past .card { opacity: .5; }
+  .num { font-size: 13px; font-weight: 700; color: var(--muted); height: 22px; display: flex; align-items: center; }
+  .cell.today .num { background: var(--orange); color: #fff; border-radius: 999px; width: 26px; height: 26px; justify-content: center; font-weight: 800; }
 
-  .legend {
-    display: flex; flex-wrap: wrap; gap: 14px;
-    margin-top: 16px; font-size: 12px; color: var(--muted);
+  /* session card */
+  .card {
+    position: relative; border-radius: 11px; padding: 6px 8px 7px; background: var(--tint); cursor: pointer;
+    display: flex; flex-direction: column; gap: 2px; min-width: 0; transition: transform .15s, box-shadow .15s;
   }
-  .legend span { display: flex; align-items: center; gap: 6px; }
-  .swatch { width: 10px; height: 10px; display: inline-block; }
+  .card:hover, .card.open { box-shadow: 0 0 0 2px var(--cat); transform: translateY(-1px); }
+  .card .time { font-size: 14.5px; font-weight: 800; color: var(--cat); }
+  .card .title { font-size: 13.5px; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+  .lvl { font-size: 11.5px; font-weight: 700; color: var(--cat); background: #fff; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+  .trial-tag {
+    font-size: 11.5px; font-weight: 800; color: var(--ink); background: var(--orange); border-radius: 999px; padding: 2px 9px;
+    text-decoration: none; white-space: nowrap; transition: background .15s;
+  }
+  .trial-tag:hover { background: #e2632f; color: var(--ink); }
 
-  .empty-month {
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-    padding: 30px 0 6px;
+  /* floating details (desktop) */
+  .pop {
+    position: absolute; z-index: 20; width: 330px; background: #fff; border-radius: 18px; border: 2px solid var(--cat);
+    box-shadow: 0 24px 50px rgba(42,36,32,.22); padding: 18px 20px; display: none; flex-direction: column; gap: 9px;
   }
+  .pop.show { display: flex; animation: popin .16s ease-out; }
+  @keyframes popin { from { opacity: 0; transform: translateY(6px) scale(.98); } }
+  .pop .row1 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .badge { font-size: 12px; font-weight: 800; color: #fff; background: var(--cat); border-radius: 999px; padding: 3px 10px; }
+  .pop .day { font-size: 13px; color: var(--muted); }
+  .pop h3 { margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2; }
+  .when { font-size: 15px; font-weight: 700; color: var(--cat); }
+  .when span { font-weight: 500; color: var(--muted); }
+  .topic { font-size: 14.5px; font-weight: 700; line-height: 1.4; }
+  .about { margin: 0; font-size: 14.5px; line-height: 1.55; color: #4a3c34; }
+  .host { font-size: 13px; color: var(--muted); }
+  .cta { margin-top: 4px; text-align: center; background: var(--orange); color: var(--ink); font-weight: 800; font-size: 15px; padding: 12px; border-radius: 999px; text-decoration: none; }
+  .cta:hover { background: #e2632f; color: var(--ink); }
+  .note { font-size: 12.5px; color: var(--soft); text-align: center; }
+  .close { position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border: 0; background: none; font-size: 20px; color: var(--soft); cursor: pointer; border-radius: 50%; display: none; }
 
-  @media (max-width: 640px) {
-    .cell { min-height: 74px; padding: 4px; }
-    .pill { font-size: 10px; }
-    .head-title .en { font-size: 17px; }
-    .head-title .cn { font-size: 20px; }
-    .dow { font-size: 10px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; font-size: 13.5px; color: #5c4f47; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .legend i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
+  .legend .t { width: auto; height: auto; font-style: normal; font-size: 11px; font-weight: 800; background: var(--orange); color: var(--ink); border-radius: 999px; padding: 1px 7px; }
+
+  .empty-month { text-align: center; color: var(--muted); font-size: 15px; padding: 30px 0 6px; }
+
+  /* phones: list view */
+  .list { display: none; flex-direction: column; gap: 14px; }
+  .lday { display: flex; gap: 12px; }
+  .lday .d { width: 44px; flex: none; text-align: center; padding-top: 4px; }
+  .lday .d small { display: block; font-size: 11px; font-weight: 800; color: var(--soft); letter-spacing: .06em; }
+  .lday .d b { display: block; font-size: 22px; font-weight: 800; }
+  .lday.today .d b { color: var(--orange); }
+  .lday.past { opacity: .5; }
+  .litems { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .litems .card { padding: 10px 12px 11px; }
+  .litems .card .title { font-size: 15px; }
+  .more { display: none; flex-direction: column; gap: 8px; padding-top: 8px; margin-top: 6px; border-top: 1px solid rgba(42,36,32,.1); }
+  .card.open .more { display: flex; }
+  .earlier { font-family: inherit; font-size: 14px; font-weight: 700; color: var(--muted); background: #faf6f3; border: 1.5px dashed #e3d3c9; border-radius: 12px; padding: 10px; cursor: pointer; }
+  .lday.hidden { display: none; }
+
+  @media (max-width: 1000px) {
+    .month { font-size: 26px; min-width: 180px; }
+    .card .title { font-size: 12.5px; } .card .time { font-size: 13.5px; }
   }
+  @media (max-width: 700px) {
+    body { padding: 14px 14px 24px; }
+    .head { justify-content: center; }
+    .nav { width: 100%; justify-content: space-between; }
+    .month { font-size: 23px; min-width: 0; }
+    .today-btn { display: none; }
+    .tz { width: 100%; justify-content: space-between; }
+    .tz #tzLabel { font-size: 13px; }
+    .tz select { max-width: 60%; }
+    .grid { display: none; }
+    .list { display: flex; }
+    .pop { display: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="head">
-    <div class="head-title">
-      <span class="cn" id="cnMonth">十月</span>
-      <span class="en" id="enMonth">October 2026</span>
-    </div>
     <div class="nav">
-      <button id="prevBtn" aria-label="Previous month">&#8592;</button>
+      <button class="round" id="prevBtn" aria-label="Previous month">‹</button>
+      <div class="month" id="monthName" aria-live="polite">October 2026</div>
+      <button class="round" id="nextBtn" aria-label="Next month">›</button>
       <button class="today-btn" id="todayBtn">Today</button>
-      <button id="nextBtn" aria-label="Next month">&#8594;</button>
     </div>
+    <label class="tz">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <span id="tzLabel">Times in your time zone</span>
+      <select id="tzSelect" aria-label="Time zone used for session times"></select>
+    </label>
   </div>
 
   <div class="grid" id="grid"></div>
+  <div class="list" id="list"></div>
   <div class="empty-month" id="emptyMsg" style="display:none;">No sessions scheduled yet for this month. Check back soon.</div>
 
   <div class="legend" id="legend"></div>
 </div>
 
+<div class="pop" id="pop" role="dialog" aria-live="polite"></div>
+
 <script>
 /* ============================================================
-   EDIT YOUR COLORS HERE.
-   Change any hex code below and both the calendar pills and the
-   legend update automatically — nothing else to touch.
-   To rename a category, change its "label". To add a brand new
-   category, copy a line and give it a new key (e.g. "culture"),
-   then use that key as the "cat" on any event further down.
+   EDIT YOUR COLORS HERE. Change a hex code and the cards and the
+   legend update automatically. The keys must match the categories
+   in scripts/build_events.py.
    ============================================================ */
 const CATEGORIES = {
-  advanced:     { label: "Advanced",       color: "#3f6d5e" },
-  intermediate: { label: "Intermediate",   color: "#4f7a94" },
-  beginner:     { label: "Beginner",       color: "#b98a3d" },
-  native:       { label: "Native Teacher", color: "#a63d2f" },
+  advanced:     { label: "Advanced",        color: "#3f6d5e" },
+  intermediate: { label: "Intermediate",    color: "#4f7a94" },
+  beginner:     { label: "Beginner",        color: "#a8741f" },
+  native:       { label: "Native Teacher",  color: "#a63d2f" },
   character:    { label: "Character Focus", color: "#7d5a8c" },
-  general:      { label: "Open Topic",     color: "#6b6559" },
+  general:      { label: "Open Topic",      color: "#6b6559" },
 };
 
+// Trial sessions (marked #trial in Google Calendar) link here, in a new tab.
+const TRIAL_URL = "https://www.mandarinzest.com/mandarin-zest-club-trial-session";
+const TRIAL_PRICE = "US$2.50";
+
+// Time zones offered in the menu (the visitor's own zone is always added on top).
+const ZONES = [
+  ["America/Los_Angeles", "Los Angeles"], ["America/Chicago", "Chicago"], ["America/New_York", "New York"],
+  ["America/Sao_Paulo", "São Paulo"], ["Europe/London", "London"], ["Europe/Brussels", "Brussels / Paris / Berlin"],
+  ["Europe/Warsaw", "Warsaw"], ["Asia/Dubai", "Dubai"], ["Asia/Kolkata", "India"], ["Asia/Singapore", "Singapore"],
+  ["Asia/Taipei", "Taipei"], ["Asia/Shanghai", "Beijing / Shanghai"], ["Asia/Tokyo", "Tokyo"], ["Australia/Sydney", "Sydney"],
+];
+
 /* ============================================================
-   SESSIONS ARE NO LONGER TYPED HERE.
-   They come from events.json, which a GitHub Action rebuilds every
-   6 hours from the private Google Calendar (Meet links stripped).
-   Hosts just add sessions to Google Calendar. See README.md.
+   Sessions come from events.json, rebuilt every 6 hours from the
+   private Google Calendar (no Meet links). See README.md.
    ============================================================ */
 let EVENTS = [];
-
-// Open on the current month, or on next month if today is the last day
-// of the month (so visitors see the upcoming sessions).
-const _now = new Date();
-const _isLastDay = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate() + 1).getDate() === 1;
-let viewYear = _now.getFullYear();
-let viewMonth = _now.getMonth() + (_isLastDay ? 1 : 0);
-if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-
-const FLAG = { eu: "\u{1F1EA}\u{1F1FA}", us: "\u{1F1FA}\u{1F1F8}" };
-const CN_MONTHS = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
 const EN_MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-function pad(n){ return String(n).padStart(2,"0"); }
+/* ---------- time zone ---------- */
+let detected = "UTC";
+try { detected = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch (e) {}
+let TZ = detected;
+try { const saved = localStorage.getItem("mzTz"); if (saved) { new Intl.DateTimeFormat("en", { timeZone: saved }); TZ = saved; } } catch (e) {}
 
-function render(){
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-  document.getElementById("cnMonth").textContent = CN_MONTHS[viewMonth];
-  document.getElementById("enMonth").textContent = EN_MONTHS[viewMonth] + " " + viewYear;
+function cityOf(zone) {
+  const known = ZONES.find(z => z[0] === zone);
+  return known ? known[1] : zone.split("/").pop().replace(/_/g, " ");
+}
+function shortName(zone, date) {
+  try {
+    const p = new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "short" }).formatToParts(date || new Date());
+    return (p.find(x => x.type === "timeZoneName") || {}).value || "";
+  } catch (e) { return ""; }
+}
+function buildTzMenu() {
+  const sel = $("tzSelect");
+  const list = ZONES.slice();
+  if (!list.some(z => z[0] === detected)) list.unshift([detected, cityOf(detected)]);
+  if (!list.some(z => z[0] === TZ)) list.unshift([TZ, cityOf(TZ)]);
+  sel.innerHTML = list.map(([z, name]) =>
+    `<option value="${esc(z)}"${z === TZ ? " selected" : ""}>${esc(name)} (${esc(shortName(z))})${z === detected ? " · yours" : ""}</option>`).join("");
+  const small = window.matchMedia("(max-width: 700px)").matches;
+  $("tzLabel").textContent = TZ === detected ? (small ? "Your time zone" : "Times in your time zone") : "Times shown for";
+}
+$("tzSelect").addEventListener("change", e => {
+  TZ = e.target.value;
+  try { localStorage.setItem("mzTz", TZ); } catch (err) {}
+  buildTzMenu(); render();
+});
 
-  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
-    const el = document.createElement("div");
-    el.className = "dow";
-    el.textContent = d;
-    grid.appendChild(el);
-  });
+// Date parts of an instant in the chosen zone.
+function partsIn(date) {
+  const p = {};
+  new Intl.DateTimeFormat("en-US", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit", weekday: "short" })
+    .formatToParts(date).forEach(x => p[x.type] = x.value);
+  return { key: `${p.year}-${p.month}-${p.day}`, y: +p.year, m: +p.month - 1, d: +p.day, wd: p.weekday };
+}
+const clock = d => new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(d);
 
-  const firstDow = new Date(viewYear, viewMonth, 1).getDay();
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const todayStr = `${_now.getFullYear()}-${pad(_now.getMonth()+1)}-${pad(_now.getDate())}`;
-  let hasAny = false;
+/* ---------- events in the chosen zone ---------- */
+function localEvents() {
+  return EVENTS.map(ev => {
+    if (!ev.start) return Object.assign({}, ev, { key: ev.date, time: "All day", sort: ev.date });
+    const s = new Date(ev.start), e = ev.end ? new Date(ev.end) : null;
+    return Object.assign({}, ev, { key: partsIn(s).key, startD: s, endD: e, time: clock(s), sort: ev.start });
+  }).sort((a, b) => a.sort < b.sort ? -1 : a.sort > b.sort ? 1 : 0);
+}
 
-  for (let i = 0; i < firstDow; i++) {
-    const el = document.createElement("div");
-    el.className = "cell empty";
-    grid.appendChild(el);
+const now = new Date();
+const todayP = partsIn(now);
+let viewYear = todayP.y, viewMonth = todayP.m;
+// On the last day of the month, open on next month so visitors see what's coming.
+if (new Date(Date.UTC(todayP.y, todayP.m, todayP.d + 1)).getUTCDate() === 1) { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } }
+
+function catOf(ev) { return CATEGORIES[ev.cat] || CATEGORIES.general; }
+function tint(hex, a) {
+  const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  const m = c => Math.round(c * a + 255 * (1 - a));
+  return `rgb(${m(r)},${m(g)},${m(b)})`;
+}
+
+function cardHtml(ev, withMore) {
+  const c = catOf(ev);
+  const chips = (ev.level ? `<span class="lvl">${esc(ev.level)}</span>` : "") +
+    (ev.trial ? `<a class="trial-tag" href="${TRIAL_URL}" target="_blank" rel="noopener" title="Open to non-members: book a trial seat">Try it · ${TRIAL_PRICE} ↗</a>` : "");
+  return `<div class="card" tabindex="0" role="button" aria-expanded="false" data-i="${ev.idx}" style="--cat:${c.color};--tint:${tint(c.color, .13)}">
+    <span class="time">${esc(ev.time)}</span>
+    <span class="title">${esc(ev.title)}</span>
+    ${chips ? `<span class="chips">${chips}</span>` : ""}
+    ${withMore ? `<div class="more">${detailsHtml(ev, true)}</div>` : ""}
+  </div>`;
+}
+
+function detailsHtml(ev, compact) {
+  let when = "";
+  if (ev.startD) {
+    when = `${clock(ev.startD)}${ev.endD ? " – " + clock(ev.endD) : ""} <span>${esc(shortName(TZ, ev.startD))}</span>`;
   }
+  const isTopicDup = ev.topic && ev.topic.toLowerCase() === String(ev.title).toLowerCase();
+  let h = "";
+  if (!compact && when) h += `<div class="when">${when}</div>`;
+  if (ev.topic && !isTopicDup) h += `<div class="topic">${esc(ev.topic)}</div>`;
+  if (ev.about) h += `<p class="about">${esc(ev.about)}</p>`;
+  if (ev.host) h += `<div class="host">Host: ${esc(ev.host)}</div>`;
+  if (ev.trial) h += `<a class="cta" href="${TRIAL_URL}" target="_blank" rel="noopener">Join as a trial · ${TRIAL_PRICE} ↗</a>`;
+  h += `<div class="note">Club members: your link is in the Google Calendar invite.</div>`;
+  return h;
+}
 
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `${viewYear}-${pad(viewMonth+1)}-${pad(day)}`;
-    const cell = document.createElement("div");
-    cell.className = "cell";
-    if (dateStr === todayStr) cell.classList.add("is-today");
+let SHOWN = [];
 
-    const num = document.createElement("div");
-    num.className = "daynum";
-    num.textContent = day;
-    cell.appendChild(num);
+function render() {
+  hidePop();
+  $("monthName").textContent = `${EN_MONTHS[viewMonth]} ${viewYear}`;
+  const all = localEvents();
+  const monthKey = `${viewYear}-${pad(viewMonth + 1)}`;
+  const byDay = {};
+  all.forEach((e, i) => { e.idx = i; (byDay[e.key] = byDay[e.key] || []).push(e); });
+  SHOWN = all;
 
-    const dayEvents = EVENTS.filter(e => e.date === dateStr);
-    if (dayEvents.length) hasAny = true;
-
-    const shown = dayEvents.slice(0, 2);
-    shown.forEach(ev => cell.appendChild(buildPill(ev)));
-
-    if (dayEvents.length > 2) {
-      const extra = dayEvents.slice(2);
-      const btn = document.createElement("button");
-      btn.className = "more-btn";
-      btn.textContent = `+${extra.length} more`;
-      btn.addEventListener("click", () => {
-        extra.forEach(ev => cell.insertBefore(buildPill(ev), btn));
-        btn.remove();
-      });
-      cell.appendChild(btn);
-    }
-
-    grid.appendChild(cell);
+  // grid (weeks start on Monday)
+  const first = new Date(Date.UTC(viewYear, viewMonth, 1));
+  const lead = (first.getUTCDay() + 6) % 7;
+  const daysIn = new Date(Date.UTC(viewYear, viewMonth + 1, 0)).getUTCDate();
+  const weeks = Math.ceil((lead + daysIn) / 7);
+  let g = DOW.map(d => `<div class="dow">${d}</div>`).join("");
+  for (let i = 0; i < weeks * 7; i++) {
+    const d = new Date(Date.UTC(viewYear, viewMonth, 1 - lead + i));
+    const key = `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+    const cls = ["cell"];
+    if (d.getUTCMonth() !== viewMonth) cls.push("out");
+    if (key === todayP.key) cls.push("today");
+    if (key < todayP.key) cls.push("past");
+    g += `<div class="${cls.join(" ")}"><span class="num">${d.getUTCDate()}</span>${(byDay[key] || []).map(e => cardHtml(e, false)).join("")}</div>`;
   }
+  $("grid").innerHTML = g;
 
-  document.getElementById("emptyMsg").style.display = hasAny ? "none" : "block";
+  // list (phones): this month's days with sessions
+  const days = Object.keys(byDay).filter(k => k.slice(0, 7) === monthKey).sort();
+  const pastDays = (monthKey === todayP.key.slice(0, 7)) ? days.filter(k => k < todayP.key) : [];
+  $("list").innerHTML = (pastDays.length ? `<button class="earlier" id="earlierBtn" type="button">Show earlier sessions this month (${pastDays.length} day${pastDays.length > 1 ? "s" : ""})</button>` : "") + days.map(k => {
+    const d = new Date(Date.UTC(+k.slice(0, 4), +k.slice(5, 7) - 1, +k.slice(8, 10)));
+    const wd = ["SUN","MON","TUE","WED","THU","FRI","SAT"][d.getUTCDay()];
+    const cls = ["lday"]; if (k === todayP.key) cls.push("today"); if (k < todayP.key) cls.push("past");
+    if (pastDays.indexOf(k) > -1) cls.push("hidden");
+    return `<div class="${cls.join(" ")}"><div class="d"><small>${wd}</small><b>${d.getUTCDate()}</b></div>
+      <div class="litems">${byDay[k].map(e => cardHtml(e, true)).join("")}</div></div>`;
+  }).join("");
+
+  const eb = $("earlierBtn");
+  if (eb) eb.addEventListener("click", () => { document.querySelectorAll(".lday.hidden").forEach(x => x.classList.remove("hidden")); eb.remove(); });
+  $("emptyMsg").style.display = days.length ? "none" : "block";
 }
 
-function esc(v){
-  return String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
+/* ---------- details: hover / focus / tap ---------- */
+const pop = $("pop");
+let popFor = null, hideTimer = null;
+const isList = () => window.matchMedia("(max-width: 700px)").matches;
 
-function buildPill(ev){
-  const pill = document.createElement("div");
-  pill.className = "pill";
-  const cat = CATEGORIES[ev.cat];
-  if (cat) pill.style.setProperty("--cat", cat.color);
-  const timesHtml = (ev.times || []).map(t => `${FLAG[t.flag] || ""} ${esc(t.time)}`).join(" · ");
-  pill.innerHTML =
-    `<span class="t">${esc(ev.title)}${ev.level ? ` <span class="lvl">(${esc(ev.level)})</span>` : ""}</span>` +
-    (timesHtml ? `<span class="times">${timesHtml}</span>` : "");
-  return pill;
+function showPop(card) {
+  clearTimeout(hideTimer);
+  if (isList()) return;
+  const ev = SHOWN[+card.dataset.i]; if (!ev) return;
+  const c = catOf(ev);
+  document.querySelectorAll(".grid .card.open").forEach(x => { x.classList.remove("open"); x.setAttribute("aria-expanded", "false"); });
+  card.classList.add("open"); card.setAttribute("aria-expanded", "true");
+  const dayName = ev.startD ? new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric", month: "short" }).format(ev.startD) : ev.date;
+  pop.style.setProperty("--cat", c.color);
+  pop.innerHTML = `<div class="row1"><span class="badge">${esc(c.label)}</span>${ev.level ? `<span class="badge" style="background:#fff;color:${c.color};border:1.5px solid ${c.color}">${esc(ev.level)}</span>` : ""}<span class="day">${esc(dayName)}</span></div>
+    <h3>${esc(ev.title)}</h3>${detailsHtml(ev, false)}`;
+  pop.classList.add("show");
+  popFor = card;
+  // place it beside the card, inside the frame
+  const r = card.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+  const sx = window.scrollX, sy = window.scrollY, vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  let left = r.right + 10;
+  if (left + pw > vw - 8) left = r.left - pw - 10;
+  if (left < 8) left = Math.max(8, Math.min(vw - pw - 8, r.left));
+  let top = r.top - 10;
+  if (top + ph > vh - 8) top = vh - ph - 8;
+  if (top < 8) top = 8;
+  pop.style.left = (left + sx) + "px"; pop.style.top = (top + sy) + "px";
 }
-
-function renderLegend(){
-  const legend = document.getElementById("legend");
-  legend.innerHTML = Object.values(CATEGORIES).map(c =>
-    `<span><i class="swatch" style="background:color-mix(in srgb, ${c.color} 30%, var(--paper));border-left:3px solid ${c.color}"></i>${c.label}</span>`
-  ).join("");
+function hidePop() {
+  pop.classList.remove("show");
+  if (popFor) { popFor.classList.remove("open"); popFor.setAttribute("aria-expanded", "false"); }
+  popFor = null;
 }
-renderLegend();
+const hideSoon = () => { clearTimeout(hideTimer); hideTimer = setTimeout(hidePop, 220); };
 
-document.getElementById("prevBtn").addEventListener("click", () => {
-  viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-  render();
+document.addEventListener("mouseover", e => {
+  const card = e.target.closest(".grid .card");
+  if (card && card !== popFor) showPop(card);
+  else if (card || e.target.closest("#pop")) clearTimeout(hideTimer);
 });
-document.getElementById("nextBtn").addEventListener("click", () => {
-  viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-  render();
+document.addEventListener("mouseout", e => {
+  if (e.target.closest(".grid .card, #pop") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".grid .card, #pop"))) hideSoon();
 });
-document.getElementById("todayBtn").addEventListener("click", () => {
-  const now = new Date();
-  viewYear = now.getFullYear(); viewMonth = now.getMonth();
-  render();
+document.addEventListener("click", e => {
+  if (e.target.closest("a")) return;                // trial tag / buttons open their link
+  const card = e.target.closest(".card");
+  if (card && isList()) {
+    const open = !card.classList.contains("open");
+    card.classList.toggle("open", open); card.setAttribute("aria-expanded", String(open));
+    return;
+  }
+  if (card) { card === popFor ? hidePop() : showPop(card); return; }
+  if (!e.target.closest("#pop")) hidePop();
 });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") hidePop();
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("card")) { e.preventDefault(); e.target.click(); }
+});
+document.addEventListener("focusin", e => { const card = e.target.closest && e.target.closest(".grid .card"); if (card && !isList()) showPop(card); });
+window.addEventListener("resize", hidePop);
 
+/* ---------- legend + navigation ---------- */
+$("legend").innerHTML = Object.values(CATEGORIES).map(c =>
+  `<span><i style="background:${c.color}"></i>${esc(c.label)}</span>`).join("") +
+  `<span><i class="t">Try it</i>Open to non-members (trial)</span>`;
+
+$("prevBtn").addEventListener("click", () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } render(); });
+$("nextBtn").addEventListener("click", () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } render(); });
+$("todayBtn").addEventListener("click", () => { viewYear = todayP.y; viewMonth = todayP.m; render(); });
+
+buildTzMenu();
 render();
 fetch("events.json", { cache: "no-cache" })
   .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(data => { EVENTS = Array.isArray(data.events) ? data.events : []; render(); })
   .catch(() => {
-    const msg = document.getElementById("emptyMsg");
+    const msg = $("emptyMsg");
     msg.textContent = "The session calendar couldn't load right now. Please refresh in a moment.";
     msg.style.display = "block";
   });

@@ -40,6 +40,25 @@ To keep an event off the public calendar, add `#hide` to its title or set
 its visibility to *Private* in Google Calendar. Cancelled events are
 skipped automatically.
 
+### What visitors see when they open a session
+
+Hovering (or tapping) a session on the website shows its time in the
+visitor's own time zone, plus anything you choose to publish from the
+description. Only these lines are ever read from the description:
+
+```
+Topic: Ordering bubble tea like a local
+About: We'll practise menu words and role-play ordering at a tea shop.
+Bring your own drink!
+Host: Dorota
+```
+
+- `About:` can run over several lines; it stops at the first empty line or
+  at the next `Something:` line.
+- Links, emails, phone numbers and the Google Meet details are never
+  published. Anything you don't put after `Topic:`, `About:` or `Host:`
+  stays private.
+
 ### Trial sessions
 
 Keep the session name as usual and write `#trial` in the event
@@ -59,13 +78,15 @@ link set at the top of `trial.html`, and adds the session to it
 (`client_reference_id`, e.g. `trial-2026-11-08T13-00-utc`, in UTC) so each
 payment in Stripe shows which session was booked.
 
-Times are shown in Europe (CET/CEST) and US Eastern time. Sessions that
-fall overnight in Europe are listed under the US date with only the US time.
+On the calendar, times are shown in each visitor's own time zone (they can
+switch it in the menu at the top). Trial sessions get an orange "Try it" tag
+that opens the trial page in a new tab.
 
 ## Files
 
-- `Mandarin Zest — Class Calendar.html`: the page (colours and category
-  names are at the top of its script).
+- `Mandarin Zest — Class Calendar.html`: the page (colours, category names,
+  the trial page link and the time zone menu are at the top of its script).
+  Use a 1060px frame.
 - `next-sessions.html`: a small strip showing the next session in the
   visitor's own time zone, for the club landing page. Options in the URL:
   `?count=3` (1 to 6 sessions, default 1), `&bg=f8dacd` (background colour; default
