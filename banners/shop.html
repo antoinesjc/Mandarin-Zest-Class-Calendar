@@ -10,9 +10,10 @@
 <style>
   /* EDIT TEXT AND LINKS DIRECTLY IN THE HTML BELOW. */
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: transparent; }
+  html, body { margin: 0; background: transparent; height: 100%; }
   body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 4px; }
   .banner {
+    min-height: 100%;
     max-width: 820px; margin: 0 auto; border-radius: 20px; padding: 26px 28px;
     display: flex; gap: 26px; align-items: center;
   }
@@ -46,6 +47,19 @@
     .banner { flex-direction: column; align-items: flex-start; padding: 22px; gap: 18px; }
     h3 { font-size: 21px; }
     .visual { flex: 0 0 auto; }
+  }
+  @media (max-width: 680px) {
+    .visual { display: none !important; }
+    .banner { padding: 18px 20px; gap: 14px; }
+    .text { gap: 8px; }
+    h3 { font-size: 20px; }
+    p { font-size: 14px; }
+  }
+  @media (max-width: 440px) {
+    .btn { font-size: 15px; padding: 11px 16px; }
+    .code strong { font-size: 16px; }
+    .code small { font-size: 10px; }
+    .actions { gap: 10px; }
   }
 </style>
 </head>
