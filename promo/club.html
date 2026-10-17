@@ -94,7 +94,19 @@
     p { font-size: 14px; max-width: none; }
     .btn { margin-top: 6px; }
   }
-  @media (max-width: 300px) { .visual { width: 76px; } .mascot { width: 76px; } h3 { font-size: 22px; } .live { font-size: 11px; } }
+  .short { display: none; }
+  .btn { white-space: nowrap; }
+  @media (max-width: 320px) {
+    .card { padding: 16px 16px; }
+    .text { gap: 7px; }
+    .long { display: none; } .short { display: inline; }
+    h3 { font-size: 21px; }
+    .hl { padding: 0 6px; }
+    p { font-size: 13.5px; line-height: 1.4; }
+    .btn { font-size: 14px; padding: 10px 16px; margin-top: 4px; }
+    .visual { width: 70px; height: 80px; right: -4px; bottom: -6px; }
+    .mascot { width: 70px; }
+  }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -106,9 +118,9 @@
 <body>
 <a class="card" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" aria-label="Mandarin Zest Club: join live speaking sessions">
   <div class="text">
-    <span class="live"><span class="dot" aria-hidden="true"></span>LIVE SESSIONS EVERY WEEK</span>
+    <span class="live"><span class="dot" aria-hidden="true"></span><span>LIVE<span class="long"> SESSIONS EVERY WEEK</span><span class="short"> EVERY WEEK</span></span></span>
     <h3>Practice makes <span class="hl">perfect.</span></h3>
-    <p>A supportive place that turns your fears into confidence. All levels welcome.</p>
+    <p>A supportive place that turns your fears into confidence.<span class="long"> All levels welcome.</span></p>
     <span class="btn">Join the Club <span class="arrow" aria-hidden="true">→</span></span>
   </div>
   <div class="visual" aria-hidden="true">
