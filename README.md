@@ -100,7 +100,7 @@ fall overnight in Europe are listed under the US date with only the US time.
   Club). All prices, dates and Stripe links are in the CONFIG block at the
   bottom of the file. The early bird card switches itself off after
   `earlyEnds` (Taiwan time) and the standard ticket becomes the highlighted
-  one. For a new cohort: update CONFIG (dates, prices, links). Use a 500px frame.
+  one. For a new cohort: update CONFIG (dates, prices, links). Use a 320px frame.
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.

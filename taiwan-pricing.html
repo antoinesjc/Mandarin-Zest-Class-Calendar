@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* Desktop: 3 tickets side by side. Phones: swipe between tickets. Use a 500px frame.
+  /* Desktop: 3 tickets side by side. Phones: swipe between tickets. Use a 320px frame.
      Prices, dates and links are set in the CONFIG block in the script at the bottom. */
   * { box-sizing: border-box; }
   html, body { margin: 0; background: transparent; }
@@ -49,13 +49,6 @@
   .ticket.ended h3, .ticket.ended .note { color: #8a7d74; }
   .ticket.ended .btn { display: none; }
 
-  .includes {
-    max-width: 1100px; margin: 22px auto 0; background: #fdf1ea; border-radius: 18px; padding: 18px 22px;
-  }
-  .includes .lbl { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #a8431a; margin-bottom: 8px; }
-  .includes ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 20px; font-size: 14.5px; line-height: 1.4; }
-  .includes li { display: flex; gap: 8px; }
-  .includes li::before { content: "✓"; color: #228b22; font-weight: 800; }
 
   .hint { display: none; }
   @media (max-width: 860px) {
@@ -71,10 +64,7 @@
     .hint { display: flex; justify-content: center; gap: 6px; margin-top: 2px; }
     .hint i { width: 6px; height: 6px; border-radius: 50%; background: #e3d3c9; }
     .hint i.on { background: #f37a48; width: 16px; border-radius: 3px; }
-    .includes { margin: 14px 16px 0; padding: 14px 16px; }
-    .includes ul { grid-template-columns: 1fr 1fr; font-size: 13px; gap: 5px 12px; }
   }
-  @media (max-width: 380px) { .includes ul { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -106,16 +96,6 @@
 </div>
 <div class="hint" id="hint" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
 
-<div class="includes">
-  <div class="lbl">EVERY TICKET INCLUDES</div>
-  <ul>
-    <li>6 live sessions, max 6 students</li>
-    <li>Learning materials and homework</li>
-    <li>Learning Zhuyin: Beginner Bundle</li>
-    <li>1 free Club speaking session</li>
-    <li>Certificate of completion</li>
-  </ul>
-</div>
 
 <script>
   // ══════════════════════ CONFIG: edit these lines for each cohort ══════════════════════
