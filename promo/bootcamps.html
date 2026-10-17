@@ -30,8 +30,11 @@
   .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #1b5e1b; }
   h3 { margin: 0; font-size: 26px; font-weight: 800; line-height: 1.25; }
   .hl { padding: 0 7px; border-radius: 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-  .g { background: #228b22; color: #fff; }
-  .o { background: #f37a48; color: #2a2420; }
+  .hl { background-repeat: no-repeat; background-size: 0% 100%; }
+  .g { background-image: linear-gradient(#228b22, #228b22); animation: markG 7s infinite; }
+  .o { background-image: linear-gradient(#f37a48, #f37a48); animation: markO 7s infinite; }
+  @keyframes markG { 0%, 4% { background-size: 0% 100%; color: #173f17; } 12%, 88% { background-size: 100% 100%; color: #fff; } 96%, 100% { background-size: 0% 100%; color: #173f17; } }
+  @keyframes markO { 0%, 16% { background-size: 0% 100%; color: #173f17; } 24%, 88% { background-size: 100% 100%; color: #2a2420; } 96%, 100% { background-size: 0% 100%; color: #173f17; } }
   p { margin: 0; font-size: 15px; line-height: 1.45; color: #2c4a2c; max-width: 36ch; }
   .btn {
     position: relative; overflow: hidden; align-self: flex-start; margin-top: 4px;
@@ -47,7 +50,7 @@
   }
   @keyframes shine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
 
-  /* visual: a path from start to confidence, walked by the mascot */
+  /* visual: a path from start to confidence, filling in step by step */
   .visual { position: relative; z-index: 1; flex: 0 0 262px; width: 262px; }
   .path {
     background: #fff; border-radius: 16px; padding: 16px 16px 16px 18px;
@@ -76,15 +79,11 @@
   .s3 .label { animation: glow 7s infinite 3.9s; }
   @keyframes glow { 0%, 9% { color: #2c4a2c; } 13%, 86% { color: #c4521f; } 94%, 100% { color: #2c4a2c; } }
 
-  .rider { position: absolute; right: -10px; top: -30px; width: 60px; z-index: 2; animation: hop 1.4s ease-in-out infinite; }
-  @keyframes hop { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-7px) rotate(4deg); } }
 
   @media (max-width: 680px) {
-    .card { padding: 20px; align-items: flex-start; }
+    .card { padding: 20px; align-items: center; }
     .text { gap: 9px; }
-    .visual { position: absolute; right: -4px; bottom: -6px; top: auto; width: 78px; flex: none; }
-    .path { display: none; }
-    .rider { position: static; width: 78px; }
+    .visual { display: none; }
     h3 { font-size: 22px; }
     p { font-size: 14px; max-width: none; }
     .btn { margin-top: 6px; }
@@ -99,8 +98,6 @@
     .hl { padding: 0 5px; border-radius: 6px; }
     p { font-size: 13.5px; line-height: 1.4; }
     .btn { font-size: 14px; padding: 10px 16px; margin-top: 4px; }
-    .visual, .rider { width: 56px; }
-    .visual { right: -2px; bottom: -4px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -108,6 +105,7 @@
     .fill { height: 100%; }
     .mark { background: #228b22; border-color: #228b22; } .s3 .mark { background: #f37a48; border-color: #f37a48; }
     .mark svg { opacity: 1; transform: none; }
+    .g { background-size: 100% 100%; color: #fff; } .o { background-size: 100% 100%; color: #2a2420; }
   }
 </style>
 </head>
@@ -131,7 +129,6 @@
       </ol>
       </div>
     </div>
-    <img class="rider" src="mascot-head.png" alt="">
   </div>
 </a>
 </body>
