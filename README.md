@@ -94,6 +94,9 @@ fall overnight in Europe are listed under the US date with only the US time.
 - `promo/home-hero.html`: animated homepage hero visual (the mascot with a
   "tap me!" hint and a speech bubble that changes when tapped).
   Transparent background; scales to any frame (use about 360x400).
+- `journey.html`: the homepage "Where are you on your Chinese journey?" cards
+  (beginner → Start Here, HSK/TOCFL → shop, speaking → Club, level up fast →
+  bootcamps). 4 in a row on desktop, swipeable on phones; use a 290px frame.
 - `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
   bootcamp page (4 in a row on desktop, swipeable on phones; use a 220px frame).
 - `taiwan-agenda.html`: the Taiwanese bootcamp agenda by weekend, with no dates
