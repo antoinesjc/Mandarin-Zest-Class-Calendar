@@ -354,23 +354,6 @@
    "start": "2026-10-15T21:00:00Z"
   },
   {
-   "date": "2026-10-17",
-   "title": "Przerob ppt dla Xuan",
-   "level": "",
-   "cat": "general",
-   "times": [
-    {
-     "flag": "eu",
-     "time": "12pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "6am ET"
-    }
-   ],
-   "start": "2026-10-17T10:00:00Z"
-  },
-  {
    "date": "2026-10-18",
    "title": "Tips on Learning Chinese Characters",
    "level": "",
