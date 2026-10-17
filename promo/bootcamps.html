@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Bootcamps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Fills whatever height the frame has. Edit text and link in the HTML below. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #173f17; padding: 4px; }
+
+  .card {
+    position: relative; overflow: hidden; height: 100%;
+    border-radius: 20px; background-color: #e6f4e3;
+    /* faint character-practice grid */
+    background-image:
+      linear-gradient(rgba(34,139,34,.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,139,34,.10) 1px, transparent 1px);
+    background-size: 36px 36px;
+    display: flex; align-items: center; gap: 22px; padding: 24px 26px;
+    text-decoration: none; color: inherit;
+  }
+  .card:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
+
+  .text { position: relative; z-index: 2; flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #1b5e1b; }
+  h3 { margin: 0; font-size: 26px; font-weight: 800; line-height: 1.25; }
+  .hl { padding: 0 7px; border-radius: 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .g { background: #228b22; color: #fff; }
+  .o { background: #f37a48; color: #2a2420; }
+  p { margin: 0; font-size: 15px; line-height: 1.45; color: #2c4a2c; max-width: 36ch; }
+  .btn {
+    position: relative; overflow: hidden; align-self: flex-start; margin-top: 4px;
+    background: #1b6f1b; color: #fff; font-weight: 700; font-size: 15px;
+    padding: 12px 20px; border-radius: 999px; display: inline-flex; gap: 8px; align-items: center;
+  }
+  .btn .arrow { transition: transform .2s; }
+  .card:hover .btn .arrow { transform: translateX(4px); }
+  .btn::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent);
+    animation: shine 4.5s ease-in-out infinite 1.5s;
+  }
+  @keyframes shine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+
+  /* visual: a path from start to confidence, walked by the mascot */
+  .visual { position: relative; z-index: 1; flex: 0 0 262px; width: 262px; }
+  .path {
+    background: #fff; border-radius: 16px; padding: 16px 16px 16px 18px;
+    box-shadow: 0 10px 24px rgba(23,63,23,.12); position: relative;
+  }
+  .path h4 { margin: 0 0 10px 34px; font-size: 12px; letter-spacing: .1em; color: #6b7d6b; font-weight: 700; }
+  .steps-wrap { position: relative; }
+  .steps { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+  .rail { position: absolute; left: 11px; top: 12px; bottom: 12px; width: 4px; background: #e6efe5; border-radius: 4px; }
+  .fill { position: absolute; left: 0; top: 0; width: 100%; height: 0; background: linear-gradient(#228b22, #f37a48); border-radius: 4px; animation: fill 7s ease-in-out infinite; }
+  @keyframes fill { 0%, 6% { height: 0; } 64%, 88% { height: 100%; } 96%, 100% { height: 0; } }
+  .step { position: relative; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; color: #2c4a2c; }
+  .mark {
+    flex: 0 0 26px; width: 26px; height: 26px; border-radius: 50%; position: relative; z-index: 1;
+    background: #fff; border: 2px solid #c9dcc6; display: flex; align-items: center; justify-content: center;
+    animation: done 7s infinite;
+  }
+  .mark svg { opacity: 0; transform: scale(.4); animation: tick 7s infinite; }
+  .s2 .mark, .s2 .mark svg { animation-delay: 1.9s; }
+  .s3 .mark, .s3 .mark svg { animation-delay: 3.9s; }
+  .s3 .mark { border-color: #f6c3ad; }
+  @keyframes done { 0%, 9% { background: #fff; border-color: #c9dcc6; } 12%, 86% { background: #228b22; border-color: #228b22; } 94%, 100% { background: #fff; border-color: #c9dcc6; } }
+  @keyframes tick { 0%, 9% { opacity: 0; transform: scale(.4); } 13%, 86% { opacity: 1; transform: scale(1); } 94%, 100% { opacity: 0; transform: scale(.4); } }
+  .s3 .mark { animation-name: done3; }
+  @keyframes done3 { 0%, 9% { background: #fff; border-color: #f6c3ad; } 12%, 86% { background: #f37a48; border-color: #f37a48; } 94%, 100% { background: #fff; border-color: #f6c3ad; } }
+  .s3 .label { animation: glow 7s infinite 3.9s; }
+  @keyframes glow { 0%, 9% { color: #2c4a2c; } 13%, 86% { color: #c4521f; } 94%, 100% { color: #2c4a2c; } }
+
+  .rider { position: absolute; right: -10px; top: -30px; width: 60px; z-index: 2; animation: hop 1.4s ease-in-out infinite; }
+  @keyframes hop { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-7px) rotate(4deg); } }
+
+  @media (max-width: 680px) {
+    .card { padding: 20px; align-items: flex-start; }
+    .text { gap: 9px; }
+    .visual { position: absolute; right: -4px; bottom: -6px; top: auto; width: 78px; flex: none; }
+    .path { display: none; }
+    .rider { position: static; width: 78px; }
+    h3 { font-size: 22px; }
+    p { font-size: 14px; max-width: none; }
+    .btn { margin-top: 6px; }
+  }
+  @media (max-width: 300px) { .visual, .rider { width: 64px; } h3 { font-size: 20px; } .eyebrow { font-size: 11px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .fill { height: 100%; }
+    .mark { background: #228b22; border-color: #228b22; } .s3 .mark { background: #f37a48; border-color: #f37a48; }
+    .mark svg { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<a class="card" href="https://www.mandarinzest.com/bootcamps" target="_blank" rel="noopener" aria-label="Mandarin Zest bootcamps: see all bootcamps">
+  <div class="text">
+    <span class="eyebrow">MANDARIN ZEST BOOTCAMPS</span>
+    <h3>Start with <span class="hl g">structure.</span><br>Finish with <span class="hl o">confidence.</span></h3>
+    <p>Short, guided bootcamps with a clear path from where you are to where you want to be.</p>
+    <span class="btn">See the bootcamps <span class="arrow" aria-hidden="true">→</span></span>
+  </div>
+  <div class="visual" aria-hidden="true">
+    <div class="path">
+      <h4>YOUR PATH</h4>
+      <div class="steps-wrap">
+      <span class="rail"><span class="fill"></span></span>
+      <ol class="steps">
+        <li class="step s1"><span class="mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="label">A clear plan from day one</span></li>
+        <li class="step s2"><span class="mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="label">Guided daily practice</span></li>
+        <li class="step s3"><span class="mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="label">Speak with confidence</span></li>
+      </ol>
+      </div>
+    </div>
+    <img class="rider" src="mascot-head.png" alt="">
+  </div>
+</a>
+</body>
+</html>

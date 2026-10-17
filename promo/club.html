@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* Fills whatever height the frame has. Edit text and link in the HTML below. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 4px; }
+
+  .card {
+    position: relative; overflow: hidden; height: 100%;
+    border-radius: 20px; background: #fdf1ea;
+    display: flex; align-items: center; gap: 22px; padding: 24px 26px;
+    text-decoration: none; color: inherit;
+  }
+  .card:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
+
+  /* text */
+  .text { position: relative; z-index: 2; flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .live { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #a8431a; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #e2463a; position: relative; }
+  .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: #e2463a; animation: ping 1.8s ease-out infinite; }
+  @keyframes ping { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(2.8); opacity: 0; } }
+  h3 { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.1; }
+  h3 .hl { color: #fff; background: #f37a48; padding: 0 8px; border-radius: 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  p { margin: 0; font-size: 15px; line-height: 1.45; color: #5c4f47; max-width: 34ch; }
+  .btn {
+    position: relative; overflow: hidden; align-self: flex-start; margin-top: 4px;
+    background: #2a2420; color: #fff; font-weight: 700; font-size: 15px;
+    padding: 12px 20px; border-radius: 999px; display: inline-flex; gap: 8px; align-items: center;
+  }
+  .btn .arrow { transition: transform .2s; }
+  .card:hover .btn .arrow { transform: translateX(4px); }
+  .btn::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent);
+    animation: shine 4.5s ease-in-out infinite 1.5s;
+  }
+  @keyframes shine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+
+  /* visual: video call + mascot */
+  .visual { position: relative; z-index: 1; flex: 0 0 250px; width: 250px; height: 200px; }
+  .call {
+    position: absolute; left: 0; top: 6px; width: 200px; height: 150px;
+    background: #2a2420; border-radius: 14px; padding: 8px;
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px;
+    box-shadow: 0 10px 24px rgba(42,36,32,.18);
+  }
+  .tile { border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; outline: 2px solid transparent; }
+  .t1 { background: #f8dacd; } .t2 { background: #e0f4e0; } .t3 { background: #dfe8ee; } .t4 { background: #f3e6c9; }
+  .face { width: 26px; height: 26px; border-radius: 50%; position: relative; }
+  .face::after { content: ""; position: absolute; left: -8px; right: -8px; top: 28px; height: 14px; border-radius: 12px 12px 4px 4px; background: inherit; opacity: .85; }
+  .t1 .face { background: #e9906a; } .t2 .face { background: #6fae6f; } .t3 .face { background: #7d9db3; } .t4 .face { background: #c9a35a; }
+  .bars { position: absolute; right: 6px; bottom: 6px; display: flex; gap: 2px; align-items: flex-end; height: 12px; opacity: 0; }
+  .bars i { width: 3px; background: #2a2420; border-radius: 2px; animation: eq .6s ease-in-out infinite alternate; }
+  .bars i:nth-child(2) { animation-delay: .15s; } .bars i:nth-child(3) { animation-delay: .3s; }
+  @keyframes eq { from { height: 3px; } to { height: 12px; } }
+  /* speaker rotates every 2s across 4 tiles (8s cycle) */
+  .tile { animation: speak 8s infinite; }
+  .tile .bars { animation: bars 8s infinite; }
+  .t2, .t2 .bars { animation-delay: 2s; } .t3, .t3 .bars { animation-delay: 4s; } .t4, .t4 .bars { animation-delay: 6s; }
+  @keyframes speak { 0%, 24% { outline-color: #f37a48; } 25%, 100% { outline-color: transparent; } }
+  @keyframes bars { 0%, 24% { opacity: 1; } 25%, 100% { opacity: 0; } }
+
+  .bubble {
+    position: absolute; left: 150px; top: -2px; z-index: 3;
+    font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-weight: 700; font-size: 15px;
+    background: #fff; color: #2a2420; padding: 6px 11px; border-radius: 14px 14px 14px 4px;
+    box-shadow: 0 6px 14px rgba(42,36,32,.14); opacity: 0; transform: scale(.6); transform-origin: bottom left;
+    animation: pop 8s infinite;
+  }
+  .b2 { animation-delay: 2s; background: #f37a48; color: #2a2420; }
+  .b3 { animation-delay: 4s; background: #9fd89f; color: #173f17; }
+  .b4 { animation-delay: 6s; }
+  @keyframes pop { 0% { opacity: 0; transform: scale(.6); } 4%, 20% { opacity: 1; transform: scale(1); } 25%, 100% { opacity: 0; transform: scale(.9) translateY(-6px); } }
+
+  .mascot { position: absolute; right: -6px; bottom: -14px; width: 118px; animation: bob 3s ease-in-out infinite; transform-origin: bottom center; }
+  @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+
+  /* narrow frames (sidebars, phones): text first, mascot peeking bottom-right */
+  @media (max-width: 680px) {
+    .card { padding: 20px; align-items: flex-start; }
+    .text { gap: 9px; }
+    .visual { position: absolute; right: -6px; bottom: -8px; width: 92px; height: 104px; flex: none; }
+    .call, .bubble { display: none; }
+    .mascot { width: 92px; right: 0; bottom: 0; }
+    h3 { font-size: 24px; }
+    p { font-size: 14px; max-width: none; }
+    .btn { margin-top: 6px; }
+  }
+  @media (max-width: 300px) { .visual { width: 76px; } .mascot { width: 76px; } h3 { font-size: 22px; } .live { font-size: 11px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .bubble.b1 { opacity: 1; transform: none; }
+    .t1 { outline-color: #f37a48; } .t1 .bars { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<a class="card" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" aria-label="Mandarin Zest Club: join live speaking sessions">
+  <div class="text">
+    <span class="live"><span class="dot" aria-hidden="true"></span>LIVE SESSIONS EVERY WEEK</span>
+    <h3>Practice makes <span class="hl">perfect.</span></h3>
+    <p>A supportive place that turns your fears into confidence. All levels welcome.</p>
+    <span class="btn">Join the Club <span class="arrow" aria-hidden="true">→</span></span>
+  </div>
+  <div class="visual" aria-hidden="true">
+    <div class="call">
+      <div class="tile t1"><span class="face"></span><span class="bars"><i></i><i></i><i></i></span></div>
+      <div class="tile t2"><span class="face"></span><span class="bars"><i></i><i></i><i></i></span></div>
+      <div class="tile t3"><span class="face"></span><span class="bars"><i></i><i></i><i></i></span></div>
+      <div class="tile t4"><span class="face"></span><span class="bars"><i></i><i></i><i></i></span></div>
+    </div>
+    <span class="bubble b1">你好！</span>
+    <span class="bubble b2">我觉得…</span>
+    <span class="bubble b3">加油！</span>
+    <span class="bubble b4">对对对！</span>
+    <img class="mascot" src="mascot-laptop.png" alt="">
+  </div>
+</a>
+</body>
+</html>
