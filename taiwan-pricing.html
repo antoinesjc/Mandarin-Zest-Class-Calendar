@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taiwanese Mini Bootcamp tickets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Desktop: 3 tickets side by side. Phones: swipe between tickets. Use a 500px frame.
+     Prices, dates and links are set in the CONFIG block in the script at the bottom. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 18px 4px 10px; }
+
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; align-items: stretch; }
+  .ticket {
+    position: relative; background: #fff; border: 1px solid #ecdcd2; border-radius: 20px;
+    padding: 30px 24px 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  }
+  .ticket.best { border: 3px solid #f37a48; box-shadow: 0 14px 34px rgba(243,122,72,.16); }
+  .ticket.club { background: #e0f4e0; border-color: #e0f4e0; }
+  .badge {
+    position: absolute; top: -14px; left: 22px; font-size: 12px; font-weight: 800;
+    padding: 5px 12px; border-radius: 999px; background: #f37a48; color: #2a2420; white-space: nowrap;
+  }
+  .badge.muted { background: #e6ddd6; color: #5c4f47; }
+  h3 { margin: 0; font-size: 20px; font-weight: 800; }
+  .club h3, .club .price { color: #173f17; }
+  .price { font-size: 42px; font-weight: 800; line-height: 1; }
+  .note { font-size: 14px; line-height: 1.45; color: #5c4f47; }
+  .club .note { color: #2c4a2c; }
+  .btn {
+    margin-top: auto; display: block; text-align: center; text-decoration: none;
+    font-weight: 800; font-size: 16px; padding: 14px; border-radius: 999px; white-space: nowrap;
+  }
+  .btn:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .btn.primary { background: #f37a48; color: #2a2420; }
+  .btn.primary:hover { background: #e2632f; }
+  .btn.outline { border: 2px solid #2a2420; color: #2a2420; padding: 12px; }
+  .btn.outline:hover { background: #2a2420; color: #fff; }
+  .btn.green { background: #1b6f1b; color: #fff; }
+  .btn.green:hover { background: #145514; }
+
+  /* early bird after the deadline */
+  .ticket.ended { background: #faf6f3; border-color: #ecdcd2; box-shadow: none; }
+  .ticket.ended .price { color: #a99d95; text-decoration: line-through; font-size: 34px; }
+  .ticket.ended h3, .ticket.ended .note { color: #8a7d74; }
+  .ticket.ended .btn { display: none; }
+
+  .includes {
+    max-width: 1100px; margin: 22px auto 0; background: #fdf1ea; border-radius: 18px; padding: 18px 22px;
+  }
+  .includes .lbl { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #a8431a; margin-bottom: 8px; }
+  .includes ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 20px; font-size: 14.5px; line-height: 1.4; }
+  .includes li { display: flex; gap: 8px; }
+  .includes li::before { content: "✓"; color: #228b22; font-weight: 800; }
+
+  .hint { display: none; }
+  @media (max-width: 860px) {
+    body { padding: 18px 0 10px; }
+    .row {
+      display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding: 0 16px 8px; scroll-padding-left: 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .row::-webkit-scrollbar { display: none; }
+    .ticket { flex: 0 0 78%; max-width: 320px; scroll-snap-align: start; margin-top: 14px; }
+    .row { margin-top: -14px; }
+    .row::after { content: ""; flex: 0 0 2px; }
+    .hint { display: flex; justify-content: center; gap: 6px; margin-top: 2px; }
+    .hint i { width: 6px; height: 6px; border-radius: 50%; background: #e3d3c9; }
+    .hint i.on { background: #f37a48; width: 16px; border-radius: 3px; }
+    .includes { margin: 14px 16px 0; padding: 14px 16px; }
+    .includes ul { grid-template-columns: 1fr 1fr; font-size: 13px; gap: 5px 12px; }
+  }
+  @media (max-width: 380px) { .includes ul { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="row" id="row">
+
+  <div class="ticket best" id="early">
+    <span class="badge" id="earlyBadge"></span>
+    <h3>Early bird</h3>
+    <div class="price" id="earlyPrice"></div>
+    <div class="note" id="earlyNote"></div>
+    <a class="btn primary" id="earlyBtn" target="_blank" rel="noopener">Book at early bird price</a>
+  </div>
+
+  <div class="ticket" id="standard">
+    <span class="badge" id="stdBadge" hidden></span>
+    <h3>Standard</h3>
+    <div class="price" id="stdPrice"></div>
+    <div class="note" id="stdNote"></div>
+    <a class="btn outline" id="stdBtn" target="_blank" rel="noopener">Book now</a>
+  </div>
+
+  <div class="ticket club" id="club">
+    <h3>Club members</h3>
+    <div class="price" id="clubPrice"></div>
+    <div class="note">Members get the lowest price. Ask for your link in the Club Discord.</div>
+    <a class="btn green" id="clubBtn" target="_blank" rel="noopener">Not a member? See the Club</a>
+  </div>
+
+</div>
+<div class="hint" id="hint" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+
+<div class="includes">
+  <div class="lbl">EVERY TICKET INCLUDES</div>
+  <ul>
+    <li>6 live sessions, max 6 students</li>
+    <li>Learning materials and homework</li>
+    <li>Learning Zhuyin: Beginner Bundle</li>
+    <li>1 free Club speaking session</li>
+    <li>Certificate of completion</li>
+  </ul>
+</div>
+
+<script>
+  // ══════════════════════ CONFIG: edit these lines for each cohort ══════════════════════
+  var CONFIG = {
+    earlyPrice: "US$111",
+    standardPrice: "US$139",
+    clubPrice: "US$92",
+    saving: "US$28",                                   // standard minus early bird
+    earlyEnds: "2026-10-25T23:59:59+08:00",            // early bird switches off after this (Taiwan time)
+    earlyEndsLabel: "25 October",
+    registrationClosesLabel: "15 November",
+    earlyLink: "https://buy.stripe.com/9B63cvdkR3iZbXW5pX6oo0l",
+    standardLink: "https://buy.stripe.com/4gMdR93KhdXD0fedWt6oo0m",
+    clubLink: "https://www.mandarinzest.com/mandarin-zest-club"
+  };
+  // ═══════════════════════════════════════════════════════════════════════════════════════
+
+  var $ = function (id) { return document.getElementById(id); };
+  var earlyOpen = new Date() <= new Date(CONFIG.earlyEnds);
+
+  $("earlyPrice").textContent = CONFIG.earlyPrice;
+  $("stdPrice").textContent = CONFIG.standardPrice;
+  $("clubPrice").textContent = CONFIG.clubPrice;
+  $("earlyBtn").href = CONFIG.earlyLink;
+  $("stdBtn").href = CONFIG.standardLink;
+  $("clubBtn").href = CONFIG.clubLink;
+
+  if (earlyOpen) {
+    $("earlyBadge").textContent = "Ends " + CONFIG.earlyEndsLabel;
+    $("earlyNote").textContent = "Save " + CONFIG.saving + " when you book by " + CONFIG.earlyEndsLabel + ".";
+    $("stdNote").textContent = "After " + CONFIG.earlyEndsLabel + ", until registration closes on " + CONFIG.registrationClosesLabel + ".";
+  } else {
+    // Early bird is over: grey it out, remove its button, promote the standard ticket.
+    $("early").className = "ticket ended";
+    $("earlyBadge").className = "badge muted";
+    $("earlyBadge").textContent = "Ended";
+    $("earlyNote").textContent = "The early bird price ended on " + CONFIG.earlyEndsLabel + ".";
+    $("standard").className = "ticket best";
+    $("stdBadge").hidden = false;
+    $("stdBadge").textContent = "Registration closes " + CONFIG.registrationClosesLabel;
+    $("stdNote").textContent = "Book by " + CONFIG.registrationClosesLabel + ". Only 6 seats.";
+    $("stdBtn").className = "btn primary";
+    $("row").appendChild($("early"));   // move the ended ticket to the end
+  }
+
+  // Dots under the tickets on phones.
+  (function () {
+    var row = $("row"), dots = document.querySelectorAll("#hint i");
+    row.addEventListener("scroll", function () {
+      var cards = [].slice.call(row.querySelectorAll(".ticket")).sort(function (a, b) { return a.offsetLeft - b.offsetLeft; });
+      var w = cards[0].getBoundingClientRect().width + 14;
+      var i = Math.min(cards.length - 1, Math.round(row.scrollLeft / w));
+      if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 4) i = cards.length - 1;
+      dots.forEach(function (d, k) { d.className = k === i ? "on" : ""; });
+    }, { passive: true });
+  })();
+</script>
+</body>
+</html>
