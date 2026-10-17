@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taiwanese Mini Bootcamp agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
+<style>
+  /* No dates on purpose, so the page works for every cohort.
+     Desktop: 3 weekends side by side. Phones: swipe between weekends. Use a 410px frame. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 6px 4px 10px; }
+
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; max-width: 1120px; margin: 0 auto; }
+  .weekend { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .head {
+    background: #173f17; color: #fff; border-radius: 16px; padding: 14px 18px;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  }
+  .head .n { font-size: 13px; font-weight: 700; letter-spacing: .1em; color: #9fd89f; }
+  .head .theme { font-size: 15px; font-weight: 700; }
+  .session {
+    flex: 1 1 auto; background: #fff; border-radius: 16px; padding: 16px 18px;
+    box-shadow: 0 1px 0 #efe2d9, 0 6px 18px rgba(42,36,32,0.06);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .who { font-size: 12px; font-weight: 700; letter-spacing: .06em; }
+  .sat .who { color: #a8431a; }
+  .sun .who { color: #1b5e1b; }
+  h3 { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.25; }
+  p { margin: 0; font-size: 14px; line-height: 1.5; color: #5c4f47; }
+  .zh { font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
+
+  .hint { display: none; }
+  @media (max-width: 900px) {
+    body { padding: 6px 0 10px; }
+    .row {
+      display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding: 2px 16px 8px; scroll-padding-left: 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .row::-webkit-scrollbar { display: none; }
+    .weekend { flex: 0 0 88%; max-width: 380px; scroll-snap-align: start; gap: 10px; }
+    .session { padding: 14px 16px; gap: 5px; }
+    .head { padding: 12px 16px; }
+    h3 { font-size: 17px; }
+    p { font-size: 13.5px; line-height: 1.45; }
+    .row::after { content: ""; flex: 0 0 2px; }
+    .hint { display: flex; justify-content: center; gap: 6px; margin-top: 4px; }
+    .hint i { width: 6px; height: 6px; border-radius: 50%; background: #e3d3c9; }
+    .hint i.on { background: #f37a48; width: 16px; border-radius: 3px; }
+  }
+</style>
+</head>
+<body>
+<div class="row" id="row">
+
+  <div class="weekend">
+    <div class="head"><span class="n">WEEKEND 1</span><span class="theme">Sound &amp; script</span></div>
+    <div class="session sat">
+      <div class="who">SATURDAY · VANESSA</div>
+      <h3>Sound and social register</h3>
+      <p>Taiwanese pronunciation, sentence-final particles, and how to address shop owners, strangers and classmates.</p>
+    </div>
+    <div class="session sun">
+      <div class="who">SUNDAY · SPECIALIST</div>
+      <h3>Zhuyin (Bopomofo)</h3>
+      <p>The symbols and tone marks, and how they compare to pinyin.</p>
+    </div>
+  </div>
+
+  <div class="weekend">
+    <div class="head"><span class="n">WEEKEND 2</span><span class="theme">Everyday Taiwan</span></div>
+    <div class="session sat">
+      <div class="who">SATURDAY · VANESSA</div>
+      <h3>Everyday words and local slang</h3>
+      <p><span class="zh">捷運</span>, <span class="zh">腳踏車</span> and friends, youth slang, and the Hokkien and Japanese words you'll hear every day.</p>
+    </div>
+    <div class="session sun">
+      <div class="who">SUNDAY · SPECIALIST</div>
+      <h3>From simplified to traditional</h3>
+      <p>The logic behind the changes, and strategies to read and write traditional characters.</p>
+    </div>
+  </div>
+
+  <div class="weekend">
+    <div class="head"><span class="n">WEEKEND 3</span><span class="theme">Real life</span></div>
+    <div class="session sat">
+      <div class="who">SATURDAY · VANESSA</div>
+      <h3>Night market survival</h3>
+      <p>A full roleplay: order, customise your dish, and choose how to pay.</p>
+    </div>
+    <div class="session sun">
+      <div class="who">SUNDAY · DOROTA</div>
+      <h3>Taiwanese business culture</h3>
+      <p>Workplace etiquette and what Taiwanese colleagues and clients expect.</p>
+    </div>
+  </div>
+
+</div>
+<div class="hint" id="hint" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+<script>
+  (function () {
+    var row = document.getElementById("row"), dots = document.querySelectorAll("#hint i");
+    row.addEventListener("scroll", function () {
+      var cols = row.querySelectorAll(".weekend"), w = cols[0].getBoundingClientRect().width + 14;
+      var i = Math.min(cols.length - 1, Math.round(row.scrollLeft / w));
+      if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 4) i = cols.length - 1;
+      dots.forEach(function (d, k) { d.className = k === i ? "on" : ""; });
+    }, { passive: true });
+  })();
+</script>
+</body>
+</html>

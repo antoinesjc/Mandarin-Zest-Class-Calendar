@@ -93,6 +93,9 @@ fall overnight in Europe are listed under the US date with only the US time.
   any frame height (use 300px); no resize script needed.
 - `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
   bootcamp page (4 in a row on desktop, swipeable on phones; use a 220px frame).
+- `taiwan-agenda.html`: the Taiwanese bootcamp agenda by weekend, with no dates
+  so it works for every cohort (3 columns on desktop, swipeable on phones; use a
+  410px frame).
 - `events.json`: generated, don't edit by hand.
 - `scripts/build_events.py`: reads the feed and keeps only the safe fields.
 - `.github/workflows/sync-calendar.yml`: the schedule.
