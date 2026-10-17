@@ -390,6 +390,40 @@
    "start": "2026-10-19T17:00:00Z"
   },
   {
+   "date": "2026-10-19",
+   "title": "HSK Review + Listening Practice",
+   "level": "HSK 2-4",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-10-19T21:00:00Z"
+  },
+  {
+   "date": "2026-10-21",
+   "title": "filmik gorka narodowa",
+   "level": "",
+   "cat": "general",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "10am CEST"
+    },
+    {
+     "flag": "us",
+     "time": "4am ET"
+    }
+   ],
+   "start": "2026-10-21T08:00:00Z"
+  },
+  {
    "date": "2026-10-26",
    "title": "Advanced Session",
    "level": "",
@@ -405,6 +439,23 @@
     }
    ],
    "start": "2026-10-26T18:00:00Z"
+  },
+  {
+   "date": "2026-10-26",
+   "title": "MZ Vocab + Reading Practice (HSK",
+   "level": "",
+   "cat": "beginner",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "10pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-10-26T21:00:00Z"
   },
   {
    "date": "2026-10-31",
