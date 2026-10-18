@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upcoming bootcamps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* Bootcamp cards for the Bootcamps page. Built automatically from the
+     bootcamp pages on the website (see bootcamps.json / README).
+     One row of cards; swipe or use the arrows when there are more than fit.
+     "Join the waitlist" opens a small form that saves to the waitlist Google Sheet.
+     Use a 720px frame. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; display: flex; flex-direction: column; justify-content: center; }
+
+  .shell { position: relative; max-width: 1180px; width: 100%; margin: 0 auto; }
+  .row {
+    display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 4px 14px;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .row::-webkit-scrollbar { display: none; }
+  .card:first-child { margin-left: auto; } .card:last-child { margin-right: auto; }   /* centre when they all fit */
+  .card {
+    flex: 0 0 calc((100% - 40px) / 3); min-width: 300px; scroll-snap-align: start;
+    background: #fff; border: 1px solid #ecdcd2; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .25s, box-shadow .25s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(42,36,32,.12); }
+  .pic { position: relative; height: 160px; background: var(--soft, #fdf1ea); display: flex; align-items: center; justify-content: center; flex: none; }
+  .pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pic .zh { font-family: 'Noto Sans SC', sans-serif; font-size: 90px; font-weight: 700; color: var(--deep, #c4521f); line-height: 1; }
+  .status {
+    position: absolute; left: 14px; top: 14px; font-size: 13px; font-weight: 800; border-radius: 999px; padding: 6px 12px;
+    display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  }
+  .status i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .s-open { background: #1b6f1b; color: #fff; }
+  .s-open i { animation: blink 1.6s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .35; } }
+  .s-wait { background: #fff3d6; color: #6b4900; }
+  .s-soon { background: #e6ddd6; color: #4a3c34; }
+  .s-sold { background: #2a2420; color: #fff; }
+
+  .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  h3 { margin: 0; font-size: 21px; font-weight: 800; line-height: 1.2; }
+  .sum { margin: 0; font-size: 14.5px; line-height: 1.45; color: #4a3c34; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .facts { display: flex; flex-direction: column; gap: 5px; padding: 10px 0; border-top: 1px solid #f1e3da; border-bottom: 1px solid #f1e3da; }
+  .fact { display: flex; gap: 8px; font-size: 13.5px; line-height: 1.35; }
+  .fact b { width: 62px; flex: none; color: #8a7d74; font-weight: 700; }
+  .tbd { display: inline-block; font-size: 12px; font-weight: 700; color: #8a7d74; border: 1.5px dashed #c9bcb3; border-radius: 999px; padding: 0 8px; line-height: 18px; }
+
+  .prices { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 8px; }
+  .pbox { border: 1px solid #ecdcd2; border-radius: 14px; padding: 7px 9px; display: flex; flex-direction: column; gap: 1px; align-items: flex-start; min-width: 0; }
+  .pbox small { font-size: 11px; font-weight: 800; letter-spacing: .03em; color: #8a7d74; }
+  .pbox strong { font-size: 20px; font-weight: 800; }
+  .pbox span { font-size: 11.5px; color: #6b5a50; }
+  .pbox.early { border: 2px solid #f37a48; } .pbox.early small { color: #a8431a; }
+  .pbox.club { background: #e0f4e0; border-color: #e0f4e0; } .pbox.club small { color: #1b6f1b; } .pbox.club strong { color: #173f17; }
+  .pbox.empty { border-style: dashed; background: #fcf9f7; }
+  .pbox.empty .tbd { margin-top: 3px; }
+
+  .btn {
+    margin-top: auto; display: block; width: 100%; text-align: center; text-decoration: none; font-family: inherit;
+    font-weight: 800; font-size: 16px; padding: 13px; border-radius: 999px; cursor: pointer; border: 0;
+    transition: background .15s, color .15s;
+  }
+  .btn.go { background: #f37a48; color: #2a2420; } .btn.go:hover { background: #e2632f; }
+  .btn.wait { background: #fff; color: #2a2420; box-shadow: inset 0 0 0 2px #2a2420; } .btn.wait:hover { background: #2a2420; color: #fff; }
+  .more { font-size: 13.5px; font-weight: 700; text-align: center; color: #a8431a; text-decoration: none; }
+  .more:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
+
+  .arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0;
+    background: #fff; box-shadow: 0 6px 18px rgba(42,36,32,.18); font-size: 22px; cursor: pointer; display: none; z-index: 2; font-family: inherit;
+  }
+  .arrow.l { left: -8px; } .arrow.r { right: -8px; }
+  .has-more .arrow { display: block; }
+  .msg { text-align: center; color: #6b5a50; font-size: 15px; padding: 40px 0; }
+
+  /* waitlist pop-up */
+  .veil { position: fixed; inset: 0; background: rgba(42,36,32,.5); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
+  .veil.show { display: flex; animation: fade .18s ease-out; }
+  @keyframes fade { from { opacity: 0; } }
+  form {
+    position: relative; width: 100%; max-width: 420px; background: #fff; border-radius: 22px; box-shadow: 0 30px 60px rgba(0,0,0,.3);
+    padding: 24px 24px 20px; display: flex; flex-direction: column; gap: 11px; animation: rise .22s ease-out;
+  }
+  @keyframes rise { from { transform: translateY(14px) scale(.98); } }
+  .x { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: 0; background: none; font-size: 24px; color: #8a7d74; cursor: pointer; border-radius: 50%; font-family: inherit; }
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: #a8431a; }
+  form h4 { margin: 0; font-size: 21px; font-weight: 800; line-height: 1.2; padding-right: 28px; }
+  form p { margin: 0; font-size: 14px; color: #5c4f47; line-height: 1.45; }
+  label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; font-weight: 700; }
+  label.f input { font-family: inherit; font-size: 15px; padding: 10px 12px; border: 1.5px solid #e3d3c9; border-radius: 12px; }
+  label.f input:focus { border-color: #f37a48; outline: none; }
+  label.c { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: #4a3c34; cursor: pointer; }
+  label.c input { width: 18px; height: 18px; margin: 1px 0 0; flex: none; accent-color: #f37a48; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .err { font-size: 13px; color: #b3261e; min-height: 0; }
+  .done { display: none; flex-direction: column; gap: 10px; align-items: center; text-align: center; padding: 8px 0; }
+  .done .tick { width: 56px; height: 56px; border-radius: 50%; background: #e0f4e0; color: #1b6f1b; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; }
+  form.sent .fields { display: none; } form.sent .done { display: flex; }
+  .fields { display: flex; flex-direction: column; gap: 11px; }
+
+  @media (max-width: 700px) {
+    .card { flex-basis: 84%; min-width: 0; }
+    .row { padding: 8px 16px 14px; scroll-padding-left: 16px; gap: 14px; }
+    .arrow { display: none !important; }
+    h3 { font-size: 19px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <button class="arrow l" id="prev" type="button" aria-label="Previous bootcamps">‹</button>
+  <div class="row" id="row"><div class="msg">Loading bootcamps…</div></div>
+  <button class="arrow r" id="next" type="button" aria-label="More bootcamps">›</button>
+</div>
+
+<div class="veil" id="veil">
+  <form id="form" novalidate>
+    <button class="x" type="button" id="close" aria-label="Close">×</button>
+    <div class="fields">
+      <div class="eyebrow">WAITLIST</div>
+      <h4 id="fTitle">Bootcamp</h4>
+      <p id="fText">We'll email you first when dates and prices are set. No payment now.</p>
+      <label class="f">First name<input id="fName" name="name" type="text" autocomplete="given-name" maxlength="80" required></label>
+      <label class="f">Email<input id="fEmail" name="email" type="email" autocomplete="email" maxlength="120" required></label>
+      <label class="hp" aria-hidden="true">Website<input id="fWeb" type="text" tabindex="-1" autocomplete="off"></label>
+      <label class="c"><input id="fOk" type="checkbox" required>I agree to receive emails from Mandarin Zest about this bootcamp and other news. I can unsubscribe at any time.</label>
+      <div class="err" id="fErr" role="alert"></div>
+      <button class="btn go" type="submit" id="fBtn">Add me to the waitlist</button>
+    </div>
+    <div class="done" aria-live="polite">
+      <div class="tick" aria-hidden="true">✓</div>
+      <h4 id="dTitle" style="padding:0">You're on the list!</h4>
+      <p id="dText"></p>
+      <button class="btn wait" type="button" id="dClose" style="margin-top:6px">Close</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // ═════════════ SETTINGS ═════════════
+  // Waitlist sign-ups go to this Google Apps Script (Bootcamp waitlist sheet).
+  var WAITLIST_URL = "https://script.google.com/macros/s/AKfycbzI5QAO9wEhywb_Wm7GqwTQ9uPjAZEvU689N4eT25Ruja5iaj7S4Tp7FB4PClciMGs/exec";
+  // Picture fallback (character + colours) by words in the bootcamp name.
+  var FALLBACK = [
+    [/taiwan/i, "台", "#e0f4e0", "#1b6f1b"], [/pronunc|tone|speak/i, "音", "#fdf1ea", "#c4521f"],
+    [/character|hanzi|writ/i, "字", "#efe7f3", "#7d5a8c"], [/./, "学", "#fdf1ea", "#c4521f"]
+  ];
+  // ════════════════════════════════════
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  var TBD = '<span class="tbd">TBD</span>';
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function d(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2], 23, 59, 59); }
+  function label(iso) { var p = iso.split("-"); return (+p[2]) + " " + MON[+p[1] - 1]; }
+  var now = new Date();
+
+  // Works out the status from the dates (a "Status:" line on the page wins).
+  function statusOf(b) {
+    var s = (b.status || "").toLowerCase();
+    if (/sold/.test(s) || /full/.test(s)) return { k: "sold", t: "Sold out" };
+    if (/open/.test(s)) return { k: "open", t: b.signupBy ? "Open · closes " + label(b.signupBy) : "Open for registration" };
+    if (/wait/.test(s)) return { k: "wait", t: b.month ? "Waitlist · " + b.month : "Waitlist" };
+    if (/soon/.test(s)) return { k: "soon", t: "Coming soon" };
+    if (b.month || (!b.start && !b.signupBy)) return { k: "wait", t: b.month ? "Waitlist · next cohort " + b.month : "Waitlist" };
+    if (b.signupBy && now <= d(b.signupBy)) return { k: "open", t: "Open · closes " + label(b.signupBy) };
+    if (!b.signupBy && b.start && now < d(b.start)) return { k: "open", t: "Open for registration" };
+    if (b.start && now < d(b.start)) return { k: "wait", t: "Registration closed · waitlist" };
+    return { k: "soon", t: "Coming soon · new dates soon" };
+  }
+  var ORDER = { open: 0, wait: 1, soon: 2, sold: 3 };
+
+  function fact(name, value) { return '<div class="fact"><b>' + name + '</b><span>' + (value ? esc(value) : TBD) + '</span></div>'; }
+
+  function prices(b) {
+    var earlyOn = b.early && (!b.earlyEnds || now <= d(b.earlyEnds));
+    var boxes = [];
+    if (earlyOn) boxes.push('<div class="pbox early"><small>EARLY BIRD</small><strong>' + esc(b.early) + '</strong><span>' + (b.earlyEnds ? "until " + label(b.earlyEnds) : "&nbsp;") + '</span></div>');
+    if (b.price || !b.early) boxes.push(b.price
+      ? '<div class="pbox"><small>STANDARD</small><strong>' + esc(b.price) + '</strong><span>' + (b.signupBy ? "until " + label(b.signupBy) : "&nbsp;") + '</span></div>'
+      : '<div class="pbox empty"><small>PRICE</small>' + TBD + '</div>');
+    boxes.push(b.club
+      ? '<div class="pbox club"><small>CLUB</small><strong>' + esc(b.club) + '</strong><span>members</span></div>'
+      : '<div class="pbox club empty"><small>CLUB</small>' + TBD + '</div>');
+    if (!b.early && !b.price && !b.club) boxes.unshift('<div class="pbox early empty"><small>EARLY BIRD</small>' + TBD + '</div>');
+    return '<div class="prices" style="--n:' + boxes.length + '">' + boxes.join("") + '</div>';
+  }
+
+  var LIST = [];
+  function card(b, i) {
+    var st = statusOf(b), fb = FALLBACK.find(function (f) { return f[0].test(b.title); });
+    var pic = b.image
+      ? '<img src="' + esc(encodeURI(decodeURI(b.image))) + '" alt="" loading="lazy">'
+      : '<span class="zh" aria-hidden="true">' + fb[1] + '</span>';
+    var dates = b.dates ? esc(b.dates) + (b.datesTbd ? " " + TBD : "") : TBD;
+    var btn = st.k === "open"
+      ? '<a class="btn go" href="' + esc(b.url) + '" target="_blank" rel="noopener">Save my spot →</a>'
+      : '<button class="btn wait" type="button" data-wait="' + i + '">' + (st.k === "sold" ? "Join the waitlist for next time" : st.k === "soon" ? "Get notified →" : "Join the waitlist →") + '</button>';
+    return '<article class="card" style="--soft:' + fb[2] + ';--deep:' + fb[3] + '">' +
+      '<div class="pic">' + pic + '<span class="status s-' + st.k + '"><i></i>' + esc(st.t) + '</span></div>' +
+      '<div class="body"><h3>' + esc(b.title) + '</h3>' + (b.summary ? '<p class="sum">' + esc(b.summary) + '</p>' : "") +
+      '<div class="facts"><div class="fact"><b>Dates</b><span>' + dates + '</span></div>' +
+      fact("Time", b.time) + fact("Format", b.format) + fact("Level", b.level) + fact("Group", b.group) + '</div>' +
+      prices(b) + btn + '<a class="more" href="' + esc(b.url) + '" target="_blank" rel="noopener">See the full programme ↗</a></div></article>';
+  }
+
+  function render() {
+    var row = document.getElementById("row");
+    if (!LIST.length) { row.innerHTML = '<div class="msg">New bootcamps are coming soon. Join the updates list below to hear first.</div>'; return; }
+    LIST.sort(function (a, b) { return ORDER[statusOf(a).k] - ORDER[statusOf(b).k] || (a.start || "9").localeCompare(b.start || "9"); });
+    row.innerHTML = LIST.map(card).join("");
+    arrows();
+  }
+  function arrows() {
+    var row = document.getElementById("row");
+    document.getElementById("shell").classList.toggle("has-more", row.scrollWidth > row.clientWidth + 4);
+  }
+  window.addEventListener("resize", arrows);
+  document.getElementById("prev").onclick = function () { var r = document.getElementById("row"); r.scrollBy({ left: -r.clientWidth * .9, behavior: "smooth" }); };
+  document.getElementById("next").onclick = function () { var r = document.getElementById("row"); r.scrollBy({ left: r.clientWidth * .9, behavior: "smooth" }); };
+
+  /* ---------- waitlist pop-up ---------- */
+  var veil = document.getElementById("veil"), form = document.getElementById("form"), current = null, lastFocus = null;
+  function openForm(b) {
+    current = b; lastFocus = document.activeElement;
+    form.classList.remove("sent"); form.reset();
+    document.getElementById("fErr").textContent = "";
+    document.getElementById("fBtn").disabled = false; document.getElementById("fBtn").textContent = "Add me to the waitlist";
+    document.getElementById("fTitle").textContent = b.title;
+    document.getElementById("fText").textContent = statusOf(b).k === "soon"
+      ? "We'll email you as soon as the next dates are set. No payment now."
+      : "We'll email you first when " + (b.month ? "the " + b.month + " dates" : "registration") + " open" + (b.month ? "" : "s") + ". No payment now.";
+    veil.classList.add("show");
+    setTimeout(function () { document.getElementById("fName").focus(); }, 50);
+  }
+  function closeForm() { veil.classList.remove("show"); if (lastFocus) lastFocus.focus(); }
+  document.addEventListener("click", function (e) {
+    var w = e.target.closest("[data-wait]");
+    if (w) openForm(LIST[+w.getAttribute("data-wait")]);
+    if (e.target === veil) closeForm();
+  });
+  document.getElementById("close").onclick = closeForm;
+  document.getElementById("dClose").onclick = closeForm;
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && veil.classList.contains("show")) closeForm(); });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = document.getElementById("fName").value.trim();
+    var email = document.getElementById("fEmail").value.trim();
+    var err = document.getElementById("fErr");
+    if (!name) { err.textContent = "Please add your first name."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please check your email address."; return; }
+    if (!document.getElementById("fOk").checked) { err.textContent = "Please tick the box so we can email you."; return; }
+    err.textContent = "";
+    var btn = document.getElementById("fBtn"); btn.disabled = true; btn.textContent = "One moment…";
+    var page = "Bootcamps page (cards)";
+    fetch(WAITLIST_URL, {
+      method: "POST", mode: "no-cors", keepalive: true,
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ name: name, email: email, bootcamp: current.title, consent: true, page: page, website: document.getElementById("fWeb").value })
+    }).catch(function () {}).then(function () {
+      document.getElementById("dTitle").textContent = "You're on the list, " + name + "!";
+      document.getElementById("dText").textContent = "We'll write to " + email + " as soon as there's news about the " + current.title + ".";
+      form.classList.add("sent");
+      document.getElementById("dClose").focus();
+    });
+  });
+
+  fetch("bootcamps.json", { cache: "no-cache" })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (data) { LIST = (data.bootcamps || []).slice(); render(); })
+    .catch(function () { document.getElementById("row").innerHTML = '<div class="msg">The bootcamps couldn\'t load right now. Please refresh in a moment.</div>'; });
+</script>
+</body>
+</html>

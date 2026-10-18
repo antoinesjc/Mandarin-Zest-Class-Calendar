@@ -1,0 +1,39 @@
+name: Sync bootcamps
+
+on:
+  schedule:
+    - cron: "41 1 * * *"     # every day at 09:41 Taiwan time
+  workflow_dispatch:          # "Run workflow" button for an instant refresh
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-bootcamps
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build bootcamps.json from the bootcamp pages on mandarinzest.com
+        run: python scripts/build_bootcamps.py
+
+      - name: Commit if something changed
+        run: |
+          if git diff --quiet -- bootcamps.json; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "bootcamps-bot"
+          git config user.email "bootcamps-bot@users.noreply.github.com"
+          git add bootcamps.json
+          git commit -m "Update bootcamps from the website"
+          git pull --rebase
+          git push

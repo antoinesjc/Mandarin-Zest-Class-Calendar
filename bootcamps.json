@@ -1,0 +1,44 @@
+{
+ "bootcamps": [
+  {
+   "url": "https://www.mandarinzest.com/taiwanese-mini-bootcamp",
+   "title": "Taiwanese Mini Bootcamp",
+   "summary": "Learned Chinese from mainland textbooks? In 3 weekends, get the words, accent and manners Taiwanese people actually use, from the MRT to the night market.",
+   "image": "https://www.mandarinzest.com/unsplash/qJX_J6U5Vm4/5435/taipei.jpg?unique=d39d6a55",
+   "dates": "Sat 21 Nov – Sun 6 Dec",
+   "time": "3 PM CET · 9 AM ET · 10 PM Taiwan",
+   "format": "6 live online sessions, Sat & Sun",
+   "level": "HSK 2–3 (lower intermediate)",
+   "group": "Max 6 students",
+   "status": "",
+   "month": "",
+   "start": "2026-11-21",
+   "datesTbd": false,
+   "early": "US$111",
+   "earlyEnds": "2026-10-25",
+   "price": "US$139",
+   "club": "US$92",
+   "signupBy": "2026-11-15"
+  },
+  {
+   "url": "https://www.mandarinzest.com/chinese-pronunciation-bootcamp",
+   "title": "Chinese Pronunciation Bootcamp",
+   "summary": "You probably know more Chinese than you can comfortably say out loud. Let’s change that.",
+   "image": "https://www.mandarinzest.com/unsplash/siBPBbEe284/6083/chinese people.jpg?unique=9c1391be",
+   "dates": "January",
+   "time": "",
+   "format": "4 live online sessions, Saturdays, daily homework",
+   "level": "HSK 3+ (intermediate)",
+   "group": "Max 15 students",
+   "status": "",
+   "month": "January",
+   "start": "",
+   "datesTbd": true,
+   "early": "",
+   "earlyEnds": "",
+   "price": "",
+   "club": "",
+   "signupBy": ""
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bootcamp waitlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Waitlist form for a bootcamp's own page. Saves to the waitlist Google Sheet.
+     Which bootcamp: add ?bootcamp=<page address ending>, e.g.
+       waitlist.html?bootcamp=chinese-pronunciation-bootcamp
+     Optional: &bg=fdf1ea (card colour), &title=Join%20the%20waitlist
+     Use a 440px frame. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; display: flex; align-items: center; justify-content: center; padding: 8px; }
+  form {
+    width: 100%; max-width: 460px; background: var(--bg, #fff); border: 1px solid #ecdcd2; border-radius: 22px;
+    padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: #a8431a; }
+  h1 { margin: 0; font-size: 21px; font-weight: 800; line-height: 1.2; }
+  p { margin: 0; font-size: 14px; color: #5c4f47; line-height: 1.45; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; font-weight: 700; min-width: 0; }
+  label.f input { font-family: inherit; font-size: 15px; padding: 10px 12px; border: 1.5px solid #e3d3c9; border-radius: 12px; background: #fff; width: 100%; }
+  label.f input:focus { border-color: #f37a48; outline: none; }
+  label.c { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: #4a3c34; cursor: pointer; }
+  label.c input { width: 18px; height: 18px; margin: 1px 0 0; flex: none; accent-color: #f37a48; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .err { font-size: 13px; color: #b3261e; }
+  button { font-family: inherit; background: #f37a48; color: #2a2420; border: 0; border-radius: 999px; padding: 13px; font-size: 16px; font-weight: 800; cursor: pointer; }
+  button:hover { background: #e2632f; }
+  button:focus-visible, input:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
+  .done { display: none; flex-direction: column; gap: 10px; align-items: center; text-align: center; padding: 14px 0; }
+  .tick { width: 56px; height: 56px; border-radius: 50%; background: #e0f4e0; color: #1b6f1b; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; animation: pop .35s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes pop { from { transform: scale(.4); } }
+  .fields { display: flex; flex-direction: column; gap: 10px; }
+  form.sent .fields { display: none; } form.sent .done { display: flex; }
+  @media (max-width: 380px) { .two { grid-template-columns: 1fr; } form { padding: 18px 16px 16px; } }
+</style>
+</head>
+<body>
+<form id="form" novalidate>
+  <div class="fields">
+    <div class="eyebrow">WAITLIST</div>
+    <h1 id="title">Join the waitlist</h1>
+    <p id="text">We'll email you first when dates and prices are set. No payment now.</p>
+    <div class="two">
+      <label class="f">First name<input id="fName" type="text" autocomplete="given-name" maxlength="80" required></label>
+      <label class="f">Email<input id="fEmail" type="email" autocomplete="email" maxlength="120" required></label>
+    </div>
+    <label class="hp" aria-hidden="true">Website<input id="fWeb" type="text" tabindex="-1" autocomplete="off"></label>
+    <label class="c"><input id="fOk" type="checkbox" required>I agree to receive emails from Mandarin Zest about this bootcamp and other news. I can unsubscribe at any time.</label>
+    <div class="err" id="fErr" role="alert"></div>
+    <button type="submit" id="fBtn">Add me to the waitlist</button>
+  </div>
+  <div class="done" aria-live="polite">
+    <div class="tick" aria-hidden="true">✓</div>
+    <h1 id="dTitle">You're on the list!</h1>
+    <p id="dText"></p>
+  </div>
+</form>
+
+<script>
+  // Same Google Sheet as the Bootcamps page cards.
+  var WAITLIST_URL = "https://script.google.com/macros/s/AKfycbzI5QAO9wEhywb_Wm7GqwTQ9uPjAZEvU689N4eT25Ruja5iaj7S4Tp7FB4PClciMGs/exec";
+
+  var q = new URLSearchParams(location.search);
+  var slug = (q.get("bootcamp") || "").replace(/^.*\//, "").trim();
+  var bootcamp = { title: slug ? slug.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); }) : "Bootcamp", url: "" };
+  if (q.get("bg")) document.querySelector("form").style.setProperty("--bg", "#" + q.get("bg").replace(/[^0-9a-f]/gi, "").slice(0, 6));
+  if (q.get("title")) document.getElementById("title").textContent = q.get("title");
+
+  // Use the real bootcamp name from bootcamps.json (built from the website).
+  fetch("bootcamps.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (data) {
+    var b = (data.bootcamps || []).find(function (x) { return slug && x.url.replace(/\/$/, "").endsWith("/" + slug); });
+    if (b) {
+      bootcamp = b;
+      if (!q.get("title")) document.getElementById("title").textContent = "Join the " + b.title + " waitlist";
+      if (b.month) document.getElementById("text").textContent = "We'll email you first when the " + b.month + " dates and prices are set. No payment now.";
+    }
+  }).catch(function () {});
+
+  document.getElementById("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = document.getElementById("fName").value.trim();
+    var email = document.getElementById("fEmail").value.trim();
+    var err = document.getElementById("fErr");
+    if (!name) { err.textContent = "Please add your first name."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please check your email address."; return; }
+    if (!document.getElementById("fOk").checked) { err.textContent = "Please tick the box so we can email you."; return; }
+    err.textContent = "";
+    var btn = document.getElementById("fBtn"); btn.disabled = true; btn.textContent = "One moment…";
+    fetch(WAITLIST_URL, {
+      method: "POST", mode: "no-cors", keepalive: true,
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ name: name, email: email, bootcamp: bootcamp.title, consent: true,
+        page: bootcamp.url || ("bootcamp page: " + slug), website: document.getElementById("fWeb").value })
+    }).catch(function () {}).then(function () {
+      document.getElementById("dTitle").textContent = "You're on the list, " + name + "!";
+      document.getElementById("dText").textContent = "We'll write to " + email + " as soon as there's news about the " + bootcamp.title + ".";
+      document.getElementById("form").classList.add("sent");
+    });
+  });
+</script>
+</body>
+</html>

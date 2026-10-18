@@ -127,6 +127,22 @@ that opens the trial page in a new tab.
 - `founders.html` + `about/`: Antoine and Dorota cards (photo, quote, role,
   LinkedIn and Instagram, opening in a new tab) for the About us page, no title.
   Side by side on desktop, swipeable on phones. Use a 480px frame.
+- `bootcamps.html` + `bootcamps.json`: the bootcamp cards for the Bootcamps
+  page, built every day by `scripts/build_bootcamps.py` from every page on
+  mandarinzest.com with "bootcamp" in its address. It reads the "AT A GLANCE"
+  box (Dates, Time, Format, Level, Group, Early bird, Price, Club members,
+  Sign up by, optional Status and Summary) and the background picture of that
+  section. Missing lines or "TBD" show a grey TBD tag. Status is worked out
+  from the dates (Open until "Sign up by", Waitlist when only a month is set or
+  sign-up has closed, Coming soon when the dates have passed); a "Status:" line
+  wins. If the box has no prices, they come from an embedded *-pricing.html
+  widget's CONFIG. "Join the waitlist" opens a form that saves to the Bootcamp
+  waitlist Google Sheet. Use a 720px frame.
+- `waitlist.html?bootcamp=<page-address-ending>`: the same waitlist form for a
+  bootcamp's own page, e.g. `?bootcamp=chinese-pronunciation-bootcamp`. Use a
+  440px frame.
+- `apps-script/bootcamp-waitlist.gs`: the Google Apps Script behind the
+  waitlist sheet (for reference; it runs in Google, not here).
 - `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
   bootcamp page (4 in a row on desktop, swipeable on phones; use a 220px frame).
 - `taiwan-agenda.html`: the Taiwanese bootcamp agenda by weekend, with no dates
