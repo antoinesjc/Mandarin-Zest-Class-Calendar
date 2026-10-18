@@ -147,6 +147,12 @@ that opens the trial page in a new tab.
   `&align=center|left|right`. Use a 72px frame.
 - `apps-script/bootcamp-waitlist.gs`: the Google Apps Script behind the
   waitlist sheet (for reference; it runs in Google, not here).
+- `pronunciation-week.html`: how a Pronunciation Bootcamp week works (no
+  title): onboarding call before, Mon–Fri recordings (teacher's voice, social
+  media reels, C-drama scenes, street interviews and more, rotating each week),
+  Saturday live class, Sunday rest, final assessment after. Days light up one by
+  one; hover or tap a day. Material types are in SOURCES at the bottom. Use a
+  460px frame.
 - `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
   bootcamp page (4 in a row on desktop, swipeable on phones; use a 220px frame).
 - `taiwan-agenda.html`: the Taiwanese bootcamp agenda by weekend, with no dates

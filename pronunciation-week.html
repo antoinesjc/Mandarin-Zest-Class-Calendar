@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A small daily habit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Pronunciation Bootcamp: how a week works (no title).
+     The days light up one by one; hover or tap a day to see it.
+     Edit the material types in DAYS at the bottom. Use a 460px frame. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; display: flex; flex-direction: column; justify-content: center; padding: 6px 4px; }
+
+  .wrap { display: grid; grid-template-columns: 1fr 2.7fr 1fr; gap: 16px; max-width: 1180px; width: 100%; margin: 0 auto; align-items: stretch; }
+  .side, .main { background: #fff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .side { border: 1px solid #ecdcd2; }
+  .kicker { font-size: 12px; font-weight: 800; letter-spacing: .09em; color: #8a7d74; }
+  .side h3 { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.2; }
+  .side p { margin: 0; font-size: 14px; line-height: 1.5; color: #5c4f47; }
+  .side .ic { width: 42px; height: 42px; border-radius: 12px; background: #fdf1ea; color: #c4521f; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .side.after .ic { background: #e0f4e0; color: #1b6f1b; }
+  .side svg, .detail svg { width: 22px; height: 22px; }
+
+  .main { border: 2px solid #f8dacd; }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .weeks { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 800; color: #8a7d74; }
+  .weeks i { width: 22px; height: 6px; border-radius: 3px; background: #f1e3da; transition: background .3s; }
+  .weeks i.on { background: #f37a48; }
+
+  .days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 7px; }
+  .day {
+    font-family: inherit; border: 0; cursor: pointer; border-radius: 14px; padding: 10px 4px 9px; background: #fdf1ea; color: #c4521f;
+    display: flex; flex-direction: column; align-items: center; gap: 3px; transition: transform .2s, background .2s, box-shadow .2s, color .2s; min-width: 0;
+  }
+  .day b { font-size: 11.5px; letter-spacing: .08em; color: #8a7d74; }
+  .day span { font-size: 14px; font-weight: 800; white-space: nowrap; }
+  .day.sat { background: #e0f4e0; color: #1b6f1b; }
+  .day.sun { background: #f4f0ec; color: #8a7d74; }
+  .day.done { opacity: .65; }
+  .day .m { display: none; }
+  .day.on { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(42,36,32,.14); background: #f37a48; color: #2a2420; opacity: 1; }
+  .day.on b { color: #2a2420; }
+  .day.sat.on { background: #1b6f1b; color: #fff; } .day.sat.on b { color: #e0f4e0; }
+  .day.sun.on { background: #6b5a50; color: #fff; } .day.sun.on b { color: #f4f0ec; }
+  .day:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
+
+  .detail { display: flex; gap: 14px; align-items: center; background: #fffaf6; border-radius: 16px; padding: 14px 16px; min-height: 104px; }
+  .badge { width: 56px; height: 56px; flex: none; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: #f37a48; color: #2a2420; transition: background .3s; }
+  .badge svg { width: 28px; height: 28px; }
+  .dtext { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .dtext small { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: #a8431a; }
+  .dtext strong { font-size: 19px; font-weight: 800; line-height: 1.2; }
+  .dtext p { margin: 0; font-size: 14px; line-height: 1.45; color: #5c4f47; }
+  .steps { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .steps span { font-size: 12px; font-weight: 700; background: #fff; border: 1px solid #ecdcd2; border-radius: 999px; padding: 3px 9px; display: inline-flex; align-items: center; gap: 5px; }
+  .wave { display: inline-flex; gap: 2px; align-items: center; height: 12px; }
+  .wave i { width: 2px; background: #f37a48; border-radius: 1px; animation: wv 0.9s ease-in-out infinite; }
+  .wave i:nth-child(2) { animation-delay: .15s } .wave i:nth-child(3) { animation-delay: .3s } .wave i:nth-child(4) { animation-delay: .45s }
+  @keyframes wv { 0%,100% { height: 3px } 50% { height: 12px } }
+  .fade { animation: fade .35s ease-out; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+
+  .sources { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; color: #6b5a50; }
+  .sources b { font-weight: 700; margin-right: 2px; }
+  .src { font-weight: 700; border-radius: 999px; padding: 3px 10px; background: #f6eee9; color: #5c4f47; transition: background .25s, color .25s; }
+  .src.on { background: #2a2420; color: #fff; }
+
+  @media (max-width: 960px) and (min-width: 701px) {
+    .wrap { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .main { grid-column: 1 / -1; order: -1; }
+    .side { padding: 12px 16px; gap: 2px; } .side .ic, .side p { display: none; } .side h3 { font-size: 16px; }
+  }
+  @media (max-width: 700px) {
+    body { padding: 4px 0; }
+    .wrap { grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 12px; }
+    .main { grid-column: 1 / -1; order: -1; padding: 14px; gap: 10px; }
+    .side { padding: 12px 14px; gap: 2px; }
+    .side .ic { display: none; } .side p { display: none; }
+    .side h3 { font-size: 15px; }
+    .days { gap: 4px; }
+    .day { padding: 8px 2px; border-radius: 11px; }
+    .day span { display: none; }
+    .day b { font-size: 11px; }
+    .day .m { display: block; font-size: 11px; font-weight: 800; }
+    .detail { padding: 12px; gap: 10px; min-height: 128px; align-items: flex-start; }
+    .badge { width: 44px; height: 44px; border-radius: 12px; } .badge svg { width: 22px; height: 22px; }
+    .dtext strong { font-size: 16.5px; } .dtext p { font-size: 13.5px; }
+    .top .kicker { font-size: 11px; }
+    .sources { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -14px; padding: 0 14px; }
+    .sources::-webkit-scrollbar { display: none; }
+    .src, .sources b { white-space: nowrap; flex: none; }
+  }
+  @media (max-width: 360px) {
+    .detail { min-height: 120px; } .steps span { font-size: 11px; padding: 2px 7px; }
+    .dtext p { font-size: 13px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="side before">
+    <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></div>
+    <div class="kicker">WEEK BEFORE</div>
+    <h3>1-to-1 onboarding call</h3>
+    <p>Your background, your goals and the sounds that trouble you most, plus a first recording.</p>
+  </div>
+
+  <div class="main" id="main">
+    <div class="top">
+      <div class="kicker">EVERY WEEK, FOR 4 WEEKS</div>
+      <div class="weeks" aria-hidden="true"><span id="wkLabel">Week 1</span><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="days" id="days" role="tablist" aria-label="Days of the week"></div>
+    <div class="detail" id="detail" role="tabpanel" aria-live="polite"></div>
+    <div class="sources" id="sources"></div>
+  </div>
+
+  <div class="side after">
+    <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg></div>
+    <div class="kicker">AFTER WEEK 4</div>
+    <h3>Final assessment</h3>
+    <p>Your first and last recordings side by side, a personal report and your certificate.</p>
+  </div>
+</div>
+
+<script>
+  // ═════════════ EDIT HERE ═════════════
+  // Weekday material types (they rotate, so every week mixes them up).
+  var SOURCES = [
+    { name: "Teacher's voice",  text: "Model lines recorded by your teacher, so you hear every tone clearly.", icon: "mic" },
+    { name: "Social media reel", text: "Short clips the way people really talk online today.", icon: "phone" },
+    { name: "C-drama scene",     text: "Dialogue from Chinese dramas, emotion and all.", icon: "film" },
+    { name: "Street interview",  text: "Real people on the street: natural speed, real accents.", icon: "street" },
+    { name: "And more",          text: "Songs, vlogs, ads… a different mix every week.", icon: "spark" }
+  ];
+  // ═════════════════════════════════════
+
+  var ICONS = {
+    mic: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/>',
+    phone: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="m10.5 9 4 3-4 3z" fill="currentColor"/>',
+    film: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5"/>',
+    street: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/>',
+    spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+    live: '<rect x="2" y="5" width="14" height="14" rx="2"/><path d="m16 10 6-3v10l-6-3"/>',
+    rest: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+  };
+  function svg(name) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>'; }
+
+  var NAMES = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  var FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  var week = 0, day = 0, timer = null, paused = false;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function sourceFor(w, d) { return SOURCES[(d + w) % SOURCES.length]; }   // shift each week
+
+  function renderDays() {
+    document.getElementById("days").innerHTML = NAMES.map(function (n, i) {
+      var cls = i === 5 ? "sat" : i === 6 ? "sun" : "";
+      var lbl = i < 5 ? "Record" : i === 5 ? "Live class" : "Rest";
+      return '<button class="day ' + cls + (i < day ? " done" : "") + (i === day ? " on" : "") + '" role="tab" aria-selected="' + (i === day) + '" data-d="' + i + '"><b>' + n + '</b><span>' + lbl + '</span><em class="m" style="font-style:normal">' + (i < 5 ? "●" : i === 5 ? "▶" : "☾") + '</em></button>';
+    }).join("");
+  }
+  function renderDetail() {
+    var el = document.getElementById("detail"), h;
+    if (day < 5) {
+      var s = sourceFor(week, day);
+      h = '<div class="badge">' + svg(s.icon) + '</div><div class="dtext"><small>' + FULL[day].toUpperCase() + ' · TODAY\'S MATERIAL</small><strong>' + s.name + '</strong><p>' + s.text + '</p>' +
+        '<div class="steps"><span>1 · Listen</span><span>2 · Record, any time <i class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i></i></span><span>3 · Personal feedback</span></div></div>';
+    } else if (day === 5) {
+      h = '<div class="badge" style="background:#1b6f1b;color:#fff">' + svg("live") + '</div><div class="dtext"><small style="color:#1b6f1b">SATURDAY · LIVE CLASS</small><strong>One hour with your teacher</strong><p>The week\'s most common mistakes, fixed together. Send up to three questions beforehand.</p></div>';
+    } else {
+      h = '<div class="badge" style="background:#e6ddd6;color:#5c4f47">' + svg("rest") + '</div><div class="dtext"><small style="color:#8a7d74">SUNDAY</small><strong>Rest day</strong><p>Let it sink in. A new set of material arrives on Monday.</p></div>';
+    }
+    el.innerHTML = h; el.classList.remove("fade"); void el.offsetWidth; el.classList.add("fade");
+    var active = day < 5 ? sourceFor(week, day).name : "";
+    document.getElementById("sources").innerHTML = '<b>Recordings based on:</b>' + SOURCES.map(function (s) {
+      return '<span class="src' + (s.name === active ? " on" : "") + '">' + s.name + '</span>';
+    }).join("");
+    var row = document.getElementById("sources"), chip = row.querySelector(".src.on");
+    if (chip && row.scrollWidth > row.clientWidth) row.scrollTo({ left: chip.offsetLeft - 60, behavior: reduce ? "auto" : "smooth" });
+    document.getElementById("wkLabel").textContent = "Week " + (week + 1);
+    document.querySelectorAll(".weeks i").forEach(function (b, i) { b.className = i <= week ? "on" : ""; });
+  }
+  function show(d) { day = d; renderDays(); renderDetail(); }
+  function tick() {
+    if (paused) return;
+    if (day === 6) { week = (week + 1) % 4; show(0); } else show(day + 1);
+  }
+  function start() { clearInterval(timer); if (!reduce) timer = setInterval(tick, 2600); }
+
+  document.getElementById("days").addEventListener("click", function (e) {
+    var b = e.target.closest(".day"); if (!b) return;
+    show(+b.getAttribute("data-d")); start();
+  });
+  var main = document.getElementById("main");
+  main.addEventListener("mouseenter", function () { paused = true; });
+  main.addEventListener("mouseleave", function () { paused = false; });
+  main.addEventListener("mouseover", function (e) {
+    var b = e.target.closest(".day"); if (b && +b.getAttribute("data-d") !== day) show(+b.getAttribute("data-d"));
+  });
+
+  // start when visible
+  show(0);
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { start(); io.disconnect(); } }, { threshold: .3 });
+    io.observe(main);
+  } else start();
+</script>
+</body>
+</html>
