@@ -171,3 +171,10 @@ that opens the trial page in a new tab.
 - `.github/workflows/sync-calendar.yml`: the schedule.
 
 Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
+
+## Chinese clothing timeline (articles)
+
+- `fashion-timeline.html` + `fashion/f01.jpg … f21.jpg`: 21 figures of women's clothing from the Qin–Han to today,
+  with dynasty bar, dates, a short explanation and the Chinese name of each style (FIGS list in the file).
+  Illustrations © N. Duong (iridescentdream.com), used with permission; the credit is shown under the widget.
+  `?start=9` opens on figure 9. Embed: `height:max(780px, min(900px, calc((790px - 100vw) * 1000)))` with `scrolling="no"`.
