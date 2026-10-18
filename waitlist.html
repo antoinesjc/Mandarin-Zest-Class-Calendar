@@ -12,6 +12,7 @@
      Which bootcamp: add ?bootcamp=<page address ending>, e.g.
        waitlist.html?bootcamp=chinese-pronunciation-bootcamp
      Optional: &bg=fdf1ea (card colour), &title=Join%20the%20waitlist
+     &plain=1 removes the card border (for an Odoo pop-up block)
      (&popup=1 is added by waitlist-button.html when it opens this as a small window)
      Use a 440px frame. */
   * { box-sizing: border-box; }
@@ -48,6 +49,8 @@
   .closebtn { display: none; background: #fff; color: #2a2420; box-shadow: inset 0 0 0 2px #2a2420; margin-top: 6px; padding: 11px 26px; }
   .closebtn:hover { background: #2a2420; color: #fff; }
   body.popup .closebtn { display: inline-block; }
+  /* &plain=1: no card border, for use inside an Odoo pop-up block */
+  body.plain form { border: 0; background: transparent; padding: 8px 6px 4px; max-width: none; }
 </style>
 </head>
 <body>
@@ -82,6 +85,7 @@
   var bootcamp = { title: slug ? slug.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); }) : "Bootcamp", url: "" };
   if (q.get("bg")) document.querySelector("form").style.setProperty("--bg", "#" + q.get("bg").replace(/[^0-9a-f]/gi, "").slice(0, 6));
   if (q.get("title")) document.getElementById("title").textContent = q.get("title");
+  if (q.get("plain")) document.body.classList.add("plain");
   if (q.get("popup")) {
     document.body.classList.add("popup");
     document.getElementById("closeBtn").addEventListener("click", function () {
