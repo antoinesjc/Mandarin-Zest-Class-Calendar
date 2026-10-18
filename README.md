@@ -69,7 +69,7 @@ description, optionally with a topic line:
 Topic: Tips for learning and remembering characters
 ```
 
-The trial page then shows the next 2 trial sessions automatically. Only
+The trial page then shows every upcoming trial session automatically (two side by side; swipe or use the arrows for more). Only
 `#trial` and the `Topic:` line are read from the description; everything
 else in it (Meet links included) is ignored.
 

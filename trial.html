@@ -9,7 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
 <style>
   /* Shows the upcoming sessions with #trial in their Google Calendar description.
-     Options in the URL: ?count=2 (how many, default 2) */
+     Shows every upcoming trial session (up to 8). Two fit side by side; when there
+     are more, visitors swipe or use the arrows. Optional: ?count=2 to limit. Use a 340px frame. */
   :root {
     --ink: #2a2420;
     --muted: #5c4f47;
@@ -18,13 +19,25 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; background: transparent; }
   body { font-family: 'Outfit', 'Noto Serif SC', system-ui, sans-serif; color: var(--ink); padding: 16px 16px 8px; }
+  .shell { position: relative; max-width: 1060px; margin: 0 auto; }
+  .shell.has-more { padding: 0 30px; }
   .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    max-width: 1000px;
-    margin: 0 auto;
+    display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 4px 4px 14px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
   }
+  .cards::-webkit-scrollbar { display: none; }
+  .card { flex: 0 0 calc((100% - 24px) / 2); min-width: 280px; scroll-snap-align: start; }
+  .card:first-child { margin-left: auto; } .card:last-child { margin-right: auto; }
+  .arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0;
+    background: #fff; box-shadow: 0 6px 18px rgba(42,36,32,.18); font-size: 22px; cursor: pointer; display: none; z-index: 2; font-family: inherit; color: var(--ink);
+  }
+  .arrow.l { left: -6px; } .arrow.r { right: -6px; }
+  .has-more .arrow { display: block; }
+  .dots { display: none; justify-content: center; gap: 6px; }
+  .has-more .dots { display: flex; }
+  .dots i { width: 6px; height: 6px; border-radius: 3px; background: #e3d3c9; transition: width .2s, background .2s; }
+  .dots i.on { background: #1b6f1b; width: 16px; }
   .card {
     background: #ffffff;
     border-radius: 20px;
@@ -68,6 +81,16 @@
     color: var(--muted);
   }
   .empty strong { display: block; color: var(--ink); font-size: 20px; margin-bottom: 6px; }
+  @media (max-width: 760px) {
+    body { padding: 10px 0 4px; }
+    .shell.has-more { padding: 0; }
+    .cards { gap: 14px; padding: 4px 16px 10px; scroll-padding-left: 16px; }
+    .card { flex-basis: 86%; max-width: 420px; min-width: 0; padding: 18px 20px; gap: 9px; }
+    .arrow { display: none !important; }
+    h3 { font-size: 20px; } .when { font-size: 15px; } .when span { font-size: 13.5px; }
+    .bottom { flex-wrap: nowrap; gap: 10px; padding-top: 2px; }
+    .price { font-size: 23px; } .btn { padding: 11px 18px; font-size: 15px; white-space: nowrap; }
+  }
 </style>
 </head>
 <body>
@@ -85,7 +108,7 @@ const CAT_COLORS = {
 };
 
 const params = new URLSearchParams(location.search);
-const COUNT = Math.min(6, Math.max(1, parseInt(params.get("count"), 10) || 2));
+const COUNT = Math.min(8, Math.max(1, parseInt(params.get("count"), 10) || 8));
 const root = document.getElementById("root");
 
 function el(tag, cls, text) {
@@ -152,9 +175,27 @@ function render(events) {
     box.appendChild(document.createTextNode("We run 2 trial sessions every month. Check back in a few days."));
     root.appendChild(box);
   } else {
+    const shell = el("div", "shell");
     const wrap = el("div", "cards");
     trials.forEach(ev => wrap.appendChild(card(ev)));
-    root.appendChild(wrap);
+    const prev = el("button", "arrow l", "‹"); prev.type = "button"; prev.setAttribute("aria-label", "Earlier sessions");
+    const next = el("button", "arrow r", "›"); next.type = "button"; next.setAttribute("aria-label", "More sessions");
+    prev.onclick = () => wrap.scrollBy({ left: -wrap.clientWidth * 0.9, behavior: "smooth" });
+    next.onclick = () => wrap.scrollBy({ left: wrap.clientWidth * 0.9, behavior: "smooth" });
+    const dots = el("div", "dots"); dots.setAttribute("aria-hidden", "true");
+    trials.forEach((_, i) => dots.appendChild(el("i", i ? "" : "on")));
+    shell.append(prev, wrap, next, dots);
+    root.appendChild(shell);
+    const update = () => {
+      shell.classList.toggle("has-more", wrap.scrollWidth > wrap.clientWidth + 4);
+      const cards = wrap.children, w = cards[0].getBoundingClientRect().width + 14;
+      let i = Math.round(wrap.scrollLeft / w);
+      if (wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4) i = cards.length - 1;
+      [...dots.children].forEach((d, k) => d.className = k === i ? "on" : "");
+    };
+    wrap.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
   }
   reportHeight();
 }
