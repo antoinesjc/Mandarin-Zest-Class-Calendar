@@ -141,10 +141,11 @@ that opens the trial page in a new tab.
 - `waitlist.html?bootcamp=<page-address-ending>`: the same waitlist form for a
   bootcamp's own page, e.g. `?bootcamp=chinese-pronunciation-bootcamp`. Use a
   440px frame.
-- `waitlist-button.html?bootcamp=<page-address-ending>`: just a "Join the
-  waitlist" button. On desktop it opens the waitlist form in a small window; on
-  phones in a new tab. Options: `&label=`, `&style=orange|outline|light`,
-  `&align=center|left|right`. Use a 72px frame.
+- `waitlist-button.html?bootcamp=<page-address-ending>`: a "Join the waitlist"
+  button; clicking it pops up the small waitlist form right there (the frame
+  keeps room for it; the rest is transparent). Options: `&label=`,
+  `&style=orange|outline|light`, `&align=center|left|right`, `&pos=top`.
+  Use a 460px frame.
 - `apps-script/bootcamp-waitlist.gs`: the Google Apps Script behind the
   waitlist sheet (for reference; it runs in Google, not here).
 - `taiwan-vs-textbook.html`: textbook vs. Taiwan word cards for the Taiwanese
