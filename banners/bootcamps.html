@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Bootcamps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Article banner for all bootcamps. Fills whatever height the frame has (use 300px).
+     The line next to the button updates itself from bootcamps.json (built from the website). */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #fff; padding: 4px; }
+  .banner {
+    min-height: 100%; max-width: 820px; margin: 0 auto; border-radius: 20px; padding: 26px 28px;
+    display: flex; gap: 26px; align-items: center; background: #1f3a1f;
+  }
+  .text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #9fd89f; }
+  h3 { margin: 0; font-size: 24px; font-weight: 800; line-height: 1.2; }
+  p { margin: 0; font-size: 15px; line-height: 1.5; color: #d7e8d7; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center; margin-top: 4px; }
+  .btn {
+    position: relative; overflow: hidden; white-space: nowrap; text-decoration: none; font-weight: 800; font-size: 16px;
+    padding: 13px 22px; border-radius: 999px; background: #f37a48; color: #2a2420;
+  }
+  .btn:hover { background: #e2632f; }
+  .btn:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .btn::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+    animation: shine 5s ease-in-out infinite 3s;
+  }
+  @keyframes shine { 0%, 75% { left: -60%; } 100% { left: 130%; } }
+  .side { font-size: 14px; color: #cfe3cf; display: none; align-items: center; gap: 7px; }
+  .side.show { display: inline-flex; }
+  .side i { width: 8px; height: 8px; border-radius: 50%; background: #9fd89f; flex: none; animation: blink 1.6s ease-in-out infinite; }
+  .side.wait i { background: #ffd27a; animation: none; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .short { display: none; }
+
+  /* progress bars: fill week by week, then "Level up" */
+  .visual {
+    flex: 0 0 160px; align-self: stretch; min-height: 140px; border-radius: 14px; background: #173017;
+    display: flex; flex-direction: column; justify-content: center; gap: 9px; padding: 16px 14px;
+  }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .row b { width: 24px; font-size: 11px; font-weight: 800; color: #9cb79c; }
+  .track { flex: 1; height: 12px; border-radius: 6px; background: #2c4a2c; overflow: hidden; }
+  .fill { height: 100%; width: 0; border-radius: 6px; background: #f37a48; animation: grow 8s ease-in-out infinite both; }
+  .r2 .fill { animation-name: grow2; } .r3 .fill { animation-name: grow3; background: #f8a77f; } .r4 .fill { animation-name: grow4; background: #9fd89f; }
+  @keyframes grow  { 0% { width: 0 } 12%, 88% { width: 100% } 96%, 100% { width: 0 } }
+  @keyframes grow2 { 0%, 12% { width: 0 } 24%, 88% { width: 100% } 96%, 100% { width: 0 } }
+  @keyframes grow3 { 0%, 24% { width: 0 } 36%, 88% { width: 100% } 96%, 100% { width: 0 } }
+  @keyframes grow4 { 0%, 36% { width: 0 } 48%, 88% { width: 100% } 96%, 100% { width: 0 } }
+  .lvl { font-size: 13px; font-weight: 800; color: #9fd89f; text-align: right; opacity: 0; animation: lvl 8s ease-in-out infinite both; }
+  @keyframes lvl { 0%, 48% { opacity: 0; transform: scale(.6); } 53% { opacity: 1; transform: scale(1.15); } 57%, 86% { opacity: 1; transform: scale(1); } 94%, 100% { opacity: 0; } }
+
+  @media (max-width: 640px) {
+    .banner { flex-direction: column; align-items: stretch; padding: 18px 20px; gap: 14px; justify-content: center; }
+    .visual { flex: none; min-height: 0; flex-direction: row; align-items: center; gap: 6px; padding: 10px 12px; }
+    .row { flex: 1; gap: 5px; } .row b { width: auto; }
+    .lvl { flex: none; font-size: 12px; }
+    h3 { font-size: 21px; } p { font-size: 14px; line-height: 1.45; }
+    .long { display: none; } .short { display: inline; }
+    .btn { font-size: 15px; padding: 11px 18px; }
+  }
+  @media (max-width: 320px) { .lvl, .side { display: none !important; } }
+  @media (prefers-reduced-motion: reduce) {
+    .fill, .lvl, .btn::after, .side i { animation: none !important; } .fill { width: 100%; } .lvl { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="visual" aria-hidden="true">
+    <div class="row r1"><b>W1</b><div class="track"><div class="fill"></div></div></div>
+    <div class="row r2"><b>W2</b><div class="track"><div class="fill"></div></div></div>
+    <div class="row r3"><b>W3</b><div class="track"><div class="fill"></div></div></div>
+    <div class="row r4"><b>W4</b><div class="track"><div class="fill"></div></div></div>
+    <div class="lvl">Level up ✓</div>
+  </div>
+  <div class="text">
+    <div class="eyebrow">MANDARIN ZEST BOOTCAMPS</div>
+    <h3>Make a real jump in a few weeks, not a few years.</h3>
+    <p><span class="long">Short, intensive courses with live teachers and a small group: Taiwanese Mandarin, pronunciation and more.</span><span class="short">Short courses with live teachers and a small group.</span></p>
+    <div class="actions">
+      <a class="btn" href="https://www.mandarinzest.com/bootcamps" target="_blank" rel="noopener">See the bootcamps</a>
+      <span class="side" id="side"><i></i><span id="sideText"></span></span>
+    </div>
+  </div>
+</div>
+<script>
+  // "Open now: …" or "Next cohort: …", worked out from the bootcamp pages.
+  function d(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2], 23, 59, 59); }
+  var now = new Date();
+  function isOpen(b) {
+    var s = (b.status || "").toLowerCase();
+    if (/sold|full|wait|soon/.test(s)) return false;
+    if (/open/.test(s)) return true;
+    if (b.month) return false;
+    if (b.signupBy) return now <= d(b.signupBy);
+    return !!(b.start && now < d(b.start));
+  }
+  fetch("../bootcamps.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (data) {
+    var list = data.bootcamps || [], side = document.getElementById("side"), t = document.getElementById("sideText");
+    var open = list.filter(isOpen);
+    if (open.length) { t.textContent = "Open now: " + open[0].title; side.className = "side show"; return; }
+    var next = list.find(function (b) { return b.month; }) || list.find(function (b) { return b.start && now < d(b.start); });
+    if (next) { t.textContent = "Next cohort: " + (next.month || next.dates) + " · " + next.title.replace(/ Bootcamp$/, ""); side.className = "side show wait"; }
+  }).catch(function () {});
+</script>
+</body>
+</html>

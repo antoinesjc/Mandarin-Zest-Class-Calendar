@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest bootcamp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* Article banner for ONE bootcamp, filled in automatically from its page:
+       banners/bootcamp.html?bootcamp=taiwanese-mini-bootcamp
+     Picture, status, dates, level, group and price come from bootcamps.json.
+     Fills whatever height the frame has (use 320px). */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 4px; }
+  .banner {
+    min-height: 100%; max-width: 820px; margin: 0 auto; border-radius: 20px; overflow: hidden;
+    display: flex; align-items: stretch; background: #fdf1ea; text-decoration: none; color: inherit;
+  }
+  .pic { flex: 0 0 240px; position: relative; background: #e0f4e0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+  .banner:hover .pic img { transform: scale(1.05); }
+  .pic .zh { font-family: 'Noto Sans SC', sans-serif; font-size: 84px; font-weight: 700; color: #1b6f1b; }
+  .status { position: absolute; left: 12px; top: 12px; font-size: 12px; font-weight: 800; border-radius: 999px; padding: 5px 10px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  .status i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .s-open { background: #1b6f1b; color: #fff; } .s-open i { animation: blink 1.6s ease-in-out infinite; }
+  .s-wait { background: #fff3d6; color: #6b4900; } .s-soon { background: #e6ddd6; color: #4a3c34; } .s-sold { background: #2a2420; color: #fff; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .text { flex: 1; min-width: 0; padding: 22px 26px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #a8431a; }
+  h3 { margin: 0; font-size: 23px; font-weight: 800; line-height: 1.2; }
+  p { margin: 0; font-size: 15px; line-height: 1.5; color: #4a3c34; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .facts { font-size: 14px; color: #6b5a50; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-top: 2px; }
+  .btn {
+    position: relative; overflow: hidden; white-space: nowrap; font-weight: 800; font-size: 16px; padding: 12px 22px; border-radius: 999px;
+    background: #f37a48; color: #2a2420;
+  }
+  .btn.wait { background: #2a2420; color: #fff; }
+  .banner:hover .btn { background: #e2632f; } .banner:hover .btn.wait { background: #000; }
+  .banner:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .btn::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+    animation: shine 5s ease-in-out infinite 3s;
+  }
+  @keyframes shine { 0%, 75% { left: -60%; } 100% { left: 130%; } }
+  .price { font-size: 14px; font-weight: 800; }
+  .price span { font-weight: 500; color: #6b5a50; }
+
+  @media (max-width: 640px) {
+    .banner { flex-direction: column; }
+    .pic { flex: 0 0 96px; }
+    .pic .zh { font-size: 56px; }
+    .text { padding: 14px 18px 16px; gap: 6px; }
+    h3 { font-size: 20px; } p { display: none; } .facts { font-size: 13px; }
+    .btn { font-size: 15px; padding: 10px 18px; }
+  }
+  @media (max-width: 320px) { .price span { display: none; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="banner" id="banner" href="https://www.mandarinzest.com/bootcamps" target="_blank" rel="noopener">
+  <div class="pic" id="pic"><span class="zh" aria-hidden="true">营</span></div>
+  <div class="text">
+    <div class="eyebrow" id="eyebrow">MANDARIN ZEST BOOTCAMP</div>
+    <h3 id="title">Mandarin Zest Bootcamps</h3>
+    <p id="sum">Short, intensive courses with live teachers and a small group.</p>
+    <div class="facts" id="facts"></div>
+    <div class="actions"><span class="btn" id="btn">See the bootcamps</span><span class="price" id="price"></span></div>
+  </div>
+</a>
+<script>
+  var slug = (new URLSearchParams(location.search).get("bootcamp") || "").replace(/[^\w-]/g, "");
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function d(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2], 23, 59, 59); }
+  function label(iso) { var p = iso.split("-"); return (+p[2]) + " " + MON[+p[1] - 1]; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  var now = new Date();
+  function statusOf(b) {   // same rules as the Bootcamps page
+    var s = (b.status || "").toLowerCase();
+    if (/sold|full/.test(s)) return { k: "sold", t: "Sold out" };
+    if (/open/.test(s)) return { k: "open", t: b.signupBy ? "Open · closes " + label(b.signupBy) : "Open for registration" };
+    if (/wait/.test(s)) return { k: "wait", t: b.month ? "Waitlist · " + b.month : "Waitlist" };
+    if (/soon/.test(s)) return { k: "soon", t: "Coming soon" };
+    if (b.month || (!b.start && !b.signupBy)) return { k: "wait", t: b.month ? "Waitlist · next cohort " + b.month : "Waitlist" };
+    if (b.signupBy && now <= d(b.signupBy)) return { k: "open", t: "Open · closes " + label(b.signupBy) };
+    if (!b.signupBy && b.start && now < d(b.start)) return { k: "open", t: "Open for registration" };
+    if (b.start && now < d(b.start)) return { k: "wait", t: "Registration closed · waitlist" };
+    return { k: "soon", t: "Coming soon" };
+  }
+  fetch("../bootcamps.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (data) {
+    var b = (data.bootcamps || []).find(function (x) { return slug && x.url.replace(/\/$/, "").endsWith("/" + slug); });
+    if (!b) return;
+    var st = statusOf(b);
+    document.getElementById("banner").href = b.url;
+    document.getElementById("pic").innerHTML = (b.image ? '<img src="' + esc(encodeURI(decodeURI(b.image))) + '" alt="">' : '<span class="zh" aria-hidden="true">营</span>') +
+      '<span class="status s-' + st.k + '"><i></i>' + esc(st.t) + '</span>';
+    document.getElementById("eyebrow").textContent = "BOOTCAMP" + (b.format ? " · " + b.format.split(",")[0].toUpperCase() : "");
+    document.getElementById("title").textContent = b.title;
+    document.getElementById("sum").textContent = b.summary || "";
+    document.getElementById("facts").textContent = [b.dates || "Dates TBD", b.level, b.group].filter(Boolean).join(" · ");
+    var btn = document.getElementById("btn");
+    if (st.k === "open") btn.textContent = "Save my spot";
+    else { btn.textContent = "Join the waitlist"; btn.className = "btn wait"; }
+    var earlyOn = b.early && (!b.earlyEnds || now <= d(b.earlyEnds));
+    var price = earlyOn ? b.early : b.price;
+    document.getElementById("price").innerHTML = price
+      ? "from " + esc(price) + (earlyOn && b.earlyEnds ? " <span>· early bird until " + label(b.earlyEnds) + "</span>" : "")
+      : "<span>Price TBD</span>";
+  }).catch(function () {});
+</script>
+</body>
+</html>

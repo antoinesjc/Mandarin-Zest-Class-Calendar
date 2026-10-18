@@ -105,7 +105,10 @@ that opens the trial page in a new tab.
 - `whats-inside.html`: the two free guides with covers and contents (no
   download buttons), for the Start Here page above the email form.
 - `banners/`: article banners for SEO posts: `shop.html` (WELCOME01),
-  `club.html`, `start-here.html` and `characters-guide.html` (WELCOME01).
+  `club.html`, `start-here.html` and `characters-guide.html` (WELCOME01),
+  `bootcamps.html` (all bootcamps; "Open now / Next cohort" line updates itself,
+  300px frame) and `bootcamp.html?bootcamp=<page-address-ending>` (one
+  bootcamp, filled in from its page: picture, status, dates, price; 320px frame).
   All links open in a new tab. `banners/snippets/` holds frame-free
   versions to paste straight into an Odoo Embed Code block (they always
   display in full, but text changes must be made in each article).
