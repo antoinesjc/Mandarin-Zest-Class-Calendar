@@ -49,7 +49,7 @@
 
   btn.addEventListener("click", function (e) {
     // Phones and small screens: let the link open the form in a new tab.
-    if (window.matchMedia("(max-width: 700px), (pointer: coarse)").matches) return;
+    if (window.matchMedia("(pointer: coarse)").matches || screen.width < 700) return;
     var w = 480, h = 520;
     var left = Math.max(0, (window.screenX || 0) + ((window.outerWidth || screen.width) - w) / 2);
     var top = Math.max(0, (window.screenY || 0) + ((window.outerHeight || screen.height) - h) / 2);
