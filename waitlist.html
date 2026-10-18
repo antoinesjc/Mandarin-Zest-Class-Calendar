@@ -12,6 +12,7 @@
      Which bootcamp: add ?bootcamp=<page address ending>, e.g.
        waitlist.html?bootcamp=chinese-pronunciation-bootcamp
      Optional: &bg=fdf1ea (card colour), &title=Join%20the%20waitlist
+     (&popup=1 is added by waitlist-button.html when it opens this as a small window)
      Use a 440px frame. */
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: transparent; }
@@ -40,6 +41,13 @@
   .fields { display: flex; flex-direction: column; gap: 10px; }
   form.sent .fields { display: none; } form.sent .done { display: flex; }
   @media (max-width: 380px) { .two { grid-template-columns: 1fr; } form { padding: 18px 16px 16px; } }
+  /* opened as its own small window from waitlist-button.html */
+  body.popup { background: #fffaf6; align-items: center; padding: 0; }
+  body.popup form { max-width: none; border: 0; border-radius: 0; padding: 28px 26px 22px; background: #fffaf6; }
+  body.popup .two { grid-template-columns: 1fr; }
+  .closebtn { display: none; background: #fff; color: #2a2420; box-shadow: inset 0 0 0 2px #2a2420; margin-top: 6px; padding: 11px 26px; }
+  .closebtn:hover { background: #2a2420; color: #fff; }
+  body.popup .closebtn { display: inline-block; }
 </style>
 </head>
 <body>
@@ -61,6 +69,7 @@
     <div class="tick" aria-hidden="true">✓</div>
     <h1 id="dTitle">You're on the list!</h1>
     <p id="dText"></p>
+    <button type="button" class="closebtn" id="closeBtn">Close this window</button>
   </div>
 </form>
 
@@ -73,6 +82,14 @@
   var bootcamp = { title: slug ? slug.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); }) : "Bootcamp", url: "" };
   if (q.get("bg")) document.querySelector("form").style.setProperty("--bg", "#" + q.get("bg").replace(/[^0-9a-f]/gi, "").slice(0, 6));
   if (q.get("title")) document.getElementById("title").textContent = q.get("title");
+  if (q.get("popup")) {
+    document.body.classList.add("popup");
+    document.getElementById("closeBtn").addEventListener("click", function () {
+      window.close();
+      // If the browser keeps the tab open, say so.
+      setTimeout(function () { document.getElementById("closeBtn").textContent = "You can close this tab now"; }, 300);
+    });
+  }
 
   // Use the real bootcamp name from bootcamps.json (built from the website).
   fetch("bootcamps.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (data) {

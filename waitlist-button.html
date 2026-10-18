@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join the waitlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&display=swap" rel="stylesheet">
+<style>
+  /* A single "Join the waitlist" button. Clicking it opens a small window with
+     the waitlist form (name, email, consent → Bootcamp waitlist sheet).
+     On phones the form opens in a new tab instead.
+       waitlist-button.html?bootcamp=chinese-pronunciation-bootcamp
+     Options: &label=Join%20the%20waitlist  &style=orange|outline|light  &align=center|left|right
+     Use a 72px frame. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; padding: 6px 4px; }
+  body.left { justify-content: flex-start; } body.right { justify-content: flex-end; }
+  a {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 800; font-size: 17px;
+    padding: 15px 30px; border-radius: 999px; white-space: nowrap; transition: transform .15s, background .15s, color .15s, box-shadow .15s;
+    background: #f37a48; color: #2a2420; box-shadow: 0 6px 16px rgba(243,122,72,.25);
+  }
+  a:hover { background: #e2632f; transform: translateY(-1px); }
+  a .ar { transition: transform .2s; } a:hover .ar { transform: translateX(4px); }
+  a.outline { background: transparent; color: #2a2420; box-shadow: inset 0 0 0 2px #2a2420; }
+  a.outline:hover { background: #2a2420; color: #fff; }
+  a.light { background: #fff; color: #2a2420; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+  a.light:hover { background: #fdf1ea; }
+  a:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  @media (max-width: 360px) { a { font-size: 15.5px; padding: 14px 22px; } }
+  @media (prefers-reduced-motion: reduce) { a, a .ar { transition: none; } }
+</style>
+</head>
+<body>
+<a id="btn" href="waitlist.html" target="_blank" rel="noopener"><span id="lbl">Join the waitlist</span><span class="ar" aria-hidden="true">→</span></a>
+<script>
+  var q = new URLSearchParams(location.search);
+  var slug = (q.get("bootcamp") || "").replace(/[^\w-]/g, "");
+  var btn = document.getElementById("btn");
+  if (q.get("label")) document.getElementById("lbl").textContent = q.get("label").slice(0, 40);
+  if (/^(outline|light)$/.test(q.get("style") || "")) btn.className = q.get("style");
+  if (/^(left|right)$/.test(q.get("align") || "")) document.body.className = q.get("align");
+
+  var formUrl = "waitlist.html?popup=1" + (slug ? "&bootcamp=" + encodeURIComponent(slug) : "");
+  btn.href = formUrl;
+
+  btn.addEventListener("click", function (e) {
+    // Phones and small screens: let the link open the form in a new tab.
+    if (window.matchMedia("(max-width: 700px), (pointer: coarse)").matches) return;
+    var w = 480, h = 520;
+    var left = Math.max(0, (window.screenX || 0) + ((window.outerWidth || screen.width) - w) / 2);
+    var top = Math.max(0, (window.screenY || 0) + ((window.outerHeight || screen.height) - h) / 2);
+    var win = window.open(formUrl, "mzWaitlist", "popup=yes,width=" + w + ",height=" + h + ",left=" + Math.round(left) + ",top=" + Math.round(top));
+    if (win) { e.preventDefault(); try { win.focus(); } catch (err) {} }
+    // If the browser blocked the window, the normal link opens a new tab instead.
+  });
+</script>
+</body>
+</html>
