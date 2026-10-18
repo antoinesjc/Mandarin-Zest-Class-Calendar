@@ -6,164 +6,56 @@
 <title>Join the waitlist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&display=swap" rel="stylesheet">
 <style>
-  /* A "Join the waitlist" button. Clicking it pops up a small floating form
-     (name, email, consent → Bootcamp waitlist sheet) right where the button is.
-     A widget can only draw inside its own frame, so the frame keeps room for
-     the form; the space around the button is transparent.
+  /* A single "Join the waitlist" button. Clicking it opens a small window with
+     the waitlist form (name, email, consent → Bootcamp waitlist sheet).
+     On phones the form opens in a new tab instead.
        waitlist-button.html?bootcamp=chinese-pronunciation-bootcamp
-     Options: &label=Join%20the%20waitlist  &style=orange|outline|light
-              &align=center|left|right  &pos=top (button at the top of the frame)
-     Use a 460px frame. */
+     Options: &label=Join%20the%20waitlist  &style=orange|outline|light  &align=center|left|right
+     Use a 72px frame. */
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
-  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; position: relative; }
-
-  .spot { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 10px; }
-  body.top .spot { align-items: flex-start; }
-  body.left .spot { justify-content: flex-start; } body.right .spot { justify-content: flex-end; }
-  .open-btn {
-    display: inline-flex; align-items: center; gap: 8px; font-family: inherit; font-weight: 800; font-size: 17px;
-    padding: 15px 30px; border-radius: 999px; border: 0; cursor: pointer; white-space: nowrap; color: #2a2420;
-    background: #f37a48; box-shadow: 0 6px 16px rgba(243,122,72,.28);
-    transition: transform .2s, opacity .2s, background .15s, color .15s;
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; padding: 6px 4px; }
+  body.left { justify-content: flex-start; } body.right { justify-content: flex-end; }
+  a {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 800; font-size: 17px;
+    padding: 15px 30px; border-radius: 999px; white-space: nowrap; transition: transform .15s, background .15s, color .15s, box-shadow .15s;
+    background: #f37a48; color: #2a2420; box-shadow: 0 6px 16px rgba(243,122,72,.25);
   }
-  .open-btn:hover { background: #e2632f; transform: translateY(-1px); }
-  .open-btn .ar { transition: transform .2s; } .open-btn:hover .ar { transform: translateX(4px); }
-  .open-btn.outline { background: transparent; box-shadow: inset 0 0 0 2px #2a2420; }
-  .open-btn.outline:hover { background: #2a2420; color: #fff; }
-  .open-btn.light { background: #fff; box-shadow: 0 6px 16px rgba(0,0,0,.2); }
-  .open-btn.light:hover { background: #fdf1ea; }
-  body.opened .open-btn { opacity: 0; transform: scale(.9); pointer-events: none; }
-
-  /* floating form */
-  .float { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 8px; pointer-events: none; }
-  body.top .float { align-items: flex-start; }
-  body.left .float { justify-content: flex-start; } body.right .float { justify-content: flex-end; }
-  form {
-    position: relative; width: 100%; max-width: 420px; background: #fff; border-radius: 22px;
-    box-shadow: 0 22px 50px rgba(42,36,32,.28), 0 0 0 1px rgba(42,36,32,.06);
-    padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 10px;
-    opacity: 0; transform: scale(.6) translateY(10px); transform-origin: var(--ox, 50%) var(--oy, 50%);
-    transition: opacity .2s ease-out, transform .28s cubic-bezier(.2,1.3,.4,1), visibility 0s .28s; visibility: hidden;
-  }
-  body.opened form { opacity: 1; transform: none; visibility: visible; pointer-events: auto; transition: opacity .2s ease-out, transform .28s cubic-bezier(.2,1.3,.4,1); }
-  .x { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: 0; background: none; font-size: 24px; color: #8a7d74; cursor: pointer; border-radius: 50%; font-family: inherit; }
-  .x:hover { background: #f6eee9; }
-  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: #a8431a; }
-  h1 { margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2; padding-right: 30px; }
-  p { margin: 0; font-size: 14px; color: #5c4f47; line-height: 1.45; }
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; font-weight: 700; min-width: 0; }
-  label.f input { font-family: inherit; font-size: 15px; padding: 10px 12px; border: 1.5px solid #e3d3c9; border-radius: 12px; background: #fff; width: 100%; }
-  label.f input:focus { border-color: #f37a48; outline: none; }
-  label.c { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: #4a3c34; cursor: pointer; }
-  label.c input { width: 18px; height: 18px; margin: 1px 0 0; flex: none; accent-color: #f37a48; }
-  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-  .err { font-size: 13px; color: #b3261e; }
-  .send { font-family: inherit; background: #f37a48; color: #2a2420; border: 0; border-radius: 999px; padding: 13px; font-size: 16px; font-weight: 800; cursor: pointer; }
-  .send:hover { background: #e2632f; }
-  button:focus-visible, input:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
-  .fields { display: flex; flex-direction: column; gap: 10px; }
-  .done { display: none; flex-direction: column; gap: 10px; align-items: center; text-align: center; padding: 14px 0 6px; }
-  .tick { width: 56px; height: 56px; border-radius: 50%; background: #e0f4e0; color: #1b6f1b; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; animation: pop .35s cubic-bezier(.3,1.6,.5,1); }
-  @keyframes pop { from { transform: scale(.4); } }
-  form.sent .fields { display: none; } form.sent .done { display: flex; }
-  @media (max-width: 400px) {
-    .two { grid-template-columns: 1fr; gap: 8px; } form, .fields { gap: 8px; } form { padding: 16px 16px 14px; }
-    h1 { font-size: 18px; } p { font-size: 13.5px; } label.f input { padding: 9px 12px; } .send { padding: 12px; }
-    .open-btn { font-size: 15.5px; padding: 14px 22px; }
-  }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  a:hover { background: #e2632f; transform: translateY(-1px); }
+  a .ar { transition: transform .2s; } a:hover .ar { transform: translateX(4px); }
+  a.outline { background: transparent; color: #2a2420; box-shadow: inset 0 0 0 2px #2a2420; }
+  a.outline:hover { background: #2a2420; color: #fff; }
+  a.light { background: #fff; color: #2a2420; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+  a.light:hover { background: #fdf1ea; }
+  a:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  @media (max-width: 360px) { a { font-size: 15.5px; padding: 14px 22px; } }
+  @media (prefers-reduced-motion: reduce) { a, a .ar { transition: none; } }
 </style>
 </head>
 <body>
-<div class="spot"><button class="open-btn" id="openBtn" type="button" aria-haspopup="dialog" aria-expanded="false"><span id="lbl">Join the waitlist</span><span class="ar" aria-hidden="true">→</span></button></div>
-
-<div class="float">
-  <form id="form" role="dialog" aria-labelledby="title" novalidate>
-    <button class="x" type="button" id="closeBtn" aria-label="Close">×</button>
-    <div class="fields">
-      <div class="eyebrow">WAITLIST</div>
-      <h1 id="title">Join the waitlist</h1>
-      <p id="text">We'll email you first when dates and prices are set. No payment now.</p>
-      <div class="two">
-        <label class="f">First name<input id="fName" type="text" autocomplete="given-name" maxlength="80" required></label>
-        <label class="f">Email<input id="fEmail" type="email" autocomplete="email" maxlength="120" required></label>
-      </div>
-      <label class="hp" aria-hidden="true">Website<input id="fWeb" type="text" tabindex="-1" autocomplete="off"></label>
-      <label class="c"><input id="fOk" type="checkbox" required>I agree to receive emails from Mandarin Zest about this bootcamp and other news. I can unsubscribe at any time.</label>
-      <div class="err" id="fErr" role="alert"></div>
-      <button class="send" type="submit" id="fBtn">Add me to the waitlist</button>
-    </div>
-    <div class="done" aria-live="polite">
-      <div class="tick" aria-hidden="true">✓</div>
-      <h1 id="dTitle" style="padding:0">You're on the list!</h1>
-      <p id="dText"></p>
-    </div>
-  </form>
-</div>
-
+<a id="btn" href="waitlist.html" target="_blank" rel="noopener"><span id="lbl">Join the waitlist</span><span class="ar" aria-hidden="true">→</span></a>
 <script>
-  // Same Google Sheet as the Bootcamps page cards.
-  var WAITLIST_URL = "https://script.google.com/macros/s/AKfycbzI5QAO9wEhywb_Wm7GqwTQ9uPjAZEvU689N4eT25Ruja5iaj7S4Tp7FB4PClciMGs/exec";
-
   var q = new URLSearchParams(location.search);
   var slug = (q.get("bootcamp") || "").replace(/[^\w-]/g, "");
-  var bootcamp = { title: slug ? slug.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); }) : "Bootcamp", url: "" };
-  var openBtn = document.getElementById("openBtn"), form = document.getElementById("form");
+  var btn = document.getElementById("btn");
   if (q.get("label")) document.getElementById("lbl").textContent = q.get("label").slice(0, 40);
-  if (/^(outline|light)$/.test(q.get("style") || "")) openBtn.classList.add(q.get("style"));
-  if (/^(left|right)$/.test(q.get("align") || "")) document.body.classList.add(q.get("align"));
-  if (q.get("pos") === "top") document.body.classList.add("top");
+  if (/^(outline|light)$/.test(q.get("style") || "")) btn.className = q.get("style");
+  if (/^(left|right)$/.test(q.get("align") || "")) document.body.className = q.get("align");
 
-  fetch("bootcamps.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (data) {
-    var b = (data.bootcamps || []).find(function (x) { return slug && x.url.replace(/\/$/, "").endsWith("/" + slug); });
-    if (b) {
-      bootcamp = b;
-      document.getElementById("title").textContent = "Join the " + b.title + " waitlist";
-      if (b.month) document.getElementById("text").textContent = "We'll email you first when the " + b.month + " dates and prices are set. No payment now.";
-    }
-  }).catch(function () {});
+  var formUrl = "waitlist.html?popup=1" + (slug ? "&bootcamp=" + encodeURIComponent(slug) : "");
+  btn.href = formUrl;
 
-  function openForm() {
-    // grow the form out of the button
-    var br = openBtn.getBoundingClientRect(), fr = form.getBoundingClientRect();
-    form.style.setProperty("--ox", (br.left + br.width / 2 - fr.left) + "px");
-    form.style.setProperty("--oy", (br.top + br.height / 2 - fr.top) + "px");
-    document.body.classList.add("opened"); openBtn.setAttribute("aria-expanded", "true");
-    setTimeout(function () { (form.classList.contains("sent") ? document.getElementById("closeBtn") : document.getElementById("fName")).focus({ preventScroll: true }); }, 120);
-  }
-  function closeForm() {
-    document.body.classList.remove("opened"); openBtn.setAttribute("aria-expanded", "false");
-    openBtn.focus({ preventScroll: true });
-  }
-  openBtn.addEventListener("click", openForm);
-  document.getElementById("closeBtn").addEventListener("click", closeForm);
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && document.body.classList.contains("opened")) closeForm(); });
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var name = document.getElementById("fName").value.trim();
-    var email = document.getElementById("fEmail").value.trim();
-    var err = document.getElementById("fErr");
-    if (!name) { err.textContent = "Please add your first name."; return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please check your email address."; return; }
-    if (!document.getElementById("fOk").checked) { err.textContent = "Please tick the box so we can email you."; return; }
-    err.textContent = "";
-    var btn = document.getElementById("fBtn"); btn.disabled = true; btn.textContent = "One moment…";
-    fetch(WAITLIST_URL, {
-      method: "POST", mode: "no-cors", keepalive: true,
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ name: name, email: email, bootcamp: bootcamp.title, consent: true,
-        page: bootcamp.url || ("bootcamp page: " + slug), website: document.getElementById("fWeb").value })
-    }).catch(function () {}).then(function () {
-      document.getElementById("dTitle").textContent = "You're on the list, " + name + "!";
-      document.getElementById("dText").textContent = "We'll write to " + email + " as soon as there's news about the " + bootcamp.title + ".";
-      form.classList.add("sent");
-      document.getElementById("lbl").textContent = "You're on the waitlist ✓";
-    });
+  btn.addEventListener("click", function (e) {
+    // Phones and small screens: let the link open the form in a new tab.
+    if (window.matchMedia("(pointer: coarse)").matches || screen.width < 700) return;
+    var w = 480, h = 520;
+    var left = Math.max(0, (window.screenX || 0) + ((window.outerWidth || screen.width) - w) / 2);
+    var top = Math.max(0, (window.screenY || 0) + ((window.outerHeight || screen.height) - h) / 2);
+    var win = window.open(formUrl, "mzWaitlist", "popup=yes,width=" + w + ",height=" + h + ",left=" + Math.round(left) + ",top=" + Math.round(top));
+    if (win) { e.preventDefault(); try { win.focus(); } catch (err) {} }
+    // If the browser blocked the window, the normal link opens a new tab instead.
   });
 </script>
 </body>
