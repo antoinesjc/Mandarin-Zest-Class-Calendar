@@ -203,11 +203,9 @@ def build(ics_bytes: bytes):
                     end_utc = dtend.astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%SZ")
             elif ev.get("DURATION") is not None:
                 end_utc = (dtstart + ev.decoded("DURATION")).astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%SZ")
-        else:                                    # all-day event
-            day = dtstart
-            sort_key = day.isoformat()
-            start_utc = ""
-            end_utc = ""
+        else:
+            # All-day events (holidays, greetings, reminders) are not sessions: skip them.
+            continue
 
         # ALLOWLIST: these are the only fields that ever leave the feed.
         item = {
