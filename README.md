@@ -200,6 +200,7 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
   each other, no update emails to members) and emails them a confirmation with the Meet link. Log in the "Trial bookings" tab;
   set a row's Status to "refunded" to free its seat. Its web app URL tells the website how many of the 6 trial seats are taken.
 - `trial.html` and the calendar read it through `SEATS_URL` and show "x seats left", "Last seat!" or "Sold out".
+- The calendar's "Join as a trial" button asks for the email, checks it has never had a trial (`?check=`), then opens Stripe checkout with the email locked. The trial page does the same.
 - One trial per person: trial.html asks for the email and checks it (`?check=email`) before opening Stripe with that email locked.
   Past buyers are imported into the "Past trials" tab by `setup`. A second booking that slips through (e.g. from the calendar button)
   is not invited; the buyer gets a friendly email and is refunded automatically if `REFUND_REPEATS` = yes.
