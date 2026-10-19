@@ -12,16 +12,24 @@
  *       TRIAL_LINK_ID  plink_… id of the trial payment link
  *       CALENDAR_ID    the Club calendar's ID (Google Calendar → Settings → the calendar → "Calendar ID")
  *       NOTIFY_EMAIL   where problems are reported (your email)
+ *       REFUND_REPEATS optional: "yes" = automatically refund someone who books a second trial
+ *                      (the Stripe key then also needs WRITE access to Refunds)
  *  3. Run the `setup` function once (it creates the timer and the "Trial bookings" tab).
  *  4. Deploy → New deployment → Web app → Execute as Me → Anyone. Send the URL to Claude/the website.
  */
 
 var MAX_SEATS = 6;
 var TAB = 'Trial bookings';
+var PAST = 'Past trials';           // emails of everyone who bought a trial before this script (filled by setup)
 var HEAD = ['Session', 'Start (UTC)', 'Session title', 'Email', 'Name', 'Stripe checkout', 'Paid at', 'Status', 'Done at'];
 
-/* ---------- website: seats taken per session ---------- */
-function doGet() {
+/* ---------- website: seats taken per session, and "has this email had a trial?" ---------- */
+function doGet(e) {
+  var check = e && e.parameter && e.parameter.check;
+  if (check) {
+    return ContentService.createTextOutput(JSON.stringify({ used: hadTrial(String(check).trim().toLowerCase()) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   var rows = tab().getDataRange().getValues().slice(1);
   var taken = {};
   rows.forEach(function (r) { if (r[0] && String(r[7]).indexOf('invited') === 0) taken[r[0]] = (taken[r[0]] || 0) + 1; });  // set Status to "refunded" to free a seat
@@ -32,6 +40,7 @@ function doGet() {
 /* ---------- run once ---------- */
 function setup() {
   tab();
+  importPastTrials();
   PropertiesService.getScriptProperties().setProperty('SINCE', String(Math.floor(Date.now() / 1000)));
   ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'processBookings') ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger('processBookings').timeBased().everyMinutes(5).create();
@@ -64,6 +73,16 @@ function processBookings() {
       var ev = findEvent(start);
       if (!ev) { row[7] = 'session not found'; sh.appendRow(row); notify('Trial booking: session not found', email + ' paid for the trial session at ' + start.toISOString() + ' (UTC), but there is no event at that time in the Club calendar. Please invite them by hand or refund.\nStripe checkout: ' + cs.id); return; }
       row[2] = ev.summary || '';
+      // One trial per person: a second booking with the same email is not invited.
+      if (hadTrial(email)) {
+        row[7] = 'repeat trial';
+        var refunded = refundRepeat(cs);
+        if (refunded) row[7] = 'repeat trial (refunded)';
+        sh.appendRow(row);
+        sendRepeatEmail(email, name, refunded);
+        notify('Second trial booking', email + ' already had a trial session and booked "' + (ev.summary || '') + '" (' + start.toISOString() + ' UTC). They were not invited' + (refunded ? ' and were refunded automatically.' : '. Please refund them in Stripe (checkout ' + cs.id + ').'));
+        return;
+      }
       var taken = sh.getDataRange().getValues().slice(1).filter(function (r) { return r[0] === ref && String(r[7]).indexOf('invited') === 0; }).length;
       addGuest(ev, email);
       sendConfirmation(email, name, ev, start);
@@ -72,6 +91,63 @@ function processBookings() {
       if (taken >= MAX_SEATS) notify('Trial session over ' + MAX_SEATS + ' seats', email + ' booked "' + (ev.summary || '') + '" (' + start.toISOString() + ' UTC) just as it filled up. They are invited; you may want to check the group size.');
     });
   } finally { lock.releaseLock(); }
+}
+
+/* ---------- one trial per person ---------- */
+function hadTrial(email) {
+  if (!email) return false;
+  var booked = tab().getDataRange().getValues().slice(1).some(function (r) { return String(r[3]).toLowerCase() === email && String(r[7]).indexOf('invited') === 0; });
+  if (booked) return true;
+  var past = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(PAST);
+  if (!past || past.getLastRow() < 1) return false;
+  return past.getRange(1, 1, past.getLastRow(), 1).getValues().some(function (r) { return String(r[0]).trim().toLowerCase() === email; });
+}
+// Everyone who paid for a trial before this script started (so they can't book a second one either).
+function importPastTrials() {
+  var link = PropertiesService.getScriptProperties().getProperty('TRIAL_LINK_ID');
+  if (!link) return;
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(PAST) || ss.insertSheet(PAST);
+  var have = {};
+  if (sh.getLastRow() === 0) sh.appendRow(['Email (had a trial before)']);
+  sh.getDataRange().getValues().forEach(function (r) { have[String(r[0]).toLowerCase()] = true; });
+  var after = '', rows = [];
+  for (var page = 0; page < 20; page++) {
+    var list = stripe('checkout/sessions?limit=100&payment_link=' + encodeURIComponent(link) + (after ? '&starting_after=' + after : ''));
+    if (!list || !list.data || !list.data.length) break;
+    list.data.forEach(function (cs) {
+      var em = String((cs.customer_details && cs.customer_details.email) || cs.customer_email || '').toLowerCase();
+      if (cs.payment_status === 'paid' && em && !have[em]) { have[em] = true; rows.push([em]); }
+    });
+    if (!list.has_more) break;
+    after = list.data[list.data.length - 1].id;
+  }
+  if (rows.length) sh.getRange(sh.getLastRow() + 1, 1, rows.length, 1).setValues(rows);
+  console.log('Past trial emails imported: ' + rows.length);
+}
+function refundRepeat(cs) {
+  var p = PropertiesService.getScriptProperties();
+  if (String(p.getProperty('REFUND_REPEATS') || '').toLowerCase() !== 'yes' || !cs.payment_intent) return false;
+  var res = UrlFetchApp.fetch('https://api.stripe.com/v1/refunds', {
+    method: 'post', headers: { Authorization: 'Bearer ' + p.getProperty('STRIPE_KEY') },
+    payload: { payment_intent: cs.payment_intent, reason: 'duplicate' }, muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) { console.warn('Refund failed ' + res.getContentText().slice(0, 300)); return false; }
+  return true;
+}
+function sendRepeatEmail(email, name, refunded) {
+  var first = String(name || '').split(' ')[0];
+  MailApp.sendEmail({
+    to: email, name: 'Mandarin Zest',
+    subject: 'About your Mandarin Zest Club trial booking',
+    htmlBody: '<div style="font-family:Arial,sans-serif;font-size:15px;color:#2a2420;line-height:1.5;max-width:520px">' +
+      '<p>' + (first ? 'Hi ' + first + ',' : 'Hi,') + '</p>' +
+      '<p>Thanks for booking again! Trial sessions are one per person, and our records show you already had yours, so we couldn\'t add you to this session.' +
+      (refunded ? ' Your US$2.50 has been refunded; it can take a few days to show on your card.' : ' We\'ll refund your US$2.50 within a few days.') + '</p>' +
+      '<p>If you enjoyed it, the Club gives you as many speaking sessions as you like every week, plus a new workbook every month.</p>' +
+      '<p><a href="https://www.mandarinzest.com/mandarin-zest-club" style="background:#f37a48;color:#2a2420;text-decoration:none;font-weight:bold;padding:11px 20px;border-radius:999px;display:inline-block">See the Club</a></p>' +
+      '<p>加油！<br>Mandarin Zest</p></div>'
+  });
 }
 
 /* ---------- helpers ---------- */

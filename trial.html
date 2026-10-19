@@ -72,6 +72,13 @@
   .btn.out { background: #e9e2dc; color: #8a7d74; pointer-events: none; }
   .seats.few { color: #c4521f; }
   .seats.full { color: #8a7d74; }
+  .ask { display: flex; gap: 8px; width: 100%; }
+  .ask input { flex: 1; min-width: 0; font: inherit; font-size: 15px; padding: 11px 14px; border: 1.5px solid #e3d3c9; border-radius: 999px; }
+  .ask input:focus { outline: none; border-color: #f37a48; }
+  .ask .btn { border: 0; cursor: pointer; font-family: inherit; }
+  .askmsg { font-size: 13.5px; color: var(--muted); line-height: 1.4; min-height: 0; }
+  .askmsg.warn { color: #a8431a; font-weight: 600; }
+  .askmsg a { color: #1b6f1b; font-weight: 700; }
   .empty {
     max-width: 640px;
     margin: 0 auto;
@@ -173,10 +180,44 @@ function card(ev) {
     a.href = BOOK_URL + "?client_reference_id=" + encodeURIComponent(refOf(ev));
     a.target = "_blank";
     a.rel = "noopener";
+    // One trial per person: ask for the email first and check it, then go to Stripe with that email locked.
+    if (SEATS_URL) a.addEventListener("click", e => { e.preventDefault(); askEmail(c, bottom, ev); });
     bottom.appendChild(a);
   }
   c.appendChild(bottom);
   return c;
+}
+
+function askEmail(c, bottom, ev) {
+  bottom.innerHTML = "";
+  const f = el("form", "ask");
+  const inp = el("input"); inp.type = "email"; inp.placeholder = "Your email"; inp.required = true; inp.autocomplete = "email"; inp.setAttribute("aria-label", "Your email");
+  const go = el("button", "btn", "Continue ↗"); go.type = "submit";
+  f.append(inp, go);
+  const msg = el("div", "askmsg", "Trial sessions are one per person. We'll send your Meet link to this email.");
+  bottom.append(f);
+  c.appendChild(msg);
+  setTimeout(() => inp.focus(), 30);
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = inp.value.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = "askmsg warn"; msg.textContent = "Please check your email address."; return; }
+    // open the Stripe tab right away (pop-up blockers), then send it to Stripe once the email is checked
+    const w = window.open("", "_blank");
+    go.disabled = true; go.textContent = "Checking…";
+    let used = false;
+    try { used = (await (await fetch(SEATS_URL + "?check=" + encodeURIComponent(email))).json()).used; } catch (err) {}
+    go.disabled = false; go.textContent = "Continue ↗";
+    if (used) {
+      if (w) w.close();
+      msg.className = "askmsg warn";
+      msg.innerHTML = 'You\'ve already had your trial session. Ready for more? <a href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Join the Club ↗</a>';
+      return;
+    }
+    const url = BOOK_URL + "?client_reference_id=" + encodeURIComponent(refOf(ev)) + "&prefilled_email=" + encodeURIComponent(email) + "&locked_prefilled_email=true";
+    if (w) w.location.href = url; else window.open(url, "_blank");
+    msg.className = "askmsg"; msg.textContent = "Payment opened in a new tab. Your Meet link arrives by email within 5 minutes.";
+  });
 }
 
 function render(events) {
