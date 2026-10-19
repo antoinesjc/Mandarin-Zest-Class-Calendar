@@ -138,6 +138,19 @@
     .pop { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+  /* "one trial per person" pop-up (placed next to the form, works inside a full-height frame) */
+  .once-bg { position: absolute; left: 0; top: 0; width: 100%; background: rgba(42,36,32,.32); z-index: 50; animation: oncefade .15s ease-out; }
+  .once { position: absolute; z-index: 51; width: min(360px, calc(100% - 24px)); background: #fffaf6; border-radius: 20px; padding: 22px 20px 18px; box-shadow: 0 18px 50px rgba(42,36,32,.28); text-align: center; font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; animation: oncein .18s ease-out; }
+  .once .em { font-size: 34px; line-height: 1; }
+  .once h4 { margin: 8px 0 6px; font-size: 19px; font-weight: 800; }
+  .once p { margin: 0 0 14px; font-size: 14.5px; line-height: 1.5; color: #5c4f47; }
+  .once a.go { display: block; background: #1b6f1b; color: #fff; font-weight: 800; font-size: 15px; padding: 12px; border-radius: 999px; text-decoration: none; }
+  .once a.go:hover { background: #173f17; color: #fff; }
+  .once button { margin-top: 8px; border: 0; background: none; font: inherit; font-size: 14px; color: #8a7d74; cursor: pointer; padding: 6px 10px; }
+  .once .x { position: absolute; top: 8px; right: 8px; margin: 0; font-size: 20px; width: 32px; height: 32px; padding: 0; }
+  @keyframes oncefade { from { opacity: 0; } }
+  @keyframes oncein { from { opacity: 0; transform: translateY(8px) scale(.97); } }
 </style>
 </head>
 <body>
@@ -392,7 +405,7 @@ function hidePop() {
   if (popFor) { popFor.classList.remove("open"); popFor.setAttribute("aria-expanded", "false"); }
   popFor = null;
 }
-const hideSoon = () => { clearTimeout(hideTimer); if (pop.contains(document.activeElement) && document.activeElement.tagName === "INPUT") return; hideTimer = setTimeout(hidePop, 220); };
+const hideSoon = () => { clearTimeout(hideTimer); if (document.querySelector(".once")) return; if (pop.contains(document.activeElement) && document.activeElement.tagName === "INPUT") return; hideTimer = setTimeout(hidePop, 220); };
 
 document.addEventListener("mouseover", e => {
   const card = e.target.closest(".grid .card");
@@ -406,7 +419,7 @@ document.addEventListener("click", e => {
   if (e.target.closest("a")) return;                // trial tag / buttons open their link
   const tb = e.target.closest(".trialbtn");
   if (tb) { askTrialEmail(tb); return; }
-  if (e.target.closest(".ask, .askmsg")) return;
+  if (e.target.closest(".ask, .askmsg, .once, .once-bg")) return;
   const card = e.target.closest(".card");
   if (card && isList()) {
     const open = !card.classList.contains("open");
@@ -430,20 +443,23 @@ function askTrialEmail(btn) {
     e.preventDefault();
     const email = inp.value.trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = "askmsg warn"; msg.textContent = "Please check your email address."; return; }
-    const w = window.open("", "_blank");             // open now so pop-up blockers allow it
     go.disabled = true; go.textContent = "Checking…";
     let used = false;
     try { used = (await (await fetch(SEATS_URL + "?check=" + encodeURIComponent(email))).json()).used; } catch (err) {}
     go.disabled = false; go.textContent = "Continue ↗";
     if (used) {
-      if (w) w.close();
-      msg.className = "askmsg warn";
-      msg.innerHTML = 'You\'ve already had your trial session. Ready for more? <a href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Join the Club ↗</a>';
+      msg.className = "askmsg"; msg.textContent = "Trial sessions are one per person. We'll send your Meet link to this email.";
+      showOnceOnly(f);
       return;
     }
     const url = TRIAL_PAY_URL + "?client_reference_id=" + encodeURIComponent(ref) + "&prefilled_email=" + encodeURIComponent(email) + "&locked_prefilled_email=true";
-    if (w) w.location.href = url; else window.open(url, "_blank");
-    msg.className = "askmsg"; msg.textContent = "Payment opened in a new tab. Your Meet link arrives by email within 5 minutes.";
+    const w = window.open(url, "_blank");
+    if (w) { msg.className = "askmsg"; msg.textContent = "Payment opened in a new tab. Your Meet link arrives by email within 5 minutes."; return; }
+    // the browser blocked the new tab: give a real link to click instead
+    const a = document.createElement("a"); a.className = "cta"; a.href = url; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = "Go to secure payment ↗"; a.style.display = "block"; a.style.textAlign = "center";
+    f.replaceWith(a);
+    msg.className = "askmsg"; msg.textContent = "Your Meet link arrives by email within 5 minutes of paying.";
   });
 }
 document.addEventListener("keydown", e => {
@@ -472,6 +488,32 @@ fetch("events.json", { cache: "no-cache" })
     msg.textContent = "The session calendar couldn't load right now. Please refresh in a moment.";
     msg.style.display = "block";
   });
+
+// Pop-up shown when an email has already had its trial session.
+function showOnceOnly(anchor) {
+  document.querySelectorAll(".once, .once-bg").forEach(x => x.remove());
+  const bg = document.createElement("div"); bg.className = "once-bg";
+  bg.style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
+  const box = document.createElement("div"); box.className = "once"; box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true");
+  box.innerHTML = `<button type="button" class="x" aria-label="Close">×</button>
+    <div class="em" aria-hidden="true">🍊</div>
+    <h4>One trial session per person</h4>
+    <p>You've already had your trial session with this email. Enjoyed the experience? Become a Club member and join as many speaking sessions as you like.</p>
+    <a class="go" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Become a Club member ↗</a>
+    <button type="button" class="ok">Close</button>`;
+  document.body.append(bg, box);
+  const r = anchor.getBoundingClientRect(), docH = parseFloat(bg.style.height);
+  let top = r.top + window.scrollY + r.height / 2 - box.offsetHeight / 2;
+  top = Math.max(window.scrollY + 8, Math.min(top, docH - box.offsetHeight - 8));
+  box.style.top = Math.max(8, top) + "px";
+  box.style.left = Math.max(12, (document.documentElement.clientWidth - box.offsetWidth) / 2) + "px";
+  const close = () => { box.remove(); bg.remove(); document.removeEventListener("keydown", esc); };
+  const esc = e => { if (e.key === "Escape") close(); };
+  bg.addEventListener("click", close); box.querySelector(".x").addEventListener("click", close); box.querySelector(".ok").addEventListener("click", close);
+  box.querySelector(".go").addEventListener("click", () => setTimeout(close, 100));
+  document.addEventListener("keydown", esc);
+  box.querySelector(".go").focus({ preventScroll: true });
+}
 </script>
 </body>
 </html>
