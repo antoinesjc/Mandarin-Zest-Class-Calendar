@@ -69,6 +69,9 @@
   .btn:hover { background: #145514; }
   .btn:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
   .soon { font-size: 15px; font-weight: 600; color: var(--muted); }
+  .btn.out { background: #e9e2dc; color: #8a7d74; pointer-events: none; }
+  .seats.few { color: #c4521f; }
+  .seats.full { color: #8a7d74; }
   .empty {
     max-width: 640px;
     margin: 0 auto;
@@ -100,7 +103,10 @@
 // Price and booking link for every trial session. Change them here.
 const PRICE = "US$2.50";
 const BOOK_URL = "https://buy.stripe.com/cNi6oH94B8Dj6DCf0x6oo0k";
-const SEATS = "5 seats";
+// Seats: the trial-bookings Apps Script tells how many of the 6 trial seats are taken (leave empty to hide).
+const SEATS_URL = "";
+const MAX_SEATS = 6;
+let TAKEN = {};
 
 const CAT_COLORS = {
   advanced: "#3f6d5e", intermediate: "#4f7a94", beginner: "#b98a3d",
@@ -125,13 +131,19 @@ function reportHeight() {
 window.addEventListener("resize", reportHeight);
 if (document.fonts) document.fonts.ready.then(reportHeight);
 
+function refOf(ev) {
+  return "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : "");
+}
 function card(ev) {
   const c = el("div", "card");
   c.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.general);
 
   const top = el("div", "top");
   top.appendChild(el("span", "lvl", ev.level || "All levels"));
-  top.appendChild(el("span", "seats", SEATS));
+  const left = Math.max(0, MAX_SEATS - (TAKEN[refOf(ev)] || 0));
+  const seats = el("span", "seats" + (left === 0 ? " full" : left <= 2 ? " few" : ""),
+    left === 0 ? "Sold out" : left === 1 ? "Last seat!" : `${left} seats left`);
+  top.appendChild(seats);
   c.appendChild(top);
 
   c.appendChild(el("h3", null, ev.title));
@@ -152,12 +164,17 @@ function card(ev) {
   bottom.appendChild(el("span", "price", PRICE));
   // client_reference_id tells you in Stripe which session was booked,
   // e.g. "trial-2026-11-08-1300-utc".
-  const ref = "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : "");
-  const a = el("a", "btn", "Book my seat");
-  a.href = BOOK_URL + "?client_reference_id=" + encodeURIComponent(ref);
-  a.target = "_blank";
-  a.rel = "noopener";
-  bottom.appendChild(a);
+  if (left === 0) {
+    const out = el("span", "btn out", "Sold out");
+    out.setAttribute("aria-disabled", "true");
+    bottom.appendChild(out);
+  } else {
+    const a = el("a", "btn", "Book my seat");
+    a.href = BOOK_URL + "?client_reference_id=" + encodeURIComponent(refOf(ev));
+    a.target = "_blank";
+    a.rel = "noopener";
+    bottom.appendChild(a);
+  }
   c.appendChild(bottom);
   return c;
 }
@@ -200,9 +217,11 @@ function render(events) {
   reportHeight();
 }
 
-fetch("events.json", { cache: "no-cache" })
-  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-  .then(data => render(Array.isArray(data.events) ? data.events : []))
+const seatsReady = SEATS_URL
+  ? fetch(SEATS_URL).then(r => r.json()).then(d => { TAKEN = d.taken || {}; }).catch(() => {})
+  : Promise.resolve();
+Promise.all([fetch("events.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }), seatsReady])
+  .then(([data]) => render(Array.isArray(data.events) ? data.events : []))
   .catch(() => render([]));
 </script>
 </body>

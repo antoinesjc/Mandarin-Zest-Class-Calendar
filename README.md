@@ -192,3 +192,11 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
   messages "arrive" one by one with a typing indicator when scrolled into view. Edit the REVIEWS list
   (`==text==` = highlighted). Three side by side from 980px, swipe below.
   Embed: `height:max(640px, min(740px, calc((1100px - 100vw) * 1000)))` with `scrolling="no"`.
+
+## Trial bookings (automatic invites + seat limit)
+
+- `apps-script/trial-bookings.gs`: Google Apps Script (on the account that owns the Club calendar). Every 5 minutes it reads
+  new paid trial checkouts from Stripe, adds the buyer to that session in the Club calendar (Meet access, guests can't see
+  each other, no update emails to members) and emails them a confirmation with the Meet link. Log in the "Trial bookings" tab;
+  set a row's Status to "refunded" to free its seat. Its web app URL tells the website how many of the 6 trial seats are taken.
+- `trial.html` and the calendar read it through `SEATS_URL` and show "x seats left", "Last seat!" or "Sold out".

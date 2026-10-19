@@ -178,6 +178,13 @@ const TRIAL_PRICE = "US$2.50";
 // The "Join as a trial" button goes straight to Stripe checkout (same link as trial.html).
 const TRIAL_PAY_URL = "https://buy.stripe.com/cNi6oH94B8Dj6DCf0x6oo0k";
 // Tells you in Stripe which session was booked, e.g. "trial-2026-11-08T13-00-utc".
+// Trial seats taken per session, from the trial-bookings Apps Script (leave empty to skip).
+const SEATS_URL = "";
+const MAX_SEATS = 6;
+let TAKEN = {};
+if (SEATS_URL) fetch(SEATS_URL).then(r => r.json()).then(d => { TAKEN = d.taken || {}; }).catch(() => {});
+function trialRef(ev) { return "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : ""); }
+function trialFull(ev) { return (TAKEN[trialRef(ev)] || 0) >= MAX_SEATS; }
 function trialPayLink(ev) {
   const ref = "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : "");
   return TRIAL_PAY_URL + "?client_reference_id=" + encodeURIComponent(ref);
@@ -288,7 +295,9 @@ function detailsHtml(ev, compact) {
   if (ev.topic && !isTopicDup) h += `<div class="topic">${esc(ev.topic)}</div>`;
   if (ev.about) h += `<p class="about">${esc(ev.about)}</p>`;
   if (ev.host) h += `<div class="host">Host: ${esc(ev.host)}</div>`;
-  if (ev.trial) h += `<a class="cta" href="${esc(trialPayLink(ev))}" target="_blank" rel="noopener">Join as a trial · ${TRIAL_PRICE} ↗</a>`;
+  if (ev.trial) h += trialFull(ev)
+    ? `<span class="cta" style="background:#e9e2dc;color:#8a7d74;pointer-events:none">Trial seats sold out</span>`
+    : `<a class="cta" href="${esc(trialPayLink(ev))}" target="_blank" rel="noopener">Join as a trial · ${TRIAL_PRICE} ↗</a>`;
   h += `<div class="note">Club members: your link is in the Google Calendar invite.</div>`;
   return h;
 }
