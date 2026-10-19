@@ -673,7 +673,8 @@
    "end": "2026-11-12T23:00:00Z",
    "topic": "Basic and Specific School Subjects",
    "about": "Learn general terms about school subjects, as well as more specific university majors",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-11-15",
@@ -758,6 +759,26 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2026-11-22",
+   "title": "Chinese Character Game",
+   "level": "",
+   "cat": "character",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ],
+   "start": "2026-11-22T14:00:00Z",
+   "end": "2026-11-22T15:00:00Z",
+   "topic": "Learn new Chinese characters through games designed by Mandarin Zest",
+   "host": "Antoine"
+  },
+  {
    "date": "2026-11-23",
    "title": "Advanced Session",
    "level": "",
@@ -795,15 +816,6 @@
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle"
-  },
-  {
-   "date": "2026-11-26",
-   "title": "美国朋友们，感恩节快乐！",
-   "level": "",
-   "cat": "general",
-   "times": [],
-   "start": "",
-   "end": ""
   },
   {
    "date": "2026-11-29",
