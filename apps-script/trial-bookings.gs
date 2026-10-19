@@ -57,20 +57,21 @@ function processBookings() {
     var since = Number(p.getProperty('SINCE') || 0);
     var link = p.getProperty('TRIAL_LINK_ID');
     var list = stripe('checkout/sessions?limit=100' + (link ? '&payment_link=' + encodeURIComponent(link) : '') + (since ? '&created%5Bgte%5D=' + since : ''));
-    if (!list || !list.data) return;
+    if (!list || !list.data) { problem('Stripe did not answer: ' + LAST_STRIPE_ERROR); return; }
     var sh = tab();
     var done = {};
     sh.getDataRange().getValues().slice(1).forEach(function (r) { done[r[5]] = true; });
 
     list.data.slice().reverse().forEach(function (cs) {                 // oldest first
-      if (cs.payment_status !== 'paid' || done[cs.id]) return;
+      if ((cs.payment_status !== 'paid' && cs.payment_status !== 'no_payment_required') || done[cs.id]) return;   // no_payment_required = 100% coupon
       var ref = String(cs.client_reference_id || '');
       var email = String((cs.customer_details && cs.customer_details.email) || cs.customer_email || '').toLowerCase();
       var name = (cs.customer_details && cs.customer_details.name) || '';
       var start = parseRef(ref);
       var row = [ref, start || '', '', email, name, cs.id, new Date(cs.created * 1000), '', new Date()];
       if (!start || !email) { row[7] = 'check by hand'; sh.appendRow(row); notify('Trial booking needs a look', 'A paid trial booking has no session or email.\nStripe checkout: ' + cs.id + '\nReference: ' + ref + '\nEmail: ' + email); return; }
-      var ev = findEvent(start);
+      var ev;
+      try { ev = findEvent(start); } catch (err) { problem('Google Calendar error: ' + err.message + ' (is the "Google Calendar API" service added, and is CALENDAR_ID right?)'); throw err; }
       if (!ev) { row[7] = 'session not found'; sh.appendRow(row); notify('Trial booking: session not found', email + ' paid for the trial session at ' + start.toISOString() + ' (UTC), but there is no event at that time in the Club calendar. Please invite them by hand or refund.\nStripe checkout: ' + cs.id); return; }
       row[2] = ev.summary || '';
       // One trial per person: a second booking with the same email is not invited.
@@ -203,10 +204,53 @@ function notify(subject, body) {
   var to = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL') || Session.getEffectiveUser().getEmail();
   MailApp.sendEmail(to, '[Mandarin Zest] ' + subject, body);
 }
+var LAST_STRIPE_ERROR = '';
 function stripe(path) {
-  var key = PropertiesService.getScriptProperties().getProperty('STRIPE_KEY');
-  if (!key) { console.warn('STRIPE_KEY missing'); return null; }
+  var key = String(PropertiesService.getScriptProperties().getProperty('STRIPE_KEY') || '').trim();
+  if (!key) { LAST_STRIPE_ERROR = 'STRIPE_KEY is missing in Script properties'; console.warn(LAST_STRIPE_ERROR); return null; }
   var res = UrlFetchApp.fetch('https://api.stripe.com/v1/' + path, { headers: { Authorization: 'Bearer ' + key }, muteHttpExceptions: true });
-  if (res.getResponseCode() !== 200) { console.warn('Stripe ' + res.getResponseCode() + ' ' + res.getContentText().slice(0, 300)); return null; }
+  if (res.getResponseCode() !== 200) { LAST_STRIPE_ERROR = res.getResponseCode() + ' ' + res.getContentText().slice(0, 300); console.warn('Stripe ' + LAST_STRIPE_ERROR); return null; }
   return JSON.parse(res.getContentText());
+}
+// Emails you about a problem, at most once every 6 hours (the timer runs every 5 minutes).
+function problem(msg) {
+  console.warn(msg);
+  var p = PropertiesService.getScriptProperties(), last = Number(p.getProperty('LAST_PROBLEM') || 0);
+  if (Date.now() - last < 6 * 3600 * 1000) return;
+  p.setProperty('LAST_PROBLEM', String(Date.now()));
+  notify('Trial bookings script has a problem', msg + '\n\nOpen the script and run "diagnose" to see more.');
+}
+
+/* ---------- run from the editor if bookings don't come through: it only reads, changes nothing ---------- */
+function diagnose() {
+  var p = PropertiesService.getScriptProperties();
+  ['STRIPE_KEY', 'TRIAL_LINK_ID', 'CALENDAR_ID', 'NOTIFY_EMAIL', 'REFUND_REPEATS'].forEach(function (k) {
+    var v = String(p.getProperty(k) || '');
+    console.log(k + ': ' + (!v ? 'MISSING' : k === 'STRIPE_KEY' ? v.slice(0, 8) + '… (' + v.length + ' characters' + (v.trim() !== v ? ', has spaces around it!' : '') + ')' : '"' + v + '"'));
+  });
+  var since = Number(p.getProperty('SINCE') || 0);
+  console.log('Handles bookings made after: ' + (since ? new Date(since * 1000).toISOString() + ' UTC' : 'not set (run setup)'));
+  var trig = ScriptApp.getProjectTriggers().filter(function (t) { return t.getHandlerFunction() === 'processBookings'; });
+  console.log('5-minute timer: ' + (trig.length ? 'on' : 'OFF (run setup)'));
+  var link = String(p.getProperty('TRIAL_LINK_ID') || '').trim();
+  if (link && link.indexOf('plink_') !== 0) console.log('TRIAL_LINK_ID should start with plink_ (not the buy.stripe.com address)');
+  var all = stripe('checkout/sessions?limit=5');
+  console.log('Stripe key: ' + (all ? 'works' : 'ERROR ' + LAST_STRIPE_ERROR));
+  if (all) (all.data || []).forEach(function (cs) {
+    console.log('  latest checkout ' + new Date(cs.created * 1000).toISOString() + ' | ' + cs.payment_status + ' | link ' + cs.payment_link + ' | ref ' + cs.client_reference_id + ' | ' + ((cs.customer_details && cs.customer_details.email) || ''));
+  });
+  if (link) {
+    var mine = stripe('checkout/sessions?limit=5&payment_link=' + encodeURIComponent(link));
+    console.log('Checkouts on the trial link: ' + (mine ? mine.data.length + ' found' : 'ERROR ' + LAST_STRIPE_ERROR));
+    if (mine) mine.data.forEach(function (cs) {
+      var start = parseRef(String(cs.client_reference_id || ''));
+      var ev = null, err = '';
+      if (start) { try { ev = findEvent(start); } catch (e) { err = e.message; } }
+      console.log('  ' + new Date(cs.created * 1000).toISOString() + ' | ' + cs.payment_status + ' | ref ' + cs.client_reference_id +
+        (since && cs.created < since ? ' | BEFORE setup, ignored' : '') +
+        ' | session: ' + (!start ? 'no session in reference' : err ? 'CALENDAR ERROR ' + err : ev ? '"' + ev.summary + '"' : 'NOT FOUND in calendar'));
+    });
+  }
+  try { Calendar.Events.list(calId(), { maxResults: 1 }); console.log('Calendar: works'); }
+  catch (e) { console.log('Calendar: ERROR ' + e.message); }
 }
