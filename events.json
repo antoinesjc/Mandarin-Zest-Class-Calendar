@@ -437,6 +437,27 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2026-10-22",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-10-22T21:00:00Z",
+   "end": "2026-10-22T22:00:00Z",
+   "topic": "Talking about your hobbies",
+   "about": "Learn about different people's hobbies to expand your vocabulary and learn more about your fellow members",
+   "host": "Gabrielle"
+  },
+  {
    "date": "2026-10-26",
    "title": "Advanced Session",
    "level": "",
@@ -470,7 +491,31 @@
     }
    ],
    "start": "2026-10-26T21:00:00Z",
-   "end": "2026-10-26T22:00:00Z"
+   "end": "2026-10-26T22:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2026-10-29",
+   "title": "Supermarket",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "10pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-10-29T21:00:00Z",
+   "end": "2026-10-29T22:00:00Z",
+   "topic": "Things in a supermarket",
+   "about": "Learn about things that are in a supermarket in Chinese and compare what you like to buy with other members",
+   "host": "Gabrielle"
   },
   {
    "date": "2026-10-31",
@@ -530,6 +575,27 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2026-11-05",
+   "title": "Snacks!",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-11-05T22:00:00Z",
+   "end": "2026-11-05T23:00:00Z",
+   "topic": "Different types of snacks",
+   "about": "Share your favorite snacks and learn new snack names and other things associated with snacks",
+   "host": "Gabrielle"
+  },
+  {
    "date": "2026-11-09",
    "title": "Advanced Session",
    "level": "",
@@ -563,7 +629,51 @@
     }
    ],
    "start": "2026-11-09T22:00:00Z",
-   "end": "2026-11-09T23:00:00Z"
+   "end": "2026-11-09T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2026-11-12",
+   "title": "Chinese Character Game",
+   "level": "",
+   "cat": "character",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ],
+   "start": "2026-11-12T14:00:00Z",
+   "end": "2026-11-12T15:00:00Z",
+   "topic": "Learn new Chinese character through games designed by Mandarin Zest",
+   "host": "Antoine"
+  },
+  {
+   "date": "2026-11-12",
+   "title": "School Subjects",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-11-12T22:00:00Z",
+   "end": "2026-11-12T23:00:00Z",
+   "topic": "Basic and Specific School Subjects",
+   "about": "Learn general terms about school subjects, as well as more specific university majors",
+   "host": "Gabrielle"
   },
   {
    "date": "2026-11-15",
@@ -627,6 +737,27 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2026-11-19",
+   "title": "Slow Chinese Video Practice",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-11-19T22:00:00Z",
+   "end": "2026-11-19T23:00:00Z",
+   "topic": "Video Comprehension Practice and Discussion",
+   "about": "Watch some short videos (first with no Eng subs, then again with) and discuss it after",
+   "host": "Gabrielle"
+  },
+  {
    "date": "2026-11-23",
    "title": "Advanced Session",
    "level": "",
@@ -660,7 +791,19 @@
     }
    ],
    "start": "2026-11-23T22:00:00Z",
-   "end": "2026-11-23T23:00:00Z"
+   "end": "2026-11-23T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2026-11-26",
+   "title": "美国朋友们，感恩节快乐！",
+   "level": "",
+   "cat": "general",
+   "times": [],
+   "start": "",
+   "end": ""
   },
   {
    "date": "2026-11-29",
@@ -720,6 +863,27 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2026-12-03",
+   "title": "Snow Activities",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-12-03T22:00:00Z",
+   "end": "2026-12-03T23:00:00Z",
+   "topic": "Snow and Winter Activities Vocabulary",
+   "about": "For the start of December, we will learn about some fun snow activities and other things that go along with the winter theme",
+   "host": "Gabrielle"
+  },
+  {
    "date": "2026-12-07",
    "title": "Advanced Session",
    "level": "",
@@ -753,7 +917,28 @@
     }
    ],
    "start": "2026-12-07T22:00:00Z",
-   "end": "2026-12-07T23:00:00Z"
+   "end": "2026-12-07T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2026-12-10",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-12-10T22:00:00Z",
+   "end": "2026-12-10T23:00:00Z"
   },
   {
    "date": "2026-12-14",
@@ -795,6 +980,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2026-12-17",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-12-17T22:00:00Z",
+   "end": "2026-12-17T23:00:00Z"
+  },
+  {
    "date": "2026-12-21",
    "title": "Advanced Session",
    "level": "",
@@ -828,7 +1031,28 @@
     }
    ],
    "start": "2026-12-21T22:00:00Z",
-   "end": "2026-12-21T23:00:00Z"
+   "end": "2026-12-21T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2026-12-24",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-12-24T22:00:00Z",
+   "end": "2026-12-24T23:00:00Z"
   },
   {
    "date": "2026-12-28",
@@ -870,6 +1094,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2026-12-31",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2026-12-31T22:00:00Z",
+   "end": "2026-12-31T23:00:00Z"
+  },
+  {
    "date": "2027-01-04",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -885,7 +1127,28 @@
     }
    ],
    "start": "2027-01-04T22:00:00Z",
-   "end": "2027-01-04T23:00:00Z"
+   "end": "2027-01-04T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-01-07",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-01-07T22:00:00Z",
+   "end": "2027-01-07T23:00:00Z"
   },
   {
    "date": "2027-01-11",
@@ -909,6 +1172,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-01-14",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-01-14T22:00:00Z",
+   "end": "2027-01-14T23:00:00Z"
+  },
+  {
    "date": "2027-01-18",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -924,7 +1205,28 @@
     }
    ],
    "start": "2027-01-18T22:00:00Z",
-   "end": "2027-01-18T23:00:00Z"
+   "end": "2027-01-18T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-01-21",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-01-21T22:00:00Z",
+   "end": "2027-01-21T23:00:00Z"
   },
   {
    "date": "2027-01-25",
@@ -948,6 +1250,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-01-28",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-01-28T22:00:00Z",
+   "end": "2027-01-28T23:00:00Z"
+  },
+  {
    "date": "2027-02-01",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -963,7 +1283,28 @@
     }
    ],
    "start": "2027-02-01T22:00:00Z",
-   "end": "2027-02-01T23:00:00Z"
+   "end": "2027-02-01T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-02-04",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-02-04T22:00:00Z",
+   "end": "2027-02-04T23:00:00Z"
   },
   {
    "date": "2027-02-08",
@@ -987,6 +1328,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-02-11",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-02-11T22:00:00Z",
+   "end": "2027-02-11T23:00:00Z"
+  },
+  {
    "date": "2027-02-15",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -1002,7 +1361,28 @@
     }
    ],
    "start": "2027-02-15T22:00:00Z",
-   "end": "2027-02-15T23:00:00Z"
+   "end": "2027-02-15T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-02-18",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-02-18T22:00:00Z",
+   "end": "2027-02-18T23:00:00Z"
   },
   {
    "date": "2027-02-22",
@@ -1026,6 +1406,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-02-25",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-02-25T22:00:00Z",
+   "end": "2027-02-25T23:00:00Z"
+  },
+  {
    "date": "2027-03-01",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -1041,7 +1439,28 @@
     }
    ],
    "start": "2027-03-01T22:00:00Z",
-   "end": "2027-03-01T23:00:00Z"
+   "end": "2027-03-01T23:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-03-04",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-03-04T22:00:00Z",
+   "end": "2027-03-04T23:00:00Z"
   },
   {
    "date": "2027-03-08",
@@ -1065,6 +1484,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-03-11",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-03-11T22:00:00Z",
+   "end": "2027-03-11T23:00:00Z"
+  },
+  {
    "date": "2027-03-15",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -1080,7 +1517,28 @@
     }
    ],
    "start": "2027-03-15T21:00:00Z",
-   "end": "2027-03-15T22:00:00Z"
+   "end": "2027-03-15T22:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-03-18",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "10pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-03-18T21:00:00Z",
+   "end": "2027-03-18T22:00:00Z"
   },
   {
    "date": "2027-03-22",
@@ -1104,6 +1562,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-03-25",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "10pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-03-25T21:00:00Z",
+   "end": "2027-03-25T22:00:00Z"
+  },
+  {
    "date": "2027-03-29",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -1119,7 +1595,28 @@
     }
    ],
    "start": "2027-03-29T21:00:00Z",
-   "end": "2027-03-29T22:00:00Z"
+   "end": "2027-03-29T22:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-04-01",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-04-01T21:00:00Z",
+   "end": "2027-04-01T22:00:00Z"
   },
   {
    "date": "2027-04-05",
@@ -1143,6 +1640,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-04-08",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-04-08T21:00:00Z",
+   "end": "2027-04-08T22:00:00Z"
+  },
+  {
    "date": "2027-04-12",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -1158,7 +1673,28 @@
     }
    ],
    "start": "2027-04-12T21:00:00Z",
-   "end": "2027-04-12T22:00:00Z"
+   "end": "2027-04-12T22:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-04-15",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-04-15T21:00:00Z",
+   "end": "2027-04-15T22:00:00Z"
   },
   {
    "date": "2027-04-19",
@@ -1182,6 +1718,24 @@
    "host": "Gabrielle"
   },
   {
+   "date": "2027-04-22",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-04-22T21:00:00Z",
+   "end": "2027-04-22T22:00:00Z"
+  },
+  {
    "date": "2027-04-26",
    "title": "Vocab + Reading Practice",
    "level": "HSK 2-4",
@@ -1197,7 +1751,28 @@
     }
    ],
    "start": "2027-04-26T21:00:00Z",
-   "end": "2027-04-26T22:00:00Z"
+   "end": "2027-04-26T22:00:00Z",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle"
+  },
+  {
+   "date": "2027-04-29",
+   "title": "Hobbies",
+   "level": "HSK 1-3",
+   "cat": "intermediate",
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-04-29T21:00:00Z",
+   "end": "2027-04-29T22:00:00Z"
   }
  ]
 }
