@@ -40,8 +40,12 @@ function doGet(e) {
 /* ---------- run once ---------- */
 function setup() {
   tab();
-  importPastTrials();
-  PropertiesService.getScriptProperties().setProperty('SINCE', String(Math.floor(Date.now() / 1000)));
+  // Bookings from the last 12 hours are handled too (e.g. a test made before running setup);
+  // everyone who paid before that goes to "Past trials" and can't book again.
+  var p = PropertiesService.getScriptProperties();
+  var since = Number(p.getProperty('SINCE') || 0) || Math.floor(Date.now() / 1000) - 12 * 3600;
+  p.setProperty('SINCE', String(since));
+  importPastTrials(since);
   ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'processBookings') ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger('processBookings').timeBased().everyMinutes(5).create();
   processBookings();
@@ -104,7 +108,7 @@ function hadTrial(email) {
   return past.getRange(1, 1, past.getLastRow(), 1).getValues().some(function (r) { return String(r[0]).trim().toLowerCase() === email; });
 }
 // Everyone who paid for a trial before this script started (so they can't book a second one either).
-function importPastTrials() {
+function importPastTrials(before) {
   var link = PropertiesService.getScriptProperties().getProperty('TRIAL_LINK_ID');
   if (!link) return;
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -118,6 +122,7 @@ function importPastTrials() {
     if (!list || !list.data || !list.data.length) break;
     list.data.forEach(function (cs) {
       var em = String((cs.customer_details && cs.customer_details.email) || cs.customer_email || '').toLowerCase();
+      if (before && cs.created >= before) return;          // recent bookings are handled by processBookings
       if (cs.payment_status === 'paid' && em && !have[em]) { have[em] = true; rows.push([em]); }
     });
     if (!list.has_more) break;
