@@ -178,3 +178,10 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
   with dynasty bar, dates, a short explanation and the Chinese name of each style (FIGS list in the file).
   Illustrations © N. Duong (iridescentdream.com), used with permission; the credit is shown under the widget.
   `?start=9` opens on figure 9. Embed: `height:max(780px, min(900px, calc((790px - 100vw) * 1000)))` with `scrolling="no"`.
+
+## Club reviews as message cards
+
+- `club-reviews.html`: the Club page reviews (Nancy, Agnieszka, Debbie) shown as chat-style message cards;
+  messages "arrive" one by one with a typing indicator when scrolled into view. Edit the REVIEWS list
+  (`==text==` = highlighted). Three side by side from 980px, swipe below.
+  Embed: `height:max(640px, min(740px, calc((1100px - 100vw) * 1000)))` with `scrolling="no"`.
