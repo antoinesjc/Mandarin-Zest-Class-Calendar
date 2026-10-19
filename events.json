@@ -455,7 +455,8 @@
    "end": "2026-10-22T22:00:00Z",
    "topic": "Talking about your hobbies",
    "about": "Learn about different people's hobbies to expand your vocabulary and learn more about your fellow members",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-10-26",
@@ -494,7 +495,8 @@
    "end": "2026-10-26T22:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-10-29",
@@ -693,8 +695,8 @@
    ],
    "start": "2026-11-15T14:00:00Z",
    "end": "2026-11-15T15:00:00Z",
-   "trial": true,
-   "topic": ""
+   "topic": "Real life conversation with a native Taiwanese teacher",
+   "trial": true
   },
   {
    "date": "2026-11-16",
@@ -713,8 +715,8 @@
    ],
    "start": "2026-11-16T18:00:00Z",
    "end": "2026-11-16T19:00:00Z",
-   "trial": true,
-   "topic": ""
+   "topic": "Practice speaking based on advanced reading content",
+   "trial": true
   },
   {
    "date": "2026-11-16",
