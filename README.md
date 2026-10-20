@@ -213,6 +213,7 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
 - Rare radicals (fewer than 5 common characters) ask for fewer boxes; they only come up once the common ones are collected.
 - 5/5 collects the radical. The collection (214 grid, tap one to play it) is saved in the visitor's browser.
 - `?radical=85` opens on a radical, `&script=t` in traditional.
+- **Draw mode** (handwriting): a drawing pad replaces the ball; after each stroke it suggests 6 characters (chosen script first), tap one to fill the box. Recognition runs in the browser with HanziLookupJS (`vendor/hanzilookup/`, GPL v3 code + Arphic-licensed data, ~0.8 MB loaded only when Draw is chosen). The Type/Draw choice is remembered.
 - Rebuild the data: `cd scripts/radical-game && npm install hanzi opencc-js && node build.js 6000 ../../radical-game-data.json` (radicals.txt = the 214 radicals, pinyin, meaning, variant forms; needs the writing-sheets `dict.json` for pinyin and hint order).
 
 Odoo embed (taller on phones, where the ball sits above the boxes):

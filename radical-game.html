@@ -99,6 +99,27 @@
   .foot span { flex:1; min-width:220px; }
   .foot a { color:#a8431a; font-weight:800; white-space:nowrap; }
 
+  /* handwriting */
+  .modes { display:inline-grid; grid-template-columns:1fr 1fr; background:#f6e9e1; border-radius:999px; padding:4px; align-self:flex-start; }
+  .modes button { min-height:40px; padding:0 16px; border:0; border-radius:999px; font-weight:800; font-size:14.5px; cursor:pointer; background:transparent; display:flex; align-items:center; gap:7px; }
+  .modes button[aria-checked="true"] { background:#fff; box-shadow:0 1px 3px rgba(42,36,32,.12); }
+  .pad { display:none; flex-direction:column; align-items:center; gap:10px; width:100%; }
+  .app.drawing .pad { display:flex; }
+  .app.drawing .ball, .app.drawing .stage .side { display:none; }
+  .pad .ph { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:320px; font-size:15px; font-weight:800; }
+  .pad .ph .zh { font-size:22px; color:var(--orange-d); }
+  .pad canvas { width:100%; max-width:320px; aspect-ratio:1; background:#fff; border:2.5px solid var(--orange); border-radius:20px; touch-action:none; cursor:crosshair; display:block;
+    background-image:linear-gradient(transparent calc(50% - .5px), #f3e2d8 calc(50% - .5px), #f3e2d8 calc(50% + .5px), transparent calc(50% + .5px)), linear-gradient(90deg, transparent calc(50% - .5px), #f3e2d8 calc(50% - .5px), #f3e2d8 calc(50% + .5px), transparent calc(50% + .5px)); }
+  .cands { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; width:100%; max-width:320px; min-height:48px; }
+  .cands button { min-height:48px; border:1.5px solid var(--line); background:#fff; border-radius:12px; font-size:24px; font-weight:700; cursor:pointer; padding:0; font-family:var(--zh),'Noto Sans SC',sans-serif; }
+  .cands button:hover, .cands button:focus-visible { border-color:var(--green); background:#eef8ee; }
+  .cands .empty { grid-column:1/-1; align-self:center; text-align:center; font-size:13.5px; color:var(--muted); }
+  .padbtns { display:flex; gap:8px; width:100%; max-width:320px; }
+  .padbtns button { flex:1; min-height:44px; border:1.5px solid var(--line); background:#fff; border-radius:999px; font-weight:700; font-size:14.5px; cursor:pointer; }
+  .padbtns button:hover { border-color:var(--orange); }
+  .app.drawing .box input { cursor:pointer; caret-color:transparent; }
+  .app.drawing .cell.active .box { border-color:var(--orange); box-shadow:0 0 0 4px rgba(243,122,72,.2); }
+
   /* collection */
   .coll { display:none; flex-direction:column; gap:14px; }
   .app.show-coll .main { display:none; } .app.show-coll .coll { display:flex; }
@@ -137,6 +158,8 @@
     .result > div { flex:1 1 200px !important; }
     .result .btn.dark { flex:1 1 100%; }
     .grid { grid-template-columns:repeat(7,minmax(0,1fr)); max-height:520px; }
+    .app.drawing .play .help { display:none; }
+    .pad canvas { max-width:260px; } .pad .ph, .cands, .padbtns { max-width:100%; }
   }
   @media (min-width:861px) { .stage .side { display:contents; } }
   @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
@@ -185,13 +208,27 @@
           <span id="shakeLbl">Shake the ball</span>
         </button>
       </div>
+      <div class="pad" id="pad">
+        <div class="ph"><span id="padTitle">Draw character 1</span><span>with <span class="zh" id="padRad"></span></span></div>
+        <canvas id="cv" width="320" height="320" aria-label="Drawing area: write a character with your finger or mouse"></canvas>
+        <div class="cands" id="cands" aria-live="polite"><span class="empty">Write a character above, then tap it here</span></div>
+        <div class="padbtns">
+          <button type="button" id="undoBtn">Undo stroke</button>
+          <button type="button" id="clearBtn">Clear</button>
+          <button type="button" id="padShake">New radical</button>
+        </div>
+      </div>
       <div class="toast" id="toast" role="status"></div>
     </div>
 
     <form class="play" id="play" autocomplete="off">
       <div>
         <h2 id="task">Shake the ball, then write 5 characters that contain the radical</h2>
-        <p class="help">Type with pinyin or your phone's handwriting keyboard. Any character where the radical appears counts, even as a small part.</p>
+        <p class="help" id="help">Type with pinyin, or choose Draw to write them by hand. Any character where the radical appears counts, even as a small part.</p>
+      </div>
+      <div class="modes" role="radiogroup" aria-label="How to enter characters">
+        <button type="button" role="radio" data-mode="type" aria-checked="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 15h10"/></svg>Type</button>
+        <button type="button" role="radio" data-mode="draw" aria-checked="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3l5 5L8 21H3v-5z"/><path d="M13 6l5 5"/></svg>Draw</button>
       </div>
       <div class="boxes" id="boxes"></div>
       <div class="actions">
@@ -277,6 +314,8 @@
     inp.addEventListener('compositionstart', () => composing = true);
     inp.addEventListener('compositionend', () => { composing = false; spread(i); });
     inp.addEventListener('input', () => { if (!composing) spread(i); if (checked) clearMarks(); });
+    inp.addEventListener('focus', () => { if (mode === 'draw') setActive(i); });
+    inp.addEventListener('click', () => { if (mode === 'draw') setActive(i); });
     inp.addEventListener('keydown', e => {
       if (e.key === 'Backspace' && !inp.value && i > 0) { cells[i - 1].inp.focus(); }
     });
@@ -299,6 +338,94 @@
     $('result').classList.remove('on', 'win');
   }
 
+  /* ---------- handwriting ---------- */
+  let mode = 'type', active = 0, strokes = [], curStroke = null, hlReady = null, matcher = null;
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  function loadHL() {
+    if (hlReady) return hlReady;
+    hlReady = new Promise(res => {
+      const sc = document.createElement('script');
+      sc.src = 'vendor/hanzilookup/hanzilookup.min.js';
+      sc.onload = () => HanziLookup.init('mmah', 'vendor/hanzilookup/mmah.json', ok => { if (ok) matcher = new HanziLookup.Matcher('mmah'); res(!!ok); });
+      sc.onerror = () => res(false);
+      document.head.appendChild(sc);
+    });
+    return hlReady;
+  }
+  function sizeCanvas() {
+    const r = cv.getBoundingClientRect(); if (!r.width) return;
+    const d = window.devicePixelRatio || 1;
+    cv.width = Math.round(r.width * d); cv.height = Math.round(r.width * d);
+    redraw();
+  }
+  function redraw() {
+    const d = cv.width / (cv.getBoundingClientRect().width || 1);
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2a2420'; ctx.lineWidth = Math.max(5, cv.getBoundingClientRect().width / 34);
+    strokes.concat(curStroke ? [curStroke] : []).forEach(st => {
+      ctx.beginPath(); st.forEach((p, k) => k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+      if (st.length === 1) ctx.lineTo(st[0][0] + .1, st[0][1] + .1);
+      ctx.stroke();
+    });
+  }
+  const pt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener('pointerdown', e => { e.preventDefault(); cv.setPointerCapture(e.pointerId); curStroke = [pt(e)]; redraw(); });
+  cv.addEventListener('pointermove', e => { if (!curStroke) return; const p = pt(e), q = curStroke[curStroke.length - 1]; if (Math.hypot(p[0] - q[0], p[1] - q[1]) > 1.5) { curStroke.push(p); redraw(); } });
+  const endStroke = () => { if (!curStroke) return; strokes.push(curStroke); curStroke = null; redraw(); recognise(); };
+  cv.addEventListener('pointerup', endStroke); cv.addEventListener('pointercancel', endStroke);
+  function recognise() {
+    const box = $('cands');
+    if (!strokes.length) { box.innerHTML = '<span class="empty">Write a character above, then tap it here</span>'; return; }
+    if (!matcher) { box.innerHTML = '<span class="empty">Loading handwriting…</span>'; loadHL().then(ok => ok ? recognise() : (box.innerHTML = '<span class="empty">Handwriting could not load. Please type instead.</span>')); return; }
+    const an = new HanziLookup.AnalyzedCharacter(strokes.map(st => st.length > 1 ? st : [st[0], [st[0][0] + 1, st[0][1] + 1]]));
+    matcher.match(an, 18, matches => {
+      const chars = matches.map(m => m.character);
+      // characters of the chosen script first
+      const list = chars.filter(c => (script === 's' ? S : T).has(c)).concat(chars.filter(c => !(script === 's' ? S : T).has(c))).slice(0, 6);
+      box.innerHTML = '';
+      list.forEach(c => {
+        const b = document.createElement('button'); b.type = 'button'; b.textContent = c; b.setAttribute('aria-label', 'Use ' + c);
+        b.addEventListener('click', () => pickChar(c));
+        box.appendChild(b);
+      });
+    });
+  }
+  function clearPad() { strokes = []; curStroke = null; redraw(); recognise(); }
+  $('undoBtn').addEventListener('click', () => { strokes.pop(); redraw(); recognise(); });
+  $('clearBtn').addEventListener('click', clearPad);
+  $('padShake').addEventListener('click', () => shake());
+  function setActive(i) {
+    const need = cur ? needFor(cur) : NEED;
+    active = Math.max(0, Math.min(i, need - 1));
+    cells.forEach((x, k) => x.cell.classList.toggle('active', k === active));
+    $('padTitle').textContent = 'Draw character ' + (active + 1);
+  }
+  function pickChar(c) {
+    cells[active].inp.value = c;
+    if (checked) clearMarks();
+    clearPad();
+    const need = cur ? needFor(cur) : NEED;
+    const next = cells.slice(0, need).findIndex((x, k) => k > active && !x.inp.value);
+    const any = cells.slice(0, need).findIndex(x => !x.inp.value);
+    setActive(next >= 0 ? next : any >= 0 ? any : active);
+  }
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.mode === m)));
+    app.classList.toggle('drawing', m === 'draw');
+    cells.forEach(x => { x.inp.readOnly = m === 'draw'; x.inp.setAttribute('inputmode', m === 'draw' ? 'none' : 'text'); });
+    store.set('mode', m);
+    if (m === 'draw') {
+      loadHL();
+      const any = cells.findIndex(x => !x.cell.classList.contains('off') && !x.inp.value);
+      setActive(any >= 0 ? any : 0);
+      requestAnimationFrame(sizeCanvas);
+    } else cells.forEach(x => x.cell.classList.remove('active'));
+  }
+  document.querySelectorAll('.modes button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  window.addEventListener('resize', () => { if (mode === 'draw') sizeCanvas(); });
+
   /* ---------- radical display ---------- */
   function showRadical(r, pop) {
     const f = form(r);
@@ -318,6 +445,8 @@
     cells.forEach((x, k) => { x.cell.classList.toggle('off', k >= need); x.inp.value = ''; x.inp.disabled = k >= need; });
     $('hint').hidden = true; $('hintBtn').textContent = 'Hint';
     clearMarks();
+    $('padRad').textContent = f;
+    if (mode === 'draw') { clearPad(); setActive(0); }
     if (need < NEED) $('task').innerHTML += ' <span style="font-size:14px;font-weight:600;color:var(--muted)">(a rare one)</span>';
   }
 
@@ -333,6 +462,7 @@
   function shake(r) {
     if (busy || !DATA) return;
     busy = true;
+    app.classList.remove('drawing');
     const ball = $('ball');
     $('rad').hidden = true; $('q').hidden = false;
     ball.classList.remove('shaking', 'happy'); void ball.offsetWidth; ball.classList.add('shaking');
@@ -343,8 +473,9 @@
       cur = r || pickNext();
       showRadical(cur, true);
       busy = false; $('shakeBtn').disabled = false; $('shakeLbl').textContent = 'Shake again';
+      if (mode === 'draw') setTimeout(() => { app.classList.add('drawing'); sizeCanvas(); }, 900);
       const first = cells.find(x => !x.cell.classList.contains('off'));
-      if (first && matchMedia('(hover: hover)').matches) first.inp.focus({ preventScroll: true });
+      if (mode === 'type' && first && matchMedia('(hover: hover)').matches) first.inp.focus({ preventScroll: true });
     }, reduce ? 50 : 900);
   }
   $('ball').addEventListener('click', () => shake());
@@ -449,6 +580,7 @@
   /* ---------- start ---------- */
   setScript(script);
   updateCount();
+  if (store.get('mode', 'type') === 'draw') setMode('draw');
   fetch('radical-game-data.json').then(r => r.json()).then(d => {
     DATA = d; S = new Set(d.s); T = new Set(d.t);
     const p = new URLSearchParams(location.search);
