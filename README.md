@@ -204,3 +204,19 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
 - One trial per person: trial.html asks for the email and checks it (`?check=email`) before opening Stripe with that email locked.
   Past buyers are imported into the "Past trials" tab by `setup`. A second booking that slips through (e.g. from the calendar button)
   is not invited; the buyer gets a friendly email and is refunded automatically if `REFUND_REPEATS` = yes.
+
+## Radical game: "Shake a radical 摇部首"
+
+`radical-game.html` + `radical-game-data.json`. The visitor shakes a mandarin ball, gets one of the 214 Kangxi radicals and writes 5 characters that contain it (typed with pinyin or handwriting input). Simplified / traditional switch (讠/言, 钅/金, 门/門…).
+
+- A character counts when the radical appears anywhere in it (from the CJK decomposition data), in the chosen script, among the ~6,000 most common characters. Right character in the other script = "Traditional form" / "Simplified form", not counted.
+- Rare radicals (fewer than 5 common characters) ask for fewer boxes; they only come up once the common ones are collected.
+- 5/5 collects the radical. The collection (214 grid, tap one to play it) is saved in the visitor's browser.
+- `?radical=85` opens on a radical, `&script=t` in traditional.
+- Rebuild the data: `cd scripts/radical-game && npm install hanzi opencc-js && node build.js 6000 ../../radical-game-data.json` (radicals.txt = the 214 radicals, pinyin, meaning, variant forms; needs the writing-sheets `dict.json` for pinyin and hint order).
+
+Odoo embed (taller on phones, where the ball sits above the boxes):
+
+```html
+<iframe src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/radical-game.html" title="Shake a radical game" style="width:100%;height:max(780px, min(1200px, calc((1100px - 100vw) * 1000)));border:0;display:block" scrolling="no" loading="lazy"></iframe>
+```

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shake a radical · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700;900&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* Shake a radical: a ball gives one of the 214 Kangxi radicals, the player writes 5 characters that contain it.
+     Data: radical-game-data.json (built by scripts/radical-game/build.js). Embed height: see README. */
+  :root { --orange:#f37a48; --orange-d:#e2632f; --peach:#fdf1ea; --peach2:#f8dacd; --green:#1b6f1b; --green-d:#173f17; --mint:#e0f4e0;
+          --ink:#2a2420; --muted:#5c4f47; --soft:#6f625a; --line:#ecdcd2; --cream:#fffaf6; --zh:'Noto Sans SC'; }
+  body.t { --zh:'Noto Sans TC'; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit','Noto Sans SC',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; }
+  .zh { font-family:var(--zh),'Noto Sans SC','Noto Sans TC',sans-serif; }
+  button { font-family:inherit; color:inherit; }
+  .app { max-width:1120px; margin:0 auto; background:var(--cream); border-radius:24px; padding:26px 32px 22px; display:flex; flex-direction:column; gap:18px; }
+
+  .top { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .top .ttl { flex:1; min-width:240px; }
+  .kicker { font-size:13px; font-weight:800; letter-spacing:.08em; color:#a8431a; }
+  h1 { margin:2px 0 0; font-size:30px; font-weight:800; line-height:1.1; }
+  h1 .zh { color:var(--orange-d); }
+  .pill { display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line); border-radius:999px; padding:6px 14px 6px 8px; font-size:14.5px; cursor:pointer; min-height:44px; }
+  .pill:hover { border-color:var(--orange); }
+  .pill .ic { width:30px; height:30px; border-radius:50%; background:var(--mint); display:flex; align-items:center; justify-content:center; }
+  .seg { display:grid; grid-template-columns:1fr 1fr; background:#f6e9e1; border-radius:999px; padding:4px; }
+  .seg button { min-height:40px; padding:0 16px; border:0; border-radius:999px; font-weight:800; font-size:14.5px; cursor:pointer; background:transparent; }
+  .seg button[aria-checked="true"] { background:#fff; box-shadow:0 1px 3px rgba(42,36,32,.12); }
+  .seg .s { font-family:'Outfit','Noto Sans SC',sans-serif; } .seg .t { font-family:'Outfit','Noto Sans TC',sans-serif; }
+
+  .main { display:grid; grid-template-columns:400px minmax(0,1fr); gap:28px; }
+  .stage { background:var(--peach); border-radius:28px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:20px 18px; }
+  .ball { position:relative; width:280px; height:280px; border:0; padding:0; background:none; cursor:pointer; border-radius:50%; }
+  .ball:focus-visible { outline:3px solid var(--green); outline-offset:4px; }
+  .ball svg { display:block; width:100%; height:100%; }
+  .ball .win { position:absolute; left:25.3%; top:27.5%; width:49.4%; height:49.4%; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+  .ball .rad { font-size:92px; font-weight:900; line-height:1; color:#fff; }
+  .ball .q { font-size:62px; font-weight:900; color:var(--peach2); opacity:.4; }
+  .ball.shaking { animation:shake .9s ease-in-out; }
+  .ball.shaking .q { animation:fog .45s ease-in-out infinite; }
+  .rad.pop { animation:pop .5s ease-out; }
+  .ball.happy { animation:hop .7s ease-out; }
+  @keyframes shake { 0%{transform:rotate(0) translate(0,0)} 12%{transform:rotate(-14deg) translate(-14px,4px)} 26%{transform:rotate(12deg) translate(14px,-6px)} 40%{transform:rotate(-10deg) translate(-10px,2px)} 54%{transform:rotate(8deg) translate(10px,-4px)} 68%{transform:rotate(-5deg) translate(-6px,0)} 82%{transform:rotate(3deg) translate(4px,0)} 100%{transform:rotate(0) translate(0,0)} }
+  @keyframes pop { 0%{transform:scale(.2) rotate(-30deg);opacity:0} 70%{transform:scale(1.12) rotate(4deg);opacity:1} 100%{transform:scale(1) rotate(0);opacity:1} }
+  @keyframes fog { 0%,100%{opacity:.25} 50%{opacity:.65} }
+  @keyframes hop { 0%,100%{transform:translateY(0)} 30%{transform:translateY(-22px) rotate(-4deg)} 55%{transform:translateY(0)} 75%{transform:translateY(-8px) rotate(2deg)} }
+  .info { text-align:center; min-height:46px; }
+  .info .name { font-size:17px; font-weight:800; }
+  .info .sub { font-size:13.5px; color:var(--muted); }
+  .info .forms { display:inline-flex; gap:6px; margin-left:4px; }
+  .info .forms span { background:#fff; border-radius:8px; padding:0 6px; font-size:15px; }
+  .shake { min-height:54px; min-width:240px; border:0; border-radius:999px; background:var(--green); color:#fff; font-weight:800; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; }
+  .shake:hover { background:var(--green-d); }
+  .shake:disabled { opacity:.7; cursor:wait; }
+
+  .play { display:flex; flex-direction:column; gap:16px; min-width:0; }
+  .play h2 { margin:0; font-size:22px; font-weight:800; line-height:1.25; }
+  .play h2 .zh { color:var(--orange-d); }
+  .play .help { margin:4px 0 0; font-size:14.5px; color:var(--muted); line-height:1.45; }
+  .boxes { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+  .cell { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .cell.off { visibility:hidden; }
+  .box { position:relative; width:100%; aspect-ratio:1; border-radius:18px; border:2.5px solid var(--line); background:#fff; transition:border-color .2s, background .2s; }
+  .box svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .box svg path { stroke:var(--line); }
+  .box input { position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent; text-align:center; font-family:var(--zh),'Noto Sans SC',sans-serif; font-size:56px; font-weight:700; color:var(--ink); padding:0; border-radius:16px; }
+  .box input:focus { outline:none; }
+  .box:focus-within { border-color:var(--orange); }
+  .msg { min-height:34px; font-size:13px; font-weight:700; text-align:center; line-height:1.3; }
+  .cell.ok .box { border-color:var(--green); background:#eef8ee; } .cell.ok .box svg path { stroke:#b9dcb9; } .cell.ok .msg { color:var(--green); }
+  .cell.bad .box { border-color:#b8432f; background:#fdeeea; } .cell.bad .box svg path { stroke:#efc0b6; } .cell.bad .msg { color:#a03623; }
+  .cell.dup .box { border-color:#c98a1a; background:#fff6e3; } .cell.dup .msg { color:#8a5a0a; }
+  .cell.script .box { border-color:#4f7a94; background:#eaf2f7; } .cell.script .msg { color:#3a5d73; }
+  .cell.unk .box { border-color:#c98a1a; background:#fff6e3; } .cell.unk .msg { color:#8a5a0a; }
+  .actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .btn { min-height:50px; padding:0 26px; border:0; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:16.5px; cursor:pointer; }
+  .btn:hover { background:var(--orange-d); }
+  .btn.ghost { background:#fff; border:1.5px solid var(--line); font-weight:700; font-size:15px; padding:0 20px; }
+  .btn.ghost:hover { border-color:var(--orange); background:#fff; }
+  .btn.dark { background:var(--ink); color:#fff; font-size:15px; min-height:46px; padding:0 20px; }
+  .btn.dark:hover { background:#000; }
+  .hint { font-size:15px; color:var(--muted); }
+  .hint b { font-size:22px; color:var(--ink); font-weight:700; }
+  .result { border-radius:20px; padding:14px 18px; background:var(--peach); display:none; align-items:center; gap:16px; }
+  .result.on { display:flex; }
+  .result.win { background:var(--mint); }
+  .result .score { font-size:34px; font-weight:900; color:#a8431a; white-space:nowrap; }
+  .result.win .score, .result.win .rt { color:var(--green-d); }
+  .result .rt { font-size:17px; font-weight:800; color:#a8431a; }
+  .result .rx { font-size:14.5px; color:#4a3c34; }
+  .result .more { margin-top:4px; font-size:14px; color:var(--muted); }
+  .result .more .zh { font-size:17px; color:var(--ink); font-weight:700; }
+  .foot { margin-top:auto; display:flex; align-items:center; gap:12px; border-top:1px solid var(--line); padding-top:14px; font-size:14px; color:var(--muted); flex-wrap:wrap; }
+  .foot span { flex:1; min-width:220px; }
+  .foot a { color:#a8431a; font-weight:800; white-space:nowrap; }
+
+  /* collection */
+  .coll { display:none; flex-direction:column; gap:14px; }
+  .app.show-coll .main { display:none; } .app.show-coll .coll { display:flex; }
+  .coll .head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .coll .head h2 { margin:0; font-size:22px; flex:1; }
+  .bar { height:10px; border-radius:999px; background:#f6e9e1; overflow:hidden; }
+  .bar i { display:block; height:100%; width:0; border-radius:999px; background:var(--orange); transition:width .4s; }
+  .grid { display:grid; grid-template-columns:repeat(18,minmax(0,1fr)); gap:6px; max-height:470px; overflow:auto; padding:2px; }
+  .grid button { aspect-ratio:1; border-radius:10px; border:1.5px dashed #e6d6cc; background:#fff; color:#8f7f76; font-size:20px; font-weight:700; cursor:pointer; padding:0; font-family:var(--zh),'Noto Sans SC',sans-serif; }
+  .grid button.got { background:var(--orange); border:1.5px solid var(--orange-d); color:var(--ink); }
+  .grid button:hover { border-color:var(--green); }
+  .grid button:disabled { opacity:.35; cursor:default; }
+  .coll .note { font-size:13.5px; color:var(--muted); }
+
+  .toast { position:absolute; bottom:12px; left:50%; transform:translateX(-50%) translateY(10px); background:var(--green); color:#fff; font-weight:800; border-radius:999px; padding:10px 18px; opacity:0; transition:all .3s; pointer-events:none; white-space:nowrap; z-index:5; }
+  .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+  @media (max-width:860px) {
+    .app { padding:18px 14px 16px; border-radius:20px; gap:14px; }
+    h1 { font-size:24px; }
+    .top { gap:10px; }
+    .main { grid-template-columns:minmax(0,1fr); gap:16px; }
+    .stage { flex-direction:row; flex-wrap:wrap; padding:14px; gap:10px 14px; }
+    .ball { width:150px; height:150px; flex:none; }
+    .ball .rad { font-size:50px; } .ball .q { font-size:36px; }
+    .stage .side { flex:1; min-width:150px; display:flex; flex-direction:column; gap:8px; }
+    .info { text-align:left; }
+    .shake { min-width:0; width:100%; min-height:46px; font-size:15.5px; }
+    .play h2 { font-size:18px; }
+    .boxes { gap:7px; }
+    .box { border-radius:14px; } .box input { font-size:32px; border-radius:12px; }
+    .msg { font-size:11.5px; min-height:30px; }
+    .btn { flex:1.6; padding:0 12px; } .btn.ghost { flex:1; }
+    .result { flex-wrap:wrap; }
+    .result > div { flex:1 1 200px !important; }
+    .result .btn.dark { flex:1 1 100%; }
+    .grid { grid-template-columns:repeat(7,minmax(0,1fr)); max-height:520px; }
+  }
+  @media (min-width:861px) { .stage .side { display:contents; } }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="top">
+    <div class="ttl">
+      <div class="kicker">MANDARIN ZEST GAME</div>
+      <h1>Shake a radical <span class="zh" id="ttlZh">摇部首</span></h1>
+    </div>
+    <button class="pill" id="collBtn" type="button" aria-expanded="false">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#173f17" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span>
+      <span><b id="collN">0</b> / 214 collected</span>
+    </button>
+    <div class="seg" role="radiogroup" aria-label="Characters">
+      <button type="button" role="radio" class="s" data-script="s" aria-checked="true">简体 Simplified</button>
+      <button type="button" role="radio" class="t" data-script="t" aria-checked="false">繁體 Traditional</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="stage" style="position:relative">
+      <button class="ball" id="ball" type="button" aria-label="Shake the ball">
+        <svg viewBox="0 0 300 300" aria-hidden="true">
+          <defs><radialGradient id="g" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#ffa173"/><stop offset=".55" stop-color="#f37a48"/><stop offset="1" stop-color="#d4561f"/></radialGradient></defs>
+          <ellipse cx="150" cy="290" rx="96" ry="9" fill="#2a2420" opacity=".12"/>
+          <path d="M150 22 q-4 -12 4 -20" stroke="#6b4a2b" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M156 16 q34 -30 62 -4 q-30 26 -62 4z" fill="#1b6f1b"/>
+          <circle cx="150" cy="152" r="132" fill="url(#g)"/>
+          <ellipse cx="102" cy="84" rx="34" ry="20" transform="rotate(-30 102 84)" fill="#fff" opacity=".35"/>
+          <circle cx="150" cy="156" r="84" fill="#fffaf6"/>
+          <circle cx="150" cy="156" r="76" fill="#2a2420"/>
+          <circle cx="150" cy="156" r="76" fill="none" stroke="#4a3c34" stroke-width="6"/>
+        </svg>
+        <span class="win"><span class="q" id="q">?</span><span class="rad zh" id="rad" hidden></span></span>
+      </button>
+      <div class="side">
+        <div class="info" id="info" aria-live="polite">
+          <div class="name">Shake the ball to get a radical</div>
+          <div class="sub">There are 214 to collect</div>
+        </div>
+        <button class="shake" id="shakeBtn" type="button">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 a8 8 0 0 1 14 -5.3 M20 4 v4 h-4 M20 12 a8 8 0 0 1 -14 5.3 M4 20 v-4 h4"/></svg>
+          <span id="shakeLbl">Shake the ball</span>
+        </button>
+      </div>
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+
+    <form class="play" id="play" autocomplete="off">
+      <div>
+        <h2 id="task">Shake the ball, then write 5 characters that contain the radical</h2>
+        <p class="help">Type with pinyin or your phone's handwriting keyboard. Any character where the radical appears counts, even as a small part.</p>
+      </div>
+      <div class="boxes" id="boxes"></div>
+      <div class="actions">
+        <button class="btn" type="submit" id="checkBtn">Check my answers</button>
+        <button class="btn ghost" type="button" id="hintBtn">Hint</button>
+        <span class="hint" id="hint" hidden></span>
+      </div>
+      <div class="result" id="result" aria-live="polite">
+        <div class="score" id="score"></div>
+        <div style="flex:1;min-width:0">
+          <div class="rt" id="rt"></div>
+          <div class="rx" id="rx"></div>
+          <div class="more" id="more"></div>
+        </div>
+        <button class="btn dark" type="button" id="nextBtn">Next radical</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="coll" id="coll">
+    <div class="head">
+      <h2>My radicals</h2>
+      <span id="collTxt" style="font-size:14.5px;color:var(--muted)"></span>
+      <button class="btn ghost" type="button" id="backBtn">Back to the game</button>
+    </div>
+    <div class="bar"><i id="collBar"></i></div>
+    <div class="grid" id="grid"></div>
+    <div class="note">Get 5 out of 5 to collect a radical. Tap any radical to play it. Saved in this browser.</div>
+  </div>
+
+  <div class="foot">
+    <span>Want to know what every radical means? <b style="color:var(--ink)">Unlocking Chinese Characters</b> explains them with stories and pictures. Code <b style="color:var(--ink)">WELCOME01</b> for 10% off.</span>
+    <a href="https://www.mandarinzest.com/shop/textbooks-3/unlocking-chinese-characters-a-guide-on-understanding-the-chinese-writing-system-26" target="_blank" rel="noopener">See the book ↗</a>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const app = $('app');
+  // Simplified display forms (traditional uses the Kangxi form).
+  const SIMP = {63:'户',120:'纟',147:'见',149:'讠',154:'贝',159:'车',167:'钅',168:'长',169:'门',174:'青',178:'韦',181:'页',182:'风',183:'飞',184:'饣',187:'马',195:'鱼',196:'鸟',197:'卤',199:'麦',201:'黄',205:'黾',210:'齐',211:'齿',212:'龙',213:'龟'};
+  const TRAD = {174:'青'};
+  // Forms learners actually see in characters
+  const DISP = {66:'攵',140:'艹',162:'辶',163:'阝',170:'阝'};
+  // the traditional form still appears in a few simplified characters (警, 鑫, 餐, 紧)
+  const ALT_OK = {120:1,149:1,167:1,184:1};
+  const SIDE = {163:' on the right (like 都)',170:' on the left (like 院)'};
+  const NEED = 5;
+  let DATA = null, S = null, T = null, script = 's', cur = null, checked = false, busy = false;
+
+  // per-viewer progress (collected radicals and script choice)
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('mz-radical-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('mz-radical-' + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  let got = store.get('got', {});
+  script = store.get('script', 's') === 't' ? 't' : 's';
+
+  const form = r => DISP[r.n] || (script === 's' ? SIMP[r.n] : TRAD[r.n]) || r.ch;
+  // a second common way of writing it, e.g. 水 → 氵, 讠 → 言
+  const alt = r => {
+    const f = form(r);
+    const cands = script === 's' && SIMP[r.n] ? (ALT_OK[r.n] ? [r.ch] : []) : [r.ch, ...r.vars].filter(x => !(script === 't' && SIMP[r.n] === x));
+    return cands.find(x => x !== f && x.length === 1 && !(x >= '\u2E80' && x <= '\u2FDF')) || '';
+  };
+  const inScript = c => (script === 's' ? S : T).has(c);
+  const otherScript = c => (script === 's' ? T : S).has(c);
+  const countFor = r => [...r.c].filter(inScript).length;
+  const needFor = r => Math.min(NEED, countFor(r));
+  const isHan = c => /\p{Script=Han}/u.test(c);
+
+  /* ---------- boxes ---------- */
+  const boxesEl = $('boxes');
+  const cells = [];
+  for (let i = 0; i < NEED; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.innerHTML = '<div class="box"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M50 6 V94 M6 50 H94" stroke-width="1" stroke-dasharray="4 4" fill="none"/></svg>' +
+      '<input type="text" inputmode="text" lang="zh" aria-label="Character ' + (i + 1) + '" autocomplete="off" autocorrect="off" spellcheck="false"></div><div class="msg"></div>';
+    const inp = cell.querySelector('input');
+    let composing = false;
+    inp.addEventListener('compositionstart', () => composing = true);
+    inp.addEventListener('compositionend', () => { composing = false; spread(i); });
+    inp.addEventListener('input', () => { if (!composing) spread(i); if (checked) clearMarks(); });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) { cells[i - 1].inp.focus(); }
+    });
+    boxesEl.appendChild(cell);
+    cells.push({ cell, inp, msg: cell.querySelector('.msg') });
+  }
+  // Keep one character per box; extra characters (typed or pasted) flow into the next boxes.
+  function spread(i) {
+    const chars = [...cells[i].inp.value].filter(isHan);
+    if (!chars.length) { if (!/[a-z]/i.test(cells[i].inp.value)) cells[i].inp.value = ''; return; }
+    cells[i].inp.value = chars[0];
+    let j = i + 1;
+    for (const c of chars.slice(1)) { while (j < cells.length && (cells[j].cell.classList.contains('off') || cells[j].inp.value)) j++; if (j >= cells.length) break; cells[j].inp.value = c; j++; }
+    const next = cells.slice(i + 1).find(x => !x.cell.classList.contains('off') && !x.inp.value);
+    if (next && chars.length >= 1) next.inp.focus();
+  }
+  function clearMarks() {
+    checked = false;
+    cells.forEach(x => { x.cell.classList.remove('ok', 'bad', 'dup', 'script', 'unk'); x.msg.textContent = ''; });
+    $('result').classList.remove('on', 'win');
+  }
+
+  /* ---------- radical display ---------- */
+  function showRadical(r, pop) {
+    const f = form(r);
+    $('q').hidden = true;
+    const rad = $('rad');
+    rad.hidden = false; rad.textContent = f;
+    rad.classList.remove('pop'); void rad.offsetWidth; if (pop) rad.classList.add('pop');
+    const others = [r.ch, ...r.vars].filter((x, k, a) => x !== f && a.indexOf(x) === k && !(script === 't' && SIMP[r.n] === x)).slice(0, 3);
+    const simpNote = script === 's' && SIMP[r.n] && SIMP[r.n] !== r.ch ? 'Traditional ' + r.ch : '';
+    const formsHtml = others.length ? ' · also <span class="forms zh">' + others.map(x => '<span>' + x + '</span>').join('') + '</span>' : '';
+    const need = needFor(r);
+    $('info').innerHTML = '<div class="name"><span class="zh">' + r.ch + '</span> ' + r.py + ' · ' + r.en + '</div>' +
+      '<div class="sub">Radical ' + r.n + ' of 214' + formsHtml + (simpNote && !others.includes(r.ch) ? ' · ' + simpNote : '') + (got[r.n] ? ' · collected' : '') + '</div>';
+    const a = SIDE[r.n] ? '' : alt(r);
+    $('task').innerHTML = 'Write ' + (need === 1 ? '1 character' : need + ' characters') + (need === 1 ? ' that contains' : ' that contain') + ' <span class="zh">' + f + '</span>' +
+      (a ? ' or <span class="zh">' + a + '</span>' : '') + (SIDE[r.n] || '');
+    cells.forEach((x, k) => { x.cell.classList.toggle('off', k >= need); x.inp.value = ''; x.inp.disabled = k >= need; });
+    $('hint').hidden = true; $('hintBtn').textContent = 'Hint';
+    clearMarks();
+    if (need < NEED) $('task').innerHTML += ' <span style="font-size:14px;font-weight:600;color:var(--muted)">(a rare one)</span>';
+  }
+
+  /* ---------- shaking ---------- */
+  function pickNext() {
+    const all = DATA.radicals.filter(r => r !== cur && countFor(r) > 0);
+    const fresh = all.filter(r => !got[r.n]);
+    // common radicals first, the rare ones once those are collected
+    const common = fresh.filter(r => countFor(r) >= NEED);
+    const pool = common.length ? common : fresh.length ? fresh : all;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  function shake(r) {
+    if (busy || !DATA) return;
+    busy = true;
+    const ball = $('ball');
+    $('rad').hidden = true; $('q').hidden = false;
+    ball.classList.remove('shaking', 'happy'); void ball.offsetWidth; ball.classList.add('shaking');
+    $('shakeBtn').disabled = true; $('shakeLbl').textContent = 'Shaking…';
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(() => {
+      ball.classList.remove('shaking');
+      cur = r || pickNext();
+      showRadical(cur, true);
+      busy = false; $('shakeBtn').disabled = false; $('shakeLbl').textContent = 'Shake again';
+      const first = cells.find(x => !x.cell.classList.contains('off'));
+      if (first && matchMedia('(hover: hover)').matches) first.inp.focus({ preventScroll: true });
+    }, reduce ? 50 : 900);
+  }
+  $('ball').addEventListener('click', () => shake());
+  $('shakeBtn').addEventListener('click', () => shake());
+  $('nextBtn').addEventListener('click', () => shake());
+
+  /* ---------- checking ---------- */
+  function check() {
+    if (!cur) { shake(); return; }
+    const need = needFor(cur), f = form(cur);
+    const has = new Set([...cur.c]);
+    const seen = new Set();
+    let score = 0;
+    cells.forEach((x, k) => {
+      if (k >= need) return;
+      x.cell.classList.remove('ok', 'bad', 'dup', 'script', 'unk');
+      const v = [...x.inp.value].find(isHan) || '';
+      let st = '', msg = '';
+      if (!v) { msg = 'Empty'; }
+      else if (seen.has(v)) { st = 'dup'; msg = 'Used twice'; }
+      else if (has.has(v) && inScript(v)) { st = 'ok'; msg = '✓ ' + (DATA.py[v] || ''); score++; }
+      else if (has.has(v) && otherScript(v)) { st = 'script'; msg = script === 's' ? 'Traditional form' : 'Simplified form'; }
+      else if (!S.has(v) && !T.has(v)) { st = 'unk'; msg = 'Not in our list'; }
+      else { st = 'bad'; msg = 'No ' + f + ' in ' + v; }
+      if (v) seen.add(v);
+      if (st) x.cell.classList.add(st);
+      x.msg.textContent = msg;
+    });
+    checked = true;
+    const win = score === need;
+    const res = $('result');
+    res.classList.add('on'); res.classList.toggle('win', win);
+    $('score').textContent = score + '/' + need;
+    const used = new Set(cells.map(x => x.inp.value));
+    const ex = [...(script === 's' ? cur.hs : cur.ht)].filter(c => !used.has(c)).slice(0, 6);
+    $('more').innerHTML = ex.length ? 'More with <span class="zh">' + f + '</span>: ' + ex.map(c => '<span class="zh">' + c + '</span> ' + (DATA.py[c] || '')).join(' · ') : '';
+    if (win) {
+      const isNew = !got[cur.n];
+      got[cur.n] = 1; store.set('got', got); updateCount();
+      $('rt').textContent = isNew ? 'Perfect! ' + f + ' joins your collection.' : 'Perfect again!';
+      $('rx').textContent = 'Shake the ball for a new radical.';
+      const ball = $('ball'); ball.classList.remove('happy'); void ball.offsetWidth; ball.classList.add('happy');
+      if (isNew) toast('+1 radical collected');
+    } else {
+      $('rt').textContent = score >= need - 2 ? 'So close!' : 'Keep going!';
+      $('rx').textContent = 'Fix the coloured boxes and check again, or tap Hint.';
+    }
+  }
+  $('play').addEventListener('submit', e => { e.preventDefault(); check(); });
+  $('hintBtn').addEventListener('click', () => {
+    const h = $('hint');
+    if (!cur) { shake(); return; }
+    if (!h.hidden) { h.hidden = true; $('hintBtn').textContent = 'Hint'; return; }
+    const used = new Set(cells.map(x => x.inp.value));
+    const ex = [...(script === 's' ? cur.hs : cur.ht)].filter(c => !used.has(c)).slice(0, 2);
+    h.innerHTML = ex.length ? 'Try <b class="zh">' + ex.join(' · ') + '</b>' : 'No more hints for this one';
+    h.hidden = false; $('hintBtn').textContent = 'Hide hint';
+  });
+
+  function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 1800); }
+
+  /* ---------- scripts ---------- */
+  function setScript(s) {
+    script = s; store.set('script', s);
+    document.body.classList.toggle('t', s === 't');
+    document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.script === s)));
+    $('ttlZh').textContent = s === 's' ? '摇部首' : '搖部首';
+    if (cur) { if (!countFor(cur)) { cur = null; shake(); } else showRadical(cur, false); }
+    if (app.classList.contains('show-coll')) drawGrid();
+  }
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setScript(b.dataset.script)));
+
+  /* ---------- collection ---------- */
+  function updateCount() {
+    const n = Object.keys(got).length;
+    $('collN').textContent = n;
+    $('collTxt').textContent = n + ' of 214 collected';
+    $('collBar').style.width = (n / 214 * 100) + '%';
+  }
+  function drawGrid() {
+    const g = $('grid'); g.innerHTML = '';
+    DATA.radicals.forEach(r => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = form(r);
+      const playable = countFor(r) > 0;
+      b.className = got[r.n] ? 'got' : '';
+      b.disabled = !playable;
+      b.title = r.n + ' · ' + r.py + ' · ' + r.en + (playable ? '' : ' (not used in ' + (script === 's' ? 'simplified' : 'traditional') + ' characters)');
+      b.setAttribute('aria-label', 'Radical ' + r.n + ', ' + r.en + (got[r.n] ? ', collected' : ''));
+      b.addEventListener('click', () => { showColl(false); shake(r); });
+      g.appendChild(b);
+    });
+  }
+  function showColl(on) {
+    app.classList.toggle('show-coll', on);
+    $('collBtn').setAttribute('aria-expanded', String(on));
+    if (on) drawGrid();
+  }
+  $('collBtn').addEventListener('click', () => showColl(!app.classList.contains('show-coll')));
+  $('backBtn').addEventListener('click', () => showColl(false));
+
+  /* ---------- start ---------- */
+  setScript(script);
+  updateCount();
+  fetch('radical-game-data.json').then(r => r.json()).then(d => {
+    DATA = d; S = new Set(d.s); T = new Set(d.t);
+    const p = new URLSearchParams(location.search);
+    const start = +p.get('radical');
+    if (p.get('script') === 't' || p.get('script') === 's') setScript(p.get('script'));
+    if (start >= 1 && start <= 214) shake(DATA.radicals[start - 1]);
+  }).catch(() => { $('info').innerHTML = '<div class="name">Could not load the game</div><div class="sub">Please refresh the page.</div>'; });
+})();
+</script>
+</body>
+</html>
