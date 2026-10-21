@@ -230,6 +230,15 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
   (hover or tap pauses). Add pictures to `sessions/` (2:1, 800×400) and to the PHOTOS list in the file.
   Embed: `height:max(180px, min(250px, calc((100vw - 700px) * 1000)))` with `scrolling="no"`.
 
+## Live session scene
+
+- `call-scene.html`: animated video call (host + three learners drawn as flat illustrations) where people take turns
+  talking: speech bubble pops up, mouth moves, green "speaking" ring and mic bars. Blinking and small movements in
+  between. Transparent background; the call keeps its shape and scales to fit the frame. Calm (no animation) for
+  visitors who turn off motion. Used in the hero of `speak.html`.
+  Club page embed: `<iframe src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/call-scene.html" title="A live Mandarin Zest Club session" scrolling="no" style="width:100%;max-width:520px;aspect-ratio:520/432;border:0;display:block;margin:0 auto"></iframe>`
+  (no fixed height needed). To change what people say, edit the four bubble texts in the file.
+
 ## Club App highlight
 
 - `club-app.html`: presents the Mandarin Zest Club App (six features + an animated phone showing the app's home screen:
