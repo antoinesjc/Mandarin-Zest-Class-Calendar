@@ -101,6 +101,11 @@
     .bottom { flex-wrap: nowrap; gap: 10px; padding-top: 2px; }
     .price { font-size: 23px; } .btn { padding: 11px 18px; font-size: 15px; white-space: nowrap; }
   }
+  @media (max-width: 440px) {
+    /* narrow phones: button under the price, full width, so it never gets cut off */
+    .bottom { flex-wrap: wrap; }
+    .bottom .btn { flex: 1 1 100%; text-align: center; }
+  }
 
   /* "one trial per person" pop-up (placed next to the form, works inside a full-height frame) */
   .once-bg { position: absolute; left: 0; top: 0; width: 100%; background: rgba(42,36,32,.32); z-index: 50; animation: oncefade .15s ease-out; }
