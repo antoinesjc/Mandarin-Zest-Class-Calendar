@@ -150,7 +150,7 @@ function sendRepeatEmail(email, name, refunded) {
       '<p>' + (first ? 'Hi ' + first + ',' : 'Hi,') + '</p>' +
       '<p>Thanks for booking again! Trial sessions are one per person, and our records show you already had yours, so we couldn\'t add you to this session.' +
       (refunded ? ' Your US$2.50 has been refunded; it can take a few days to show on your card.' : ' We\'ll refund your US$2.50 within a few days.') + '</p>' +
-      '<p>If you enjoyed it, the Club gives you as many speaking sessions as you like every week, plus a new workbook every month.</p>' +
+      '<p>If you enjoyed it, the Club gives you as many speaking sessions as you like every week, plus access to the Mandarin Zest Club App: your sessions, notes and progress in one place.</p>' +
       '<p><a href="https://www.mandarinzest.com/mandarin-zest-club" style="background:#f37a48;color:#2a2420;text-decoration:none;font-weight:bold;padding:11px 20px;border-radius:999px;display:inline-block">See the Club</a></p>' +
       '<p>加油！<br>Mandarin Zest</p></div>'
   });
