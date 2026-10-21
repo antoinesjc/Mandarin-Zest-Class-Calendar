@@ -188,10 +188,10 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
 
 ## Club reviews as message cards
 
-- `club-reviews.html`: the Club page reviews (Nancy, Agnieszka, Debbie) shown as chat-style message cards;
+- `club-reviews.html`: the Club page reviews (Matt, Nancy, Agnieszka, Debbie) shown as chat-style message cards;
   messages "arrive" one by one with a typing indicator when scrolled into view. Edit the REVIEWS list
-  (`==text==` = highlighted). Three side by side from 980px, swipe below.
-  Embed: `height:max(640px, min(740px, calc((1100px - 100vw) * 1000)))` with `scrolling="no"`.
+  (`==text==` = highlighted). Four side by side from 1180px, swipe below.
+  Embed: `height:740px` with `scrolling="no"` (4 cards: ~720px on wide screens and phones, less in between).
 
 ## Trial bookings (automatic invites + seat limit)
 

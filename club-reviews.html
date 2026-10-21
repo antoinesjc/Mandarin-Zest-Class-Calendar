@@ -14,7 +14,7 @@
   * { box-sizing:border-box; }
   html, body { margin:0; background:transparent; }
   body { font-family:'Outfit','Noto Sans SC',system-ui,sans-serif; color:var(--ink); padding:10px 12px 6px; -webkit-font-smoothing:antialiased; }
-  .row { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:20px; max-width:1100px; margin:0 auto; align-items:start; }
+  .row { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:18px; max-width:1180px; margin:0 auto; align-items:start; }
   .shot { background:#fff; border-radius:26px; box-shadow:0 1px 0 #efe2d9, 0 14px 34px rgba(42,36,32,.10); overflow:hidden; transform:translateY(14px) rotate(var(--r,0deg)); opacity:0; transition:transform .6s cubic-bezier(.2,.9,.3,1.2), opacity .5s; }
   .shot.in { transform:translateY(0) rotate(var(--r,0deg)); opacity:1; }
   .bar { display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid var(--line); background:#fffaf6; }
@@ -39,7 +39,7 @@
   .dots i { width:6px; height:6px; border-radius:3px; background:#e3d3c9; transition:width .2s, background .2s; }
   .dots i.on { width:16px; background:var(--green); }
 
-  @media (max-width:980px) {
+  @media (max-width:1179px) {
     body { padding:8px 0 4px; }
     .row { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:4px 16px 16px; scroll-padding-left:16px; align-items:flex-start; }
     .row::-webkit-scrollbar { display:none; }
@@ -56,7 +56,14 @@
 <script>
 // Real member reviews from the Club page. Split each into short messages; ==text== is highlighted.
 const REVIEWS = [
-  { name: "Nancy", place: "New York, United States", color: "#4f7a94", r: "-1.2deg",
+  { name: "Matt", place: "South Africa", color: "#7d5a8c", r: ".6deg",
+    msgs: [
+      "I've had an amazing experience with Mandarin Zest over the past month!",
+      "The teachers are friendly, patient, and supportive, and ==the learning materials are excellent and easy to follow==.",
+      "I've learned a lot in a short time and have really enjoyed the learning process.",
+      "I highly recommend Mandarin Zest to anyone looking to learn Mandarin in a fun, effective, and welcoming environment!",
+    ] },
+  { name: "Nancy", place: "New York, USA", color: "#4f7a94", r: "-1.2deg",
     msgs: [
       "I’ve really enjoyed participating in Mandarin Zest Club’s Advanced Session.",
       "==The challenging weekly readings are exactly what I was looking for== at this stage of learning Mandarin, and the discussions give me a chance to actively use new vocabulary in conversation.",
@@ -70,7 +77,7 @@ const REVIEWS = [
       "There are a lot of people from different countries and most are passionate learners, so it is cool to meet someone with the same vibe.",
       "It is also an affordable way to practice your speaking compared to paying for 1-1 classes. Especially if you self-study like me but have no one to practice with, I would highly recommend trying it out.",
     ] },
-  { name: "Debbie", place: "Seattle, United States", color: "#1b6f1b", r: "-.6deg",
+  { name: "Debbie", place: "Seattle, USA", color: "#1b6f1b", r: "-.6deg",
     msgs: [
       "A game-changer for anyone learning Chinese!",
       "I've always loved learning Chinese, so when I discovered Mandarin Zest, I was thrilled to join. They've put together an incredible collection of resources to help me on my language journey.",
