@@ -114,7 +114,9 @@ that opens the trial page in a new tab.
   display in full, but text changes must be made in each article).
 - `speak.html` + `promo/mz-logo.png`: the Club trial landing page for the Meta
   ads (Odoo page /speak): hero, problem, how the trial works, the live
-  `trial.html` sessions, member reviews, hosts, trial vs Club pricing, FAQ.
+  `trial.html` sessions, member reviews (Debbie, Nancy, Agnieszka, Matt), hosts
+  (Vanessa, Dorota, Antoine, Gabrielle), the `club-app.html` highlight, trial vs
+  Club pricing, FAQ.
   Full-page embed with no inner scroll; the iframe line with its height is in
   the comment at the top of the file. Buttons scroll the visitor's page down
   to the trial sessions; the Club link opens in a new tab. If you change the
