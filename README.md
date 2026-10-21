@@ -227,3 +227,12 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 - `session-photos.html` + `sessions/s01–s04.jpg`: screenshots of Club sessions sliding from right to left in an endless loop
   (hover or tap pauses). Add pictures to `sessions/` (2:1, 800×400) and to the PHOTOS list in the file.
   Embed: `height:max(180px, min(250px, calc((100vw - 700px) * 1000)))` with `scrolling="no"`.
+
+## Club App highlight
+
+- `club-app.html`: presents the Mandarin Zest Club App (six features + an animated phone showing the app's home screen:
+  floating phone, XP bar filling, "I'm in" buttons ticking, +20 XP / 红包 / "Notes are up!" chips popping in). Starts when scrolled into view.
+- Homepage: default, with a "Discover the Club ↗" button to the Club page.
+  Embed: `height:max(720px, min(1260px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.
+- Club page: `club-app.html?cta=none` (no button).
+  Embed: `height:max(700px, min(1180px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.

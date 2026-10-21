@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Mandarin Zest Club App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* Highlights the Club App. Homepage: default (button "Discover the Club" → Club page).
+     Club page: ?cta=none (no button). Embed height: see README. */
+  :root { --orange:#f37a48; --peach:#fdf1ea; --green:#1b6f1b; --green-d:#173f17; --mint:#e0f4e0; --ink:#2a2420; --muted:#5c4f47; --line:#ecdcd2; --cream:#fffaf6; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit','Noto Sans SC',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; }
+  .zh { font-family:'Noto Sans SC',sans-serif; }
+  .card { max-width:1120px; margin:0 auto; background:var(--cream); border-radius:28px; padding:44px 48px; display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:40px; overflow:hidden; }
+  .left { display:flex; flex-direction:column; gap:18px; min-width:0; }
+  .tags { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .new { font-size:12px; font-weight:800; letter-spacing:.06em; color:#fff; background:var(--orange); border-radius:999px; padding:5px 11px; }
+  .eyebrow { font-size:13px; font-weight:800; letter-spacing:.08em; color:var(--green); }
+  h2 { margin:0; font-size:38px; font-weight:800; line-height:1.08; }
+  .lead { margin:10px 0 0; font-size:17px; line-height:1.5; color:var(--muted); max-width:560px; }
+  .feats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 22px; }
+  .feat { display:flex; gap:12px; align-items:flex-start; opacity:0; transform:translateY(10px); transition:opacity .5s, transform .5s; }
+  .in .feat { opacity:1; transform:none; }
+  .ic { width:40px; height:40px; flex:none; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .ic svg { width:21px; height:21px; }
+  .feat b { display:block; font-size:16px; }
+  .feat span { font-size:14px; line-height:1.45; color:var(--muted); }
+  .cta { margin-top:auto; padding-top:4px; }
+  .btn { display:inline-flex; align-items:center; min-height:52px; padding:0 28px; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:16.5px; text-decoration:none; transition:background .2s, transform .2s; }
+  .btn:hover { background:#e2632f; transform:translateY(-1px); }
+  .nocta .cta { display:none; }
+
+  /* phone */
+  .right { position:relative; display:flex; align-items:center; justify-content:center; min-height:560px; }
+  .blob { position:absolute; width:330px; height:330px; border-radius:50%; background:var(--peach); animation:breathe 6s ease-in-out infinite; }
+  .device { position:relative; width:290px; height:580px; padding:10px; border-radius:40px; background:var(--ink); box-shadow:0 24px 50px rgba(42,36,32,.22); animation:float 6s ease-in-out infinite; }
+  .screen { width:270px; height:560px; border-radius:30px; overflow:hidden; background:var(--cream); display:flex; flex-direction:column; }
+  @keyframes float { 0%,100% { transform:rotate(3deg) translateY(0); } 50% { transform:rotate(2deg) translateY(-10px); } }
+  @keyframes breathe { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+
+  .chip { position:absolute; display:flex; align-items:center; gap:8px; border-radius:999px; padding:8px 14px 8px 8px; background:#fff; box-shadow:0 10px 24px rgba(42,36,32,.16); font-size:14px; font-weight:800; opacity:0; z-index:2; white-space:nowrap; }
+  .chip .dot { width:28px; height:28px; border-radius:50%; background:var(--green); color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .chip.xp { left:-6px; top:120px; --r:-4deg; }
+  .chip.hb { right:-14px; top:300px; --r:4deg; background:#c8272d; color:#fff; border-radius:16px; padding:9px 14px; font-weight:700; font-size:13.5px; }
+  .chip.hb .zh { font-size:18px; color:#ffd76a; font-weight:700; }
+  .chip.nt { left:10px; bottom:70px; --r:-2deg; border-radius:16px; padding:9px 14px 9px 10px; font-size:13.5px; }
+  .in .chip { animation:pop .5s cubic-bezier(.2,1.4,.4,1) forwards, bob 4s ease-in-out infinite; }
+  .in .chip.xp { animation-delay:1.6s, 2.1s; } .in .chip.hb { animation-delay:2.6s, 3.1s; } .in .chip.nt { animation-delay:3.6s, 4.1s; }
+  @keyframes pop { from { opacity:0; transform:rotate(var(--r)) scale(.4); } to { opacity:1; transform:rotate(var(--r)) scale(1); } }
+  @keyframes bob { 0%,100% { opacity:1; transform:rotate(var(--r)) translateY(0); } 50% { opacity:1; transform:rotate(var(--r)) translateY(-6px); } }
+
+  /* app screen */
+  .s-body { flex:1; min-height:0; padding:22px 14px 0; display:flex; flex-direction:column; gap:10px; }
+  .s-head { display:flex; align-items:center; gap:8px; }
+  .s-head .t { flex:1; } .s-head small { display:block; font-size:9px; font-weight:800; letter-spacing:.08em; color:var(--green); } .s-head b { font-size:18px; }
+  .av { position:relative; flex:none; border-radius:50%; }
+  .av svg { display:block; width:100%; height:100%; }
+  .xpc { background:var(--green); color:#fff; border-radius:16px; padding:11px 12px; display:flex; flex-direction:column; gap:7px; }
+  .xpc .row { display:flex; align-items:center; gap:8px; } .xpc .row div { flex:1; } .xpc small { font-size:10px; opacity:.85; display:block; } .xpc b { font-size:12.5px; }
+  .bar { height:7px; border-radius:999px; background:rgba(255,255,255,.22); overflow:hidden; }
+  .bar i { display:block; height:100%; width:20%; border-radius:999px; background:var(--orange); transition:width 1.6s cubic-bezier(.3,.8,.3,1) .4s; }
+  .in .bar i { width:64%; }
+  .next { background:#fff; border:1px solid var(--line); border-radius:16px; padding:11px 12px; display:flex; flex-direction:column; gap:6px; }
+  .pill { font-size:9px; font-weight:800; color:#fff; background:#4f7a94; border-radius:999px; padding:3px 7px; }
+  .when { font-size:10px; font-weight:700; color:var(--green); }
+  .next b { font-size:14.5px; }
+  .ppl { display:flex; align-items:center; gap:6px; font-size:10px; color:var(--muted); }
+  .ppl .stack { display:flex; } .ppl .stack .av + .av { margin-left:-6px; }
+  .meet { min-height:30px; border-radius:999px; background:var(--orange); display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:800; animation:glow 2.8s ease-in-out infinite; }
+  @keyframes glow { 0%,100% { box-shadow:0 0 0 0 rgba(243,122,72,.0); } 50% { box-shadow:0 0 0 5px rgba(243,122,72,.22); } }
+  .s-h { font-size:12.5px; font-weight:800; margin-top:2px; }
+  .row2 { background:#fff; border:1px solid var(--line); border-radius:13px; padding:7px 9px; display:flex; align-items:center; gap:8px; }
+  .date { width:32px; flex:none; text-align:center; border-radius:9px; padding:3px 0; }
+  .date small { display:block; font-size:7.5px; font-weight:700; } .date b { font-size:13px; line-height:1.05; }
+  .row2 .tx { flex:1; min-width:0; } .row2 .tx b { display:block; font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .row2 .tx span { font-size:9.5px; color:var(--muted); }
+  .in-btn { font-size:9.5px; font-weight:800; border-radius:999px; padding:4px 8px; border:1.2px solid var(--orange); background:#fff; color:#a8431a; transition:all .3s; white-space:nowrap; }
+  .in-btn.on { border-color:var(--green); background:var(--mint); color:var(--green-d); }
+  .nav { height:46px; flex:none; border-top:1px solid var(--line); background:#fff; display:grid; grid-template-columns:repeat(5,1fr); align-items:center; justify-items:center; }
+  .nav svg { width:17px; height:17px; }
+
+  @media (max-width:999px) {
+    .card { grid-template-columns:minmax(0,1fr); padding:28px 20px; gap:18px; border-radius:22px; }
+    h2 { font-size:29px; } .lead { font-size:16px; } .eyebrow { font-size:12px; }
+    .right { order:2; min-height:440px; }
+    .left { display:contents; }
+    .tags { order:0; } .hd { order:1; } .feats { order:3; grid-template-columns:minmax(0,1fr); gap:14px; } .cta { order:4; }
+    .device { transform-origin:center; animation-name:floatS; margin:-75px 0; }
+    @keyframes floatS { 0%,100% { transform:scale(.74) rotate(3deg) translateY(0); } 50% { transform:scale(.74) rotate(2deg) translateY(-12px); } }
+    .blob { width:280px; height:280px; }
+    .chip.xp { left:0; top:60px; } .chip.hb { right:0; top:250px; } .chip.nt { left:6px; bottom:40px; }
+    .btn { display:flex; justify-content:center; }
+  }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } .feat, .chip { opacity:1; transform:none; } .bar i { width:64%; } }
+</style>
+</head>
+<body>
+<section class="card" id="card" aria-labelledby="ttl">
+  <div class="left">
+    <div class="tags"><span class="new">NEW</span><span class="eyebrow">INCLUDED IN YOUR CLUB MEMBERSHIP</span></div>
+    <div class="hd">
+      <h2 id="ttl">The Mandarin Zest Club App</h2>
+      <p class="lead">Your sessions, notes and progress in one place, on your phone or computer.</p>
+    </div>
+    <div class="feats">
+      <div class="feat"><span class="ic" style="background:#e0f4e0"><svg viewBox="0 0 24 24" fill="none" stroke="#173f17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v16H3z M3 10h18 M8 3v4 M16 3v4 M9 15l2 2 4-4"/></svg></span><div><b>Never miss a session</b><span>Every session in your time zone. Tap "I'm in" and get a reminder.</span></div></div>
+      <div class="feat"><span class="ic" style="background:#fdf1ea"><svg viewBox="0 0 24 24" fill="none" stroke="#a8431a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z M14 3v6h6 M8 13h8 M8 17h5"/></svg></span><div><b>Notes after every session</b><span>Vocabulary and corrections from your host, ready as a PDF.</span></div></div>
+      <div class="feat"><span class="ic" style="background:#fff1c9"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5a0a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8 M12 17v4 M7 4h10v5a5 5 0 0 1-10 0z M7 6H4a3 3 0 0 0 3 4 M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b>Earn XP, climb the leaderboard</b><span>Every session counts. The month's #1 wins a medal.</span></div></div>
+      <div class="feat"><span class="ic" style="background:#f3e6f5"><svg viewBox="0 0 24 24" fill="none" stroke="#6b3f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7c-4 0-7 3-7 7a7 7 0 0 0 14 0c0-4-3-7-7-7z M12 7c0-2 1-4 3-4"/></svg></span><div><b>Unlock fruits and stickers</b><span>18 fruit avatars to unlock, plus stickers from bootcamps.</span></div></div>
+      <div class="feat"><span class="ic" style="background:#e3eef7"><svg viewBox="0 0 24 24" fill="none" stroke="#3a5d73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z M2.5 20a6.5 6.5 0 0 1 13 0 M17 11a2.5 2.5 0 1 0 0-5 M16 14a5 5 0 0 1 6 5"/></svg></span><div><b>Meet the members</b><span>Profiles, levels and countries. Send a <span class="zh">红包</span> hongbao once a month.</span></div></div>
+      <div class="feat"><span class="ic" style="background:#e0f4e0"><svg viewBox="0 0 24 24" fill="none" stroke="#173f17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z M11 18h2"/></svg></span><div><b>On your phone or computer</b><span>Add it to your home screen in one tap. No App Store needed.</span></div></div>
+    </div>
+    <div class="cta"><a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Discover the Club ↗</a></div>
+  </div>
+
+  <div class="right" aria-hidden="true">
+    <div class="blob"></div>
+    <div class="device"><div class="screen">
+      <div class="s-body">
+        <div class="s-head"><div class="t"><small>MANDARIN ZEST CLUB</small><b>早上好, Emma!</b></div><span class="av" style="width:36px;height:36px" data-f="mandarin" data-bg="#e0f4e0"></span></div>
+        <div class="xpc">
+          <div class="row"><div><small>Level 5 · <span id="xpn">420</span> XP</small><b>80 XP to unlock the pineapple</b></div><span class="av" style="width:34px;height:34px" data-f="pineapple" data-bg="#e0f4e0" data-lock="1"></span></div>
+          <div class="bar"><i></i></div>
+        </div>
+        <div class="next">
+          <div style="display:flex;align-items:center;gap:6px"><span class="pill">Intermediate</span><span class="when">Today · 8:00 PM · in 2 h</span></div>
+          <b>Vocab + Reading Practice</b>
+          <div class="ppl"><span class="stack"><span class="av" style="width:22px;height:22px" data-f="peach" data-bg="#fdf1ea"></span><span class="av" style="width:22px;height:22px" data-f="grapes" data-bg="#e3eef7"></span><span class="av" style="width:22px;height:22px" data-f="lychee" data-bg="#fff1c9"></span></span>You + 7 going</div>
+          <div class="meet">Join on Google Meet</div>
+        </div>
+        <div class="s-h">Coming up</div>
+        <div class="row2"><div class="date" style="background:#fbf0dc;color:#a8741f"><small>THU</small><b>29</b></div><div class="tx"><b>Snacks!</b><span>5:00 PM · <span class="cnt" data-n="4">4</span> going</span></div><span class="in-btn">I'm in</span></div>
+        <div class="row2"><div class="date" style="background:#f8e3df;color:#a63d2f"><small>SAT</small><b>31</b></div><div class="tx"><b>Native Conversation</b><span>10:00 AM · <span class="cnt" data-n="7">7</span> going</span></div><span class="in-btn">I'm in</span></div>
+        <div class="row2"><div class="date" style="background:#e1ece8;color:#3f6d5e"><small>MON</small><b>2</b></div><div class="tx"><b>Advanced Session</b><span>1:00 PM · <span class="cnt" data-n="4">4</span> going</span></div><span class="in-btn">I'm in</span></div>
+      </div>
+      <div class="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#8a7d74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#8a7d74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-4-7-8-7-11a7 7 0 0 1 14 0c0 3-2 7-7 11z M12 7v6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#8a7d74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14a5 5 0 0 1 6 5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#8a7d74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      </div>
+    </div></div>
+    <div class="chip xp"><span class="dot">XP</span>+20 XP · session joined</div>
+    <div class="chip hb"><span class="zh">红包</span>from Marta</div>
+    <div class="chip nt"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#a8431a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z M14 3v6h6 M8 13h8 M8 17h5"/></svg>Notes are up!</div>
+  </div>
+</section>
+
+<script>
+(() => {
+  if (new URLSearchParams(location.search).get('cta') === 'none') document.body.classList.add('nocta');
+
+  // fruit avatars (same drawings as the app)
+  const face = (y) => `<circle cx="27" cy="${y}" r="1.8" fill="#2a2420"/><circle cx="37" cy="${y}" r="1.8" fill="#2a2420"/><path d="M28.5 ${y + 4.5} q3.5 3 7 0" stroke="#2a2420" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  const F = {
+    mandarin: `<circle cx="32" cy="38" r="17" fill="#f37a48"/><circle cx="25" cy="31" r="3.5" fill="#ffb08a"/><path d="M32 22v-4" stroke="#6b4a2b" stroke-width="2.2" stroke-linecap="round"/><path d="M33 19q8-7 14-1q-7 6-14 1z" fill="#1b6f1b"/>` + face(39),
+    pineapple: `<path d="M32 28l-9-14 7 5 2-9 2 9 7-5z" fill="#1b6f1b"/><ellipse cx="32" cy="42" rx="13" ry="15" fill="#f2b632"/><path d="M22 33l20 20M20 42l14 14M27 28l18 18M42 33L22 53M44 42L30 56M37 28L19 46" stroke="#d18e14" stroke-width="1.3"/>` + face(42),
+    peach: `<circle cx="32" cy="38" r="17" fill="#f9a8a0"/><path d="M32 22q-6 8-1 16" stroke="#e97f78" stroke-width="2" fill="none"/><path d="M32 22q-9-7-14-1q7 5 14 1z" fill="#1b6f1b"/>` + face(40),
+    grapes: `<circle cx="23" cy="27" r="6.5" fill="#7d4fa0"/><circle cx="32" cy="26" r="6.5" fill="#8c5bb0"/><circle cx="41" cy="27" r="6.5" fill="#7d4fa0"/><circle cx="27" cy="37" r="7.5" fill="#8c5bb0"/><circle cx="37" cy="37" r="7.5" fill="#8c5bb0"/><circle cx="32" cy="47" r="6.5" fill="#7d4fa0"/><path d="M33 17q7-6 12 0q-6 5-12 0z" fill="#1b6f1b"/>`,
+    lychee: `<circle cx="32" cy="38" r="16.5" fill="#e2566b"/><path d="M31 19q-8-6-13 0q6 5 13 0z" fill="#1b6f1b"/>` + face(38)
+  };
+  document.querySelectorAll('.av').forEach(el => {
+    el.innerHTML = `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="${el.dataset.bg}"/><g${el.dataset.lock ? ' opacity=".45" filter="grayscale(1)" style="filter:grayscale(1)"' : ''}>${F[el.dataset.f]}</g></svg>`;
+  });
+
+  const card = document.getElementById('card');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let started = false;
+  function start() {
+    if (started) return; started = true;
+    card.classList.add('in');
+    document.querySelectorAll('.feat').forEach((f, i) => f.style.transitionDelay = (0.15 + i * 0.12) + 's');
+    if (reduce) return;
+    // XP counter
+    const xp = document.getElementById('xpn'); let v = 400;
+    const t = setInterval(() => { v += 2; xp.textContent = v; if (v >= 420) clearInterval(t); }, 70);
+    // members tapping "I'm in", one after another, then again
+    const btns = [...document.querySelectorAll('.in-btn')];
+    let k = 0;
+    setInterval(() => {
+      const b = btns[k % btns.length], c = b.parentElement.querySelector('.cnt');
+      const on = !b.classList.contains('on');
+      b.classList.toggle('on', on); b.textContent = on ? 'Going ✓' : "I'm in";
+      c.textContent = +c.dataset.n + (on ? 1 : 0);
+      k++;
+    }, 1800);
+  }
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { start(); io.disconnect(); } }), { threshold: .25 });
+    io.observe(card);
+  } else start();
+})();
+</script>
+</body>
+</html>
