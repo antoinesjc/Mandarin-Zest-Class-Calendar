@@ -221,3 +221,9 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 ```html
 <iframe src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/radical-game.html" title="Shake a radical game" style="width:100%;height:max(780px, min(1200px, calc((1100px - 100vw) * 1000)));border:0;display:block" scrolling="no" loading="lazy"></iframe>
 ```
+
+## Session screenshots strip
+
+- `session-photos.html` + `sessions/s01–s04.jpg`: screenshots of Club sessions sliding from right to left in an endless loop
+  (hover or tap pauses). Add pictures to `sessions/` (2:1, 800×400) and to the PHOTOS list in the file.
+  Embed: `height:max(180px, min(250px, calc((100vw - 700px) * 1000)))` with `scrolling="no"`.

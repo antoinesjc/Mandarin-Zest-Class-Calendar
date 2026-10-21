@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Club sessions · Mandarin Zest</title>
+<style>
+  /* Screenshots of Club sessions sliding from right to left in an endless loop.
+     Add or remove pictures in PHOTOS below (files in sessions/, 2:1 ratio, 800×400).
+     Hover (or touch) pauses. Embed height: see README. */
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; overflow:hidden; }
+  .strip { position:relative; padding:14px 0; }
+  .track { display:flex; gap:18px; width:max-content; animation:slide var(--dur,40s) linear infinite; }
+  .strip:hover .track, .strip.paused .track { animation-play-state:paused; }
+  .shot { flex:none; width:440px; aspect-ratio:2/1; border-radius:18px; overflow:hidden; background:#2a2420;
+          box-shadow:0 2px 0 rgba(42,36,32,.06), 0 10px 24px rgba(42,36,32,.14); }
+  .shot img { display:block; width:100%; height:100%; object-fit:cover; }
+  @keyframes slide { from { transform:translateX(0); } to { transform:translateX(calc(-50% - 9px)); } }
+  @media (max-width:700px) { .shot { width:300px; border-radius:14px; } .track { gap:12px; } @keyframes slide { to { transform:translateX(calc(-50% - 6px)); } } }
+  @media (prefers-reduced-motion:reduce) { html, body { overflow-x:auto; } .track { animation:none; } }
+</style>
+</head>
+<body>
+<div class="strip" id="strip" aria-label="Screenshots of Mandarin Zest Club sessions">
+  <div class="track" id="track"></div>
+</div>
+<script>
+  // ═══ PHOTOS: edit, add or remove lines here (alt = what the picture shows) ═══
+  var PHOTOS = [
+    { src: "sessions/s01.jpg", alt: "HSK 2-3 speaking practice: a question on the slide in simplified and traditional Chinese, with members on camera" },
+    { src: "sessions/s02.jpg", alt: "Taiwan-style pronunciation and conversation session with members on camera" },
+    { src: "sessions/s03.jpg", alt: "Advanced session reading a Chinese article together, with members on camera" },
+    { src: "sessions/s04.jpg", alt: "Slide on Taiwanese retroflex sounds during a Club session, with members on camera" }
+  ];
+
+  var track = document.getElementById("track");
+  // repeat the set until it is wider than any screen, then twice for a seamless loop
+  var set = PHOTOS.slice();
+  while (set.length < 8) set = set.concat(PHOTOS);
+  function html(list, hidden) {
+    return list.map(function (p) {
+      return '<div class="shot"' + (hidden ? ' aria-hidden="true"' : '') + '><img src="' + p.src + '" alt="' + (hidden ? '' : p.alt.replace(/"/g, '&quot;')) + '" loading="lazy" decoding="async"></div>';
+    }).join("");
+  }
+  track.innerHTML = html(set, false) + html(set, true);
+  track.style.setProperty("--dur", (set.length * 7) + "s");
+
+  // tap to pause on phones
+  var strip = document.getElementById("strip");
+  strip.addEventListener("touchstart", function () { strip.classList.toggle("paused"); }, { passive: true });
+</script>
+</body>
+</html>
