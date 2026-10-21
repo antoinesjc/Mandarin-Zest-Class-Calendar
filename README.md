@@ -236,7 +236,7 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 
 - `trial-booked.html`: the page people land on after paying for a US$2.50 trial (Stripe payment link → "After payment" →
   redirect to the Odoo page that embeds it). "You're booked!", the 3 next steps (Meet link by email within 5 minutes,
-  join a few minutes early, speak up), a Contact us link, and a Club card (US$20/month → Club page).
+  join a few minutes early, speak up), a Contact us link, and a Club card (US$25/month → Club page).
   Embed (full page, no inner scroll): see the iframe line at the top of the file.
   The Meta Pixel "Purchase" event goes in a separate Embed Code block on the same Odoo page:
   `<script>fbq('track','Purchase',{value:2.50,currency:'USD'});</script>` (needs the pixel base code on the site).
