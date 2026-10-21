@@ -72,12 +72,12 @@
   .btn.out { background: #e9e2dc; color: #8a7d74; pointer-events: none; }
   .seats.few { color: #c4521f; }
   .seats.full { color: #8a7d74; }
-  .ask { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
-  .asklbl { flex: 1 1 100%; font-size: 14px; font-weight: 700; color: var(--ink); }
-  /* the email box gets its own full line when the card is narrow (phones), so it's always clearly visible */
-  .ask input { flex: 1 1 200px; min-width: 0; font: inherit; font-size: 16px; padding: 12px 16px; border: 1.5px solid #cdb9ac; border-radius: 999px; background: #fffaf6; color: var(--ink); }
+  /* email step: label, then the email box, then Continue, always stacked full width */
+  .ask { display: flex; flex-direction: column; align-items: stretch; gap: 8px; width: 100%; }
+  .asklbl { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .ask input { width: 100%; min-width: 0; font: inherit; font-size: 16px; padding: 12px 16px; border: 1.5px solid #cdb9ac; border-radius: 999px; background: #fffaf6; color: var(--ink); }
   .ask input::placeholder { color: #8a7d74; }
-  .ask .btn { flex: 1 1 auto; text-align: center; }
+  .ask .btn { width: 100%; flex: none; text-align: center; }
   .ask input:focus { outline: none; border-color: #f37a48; }
   .ask .btn { border: 0; cursor: pointer; font-family: inherit; }
   .askmsg { font-size: 13.5px; color: var(--muted); line-height: 1.4; min-height: 0; }

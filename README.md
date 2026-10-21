@@ -97,7 +97,7 @@ that opens the trial page in a new tab.
 - `trial.html`: the upcoming `#trial` sessions as booking cards, for the
   trial page (price and Stripe link at the top of its script).
   Embed with no inner scrolling (fits the email step on phones too):
-  `height:max(420px, min(470px, calc((448px - 100vw) * 10000)), min(520px, calc((348px - 100vw) * 10000)))` + `scrolling="no"`.
+  `height:max(480px, min(500px, calc((448px - 100vw) * 10000)), min(530px, calc((348px - 100vw) * 10000)))` + `scrolling="no"`.
 - `hsk1-offer.html`: the HSK 1 Bundle offer with the NEWCOMER2026 code, for
   the Start Here thank-you page (all links open in a new tab; text, price and
   code are edited directly in the file).
