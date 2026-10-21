@@ -258,3 +258,10 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
   Embed: `height:max(720px, min(1260px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.
 - Club page: `club-app.html?cta=none` (no button).
   Embed: `height:max(700px, min(1180px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.
+
+## Our team (floating portraits)
+
+- `team.html` + `team/t1–t7.png`: "Our materials are created by a team of advanced Chinese learners and native speakers",
+  round portraits floating gently (each at its own pace), and a "Meet the team ↗" button to the About us page (new tab).
+  Desktop: 7 in a row. Phones: 2 rows of 3 (the portrait marked `phone: false` in the TEAM list is hidden).
+  Embed: `height:600px` with `scrolling="no"`.
