@@ -232,6 +232,15 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
   (hover or tap pauses). Add pictures to `sessions/` (2:1, 800×400) and to the PHOTOS list in the file.
   Embed: `height:max(180px, min(250px, calc((100vw - 700px) * 1000)))` with `scrolling="no"`.
 
+## Trial booked (thank-you page)
+
+- `trial-booked.html`: the page people land on after paying for a US$2.50 trial (Stripe payment link → "After payment" →
+  redirect to the Odoo page that embeds it). "You're booked!", the 3 next steps (Meet link by email within 5 minutes,
+  join a few minutes early, speak up), a Contact us link, and a Club card (US$20/month → Club page).
+  Embed (full page, no inner scroll): see the iframe line at the top of the file.
+  The Meta Pixel "Purchase" event goes in a separate Embed Code block on the same Odoo page:
+  `<script>fbq('track','Purchase',{value:2.50,currency:'USD'});</script>` (needs the pixel base code on the site).
+
 ## Live session scene
 
 - `call-scene.html`: animated video call (host + three learners drawn as flat illustrations) where people take turns
