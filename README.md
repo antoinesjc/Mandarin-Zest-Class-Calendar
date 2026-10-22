@@ -292,3 +292,5 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 - `subscribe.html`: one-line "Stay in the loop on Chinese" bar: email + consent → Start Here sheet (source `subscribe-bar | <page>`).
   `?bg=f8dacd` for another background colour (default mint #e6f1e1).
   Embed: `height:max(86px, min(134px, calc((900px - 100vw) * 10000)))`, `scrolling="no"`.
+- Blog posts: `subscribe.html?layout=blog` (narrow, stacked: title, email + button, consent).
+  Embed: `height:max(146px, min(180px, calc((520px - 100vw) * 10000)))`, `scrolling="no"`.

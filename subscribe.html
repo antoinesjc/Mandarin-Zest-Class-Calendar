@@ -30,6 +30,15 @@
   .shake { animation:shake .3s; }
   @keyframes shake { 25% { transform:translateX(-3px); } 75% { transform:translateX(3px); } }
 
+  /* ?layout=blog: narrow version for blog posts, always stacked (title, email + button, consent) */
+  .blog .bar { max-width:720px; flex-direction:column; align-items:stretch; gap:10px; padding:16px 18px 12px; border-radius:18px; }
+  .blog .txt { flex:none; font-size:14.5px; color:#3d322b; text-align:left; }
+  .blog .txt b { display:block; font-size:17px; color:var(--ink); margin-bottom:2px; }
+  .blog form { flex:none; justify-content:flex-start; }
+  .blog input[type=email] { flex:1 1 160px; height:42px; }
+  .blog .consent { justify-content:flex-start; padding-left:4px; white-space:normal; }
+  .blog .msg { padding:4px 0; text-align:left; }
+
   @media (max-width:820px) {
     .bar { border-radius:18px; flex-wrap:wrap; padding:12px 14px; gap:8px; }
     .txt { flex:1 1 100%; font-size:14.5px; text-align:center; }
@@ -42,7 +51,7 @@
 </head>
 <body>
 <div class="bar" id="bar">
-  <div class="txt" id="txt">📬 <b>Stay in the loop on Chinese.</b> Tips, new resources and Club news in your inbox.</div>
+  <div class="txt" id="txt"><b>📬 Stay in the loop on Chinese.</b> Tips, new resources and Club news in your inbox.</div>
   <form id="f" novalidate>
     <input type="email" id="email" placeholder="Your email" autocomplete="email" aria-label="Your email">
     <button type="submit">Subscribe</button>
@@ -52,7 +61,8 @@
 </div>
 <script>
   var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
-  var bg = new URLSearchParams(location.search).get("bg");
+  var Q = new URLSearchParams(location.search), bg = Q.get("bg");
+  if (Q.get("layout") === "blog") document.documentElement.className = "blog";
   if (bg && /^[0-9a-f]{6}$/i.test(bg)) document.documentElement.style.setProperty("--bg", "#" + bg);
   var page = (document.referrer || "").replace(/^https?:\/\/(www\.)?mandarinzest\.com/, "").slice(0, 120) || "unknown";
 
