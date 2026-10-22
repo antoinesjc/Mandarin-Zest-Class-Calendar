@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Use them out loud · Mandarin Zest Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* "Use them out loud in the Club" strip for the HSK vocab page: vocab cards fly into a live chat.
+     Buttons: trial session + Club page (new tab). Embed height: see README. */
+  :root { --ink:#2a2420; --orange:#f37a48; --orange-d:#e2632f; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; -webkit-font-smoothing:antialiased; padding:6px; }
+  .card { max-width:1000px; margin:0 auto; background:var(--ink); color:#fff; border-radius:26px; padding:34px 38px; display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:36px; align-items:center; overflow:hidden; }
+  .eyebrow { font-size:12.5px; font-weight:800; letter-spacing:.09em; color:#f8dacd; }
+  h2 { margin:8px 0 10px; font-size:30px; font-weight:800; line-height:1.15; }
+  h2 em { font-style:normal; color:var(--orange); }
+  p { margin:0; font-size:16px; line-height:1.55; color:#e6ddd6; }
+  ul { list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:7px; font-size:15px; color:#f3ece6; }
+  ul li::before { content:"✓"; color:#9fd89f; font-weight:800; margin-right:9px; }
+  .actions { display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; margin-top:22px; }
+  .btn { position:relative; overflow:hidden; display:inline-flex; align-items:center; height:50px; padding:0 24px; border-radius:999px; background:var(--orange); color:var(--ink);
+         font-weight:800; font-size:16px; text-decoration:none; white-space:nowrap; transition:background .2s, transform .2s; }
+  .btn:hover { background:var(--orange-d); transform:translateY(-1px); }
+  .btn::after { content:""; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent); animation:shine 5s ease-in-out infinite 3s; }
+  @keyframes shine { 0%,75% { left:-60%; } 100% { left:130%; } }
+  .link { color:#f8dacd; font-weight:700; font-size:15px; text-decoration:none; border-bottom:1px solid rgba(248,218,205,.4); }
+  .link:hover { color:#fff; border-color:#fff; }
+  .price { font-size:13.5px; color:#bfb2a9; }
+
+  /* scene: vocab cards → chat bubbles */
+  .scene { position:relative; background:#3a322c; border-radius:20px; padding:16px; height:280px; display:flex; flex-direction:column; }
+  .vocab { display:flex; gap:8px; flex-wrap:wrap; min-height:62px; }
+  .w { background:#fff; color:var(--ink); border-radius:10px; padding:6px 10px; display:flex; flex-direction:column; align-items:center; line-height:1.1;
+       transition:transform .6s cubic-bezier(.2,.8,.2,1), opacity .5s, background .3s; }
+  .w b { font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif; font-size:19px; font-weight:700; }
+  .w span { font-size:11px; color:#7a6a60; margin-top:3px; }
+  .w.used { background:#f37a48; transform:translateY(-3px) scale(1.06); }
+  .w.used span { color:#2a2420; }
+  .chat { margin-top:auto; display:flex; flex-direction:column; gap:9px; }
+  .msg { display:flex; gap:8px; align-items:flex-end; opacity:0; transform:translateY(10px) scale(.96); transition:opacity .4s, transform .45s cubic-bezier(.2,.8,.2,1); }
+  .msg.in { opacity:1; transform:none; }
+  .msg.me { flex-direction:row-reverse; }
+  .av { width:28px; height:28px; border-radius:50%; flex:none; display:grid; place-items:center; font-size:15px; background:#9fd89f; }
+  .me .av { background:#f8dacd; }
+  .bub { font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif; font-size:16px; font-weight:500; padding:8px 12px; border-radius:14px 14px 14px 4px; background:#fff; color:var(--ink); max-width:250px; }
+  .me .bub { background:var(--orange); border-radius:14px 14px 4px 14px; }
+  .bub mark { background:none; color:inherit; font-weight:700; box-shadow:inset 0 -6px 0 rgba(243,122,72,.35); }
+  .me .bub mark { box-shadow:inset 0 -6px 0 rgba(255,255,255,.45); }
+  .live { position:absolute; top:16px; right:16px; font-size:11px; font-weight:800; letter-spacing:.06em; color:#fff; background:#c0392b; border-radius:999px; padding:4px 9px; display:flex; gap:6px; align-items:center; }
+  .live::before { content:""; width:6px; height:6px; border-radius:50%; background:#fff; animation:blink 1.4s infinite; }
+  @keyframes blink { 50% { opacity:.25; } }
+
+  @media (max-width:860px) {
+    body { padding:2px; }
+    .card { grid-template-columns:1fr; gap:18px; padding:22px 18px; border-radius:20px; }
+    .scene { order:-1; height:230px; padding:12px; }
+    h2 { font-size:22px; } p { font-size:14.5px; } ul { font-size:14px; margin-top:12px; }
+    .actions { margin-top:16px; } .btn { height:46px; font-size:15px; padding:0 20px; }
+    .w b { font-size:16px; } .bub { font-size:14.5px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .btn::after, .live::before { animation:none; } .w, .msg { transition:none; } }
+</style>
+</head>
+<body>
+<section class="card" aria-labelledby="ttl">
+  <div>
+    <div class="eyebrow">KNOWING THE WORDS IS STEP ONE</div>
+    <h2 id="ttl">Now use them <em>out loud</em> in the Mandarin Zest Club</h2>
+    <p>Lists get you to recognise words. Speaking makes them stick. Join live sessions where you actually say them.</p>
+    <ul>
+      <li>Live speaking sessions every week on Google Meet</li>
+      <li>Small groups led by a host, everyone speaks</li>
+      <li>Sessions by level, from HSK 1 to advanced</li>
+    </ul>
+    <div class="actions">
+      <a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club-trial-session" target="_blank" rel="noopener">Try a session ↗</a>
+      <span class="price">One session for US$2.50, no subscription</span>
+      <a class="link" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Discover the Club ↗</a>
+    </div>
+  </div>
+  <div class="scene" aria-hidden="true">
+    <span class="live">LIVE</span>
+    <div class="vocab" id="vocab"></div>
+    <div class="chat" id="chat"></div>
+  </div>
+</section>
+<script>
+  // ═══ SCENES: a few words from a list, then the chat that uses them (edit freely) ═══
+  var SCENES = [
+    { words:[["周末","weekend"],["打算","plan to"],["爬山","hike"]],
+      chat:[["host","你<mark>周末</mark><mark>打算</mark>做什么？"],["me","我想去<mark>爬山</mark>！你呢？"]] },
+    { words:[["已经","already"],["习惯","used to"],["辣","spicy"]],
+      chat:[["host","你<mark>习惯</mark>吃<mark>辣</mark>的吗？"],["me","<mark>已经</mark><mark>习惯</mark>了，越<mark>辣</mark>越好！"]] },
+    { words:[["推荐","recommend"],["值得","worth it"],["电影","movie"]],
+      chat:[["host","有什么<mark>电影</mark>可以<mark>推荐</mark>？"],["me","这部很<mark>值得</mark>看！"]] }
+  ];
+  var vocab = document.getElementById("vocab"), chat = document.getElementById("chat"), k = 0;
+  var still = matchMedia("(prefers-reduced-motion:reduce)").matches;
+  function play() {
+    var s = SCENES[k++ % SCENES.length], t = [];
+    vocab.innerHTML = s.words.map(function (w) { return '<div class="w"><b>' + w[0] + '</b><span>' + w[1] + '</span></div>'; }).join("");
+    chat.innerHTML = s.chat.map(function (m) { return '<div class="msg' + (m[0] === "me" ? " me" : "") + '"><span class="av">' + (m[0] === "me" ? "🍊" : "👩‍🏫") + '</span><span class="bub">' + m[1] + '</span></div>'; }).join("");
+    var msgs = chat.querySelectorAll(".msg"), ws = vocab.querySelectorAll(".w");
+    if (still) { msgs.forEach(function (m) { m.classList.add("in"); }); return; }
+    msgs.forEach(function (m, i) {
+      t.push(setTimeout(function () {
+        m.classList.add("in");
+        var txt = m.textContent;
+        ws.forEach(function (w) { if (txt.indexOf(w.querySelector("b").textContent) > -1) w.classList.add("used"); });
+      }, 900 + i * 1500));
+    });
+    setTimeout(play, 6200);
+  }
+  play();
+</script>
+</body>
+</html>

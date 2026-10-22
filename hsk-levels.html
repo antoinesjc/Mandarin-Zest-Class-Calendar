@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New HSK 3.0 vs HSK 2.0 · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Interactive "New HSK 3.0 vs old HSK 2.0" table: words per level, tap a level for details
+     and a link to its vocab list (new tab). Numbers and links: LEVELS at the bottom of the file.
+     Embed height: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --orange:#f37a48; --orange-d:#e2632f;
+          --el:#4f9a4f; --el-t:#e6f1e1; --in:#e0835f; --in-t:#f8dacd; --ad:#d5602f; --ad-t:#fbe3d6; --old:#cfc4bc; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:6px; }
+  .card { max-width:1000px; margin:0 auto; background:#fff; border-radius:24px; padding:26px 28px 24px;
+          box-shadow:0 1px 0 var(--line), 0 10px 28px rgba(42,36,32,.07); }
+  .top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 20px; margin-bottom:18px; }
+  .top h2 { margin:0; font-size:22px; font-weight:800; line-height:1.2; }
+  .top h2 span { color:var(--muted); font-weight:600; }
+  .seg { display:inline-flex; background:#f6efe9; border-radius:999px; padding:4px; }
+  .seg button { border:0; background:none; font:inherit; font-size:14px; font-weight:700; color:var(--muted); padding:8px 14px; border-radius:999px; cursor:pointer; }
+  .seg button[aria-pressed="true"] { background:#fff; color:var(--ink); box-shadow:0 1px 4px rgba(42,36,32,.12); }
+  .legend { display:flex; gap:16px; font-size:13px; color:var(--muted); margin:-6px 0 12px; }
+  .legend i { display:inline-block; width:22px; height:9px; border-radius:5px; vertical-align:middle; margin-right:6px; }
+  .legend .n i { background:linear-gradient(90deg,var(--el),var(--in),var(--ad)); }
+  .legend .o i { background:var(--old); }
+
+  .wrap { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(0,1fr); gap:26px; align-items:start; }
+  .band { display:flex; align-items:center; gap:10px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin:12px 0 4px; }
+  .band:first-child { margin-top:0; }
+  .band::after { content:""; flex:1; height:1px; background:var(--line); }
+  .band b { color:var(--muted); font-weight:600; letter-spacing:0; text-transform:none; }
+  .row { display:grid; grid-template-columns:62px minmax(0,1fr); align-items:center; gap:12px; width:100%; border:0; background:none; font:inherit; color:inherit; text-align:left;
+         padding:7px 10px; border-radius:12px; cursor:pointer; transition:background .2s; }
+  .row:hover { background:#fbf6f2; }
+  .row[aria-selected="true"] { background:var(--tint); }
+  .row:focus-visible { outline:3px solid var(--orange); outline-offset:1px; }
+  .lvl { font-weight:800; font-size:15px; white-space:nowrap; }
+  .bars { display:flex; flex-direction:column; gap:4px; }
+  .bar { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; }
+  .bar span.b { height:12px; border-radius:6px; min-width:6px; width:0; transition:width .7s cubic-bezier(.2,.8,.2,1); }
+  .bar.n span.b { background:var(--c); }
+  .bar.o span.b { background:var(--old); height:8px; }
+  .bar.o { color:var(--muted); font-weight:600; font-size:12px; }
+
+  .detail { position:sticky; top:6px; background:var(--tint,#e6f1e1); border-radius:20px; padding:22px 22px 20px; display:flex; flex-direction:column; gap:12px; transition:background .3s; }
+  .d-band { font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--cd); }
+  .d-big { font-size:44px; font-weight:800; line-height:1; }
+  .d-big small { font-size:17px; font-weight:600; color:var(--muted); margin-left:6px; }
+  .d-lvl { font-size:18px; font-weight:700; margin-top:-4px; }
+  .facts { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; font-size:14.5px; line-height:1.4; color:#3d322b; }
+  .facts li { display:flex; gap:8px; }
+  .facts li::before { content:"●"; color:var(--cd); font-size:9px; margin-top:5px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:46px; padding:0 20px; border-radius:999px; background:var(--orange); color:var(--ink);
+         font-weight:800; font-size:15px; text-decoration:none; transition:background .2s, transform .2s; margin-top:4px; }
+  .btn:hover { background:var(--orange-d); transform:translateY(-1px); }
+  .nav { display:flex; justify-content:space-between; gap:8px; }
+  .nav button { border:0; background:rgba(255,255,255,.7); font:inherit; font-size:13px; font-weight:700; color:var(--ink); padding:7px 12px; border-radius:999px; cursor:pointer; }
+  .nav button:disabled { opacity:.35; cursor:default; }
+  .note { font-size:12px; color:var(--muted); margin-top:14px; }
+
+  @media (max-width:760px) {
+    body { padding:2px; }
+    .card { padding:18px 14px 16px; border-radius:20px; }
+    .top { margin-bottom:14px; } .top h2 { font-size:18px; }
+    .seg button { font-size:13px; padding:7px 11px; }
+    .wrap { display:block; }
+    .row { grid-template-columns:52px minmax(0,1fr); padding:6px 8px; }
+    .lvl { font-size:14px; }
+    .detail { position:static; margin:6px 0 4px; padding:16px; gap:9px; border-radius:16px; }
+    .d-big { font-size:34px; } .d-lvl { font-size:16px; }
+    .facts { font-size:13.5px; } .nav { display:none; }
+    .btn { min-height:42px; font-size:14px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .bar span.b, .detail { transition:none; } }
+</style>
+</head>
+<body>
+<section class="card" aria-labelledby="ttl">
+  <div class="top">
+    <h2 id="ttl">New HSK 3.0 <span>vs old HSK 2.0</span></h2>
+    <div class="seg" role="group" aria-label="Show">
+      <button type="button" data-mode="total" aria-pressed="true">Total words</button>
+      <button type="button" data-mode="add" aria-pressed="false">New at this level</button>
+    </div>
+  </div>
+  <div class="legend"><span class="n"><i></i>New HSK 3.0</span><span class="o"><i></i>Old HSK 2.0</span></div>
+  <div class="wrap">
+    <div id="list" role="listbox" aria-label="HSK levels"></div>
+    <aside class="detail" id="detail" aria-live="polite"></aside>
+  </div>
+  <div class="note">Tap a level to see the details. Word counts from the 2026 HSK syllabus; levels 7–9 share one list.</div>
+</section>
+<script>
+  // ═══ LEVELS: word counts (total = everything up to and including this level) and list links ═══
+  var LEVELS = [
+    { name:"HSK 1",   band:"el", total:300,   old:150,  url:"https://www.mandarinzest.com/blog/free-resources-2/new-hsk-1-vocab-list-12" },
+    { name:"HSK 2",   band:"el", total:500,   old:300,  url:"https://www.mandarinzest.com/blog/free-resources-2/new-hsk-2-vocab-list-13" },
+    { name:"HSK 3",   band:"el", total:1000,  old:600,  url:"https://www.mandarinzest.com/blog/free-resources-2/new-hsk-3-vocab-list-14" },
+    { name:"HSK 4",   band:"in", total:2000,  old:1200, url:"https://www.mandarinzest.com/blog/free-resources-2/new-hsk-4-vocab-list-15" },
+    { name:"HSK 5",   band:"in", total:3600,  old:2500, url:"https://www.mandarinzest.com/blog/free-resources-2/new-hsk-5-vocab-list-16" },
+    { name:"HSK 6",   band:"in", total:5400,  old:5000, url:"https://www.mandarinzest.com/blog/free-resources-2/new-hsk-6-vocab-list-17" },
+    { name:"HSK 7–9", band:"ad", total:11000, old:null, url:"https://www.mandarinzest.com/blog/free-resources-2/new-hsk-7-9-vocab-list-18" }
+  ];
+  var BANDS = { el:{ title:"Elementary", sub:"HSK 1–3" }, in:{ title:"Intermediate", sub:"HSK 4–6" }, ad:{ title:"Advanced", sub:"HSK 7–9" } };
+
+  var css = getComputedStyle(document.documentElement);
+  function v(n) { return css.getPropertyValue(n).trim(); }
+  var COL = { el:[v("--el"), v("--el-t"), "#1b6f1b"], in:[v("--in"), v("--in-t"), "#a8431a"], ad:[v("--ad"), v("--ad-t"), "#a8431a"] };
+  var fmt = function (n) { return n == null ? "–" : n.toLocaleString("en-US"); };
+  LEVELS.forEach(function (l, i) {
+    var p = LEVELS[i - 1];
+    l.add = l.total - (p ? p.total : 0);
+    l.oldAdd = l.old == null ? null : l.old - (p && p.old != null ? p.old : 0);
+  });
+
+  var mode = "total", sel = 0, list = document.getElementById("list"), detail = document.getElementById("detail");
+  var narrow = matchMedia("(max-width:760px)");
+
+  function build() {
+    var html = "", last = "";
+    LEVELS.forEach(function (l, i) {
+      if (l.band !== last) { last = l.band; html += '<div class="band" style="color:' + COL[l.band][2] + '">' + BANDS[l.band].title + ' <b>' + BANDS[l.band].sub + '</b></div>'; }
+      html += '<button type="button" class="row" role="option" data-i="' + i + '" style="--c:' + COL[l.band][0] + ';--tint:' + COL[l.band][1] + '">' +
+        '<span class="lvl">' + l.name + '</span><span class="bars">' +
+        '<span class="bar n"><span class="b"></span><span class="t"></span></span>' +
+        '<span class="bar o"><span class="b"></span><span class="t"></span></span></span></button>';
+    });
+    list.innerHTML = html;
+  }
+
+  function draw() {
+    var key = mode === "total" ? "total" : "add", okey = mode === "total" ? "old" : "oldAdd";
+    var max = Math.max.apply(null, LEVELS.map(function (l) { return l[key]; }));
+    list.querySelectorAll(".row").forEach(function (r, i) {
+      var l = LEVELS[i], n = r.querySelector(".bar.n"), o = r.querySelector(".bar.o");
+      n.querySelector(".b").style.width = (l[key] / max * 78) + "%";
+      n.querySelector(".t").textContent = (mode === "add" && i ? "+" : "") + fmt(l[key]);
+      if (l[okey] == null) { o.style.visibility = "hidden"; }
+      else { o.style.visibility = ""; o.querySelector(".b").style.width = (l[okey] / max * 78) + "%"; o.querySelector(".t").textContent = (mode === "add" && i ? "+" : "") + fmt(l[okey]); }
+      r.setAttribute("aria-selected", i === sel ? "true" : "false");
+      r.setAttribute("aria-label", l.name + ": " + fmt(l.total) + " words in total" + (l.old ? ", " + fmt(l.old) + " in HSK 2.0" : ""));
+    });
+  }
+
+  function show(i) {
+    sel = i; var l = LEVELS[i], p = LEVELS[i - 1], c = COL[l.band];
+    detail.style.setProperty("--tint", c[1]); detail.style.setProperty("--cd", c[2]);
+    var facts = [];
+    facts.push(p ? "<b>+" + fmt(l.add) + " new words</b> on top of " + p.name : "Your first <b>" + fmt(l.total) + " words</b>: the base of everything after");
+    if (l.old != null) facts.push("Old HSK " + (i + 1) + ": " + fmt(l.old) + " words, so <b>" + (l.total / l.old >= 1.95 ? "twice as many" : "+" + Math.round((l.total / l.old - 1) * 100) + "%") + "</b> now");
+    else facts.push("New in HSK 3.0: the old HSK stopped at level 6");
+    facts.push(BANDS[l.band].title + " band (" + BANDS[l.band].sub + ")");
+    detail.innerHTML = '<div class="d-band">' + BANDS[l.band].title + '</div>' +
+      '<div class="d-lvl">New ' + l.name + '</div>' +
+      '<div class="d-big">' + (l.band === "ad" ? "~" : "") + fmt(l.total) + '<small>words in total</small></div>' +
+      '<ul class="facts">' + facts.map(function (f) { return "<li><span>" + f + "</span></li>"; }).join("") + '</ul>' +
+      '<a class="btn" href="' + l.url + '" target="_blank" rel="noopener">Open the ' + l.name + ' vocab list ↗</a>' +
+      '<div class="nav"><button type="button" data-step="-1"' + (i ? "" : " disabled") + '>← ' + (p ? p.name : "") + '</button>' +
+      '<button type="button" data-step="1"' + (i < LEVELS.length - 1 ? "" : " disabled") + '>' + (LEVELS[i + 1] ? LEVELS[i + 1].name : "") + ' →</button></div>';
+    // phones: details open right under the chosen level
+    var row = list.querySelector('.row[data-i="' + i + '"]');
+    if (narrow.matches) row.after(detail); else if (detail.parentNode !== list.parentNode || detail.previousElementSibling !== list) list.after(detail);
+    draw();
+  }
+
+  build();
+  list.addEventListener("click", function (e) { var r = e.target.closest(".row"); if (r) show(+r.dataset.i); });
+  detail.addEventListener("click", function (e) { var b = e.target.closest("[data-step]"); if (b && !b.disabled) show(sel + +b.dataset.step); });
+  list.addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault(); var n = Math.max(0, Math.min(LEVELS.length - 1, sel + (e.key === "ArrowDown" ? 1 : -1)));
+    show(n); list.querySelector('.row[data-i="' + n + '"]').focus();
+  });
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      mode = b.dataset.mode;
+      document.querySelectorAll(".seg button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      draw();
+    });
+  });
+  narrow.addEventListener ? narrow.addEventListener("change", function () { show(sel); }) : narrow.addListener(function () { show(sel); });
+  var start = +(new URLSearchParams(location.search).get("level") || 1);
+  show(Math.max(0, Math.min(LEVELS.length - 1, start - 1)));
+  // bars grow in once
+  list.querySelectorAll(".bar .b").forEach(function (b) { var w = b.style.width; b.style.width = "0"; requestAnimationFrame(function () { requestAnimationFrame(function () { b.style.width = w; }); }); });
+</script>
+</body>
+</html>

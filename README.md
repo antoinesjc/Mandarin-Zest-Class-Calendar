@@ -269,3 +269,20 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
   round portraits floating gently (each at its own pace), and a "Meet the team ↗" button to the About us page (new tab).
   Desktop: 7 in a row. Phones: 2 rows of 3 (the portrait marked `phone: false` in the TEAM list is hidden).
   Embed: `height:600px` with `scrolling="no"`.
+
+## New HSK vocabulary page (/the-new-hsk-vocabulary-lists-2026)
+
+- `hsk-levels.html`: interactive "New HSK 3.0 vs old HSK 2.0" table. Bars per level (HSK 3.0 by band colour, HSK 2.0 grey),
+  switch "Total words" / "New at this level", tap a level for the details and "Open the HSK n vocab list ↗" (new tab).
+  Phones: the details open under the chosen level. Numbers and links: LEVELS in the file. `?level=4` opens on HSK 4.
+  Embed: `height:max(600px, min(900px, calc((800px - 100vw) * 10000)))`, `scrolling="no"`.
+- `hsk-pdfs.html`: "Get all the new HSK vocab lists at once". Optional level chips + email + consent → Start Here sheet
+  (source `hsk-vocab-pdfs | <level>`) → download buttons appear (remembered in the browser). PDFS list in the file;
+  until the PDFs are added the buttons open the level pages. `ALL_URL` = one file with everything (zip or combined PDF).
+  Embed: `height:max(440px, min(590px, calc((960px - 100vw) * 10000)))`, `scrolling="no"`.
+- `hsk-club.html`: dark "Now use them out loud in the Mandarin Zest Club" strip; vocab cards light up as a live chat uses them.
+  "Try a session ↗" (trial page) + "Discover the Club ↗". SCENES in the file.
+  Embed: `height:max(480px, min(700px, calc((960px - 100vw) * 10000)))`, `scrolling="no"`.
+- `hsk-finder.html`: "Not sure which list you need?" 4 sentences (HSK 1 → 6), "Yes, I get it" / "Not really" (pinyin and
+  meaning on request) → suggested list + full level test (new tab). STEPS and RESULT in the file.
+  Embed: `height:max(320px, min(500px, calc((960px - 100vw) * 10000)))`, `scrolling="no"`.

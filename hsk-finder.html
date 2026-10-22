@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which HSK list do I need? · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* "Not sure which list you need?": 4 quick "can you read this?" sentences (HSK 1 → 6),
+     then a suggested list + the full level test (new tab). Sentences and links: bottom of the file.
+     Embed height: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:6px; }
+  .card { max-width:1000px; margin:0 auto; background:#e6f1e1; border-radius:26px; padding:28px 34px; display:grid; grid-template-columns:300px minmax(0,1fr); gap:34px; align-items:center; }
+  .eyebrow { font-size:12.5px; font-weight:800; letter-spacing:.09em; color:var(--green); }
+  h2 { margin:6px 0 8px; font-size:27px; font-weight:800; line-height:1.15; }
+  .intro p { margin:0; font-size:15.5px; line-height:1.5; color:#3f4a3c; }
+  .test { display:inline-block; margin-top:14px; color:var(--green); font-weight:800; font-size:15px; text-decoration:none; border-bottom:2px solid rgba(27,111,27,.3); }
+  .test:hover { border-color:var(--green); }
+
+  .box { background:#fff; border-radius:20px; padding:20px 22px; min-height:206px; display:flex; flex-direction:column; gap:12px; box-shadow:0 8px 22px rgba(27,111,27,.08); }
+  .steps { display:flex; gap:6px; }
+  .steps i { flex:1; height:5px; border-radius:3px; background:#e6efe2; transition:background .3s; }
+  .steps i.on { background:var(--green); }
+  .q { font-size:14px; font-weight:700; color:var(--muted); }
+  .zh { font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif; font-size:26px; font-weight:700; line-height:1.35; }
+  .hint { font-size:13.5px; color:var(--muted); min-height:19px; }
+  .hint button { border:0; background:none; padding:0; font:inherit; color:var(--green); font-weight:700; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+  .ans { display:flex; gap:10px; flex-wrap:wrap; margin-top:auto; }
+  .b { border:0; font:inherit; font-weight:800; font-size:15px; height:46px; padding:0 20px; border-radius:999px; cursor:pointer; transition:background .2s, transform .2s; text-decoration:none; display:inline-flex; align-items:center; }
+  .b:hover { transform:translateY(-1px); }
+  .yes { background:var(--orange); color:var(--ink); } .yes:hover { background:var(--orange-d); }
+  .no { background:#f3ece6; color:var(--ink); } .no:hover { background:#e9dfd6; }
+  .b:focus-visible { outline:3px solid var(--green); outline-offset:2px; }
+
+  .res .lv { display:flex; align-items:center; gap:14px; }
+  .res .badge { flex:none; width:62px; height:62px; border-radius:50%; background:var(--green); color:#fff; display:grid; place-items:center; font-weight:800; font-size:17px; line-height:1; text-align:center; }
+  .res h3 { margin:0; font-size:21px; font-weight:800; line-height:1.2; }
+  .res p { margin:2px 0 0; font-size:14px; color:var(--muted); line-height:1.45; }
+  .again { border:0; background:none; font:inherit; font-size:13.5px; font-weight:700; color:var(--muted); cursor:pointer; text-decoration:underline; text-underline-offset:3px; margin-left:auto; align-self:center; }
+  .fade { animation:fade .35s ease both; }
+  @keyframes fade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+  @media (max-width:860px) {
+    body { padding:2px; }
+    .card { grid-template-columns:1fr; gap:14px; padding:20px 16px; border-radius:20px; }
+    h2 { font-size:21px; } .intro p { font-size:14px; } .test { margin-top:8px; font-size:14px; }
+    .box { padding:16px; min-height:214px; }
+    .zh { font-size:21px; }
+    .b { height:44px; font-size:14.5px; padding:0 16px; }
+    .res .badge { width:52px; height:52px; font-size:15px; } .res h3 { font-size:18px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .fade { animation:none; } }
+</style>
+</head>
+<body>
+<section class="card" aria-labelledby="ttl">
+  <div class="intro">
+    <div class="eyebrow">NOT SURE WHICH LIST YOU NEED?</div>
+    <h2 id="ttl">Find your list in 30 seconds</h2>
+    <p>Read up to 4 short sentences, from easy to hard. We'll tell you which list to start with.</p>
+    <a class="test" href="https://www.mandarinzest.com/quick-hsk-level-test" target="_blank" rel="noopener">Or take the full 5-minute level test ↗</a>
+  </div>
+  <div class="box" id="box" aria-live="polite"></div>
+</section>
+<script>
+  // ═══ STEPS: one sentence per step, easy → hard. If the visitor can't read step n, they get RESULT[n] ═══
+  var STEPS = [
+    { zh:"你今天想去哪儿？", py:"Nǐ jīntiān xiǎng qù nǎr?", en:"Where do you want to go today?" },
+    { zh:"虽然天气不好，但是我们还是去了公园。", py:"Suīrán tiānqì bù hǎo, dànshì wǒmen háishi qùle gōngyuán.", en:"Although the weather was bad, we still went to the park." },
+    { zh:"这个问题比我想象的复杂得多。", py:"Zhège wèntí bǐ wǒ xiǎngxiàng de fùzá de duō.", en:"This problem is much more complicated than I imagined." },
+    { zh:"他的建议对公司的决策产生了深远的影响。", py:"Tā de jiànyì duì gōngsī de juécè chǎnshēngle shēnyuǎn de yǐngxiǎng.", en:"His advice had a far-reaching impact on the company's decisions." }
+  ];
+  var BASE = "https://www.mandarinzest.com/blog/free-resources-2/";
+  var RESULT = [
+    { lvl:"HSK 1",   url:BASE + "new-hsk-1-vocab-list-12",   why:"Start with the 300 words everything else is built on." },
+    { lvl:"HSK 2",   url:BASE + "new-hsk-2-vocab-list-13",   why:"You know the basics. HSK 2 (500 words) fills the gaps before longer sentences." },
+    { lvl:"HSK 4",   url:BASE + "new-hsk-4-vocab-list-15",   why:"You read everyday sentences. HSK 4 (2,000 words) takes you into intermediate." },
+    { lvl:"HSK 5",   url:BASE + "new-hsk-5-vocab-list-16",   why:"You handle intermediate Chinese. HSK 5 (3,600 words) is your next step." },
+    { lvl:"HSK 7–9", url:BASE + "new-hsk-7-9-vocab-list-18", why:"You read formal Chinese. The advanced list (about 11,000 words) is for you." }
+  ];
+
+  var box = document.getElementById("box"), step = 0;
+  function bar(n) { return '<div class="steps">' + STEPS.map(function (_, i) { return '<i' + (i < n ? ' class="on"' : '') + '></i>'; }).join("") + '</div>'; }
+  function ask(user) {
+    var s = STEPS[step];
+    box.innerHTML = bar(step + 1) + '<div class="fade"><div class="q">Sentence ' + (step + 1) + ' of ' + STEPS.length + ': can you understand it without help?</div>' +
+      '<div class="zh" lang="zh-CN">' + s.zh + '</div></div>' +
+      '<div class="hint"><button type="button" id="peek">Show pinyin & meaning</button></div>' +
+      '<div class="ans"><button type="button" class="b yes" id="yes">Yes, I get it</button><button type="button" class="b no" id="no">Not really</button></div>';
+    document.getElementById("peek").onclick = function () { this.parentNode.innerHTML = s.py + "<br>" + s.en; };
+    document.getElementById("yes").onclick = function () { step++; step < STEPS.length ? ask(true) : result(STEPS.length); };
+    document.getElementById("no").onclick = function () { result(step); };
+    if (user) document.getElementById("yes").focus({ preventScroll:true });
+  }
+  function result(n) {
+    var r = RESULT[n];
+    box.innerHTML = bar(STEPS.length) + '<div class="res fade"><div class="lv"><span class="badge">' + r.lvl.replace(" ", "<br>") + '</span><div>' +
+      '<h3>Start with the ' + r.lvl + ' list</h3><p>' + r.why + '</p></div></div></div>' +
+      '<div class="ans"><a class="b yes" href="' + r.url + '" target="_blank" rel="noopener">Open the ' + r.lvl + ' list ↗</a>' +
+      '<a class="b no" href="https://www.mandarinzest.com/quick-hsk-level-test" target="_blank" rel="noopener">Check with the full test ↗</a>' +
+      '<button type="button" class="again" id="again">Start again</button></div>';
+    document.getElementById("again").onclick = function () { step = 0; ask(true); };
+  }
+  ask();
+</script>
+</body>
+</html>
