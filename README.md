@@ -286,3 +286,9 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 - `hsk-finder.html`: "Not sure which list you need?" 4 sentences (HSK 1 → 6), "Yes, I get it" / "Not really" (pinyin and
   meaning on request) → suggested list + full level test (new tab). STEPS and RESULT in the file.
   Embed: `height:max(320px, min(500px, calc((960px - 100vw) * 10000)))`, `scrolling="no"`.
+
+## Mailing list bar (thin)
+
+- `subscribe.html`: one-line "Stay in the loop on Chinese" bar: email + consent → Start Here sheet (source `subscribe-bar | <page>`).
+  `?bg=f8dacd` for another background colour (default mint #e6f1e1).
+  Embed: `height:max(86px, min(134px, calc((900px - 100vw) * 10000)))`, `scrolling="no"`.
