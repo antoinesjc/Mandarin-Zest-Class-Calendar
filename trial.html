@@ -203,6 +203,7 @@ function card(ev) {
     a.target = "_blank";
     a.rel = "noopener";
     // One trial per person: ask for the email first and check it, then go to Stripe with that email locked.
+    a.addEventListener("click", () => mzTrack("InitiateCheckout", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" }));
     if (SEATS_URL) a.addEventListener("click", e => { e.preventDefault(); askEmail(c, bottom, ev); });
     bottom.appendChild(a);
   }
@@ -210,6 +211,11 @@ function card(ev) {
   return c;
 }
 
+// Meta Pixel: tell the Odoo page (which runs the pixel) what the visitor did. The page listens with the
+// small "mz-track" snippet in Odoo's <head> code injection (see README). Harmless if nobody listens.
+function mzTrack(event, params) {
+  try { window.top.postMessage({ mz: "track", event: event, params: params || {} }, "*"); } catch (e) {}
+}
 function askEmail(c, bottom, ev) {
   bottom.innerHTML = "";
   const f = el("form", "ask");
@@ -236,6 +242,7 @@ function askEmail(c, bottom, ev) {
       return;
     }
     const url = BOOK_URL + "?client_reference_id=" + encodeURIComponent(refOf(ev)) + "&prefilled_email=" + encodeURIComponent(email) + "&locked_prefilled_email=true";
+    mzTrack("AddPaymentInfo", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" });
     const w = window.open(url, "_blank");
     if (w) { msg.className = "askmsg"; msg.textContent = "Payment opened in a new tab. Your Meet link arrives by email within 5 minutes."; return; }
     // the browser blocked the new tab: give a real link to click instead

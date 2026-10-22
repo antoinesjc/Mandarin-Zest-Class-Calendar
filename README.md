@@ -96,6 +96,10 @@ that opens the trial page in a new tab.
   directly in the file.
 - `trial.html`: the upcoming `#trial` sessions as booking cards, for the
   trial page (price and Stripe link at the top of its script).
+  Meta Pixel steps: clicking "Book my seat" sends `InitiateCheckout`, going on to Stripe sends `AddPaymentInfo`
+  (the paid trial itself is `Purchase`, on the thank-you page). The widget only posts a message to the page;
+  the Odoo site's <head> code injection must contain the listener, right after the pixel code:
+  `<script>window.addEventListener('message',function(e){if(e.origin==='https://antoinesjc.github.io'&&e.data&&e.data.mz==='track'&&window.fbq){fbq('track',e.data.event,e.data.params||{});}});</script>`
   Embed with no inner scrolling (fits the email step on phones too):
   `height:max(480px, min(500px, calc((448px - 100vw) * 10000)), min(530px, calc((348px - 100vw) * 10000)))` + `scrolling="no"`.
 - `hsk1-offer.html`: the HSK 1 Bundle offer with the NEWCOMER2026 code, for
