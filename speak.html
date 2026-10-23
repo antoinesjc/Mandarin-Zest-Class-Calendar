@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Speak Chinese · Mandarin Zest Club trial</title>
 <!-- Landing page for the Club Meta ads (Odoo page /speak). Full-page embed, no inner scroll:
-     <iframe src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/speak.html" style="width:100%;border:0;display:block;height:max(5999px, min(7000px, calc((1200px - 100vw) * 10000)), min(7574px, calc((992px - 100vw) * 10000)), min(8499px, calc((768px - 100vw) * 10000)), min(calc(14786px - 1100vw), calc((576px - 100vw) * 10000)))" scrolling="no" title="Mandarin Zest Club trial"></iframe>
+     <iframe src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/speak.html" style="width:100%;border:0;display:block;height:max(6381px, min(7378px, calc((1200px - 100vw) * 10000)), min(7877px, calc((992px - 100vw) * 10000)), min(8803px, calc((768px - 100vw) * 10000)), min(calc(15100px - 1100vw), calc((576px - 100vw) * 10000)))" scrolling="no" title="Mandarin Zest Club trial"></iframe>
      Buttons with data-scroll="sessions" scroll the visitor's page down to the trial sessions. -->
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
 <style>html,body{margin:0;background:#fffaf6}a:hover{opacity:.9}</style>
@@ -44,6 +44,15 @@
     <div style="flex:1 1 360px;min-width:0;position:relative;display:flex;justify-content:center">
       <iframe src="call-scene.html" title="A live Mandarin Zest Club session" scrolling="no" style="width:100%;max-width:520px;aspect-ratio:520/432;border:0;display:block"></iframe>
     </div>
+  </div>
+
+  <!-- REAL SESSIONS (screenshots) -->
+  <div style="padding:8px 0 56px">
+    <div style="max-width:1160px;margin:0 auto;padding:0 24px 6px;display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:14px;font-weight:700;color:#a8431a;letter-spacing:.06em">REAL SESSIONS, REAL PEOPLE</span>
+      <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(24px,3vw,32px);line-height:1.15;font-weight:800;letter-spacing:-.01em;color:#2a2420">A peek inside our weekly Club sessions</h2>
+    </div>
+    <iframe src="session-photos.html" title="Screenshots of Mandarin Zest Club sessions" scrolling="no" loading="lazy" style="width:100%;border:0;display:block;height:max(180px, min(250px, calc((100vw - 700px) * 1000)))"></iframe>
   </div>
 
   <!-- PROBLEM -->
@@ -236,6 +245,15 @@ document.querySelectorAll('iframe[data-fit]').forEach(function (f) {
   if (f.contentDocument && f.contentDocument.readyState === 'complete') hook();
 });
 window.addEventListener('resize', function () { document.querySelectorAll('iframe[data-fit]').forEach(fitFrame); });
+
+// Tell the Odoo page how tall this page is, so its frame always fits (no cut-off, no empty space).
+// The Odoo site's <head> code listens for {mz:"height"} messages; without it, the frame's CSS height is used.
+function reportHeight() {
+  try { window.top.postMessage({ mz: "height", h: Math.ceil(document.body.getBoundingClientRect().height) }, "*"); } catch (e) {}
+}
+try { new ResizeObserver(reportHeight).observe(document.body); } catch (e) {}
+window.addEventListener('load', reportHeight);
+reportHeight();
 </script>
 </body>
 </html>

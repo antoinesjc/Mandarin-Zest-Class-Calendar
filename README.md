@@ -120,7 +120,7 @@ that opens the trial page in a new tab.
   display in full, but text changes must be made in each article).
 - `speak.html` + `promo/mz-logo.png`: the Club trial landing page for the Meta
   ads (Odoo page /speak): hero, problem, how the trial works, the live
-  `trial.html` sessions, member reviews (Debbie, Nancy, Agnieszka, Matt), hosts
+  `session-photos.html` strip ("Real sessions, real people"), `trial.html` sessions, member reviews (Debbie, Nancy, Agnieszka, Matt), hosts
   (Vanessa, Dorota, Antoine, Gabrielle), the `club-app.html` highlight, trial vs
   Club pricing, FAQ.
   Full-page embed with no inner scroll; the iframe line with its height is in
@@ -235,6 +235,10 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 - `session-photos.html` + `sessions/s01–s04.jpg`: screenshots of Club sessions sliding from right to left in an endless loop
   (hover or tap pauses). Add pictures to `sessions/` (2:1, 800×400) and to the PHOTOS list in the file.
   Embed: `height:max(180px, min(250px, calc((100vw - 700px) * 1000)))` with `scrolling="no"`.
+
+- Auto height: `speak.html` posts `{mz:"height", h}` to the Odoo page, and the site's <head> listener (same script as the
+  pixel steps, see trial.html above) sets that frame's height, so text changes never need a new embed line.
+  The listener: `<script>window.addEventListener('message',function(e){if(e.origin!=='https://antoinesjc.github.io'||!e.data)return;var d=e.data;if(d.mz==='track'&&window.fbq){fbq('track',d.event,d.params||{});}if(d.mz==='height'&&d.h>200){document.querySelectorAll('iframe').forEach(function(f){if(f.contentWindow===e.source){f.style.height=d.h+'px';}});}});</script>`
 
 ## Trial booked (thank-you page)
 
