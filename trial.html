@@ -77,7 +77,9 @@
   .asklbl { font-size: 14px; font-weight: 700; color: var(--ink); }
   .ask input { width: 100%; min-width: 0; font: inherit; font-size: 16px; padding: 12px 16px; border: 1.5px solid #cdb9ac; border-radius: 999px; background: #fffaf6; color: var(--ink); }
   .ask input::placeholder { color: #8a7d74; }
-  .ask .btn { width: 100%; flex: none; text-align: center; }
+  .ask .btn { width: 100%; flex: none; text-align: center; white-space: normal; line-height: 1.25; }
+  .ask .go-short { display: none; }
+  @media (max-width: 360px) { .ask .go-long { display: none; } .ask .go-short { display: inline; } }
   .ask input:focus { outline: none; border-color: #f37a48; }
   .ask .btn { border: 0; cursor: pointer; font-family: inherit; }
   .askmsg { font-size: 13.5px; color: var(--muted); line-height: 1.4; min-height: 0; }
@@ -131,6 +133,8 @@
 <script>
 // Price and booking link for every trial session. Change them here.
 const PRICE = "US$2.50";
+// Shown under the email box in the booking step.
+const ASK_NOTE = "Only used to send your Meet link. No newsletter, no subscription. Secure payment by Stripe; one trial per person.";
 const BOOK_URL = "https://buy.stripe.com/cNi6oH94B8Dj6DCf0x6oo0k";
 // Seats: the trial-bookings Apps Script tells how many of the 6 trial seats are taken (leave empty to hide).
 const SEATS_URL = "https://script.google.com/macros/s/AKfycbyUmZxGz3BZIeQQcp3SbFPtnFCv0FgFebbct-3UBsmhzgp9gVZbN7zuGDA18QcPhfK0/exec";
@@ -216,15 +220,21 @@ function card(ev) {
 function mzTrack(event, params) {
   try { window.top.postMessage({ mz: "track", event: event, params: params || {} }, "*"); } catch (e) {}
 }
+// The booking button: full wording on wider cards, a short one on small phones (switched by CSS).
+function setGo(b) {
+  b.innerHTML = "";
+  b.append(el("span", "go-long", "Continue to payment · " + PRICE), el("span", "go-short", "Pay " + PRICE + " →"));
+}
+
 function askEmail(c, bottom, ev) {
   bottom.innerHTML = "";
   const f = el("form", "ask");
   const lid = "em-" + Math.random().toString(36).slice(2, 8);
-  const lbl = el("label", "asklbl", "Your email"); lbl.htmlFor = lid;
+  const lbl = el("label", "asklbl", "Where should we send your Meet link?"); lbl.htmlFor = lid;
   const inp = el("input"); inp.id = lid; inp.type = "email"; inp.placeholder = "you@email.com"; inp.required = true; inp.autocomplete = "email"; inp.inputMode = "email";
-  const go = el("button", "btn", "Continue ↗"); go.type = "submit";
+  const go = el("button", "btn"); setGo(go); go.type = "submit";
   f.append(lbl, inp, go);
-  const msg = el("div", "askmsg", "Trial sessions are one per person. We'll send your Meet link to this email.");
+  const msg = el("div", "askmsg", ASK_NOTE);
   bottom.append(f);
   c.appendChild(msg);
   setTimeout(() => inp.focus(), 30);
@@ -235,9 +245,9 @@ function askEmail(c, bottom, ev) {
     go.disabled = true; go.textContent = "Checking…";
     let used = false;
     try { used = (await (await fetch(SEATS_URL + "?check=" + encodeURIComponent(email))).json()).used; } catch (err) {}
-    go.disabled = false; go.textContent = "Continue ↗";
+    go.disabled = false; setGo(go);
     if (used) {
-      msg.className = "askmsg"; msg.textContent = "Trial sessions are one per person. We'll send your Meet link to this email.";
+      msg.className = "askmsg"; msg.textContent = ASK_NOTE;
       showOnceOnly(f);
       return;
     }
