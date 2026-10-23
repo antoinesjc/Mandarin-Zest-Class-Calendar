@@ -429,6 +429,8 @@ document.addEventListener("click", e => {
   if (card) { card === popFor ? hidePop() : showPop(card); return; }
   if (!e.target.closest("#pop")) hidePop();
 });
+// Google Analytics: tell the Odoo page about the trial checkout (no personal data).
+function mzGA(name, params) { try { window.top.postMessage({ mz: "track", ga: { event: name, params: params || {} } }, "*"); } catch (e) {} }
 // "Join as a trial": ask for the email, check it hasn't had a trial yet, then open Stripe checkout.
 function askTrialEmail(btn) {
   const ref = btn.dataset.ref;
@@ -453,6 +455,7 @@ function askTrialEmail(btn) {
       return;
     }
     const url = TRIAL_PAY_URL + "?client_reference_id=" + encodeURIComponent(ref) + "&prefilled_email=" + encodeURIComponent(email) + "&locked_prefilled_email=true";
+    mzGA("add_payment_info", { currency: "USD", value: 2.5, items: [{ item_id: "club-trial", item_name: "Club trial session", price: 2.5, quantity: 1 }], widget: "calendar" });
     const w = window.open(url, "_blank");
     if (w) { msg.className = "askmsg"; msg.textContent = "Payment opened in a new tab. Your Meet link arrives by email within 5 minutes."; return; }
     // the browser blocked the new tab: give a real link to click instead

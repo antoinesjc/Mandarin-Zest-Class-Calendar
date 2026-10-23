@@ -99,7 +99,7 @@ that opens the trial page in a new tab.
   Meta Pixel steps: clicking "Book my seat" sends `InitiateCheckout`, going on to Stripe sends `AddPaymentInfo`
   (the paid trial itself is `Purchase`, on the thank-you page). The widget only posts a message to the page;
   the Odoo site's <head> code injection must contain the listener, right after the pixel code:
-  `<script>window.addEventListener('message',function(e){if(e.origin==='https://antoinesjc.github.io'&&e.data&&e.data.mz==='track'&&window.fbq){fbq('track',e.data.event,e.data.params||{});}});</script>`
+  see `odoo-head-code.html` (the full <head> code: Meta Pixel, this listener, GA events and Stripe purchases).
   Embed with no inner scrolling (fits the email step on phones too):
   `height:max(480px, min(500px, calc((448px - 100vw) * 10000)), min(530px, calc((348px - 100vw) * 10000)))` + `scrolling="no"`.
 - `hsk1-offer.html`: the HSK 1 Bundle offer with the NEWCOMER2026 code, for
@@ -238,7 +238,7 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 
 - Auto height: `speak.html` posts `{mz:"height", h}` to the Odoo page, and the site's <head> listener (same script as the
   pixel steps, see trial.html above) sets that frame's height, so text changes never need a new embed line.
-  The listener: `<script>window.addEventListener('message',function(e){if(e.origin!=='https://antoinesjc.github.io'||!e.data)return;var d=e.data;if(d.mz==='track'&&window.fbq){fbq('track',d.event,d.params||{});}if(d.mz==='height'&&d.h>200){document.querySelectorAll('iframe').forEach(function(f){if(f.contentWindow===e.source){f.style.height=d.h+'px';}});}});</script>`
+  The listener: see `odoo-head-code.html`.
 
 ## Trial booked (thank-you page)
 
@@ -298,3 +298,15 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
   Embed: `height:max(86px, min(134px, calc((900px - 100vw) * 10000)))`, `scrolling="no"`.
 - Blog posts: `subscribe.html?layout=blog` (narrow, stacked: title, email + button, consent).
   Embed: `height:max(146px, min(180px, calc((520px - 100vw) * 10000)))`, `scrolling="no"`.
+
+## Google Analytics events (GA4 G-Y4ESTYK0D6)
+
+Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener in `odoo-head-code.html` sends it to GA
+(GA follows the cookie banner through Odoo's consent mode). No emails or other personal data are ever sent.
+- `generate_lead` (param `lead_source`): subscribe-bar, hsk-vocab-pdfs, bootcamp-waitlist, start-here, hsk-test,
+  writing-sheets, stroke-order, calculator, pinyin, zhuyin
+- `begin_checkout`: Club pricing cards (club-monthly / club-yearly), trial booking, writing sheets US$9
+- `add_payment_info`: trial email step → Stripe (trial.html and the calendar)
+- `purchase`: writing sheets (when the tool sees the payment); Club and trial through the Stripe redirect
+  `?mzp=club-monthly|club-yearly|trial&sid={CHECKOUT_SESSION_ID}` on a mandarinzest.com page
+- `hsk_test_complete` (hsk_level, score), `writing_sheet_made`

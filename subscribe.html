@@ -66,6 +66,8 @@
   if (bg && /^[0-9a-f]{6}$/i.test(bg)) document.documentElement.style.setProperty("--bg", "#" + bg);
   var page = (document.referrer || "").replace(/^https?:\/\/(www\.)?mandarinzest\.com/, "").slice(0, 120) || "unknown";
 
+  // Google Analytics: tell the Odoo page what happened (no personal data). The page's <head> listener sends it to GA.
+  function mzGA(name, params) { try { (window.opener || window.top).postMessage({ mz: "track", ga: { event: name, params: params || {} } }, "*"); } catch (e) {} }
   function nope(el) { el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake", "err"); setTimeout(function () { el.classList.remove("err"); }, 1500); }
   document.getElementById("f").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -76,6 +78,7 @@
       fetch(SHEET_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" },
         body: JSON.stringify({ email: email, source: "subscribe-bar | " + page, timestamp: new Date().toISOString() }) }).catch(function () {});
     }
+    mzGA("generate_lead", { lead_source: "subscribe-bar", page_path: page });
     this.outerHTML = '<div class="msg" role="status">🎉 You\'re subscribed. 谢谢！</div>';
   });
 </script>

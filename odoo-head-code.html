@@ -1,0 +1,45 @@
+<!--
+  Mandarin Zest: the code in Odoo's <head> code injection (Website → Site → Code injection, or the website record's
+  "custom_code_head"). Keep this file and Odoo in sync. Previous version (Meta Pixel + listener only) replaced 23 Oct 2026.
+
+  1. Meta Pixel. Waits for the cookie banner: it only sends anything once the visitor clicks "I agree"
+     (Odoo saves the choice in the website_cookies_bar cookie as {"optional": true}).
+  2. Listener for the GitHub widgets (only messages from https://antoinesjc.github.io):
+     {mz:"track", event, params}  → Meta Pixel event (trial steps)
+     {mz:"track", ga:{event, params}} → Google Analytics event (sign-ups, checkouts, HSK test…)
+     {mz:"height", h}             → resizes the frame that sent it
+  3. Stripe purchases for GA: a Payment Link's "After payment" redirect goes to a page on mandarinzest.com with
+     ?mzp=<product>&sid={CHECKOUT_SESSION_ID}. The page then records a GA "purchase" once per checkout.
+     Products: club-monthly (25), club-yearly (250), trial (2.50). Add new ones to P below.
+  GA itself (G-Y4ESTYK0D6) and its consent handling come from Odoo's own Google Analytics setting.
+-->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+window.mzConsent=function(){try{var m=document.cookie.match(/(?:^|; )website_cookies_bar=([^;]*)/);return !!(m&&JSON.parse(decodeURIComponent(m[1])).optional);}catch(e){return false;}};
+if(!mzConsent())fbq('consent','revoke');
+fbq('init','1401519495195662');fbq('track','PageView');
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#website_cookies_bar'))setTimeout(function(){if(mzConsent())fbq('consent','grant');},400);});
+</script>
+<script>
+(function(){
+function ga(){window.dataLayer=window.dataLayer||[];window.dataLayer.push(arguments);}
+window.addEventListener('message',function(e){
+if(e.origin!=='https://antoinesjc.github.io'||!e.data)return;var d=e.data;
+if(d.mz==='track'){if(d.event&&window.fbq)fbq('track',d.event,d.params||{});if(d.ga&&d.ga.event)ga('event',d.ga.event,d.ga.params||{});}
+if(d.mz==='height'&&d.h>200){document.querySelectorAll('iframe').forEach(function(f){if(f.contentWindow===e.source)f.style.height=d.h+'px';});}
+});
+var P={'club-monthly':['Club membership (monthly)',25],'club-yearly':['Club membership (yearly)',250],'trial':['Club trial session',2.5]};
+window.addEventListener('load',function(){
+var q=new URLSearchParams(location.search),k=q.get('mzp'),sid=q.get('sid')||'';
+if(!P[k])return;var key='mzp_'+(sid||k+'_'+new Date().toDateString()),seen=false;
+try{seen=!!localStorage.getItem(key);localStorage.setItem(key,'1');}catch(x){}
+if(seen)return;
+var p={currency:'USD',value:P[k][1],items:[{item_id:k==='trial'?'club-trial':k,item_name:P[k][0],price:P[k][1],quantity:1}]};
+if(sid)p.transaction_id=sid;ga('event','purchase',p);
+});
+})();
+</script>

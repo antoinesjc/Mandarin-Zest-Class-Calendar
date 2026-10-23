@@ -139,6 +139,8 @@
   }
   if (unlocked()) reveal();
 
+  // Google Analytics: tell the Odoo page what happened (no personal data). The page's <head> listener sends it to GA.
+  function mzGA(name, params) { try { (window.opener || window.top).postMessage({ mz: "track", ga: { event: name, params: params || {} } }, "*"); } catch (e) {} }
   document.getElementById("form").addEventListener("submit", function (e) {
     e.preventDefault();
     var email = document.getElementById("email").value.trim(), err = document.getElementById("err");
@@ -150,6 +152,7 @@
       fetch(SHEET_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" },
         body: JSON.stringify({ email: email, source: "hsk-vocab-pdfs | " + lvl, timestamp: new Date().toISOString() }) }).catch(function () {});
     }
+    mzGA("generate_lead", { lead_source: "hsk-vocab-pdfs", hsk_level: (document.querySelector('input[name="lvl"]:checked') || {}).value || "no level" });
     try { localStorage.setItem(KEY, "1"); } catch (e2) {}
     reveal();
   });

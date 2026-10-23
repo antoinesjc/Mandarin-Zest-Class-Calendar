@@ -105,6 +105,8 @@
     }
   }).catch(function () {});
 
+  // Google Analytics: tell the Odoo page what happened (no personal data). The page's <head> listener sends it to GA.
+  function mzGA(name, params) { try { (window.opener || window.top).postMessage({ mz: "track", ga: { event: name, params: params || {} } }, "*"); } catch (e) {} }
   document.getElementById("form").addEventListener("submit", function (e) {
     e.preventDefault();
     var name = document.getElementById("fName").value.trim();
@@ -114,6 +116,7 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please check your email address."; return; }
     if (!document.getElementById("fOk").checked) { err.textContent = "Please tick the box so we can email you."; return; }
     err.textContent = "";
+    mzGA("generate_lead", { lead_source: "bootcamp-waitlist", bootcamp: bootcamp.title });
     var btn = document.getElementById("fBtn"); btn.disabled = true; btn.textContent = "One moment…";
     fetch(WAITLIST_URL, {
       method: "POST", mode: "no-cors", keepalive: true,

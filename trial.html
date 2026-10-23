@@ -207,7 +207,7 @@ function card(ev) {
     a.target = "_blank";
     a.rel = "noopener";
     // One trial per person: ask for the email first and check it, then go to Stripe with that email locked.
-    a.addEventListener("click", () => mzTrack("InitiateCheckout", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" }));
+    a.addEventListener("click", () => mzTrack("InitiateCheckout", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" }, { event: "begin_checkout", params: GA_TRIAL }));
     if (SEATS_URL) a.addEventListener("click", e => { e.preventDefault(); askEmail(c, bottom, ev); });
     bottom.appendChild(a);
   }
@@ -217,9 +217,11 @@ function card(ev) {
 
 // Meta Pixel: tell the Odoo page (which runs the pixel) what the visitor did. The page listens with the
 // small "mz-track" snippet in Odoo's <head> code injection (see README). Harmless if nobody listens.
-function mzTrack(event, params) {
-  try { window.top.postMessage({ mz: "track", event: event, params: params || {} }, "*"); } catch (e) {}
+// Google Analytics gets the same steps (GA names in `ga`), sent to GA by the same listener.
+function mzTrack(event, params, ga) {
+  try { window.top.postMessage({ mz: "track", event: event, params: params || {}, ga: ga }, "*"); } catch (e) {}
 }
+const GA_TRIAL = { currency: "USD", value: 2.5, items: [{ item_id: "club-trial", item_name: "Club trial session", price: 2.5, quantity: 1 }] };
 // The booking button: full wording on wider cards, a short one on small phones (switched by CSS).
 function setGo(b) {
   b.innerHTML = "";
@@ -252,7 +254,7 @@ function askEmail(c, bottom, ev) {
       return;
     }
     const url = BOOK_URL + "?client_reference_id=" + encodeURIComponent(refOf(ev)) + "&prefilled_email=" + encodeURIComponent(email) + "&locked_prefilled_email=true";
-    mzTrack("AddPaymentInfo", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" });
+    mzTrack("AddPaymentInfo", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" }, { event: "add_payment_info", params: GA_TRIAL });
     const w = window.open(url, "_blank");
     if (w) { msg.className = "askmsg"; msg.textContent = "Payment opened in a new tab. Your Meet link arrives by email within 5 minutes."; return; }
     // the browser blocked the new tab: give a real link to click instead

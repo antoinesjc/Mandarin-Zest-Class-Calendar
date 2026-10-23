@@ -106,7 +106,7 @@
       <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Special prices on bootcamps and trips</li>
     </ul>
     <div class="small">Cancel anytime</div>
-    <a class="btn" href="https://buy.stripe.com/4gM6oH94BcTz2nm4lT6oo0p" target="_blank" rel="noopener">Join monthly</a>
+    <a class="btn" data-plan="monthly" href="https://buy.stripe.com/4gM6oH94BcTz2nm4lT6oo0p" target="_blank" rel="noopener">Join monthly</a>
   </div>
 
   <div class="plan best">
@@ -121,11 +121,19 @@
       <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Special prices on bootcamps and trips</li>
     </ul>
     <div class="small">One-time payment, no auto-renewal</div>
-    <a class="btn" href="https://buy.stripe.com/eVqcN52Gd7zf6DC8C96oo0o" target="_blank" rel="noopener">Join yearly</a>
+    <a class="btn" data-plan="yearly" href="https://buy.stripe.com/eVqcN52Gd7zf6DC8C96oo0o" target="_blank" rel="noopener">Join yearly</a>
   </div>
 
 </div>
 <script>
+  // Google Analytics: tell the Odoo page what happened (no personal data). The page's <head> listener sends it to GA.
+  function mzGA(name, params) { try { (window.opener || window.top).postMessage({ mz: "track", ga: { event: name, params: params || {} } }, "*"); } catch (e) {} }
+  document.querySelectorAll("a[data-plan]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      var y = a.getAttribute("data-plan") === "yearly", v = y ? 250 : 25;
+      mzGA("begin_checkout", { currency: "USD", value: v, items: [{ item_id: y ? "club-yearly" : "club-monthly", item_name: y ? "Club membership (yearly)" : "Club membership (monthly)", price: v, quantity: 1 }] });
+    });
+  });
   // Tell the page embedding us how tall we are, so the frame fits (cards stack on phones).
   function reportHeight() {
     var h = Math.ceil(document.querySelector(".plans").getBoundingClientRect().bottom + 44);
