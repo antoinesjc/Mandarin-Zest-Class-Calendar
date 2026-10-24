@@ -61,17 +61,18 @@ Host: Dorota
 
 ### Trial sessions
 
-Keep the session name as usual and write `#trial` in the event
-description, optionally with a topic line:
+**Every session is open for a trial by default** (since 24 Oct 2026): one trial per
+person is enforced by email (see "Trial bookings" below), and every trial card, the calendar
+pop-up and the legend say "one trial session per person". To keep a session for members
+only, write `#notrial` in its description (or title). An optional topic line is shown on the trial page:
 
 ```
-#trial
 Topic: Tips for learning and remembering characters
 ```
 
-The trial page then shows every upcoming trial session automatically (two side by side; swipe or use the arrows for more). Only
-`#trial` and the `Topic:` line are read from the description; everything
-else in it (Meet links included) is ignored.
+The trial page shows the next 8 upcoming sessions (two side by side; swipe or use the arrows for more). Only
+`#notrial` and the `Topic:` line are read from the description; everything
+else in it (Meet links included) is ignored. Sessions that have already started can't be booked.
 
 No payment link goes in the calendar. Every trial card uses the one Stripe
 link set at the top of `trial.html`, and adds the session to it

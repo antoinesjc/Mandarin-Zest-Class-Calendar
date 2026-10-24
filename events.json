@@ -16,7 +16,9 @@
     }
    ],
    "start": "2026-09-01T17:00:00Z",
-   "end": "2026-09-01T18:00:00Z"
+   "end": "2026-09-01T18:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-01",
@@ -34,7 +36,9 @@
     }
    ],
    "start": "2026-09-01T21:00:00Z",
-   "end": "2026-09-01T21:45:00Z"
+   "end": "2026-09-01T21:45:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-04",
@@ -52,7 +56,9 @@
     }
    ],
    "start": "2026-09-04T21:00:00Z",
-   "end": "2026-09-04T21:45:00Z"
+   "end": "2026-09-04T21:45:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-07",
@@ -70,7 +76,9 @@
     }
    ],
    "start": "2026-09-07T17:00:00Z",
-   "end": "2026-09-07T18:00:00Z"
+   "end": "2026-09-07T18:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-08",
@@ -88,7 +96,9 @@
     }
    ],
    "start": "2026-09-08T21:00:00Z",
-   "end": "2026-09-08T21:45:00Z"
+   "end": "2026-09-08T21:45:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-11",
@@ -106,7 +116,9 @@
     }
    ],
    "start": "2026-09-11T21:00:00Z",
-   "end": "2026-09-11T21:45:00Z"
+   "end": "2026-09-11T21:45:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-12",
@@ -124,7 +136,9 @@
     }
    ],
    "start": "2026-09-12T14:00:00Z",
-   "end": "2026-09-12T15:00:00Z"
+   "end": "2026-09-12T15:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-13",
@@ -142,7 +156,9 @@
     }
    ],
    "start": "2026-09-13T14:00:00Z",
-   "end": "2026-09-13T14:45:00Z"
+   "end": "2026-09-13T14:45:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-14",
@@ -160,7 +176,9 @@
     }
    ],
    "start": "2026-09-14T17:00:00Z",
-   "end": "2026-09-14T18:00:00Z"
+   "end": "2026-09-14T18:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-15",
@@ -178,7 +196,9 @@
     }
    ],
    "start": "2026-09-15T21:00:00Z",
-   "end": "2026-09-15T21:45:00Z"
+   "end": "2026-09-15T21:45:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-19",
@@ -196,7 +216,9 @@
     }
    ],
    "start": "2026-09-19T14:00:00Z",
-   "end": "2026-09-19T15:00:00Z"
+   "end": "2026-09-19T15:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-21",
@@ -214,7 +236,9 @@
     }
    ],
    "start": "2026-09-21T17:00:00Z",
-   "end": "2026-09-21T18:00:00Z"
+   "end": "2026-09-21T18:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-22",
@@ -228,7 +252,9 @@
     }
    ],
    "start": "2026-09-22T23:00:00Z",
-   "end": "2026-09-22T23:45:00Z"
+   "end": "2026-09-22T23:45:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-09-28",
@@ -246,7 +272,9 @@
     }
    ],
    "start": "2026-09-28T17:00:00Z",
-   "end": "2026-09-28T18:00:00Z"
+   "end": "2026-09-28T18:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-02",
@@ -264,7 +292,9 @@
     }
    ],
    "start": "2026-10-02T21:00:00Z",
-   "end": "2026-10-02T22:00:00Z"
+   "end": "2026-10-02T22:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-03",
@@ -282,7 +312,9 @@
     }
    ],
    "start": "2026-10-03T14:00:00Z",
-   "end": "2026-10-03T15:00:00Z"
+   "end": "2026-10-03T15:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-05",
@@ -300,7 +332,9 @@
     }
    ],
    "start": "2026-10-05T17:00:00Z",
-   "end": "2026-10-05T18:00:00Z"
+   "end": "2026-10-05T18:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-05",
@@ -318,7 +352,9 @@
     }
    ],
    "start": "2026-10-05T21:00:00Z",
-   "end": "2026-10-05T22:00:00Z"
+   "end": "2026-10-05T22:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-08",
@@ -336,7 +372,9 @@
     }
    ],
    "start": "2026-10-08T21:00:00Z",
-   "end": "2026-10-08T22:00:00Z"
+   "end": "2026-10-08T22:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-12",
@@ -354,7 +392,9 @@
     }
    ],
    "start": "2026-10-12T21:00:00Z",
-   "end": "2026-10-12T22:00:00Z"
+   "end": "2026-10-12T22:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-15",
@@ -372,7 +412,9 @@
     }
    ],
    "start": "2026-10-15T21:00:00Z",
-   "end": "2026-10-15T22:00:00Z"
+   "end": "2026-10-15T22:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-10-18",
@@ -883,7 +925,9 @@
     }
    ],
    "start": "2026-11-30T18:00:00Z",
-   "end": "2026-11-30T19:00:00Z"
+   "end": "2026-11-30T19:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-11-30",
@@ -926,7 +970,8 @@
    "end": "2026-12-03T23:00:00Z",
    "topic": "Winter and Snow Day Activities",
    "about": "Learn vocab related to fun things to do in the winter",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-07",
@@ -944,7 +989,9 @@
     }
    ],
    "start": "2026-12-07T18:00:00Z",
-   "end": "2026-12-07T19:00:00Z"
+   "end": "2026-12-07T19:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-12-07",
@@ -965,7 +1012,8 @@
    "end": "2026-12-07T23:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-10",
@@ -986,7 +1034,8 @@
    "end": "2026-12-10T23:00:00Z",
    "topic": "How to Describe Foods",
    "about": "Learn how to describe how a food looks, tastes, and smells",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-14",
@@ -1004,7 +1053,9 @@
     }
    ],
    "start": "2026-12-14T18:00:00Z",
-   "end": "2026-12-14T19:00:00Z"
+   "end": "2026-12-14T19:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-12-14",
@@ -1025,7 +1076,8 @@
    "end": "2026-12-14T23:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-17",
@@ -1046,7 +1098,8 @@
    "end": "2026-12-17T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-21",
@@ -1064,7 +1117,9 @@
     }
    ],
    "start": "2026-12-21T18:00:00Z",
-   "end": "2026-12-21T19:00:00Z"
+   "end": "2026-12-21T19:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-12-21",
@@ -1085,7 +1140,8 @@
    "end": "2026-12-21T23:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-24",
@@ -1106,7 +1162,8 @@
    "end": "2026-12-24T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-28",
@@ -1124,7 +1181,9 @@
     }
    ],
    "start": "2026-12-28T18:00:00Z",
-   "end": "2026-12-28T19:00:00Z"
+   "end": "2026-12-28T19:00:00Z",
+   "trial": true,
+   "topic": ""
   },
   {
    "date": "2026-12-28",
@@ -1145,7 +1204,8 @@
    "end": "2026-12-28T23:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2026-12-31",
@@ -1166,7 +1226,8 @@
    "end": "2026-12-31T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-04",
@@ -1187,7 +1248,8 @@
    "end": "2027-01-04T23:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-07",
@@ -1208,7 +1270,8 @@
    "end": "2027-01-07T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-11",
@@ -1229,7 +1292,8 @@
    "end": "2027-01-11T23:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-14",
@@ -1250,7 +1314,8 @@
    "end": "2027-01-14T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-18",
@@ -1271,7 +1336,8 @@
    "end": "2027-01-18T23:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-21",
@@ -1292,7 +1358,8 @@
    "end": "2027-01-21T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-25",
@@ -1313,7 +1380,8 @@
    "end": "2027-01-25T23:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-01-28",
@@ -1334,7 +1402,8 @@
    "end": "2027-01-28T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-01",
@@ -1355,7 +1424,8 @@
    "end": "2027-02-01T23:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-04",
@@ -1376,7 +1446,8 @@
    "end": "2027-02-04T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-08",
@@ -1397,7 +1468,8 @@
    "end": "2027-02-08T23:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-11",
@@ -1418,7 +1490,8 @@
    "end": "2027-02-11T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-15",
@@ -1439,7 +1512,8 @@
    "end": "2027-02-15T23:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-18",
@@ -1460,7 +1534,8 @@
    "end": "2027-02-18T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-22",
@@ -1481,7 +1556,8 @@
    "end": "2027-02-22T23:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-02-25",
@@ -1502,7 +1578,8 @@
    "end": "2027-02-25T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-01",
@@ -1523,7 +1600,8 @@
    "end": "2027-03-01T23:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-04",
@@ -1544,7 +1622,8 @@
    "end": "2027-03-04T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-08",
@@ -1565,7 +1644,8 @@
    "end": "2027-03-08T23:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-11",
@@ -1586,7 +1666,8 @@
    "end": "2027-03-11T23:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-15",
@@ -1607,7 +1688,8 @@
    "end": "2027-03-15T22:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-18",
@@ -1628,7 +1710,8 @@
    "end": "2027-03-18T22:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-22",
@@ -1649,7 +1732,8 @@
    "end": "2027-03-22T22:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-25",
@@ -1670,7 +1754,8 @@
    "end": "2027-03-25T22:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-03-29",
@@ -1691,7 +1776,8 @@
    "end": "2027-03-29T22:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-01",
@@ -1712,7 +1798,8 @@
    "end": "2027-04-01T22:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-05",
@@ -1733,7 +1820,8 @@
    "end": "2027-04-05T22:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-08",
@@ -1754,7 +1842,8 @@
    "end": "2027-04-08T22:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-12",
@@ -1775,7 +1864,8 @@
    "end": "2027-04-12T22:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-15",
@@ -1796,7 +1886,8 @@
    "end": "2027-04-15T22:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-19",
@@ -1817,7 +1908,8 @@
    "end": "2027-04-19T22:00:00Z",
    "topic": "Practice HSK Vocab and Reading Practice",
    "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-22",
@@ -1838,7 +1930,8 @@
    "end": "2027-04-22T22:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-26",
@@ -1859,7 +1952,8 @@
    "end": "2027-04-26T22:00:00Z",
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   },
   {
    "date": "2027-04-29",
@@ -1880,7 +1974,8 @@
    "end": "2027-04-29T22:00:00Z",
    "topic": "About:",
    "about": "Host: Gabrielle",
-   "host": "Gabrielle"
+   "host": "Gabrielle",
+   "trial": true
   }
  ]
 }

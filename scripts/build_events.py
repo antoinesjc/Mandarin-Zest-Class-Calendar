@@ -58,11 +58,14 @@ URL_RE = re.compile(r"(https?://\S+|www\.\S+|\b[\w.-]+\.(?:com|google\.com|meet|
 LEVEL_RE = re.compile(r"\(?\s*\b(HSK|TOCFL)\s*(\d)(?:\s*[-–~/]\s*(?:HSK|TOCFL)?\s*(\d))?\s*\)?", re.I)
 TAG_RE = re.compile(r"#(\w+)")
 HIDE_TAGS = {"hide", "private"}
-# Trial sessions: write "#trial" anywhere in the event DESCRIPTION (the title
-# stays as it is). An optional line "Topic: ..." in the description is shown
+# Trial sessions: EVERY session is open for a trial by default (one trial per
+# person is enforced by the trial-bookings Apps Script). To keep a session for
+# members only, write "#notrial" in its DESCRIPTION or title. ("#trial" still
+# works but is no longer needed.) An optional line "Topic: ..." in the description is shown
 # on the trial page. Nothing else from the description is ever read, and no
 # links come from it: the booking link lives in trial.html.
 TRIAL_RE = re.compile(r"(?<![\w#])#trial\b", re.I)
+NOTRIAL_RE = re.compile(r"(?<![\w#])#(?:notrial|no-trial|membersonly|members)\b", re.I)
 TOPIC_RE = re.compile(r"^\s*(?:#trial\b[\s,.:;-]*)?topic\s*:\s*(.+)$", re.I | re.M)
 # Public description: the text after "About:" (it may run over several lines,
 # up to the first empty line or the next "Something:" line). Only this part is
@@ -223,7 +226,7 @@ def build(ics_bytes: bytes):
             value = find_line(regex, desc, limit)
             if value:
                 item[key] = value
-        if TRIAL_RE.search(desc) or "trial" in tags:
+        if not (NOTRIAL_RE.search(desc) or tags & {"notrial", "membersonly", "members"}):
             item["trial"] = True
             item.setdefault("topic", "")
         out.append(item)

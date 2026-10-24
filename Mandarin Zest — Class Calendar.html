@@ -95,6 +95,7 @@
   .askmsg.warn { color: #a8431a; font-weight: 600; }
   .askmsg a { color: #1b6f1b; font-weight: 700; }
   .note { font-size: 12.5px; color: var(--soft); text-align: center; }
+  .once-note { color: #a8431a; font-weight: 600; }
   .close { position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border: 0; background: none; font-size: 20px; color: var(--soft); cursor: pointer; border-radius: 50%; display: none; }
 
   .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; font-size: 13.5px; color: #5c4f47; }
@@ -194,7 +195,7 @@ const CATEGORIES = {
   general:      { label: "Open Topic",      color: "#6b6559" },
 };
 
-// The orange "Try it" tag on trial sessions (marked #trial in Google Calendar) opens this page, in a new tab.
+// The orange "Try it" tag on trial sessions (every session unless marked #notrial in Google Calendar) opens this page, in a new tab.
 const TRIAL_URL = "https://www.mandarinzest.com/mandarin-zest-club-trial-session";
 const TRIAL_PRICE = "US$2.50";
 // The "Join as a trial" button asks for the email (one trial per person), then opens this Stripe checkout.
@@ -322,6 +323,7 @@ function detailsHtml(ev, compact) {
     : SEATS_URL
       ? `<button type="button" class="cta trialbtn" data-ref="${esc(trialRef(ev))}">Join as a trial · ${TRIAL_PRICE} ↗</button>`
       : `<a class="cta" href="${esc(trialPayLink(ev))}" target="_blank" rel="noopener">Join as a trial · ${TRIAL_PRICE} ↗</a>`;
+  if (ev.trial) h += `<div class="note once-note">☝ Not a member yet? You can join <b>one</b> trial session per person.</div>`;
   h += `<div class="note">Club members: your link is in the Google Calendar invite.</div>`;
   return h;
 }
@@ -475,7 +477,7 @@ window.addEventListener("resize", hidePop);
 /* ---------- legend + navigation ---------- */
 $("legend").innerHTML = Object.values(CATEGORIES).map(c =>
   `<span><i style="background:${c.color}"></i>${esc(c.label)}</span>`).join("") +
-  `<span><i class="t">Try it</i>Open to non-members (trial)</span>`;
+  `<span><i class="t">Try it</i>Every session is open to non-members: one trial session per person</span>`;
 
 $("prevBtn").addEventListener("click", () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } render(); });
 $("nextBtn").addEventListener("click", () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } render(); });
@@ -485,7 +487,13 @@ buildTzMenu();
 render();
 fetch("events.json", { cache: "no-cache" })
   .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-  .then(data => { EVENTS = Array.isArray(data.events) ? data.events : []; render(); })
+  .then(data => {
+    EVENTS = Array.isArray(data.events) ? data.events : [];
+    // no trial booking for sessions that have already started
+    const now = Date.now();
+    EVENTS.forEach(ev => { if (ev.trial && new Date(ev.start || ev.date + "T23:59:00").getTime() < now) ev.trial = false; });
+    render();
+  })
   .catch(() => {
     const msg = $("emptyMsg");
     msg.textContent = "The session calendar couldn't load right now. Please refresh in a moment.";
