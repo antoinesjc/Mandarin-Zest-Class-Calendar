@@ -317,3 +317,5 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   Halloween: HALLOWEEN26, 30%, until 31 Oct 2026. Preview another day with `?date=2026-11-01`.
   Mascot pictures: white-outlined PNGs in `shop/`.
   Embed: `height:max(150px, min(250px, calc((680px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.
+- Website pop-up: `shop-banner.html?layout=square` (square card, same offers, + "Browse the shop ↗"). Scales with the frame.
+  Embed: `width:100%;max-width:440px;aspect-ratio:1/1;border:0;display:block;margin:0 auto`, `scrolling="no"`, `allow="clipboard-write"`.

@@ -10,7 +10,8 @@
 <style>
   /* Thin banner above the shop's products: "built by advanced learners, checked by professional native teachers"
      + the current discount code (copy button). Offers: OFFERS list at the bottom of the file; the banner picks
-     the one running now (Taiwan time) and falls back to the regular offer. Embed height: see README. */
+     the one running now (Taiwan time) and falls back to the regular offer. Embed height: see README.
+     ?layout=square = square card for the website pop-up (same offers). */
   :root { --ink:#2a2420; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; }
   * { box-sizing:border-box; }
   html, body { margin:0; height:100%; background:transparent; }
@@ -60,6 +61,30 @@
     .coderow { flex-direction:column; align-items:flex-start; gap:6px; }
     .code { height:34px; font-size:15px; } .copy { height:44px; font-size:14px; padding:0 16px; }
   }
+  .shopnow { display:none; }
+
+  /* ?layout=square: square card for the website pop-up. Everything scales with the frame (vmin). */
+  html.sq body { padding:0; }
+  html.sq .banner { flex-direction:column-reverse; width:100vw; height:100vh; min-height:0; max-width:none; border-radius:4vmin; background:var(--ink); }
+  html.sq .deal { flex:1 1 auto; position:relative; flex-direction:column; align-items:flex-start; justify-content:center; padding:6vmin 7vmin; gap:0; }
+  html.sq .deal img { position:absolute; right:-1vmin; bottom:-1vmin; width:42vmin; height:46vmin; margin:0; }
+  html.sq .dtxt { position:relative; gap:2.8vmin; }
+  html.sq .label { font-size:3.3vmin; white-space:nowrap; }
+  html.sq .off { font-size:6.4vmin; line-height:1.05; }
+  html.sq .off b { display:block; font-size:13.5vmin; line-height:1; letter-spacing:-.02em; white-space:nowrap; }
+  html.sq .coderow { flex-direction:column; align-items:flex-start; flex-wrap:nowrap; gap:2.4vmin; }
+  html.sq .code { height:10.5vmin; padding:0 3.6vmin; border-width:.5vmin; border-radius:2.4vmin; font-size:5.2vmin; }
+  html.sq .copy { height:10.5vmin; padding:0 5vmin; font-size:4.3vmin; }
+  html.sq .shopnow { display:inline-block; font-size:3.8vmin; font-weight:700; color:#f8dacd; text-decoration:none; border-bottom:.3vmin solid rgba(248,218,205,.45); }
+  html.sq .shopnow:hover { color:#fff; border-color:#fff; }
+  html.sq .made { flex:none; gap:3.4vmin; padding:3.2vmin 6vmin; background:#e6f1e1; }
+  html.sq .duo { display:flex; }
+  html.sq .duo span { width:9vmin; height:9vmin; font-size:3.6vmin; }
+  html.sq .duo .t { margin-left:-2.4vmin; }
+  html.sq .eyebrow { font-size:2.6vmin; }
+  html.sq .txt { gap:.8vmin; }
+  html.sq .txt h2 { font-size:3.9vmin; line-height:1.2; }
+  html.sq .txt p { display:none; }
   @media (prefers-reduced-motion:reduce) { .deal img { animation:none; } }
 </style>
 </head>
@@ -82,6 +107,7 @@
         <span class="code" id="code"></span>
         <button type="button" class="copy" id="copy">Copy code</button>
       </div>
+      <a class="shopnow" href="https://www.mandarinzest.com/shop" target="_blank" rel="noopener">Browse the shop ↗</a>
     </div>
   </div>
 </section>
@@ -101,7 +127,9 @@
   var today = /^\d{4}-\d{2}-\d{2}$/.test(q || "") ? q : new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
   var o = OFFERS.filter(function (x) { return x.from <= today && today <= x.until; })[0] || REGULAR;
 
-  var phone = matchMedia("(max-width:900px)");
+  var SQ = new URLSearchParams(location.search).get("layout") === "square";
+  if (SQ) document.documentElement.className = "sq";
+  var phone = matchMedia(SQ ? "(max-width:0px)" : "(max-width:900px)");
   function label() { document.getElementById("label").textContent = phone.matches ? o.short : o.label; }
   label(); phone.addEventListener ? phone.addEventListener("change", label) : phone.addListener(label);
   document.getElementById("off").innerHTML = "<b>" + o.off + "</b> the entire shop";
