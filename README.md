@@ -118,15 +118,12 @@ that opens the trial page in a new tab.
   All links open in a new tab. `banners/snippets/` holds frame-free
   versions to paste straight into an Odoo Embed Code block (they always
   display in full, but text changes must be made in each article).
-- `speak.html` + `promo/mz-logo.png`: the Club trial landing page for the Meta
-  ads (Odoo page /speak): hero, problem, how the trial works, the live
-  `session-photos.html` strip ("Real sessions, real people"), `trial.html` sessions, member reviews (Debbie, Nancy, Agnieszka, Matt), hosts
-  (Vanessa, Dorota, Antoine, Gabrielle), the `club-app.html` highlight, trial vs
-  Club pricing, FAQ.
-  Full-page embed with no inner scroll; the iframe line with its height is in
-  the comment at the top of the file. Buttons scroll the visitor's page down
-  to the trial sessions; the Club link opens in a new tab. If you change the
-  text a lot, the page height may change: ask for the height to be re-measured.
+- `speak.html` + `promo/mz-logo.png` + `press/`: the Club landing page for the Meta ads (Odoo page /mz-club-ad). Sells the
+  monthly membership (limited offer US$20 instead of US$25, Stripe monthly link; prices and links in CONFIG at the bottom),
+  with the US$2.50 trial as a secondary link to the trial page. Sections: problem/promise + offer, press logos
+  (ThinkChinese, Asiaglot, Jagiellonian University, Polyglot Conference, Expolingua Berlin), problem → solution,
+  session screenshots strip, "$1 per session" + what's included, reviews, hosts, final offer.
+  Clicks report to the Meta Pixel through the Odoo listener: Join = InitiateCheckout, trial link = ViewContent.
 - `promo/club.html` and `promo/bootcamps.html`: animated promo cards with
   the mascot, linking to the club page and the bootcamps page. They fill
   any frame height (use 300px); no resize script needed.

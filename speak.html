@@ -3,251 +3,234 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Speak Chinese · Mandarin Zest Club trial</title>
-<!-- Landing page for the Club Meta ads (Odoo page /speak). Full-page embed, no inner scroll:
-     <iframe src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/speak.html" style="width:100%;border:0;display:block;height:max(6381px, min(7378px, calc((1200px - 100vw) * 10000)), min(7877px, calc((992px - 100vw) * 10000)), min(8803px, calc((768px - 100vw) * 10000)), min(calc(15100px - 1100vw), calc((576px - 100vw) * 10000)))" scrolling="no" title="Mandarin Zest Club trial"></iframe>
-     Buttons with data-scroll="sessions" scroll the visitor's page down to the trial sessions. -->
+<title>Speak Chinese · Mandarin Zest Club</title>
+<!-- Landing page for the Club Meta ads (Odoo page /mz-club-ad). Sells the monthly membership (launch offer US$20 instead of US$25);
+     the US$2.50 trial is a secondary link to the trial page.
+     Embed: <iframe src="https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/speak.html" title="Mandarin Zest Club" scrolling="no" style="width:100%;border:0;display:block;height:6400px"></iframe>
+     With the Odoo <head> listener (README) the frame shrinks to this page's exact height on load; the fixed height is only a fallback.
+     Edit the prices and links in the CONFIG lines of the script at the bottom. -->
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
-<style>html,body{margin:0;background:#fffaf6}a:hover{opacity:.9}</style>
+<style>
+  :root { --ink:#2a2420; --muted:#5a4a40; --cream:#fffaf6; --peach:#f8dacd; --peach-l:#fdf1ea; --orange:#f37a48; --rust:#a8431a; --green:#1b6f1b; --mint:#e0f4e0; --line:#ecdcd2; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:var(--cream); }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); line-height:1.45; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1120px; margin:0 auto; padding:0 24px; }
+  section { padding:64px 0; }
+  h1, h2 { margin:0; font-weight:800; letter-spacing:-.025em; }
+  h1 { font-size:clamp(36px,5.6vw,62px); line-height:1.04; }
+  h2 { font-size:clamp(28px,3.8vw,40px); line-height:1.1; }
+  .eyebrow { font-size:13px; font-weight:800; letter-spacing:.08em; color:var(--rust); text-transform:uppercase; }
+  .lead { margin:0; font-size:19px; color:var(--muted); max-width:560px; }
+  .hl { background:var(--peach); padding:0 10px; border-radius:12px; -webkit-box-decoration-break:clone; box-decoration-break:clone; }
+
+  /* buttons */
+  .btn span { white-space:nowrap; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:56px; padding:0 28px; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:18px; text-decoration:none; text-align:center; }
+  .btn:hover { background:#e2632f; }
+  .link { color:var(--rust); font-weight:700; font-size:16px; }
+  .fine { font-size:14px; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 16px; }
+  .fine span::before { content:"✓ "; color:var(--green); font-weight:800; }
+
+  /* hero */
+  .hero { display:flex; flex-wrap:wrap; align-items:center; gap:40px; padding:40px 0 48px; }
+  .hero .copy { flex:999 1 500px; min-width:0; display:flex; flex-direction:column; gap:20px; }
+  .hero .visual { flex:1 1 340px; min-width:0; display:flex; justify-content:center; }
+  .brand { display:flex; align-items:center; gap:12px; font-weight:800; font-size:19px; }
+  .offer { align-self:flex-start; display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 14px; border-radius:999px; background:var(--mint); color:#1b5e1b; font-weight:800; font-size:14px; }
+  .offer s { color:#5e7c5e; font-weight:600; }
+  .ctas { display:flex; flex-wrap:wrap; align-items:center; gap:14px 22px; }
+
+  /* press */
+  .press { padding:20px 0 34px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:#fff; }
+  .press p { margin:0 0 16px; text-align:center; font-size:13px; font-weight:800; letter-spacing:.14em; color:#8a7d74; text-transform:uppercase; }
+  .logos { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:22px 40px; }
+  .logos img { display:block; width:auto; filter:grayscale(1); opacity:.75; }
+
+  /* problem → solution */
+  .ps { display:grid; gap:14px; margin-top:28px; }
+  .ps-row { display:grid; grid-template-columns:minmax(0,1fr) 36px minmax(0,1.25fr); align-items:center; gap:14px; }
+  .ps-p, .ps-s { border-radius:20px; padding:18px 22px; font-size:17px; }
+  .ps-p { background:#f1ebe6; color:var(--muted); }
+  .ps-p b { color:var(--ink); }
+  .ps-s { background:var(--mint); color:#213b21; }
+  .ps-s b { color:#173f17; }
+  .arrow { text-align:center; font-size:24px; color:var(--rust); font-weight:800; }
+  @media (max-width:640px) {
+    .ps { gap:12px; }
+    .ps-row { grid-template-columns:1fr; gap:0; }
+    .arrow { display:none; }
+    .ps-p { border-radius:18px 18px 0 0; padding:12px 18px; font-size:15px; }
+    .ps-s { border-radius:0 0 18px 18px; padding:12px 18px 14px; font-size:16px; }
+    .ps-s::before { content:"→ "; font-weight:800; color:var(--green); }
+  }
+
+  /* value */
+  .value { display:flex; flex-wrap:wrap; gap:20px; margin-top:28px; }
+  .math { flex:1 1 300px; background:var(--ink); color:var(--cream); border-radius:28px; padding:30px; display:flex; flex-direction:column; justify-content:center; gap:6px; }
+  .math .big { font-size:clamp(56px,8vw,76px); font-weight:800; line-height:1; letter-spacing:-.03em; color:var(--orange); }
+  .math .big small { font-size:22px; color:var(--cream); letter-spacing:0; }
+  .math p { margin:0; color:#e8dcd4; font-size:16px; }
+  .incl { flex:1.4 1 360px; background:#fff; border:1px solid var(--line); border-radius:28px; padding:26px 28px; display:grid; gap:14px; }
+  .incl div { display:flex; gap:12px; align-items:flex-start; font-size:16px; color:var(--muted); }
+  .incl b { color:var(--ink); }
+  .incl i { flex:none; width:26px; height:26px; border-radius:50%; background:var(--peach); color:var(--rust); font-style:normal; font-weight:800; font-size:14px; display:grid; place-items:center; margin-top:1px; }
+
+  /* reviews + hosts */
+  .reviews { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin-top:24px; }
+  .rv { background:var(--mint); border-radius:22px; padding:22px; display:flex; flex-direction:column; justify-content:space-between; gap:14px; }
+  .rv p { margin:0; font-size:17px; font-weight:600; color:#213b21; }
+  .who { display:flex; align-items:center; gap:10px; font-size:14px; color:#3d6a3d; }
+  .who b { color:var(--ink); font-size:15px; display:block; }
+  .av { width:38px; height:38px; border-radius:50%; color:#fff; display:grid; place-items:center; font-weight:800; flex:none; }
+  .hosts { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:20px 14px; margin-top:16px; }
+  .host { display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
+  .host img { width:100%; max-width:120px; height:auto; aspect-ratio:1/1; object-fit:cover; border-radius:50%; }
+  .host b { font-size:18px; }
+  .tag { padding:4px 10px; border-radius:999px; font-weight:700; font-size:12.5px; background:var(--mint); color:#1b5e1b; }
+  .tag.t { background:var(--peach); color:#8a3612; }
+
+  /* final offer */
+  .final { background:var(--ink); color:var(--cream); border-radius:32px; padding:40px 32px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; }
+  .final .price { font-size:clamp(48px,7vw,64px); font-weight:800; letter-spacing:-.03em; line-height:1; }
+  .final .price s { font-size:.45em; color:#b9aaa0; font-weight:600; margin-right:10px; }
+  .final .price small { font-size:.32em; font-weight:600; color:#e8dcd4; }
+  .final .fine { color:#e8dcd4; justify-content:center; }
+  .final .fine span::before { color:#6ee08a; }
+  .final .link { color:#f8b28f; }
+</style>
 </head>
 <body>
 
-<div style="font-family:'Outfit',system-ui,sans-serif;color:#2a2420;background:#fffaf6;width:100%;line-height:1.4">
-
-  <!-- HERO -->
-  <div style="max-width:1160px;margin:0 auto;padding:48px 24px 80px;display:flex;flex-wrap:wrap;align-items:center;gap:48px">
-    <div style="flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:22px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <img src="promo/mz-logo.png" alt="Mandarin Zest" width="56" height="43" style="width:56px;height:43px">
-        <span style="font-weight:800;font-size:20px">Mandarin Zest Club</span>
+<!-- HERO: the problem, the solution, the offer -->
+<div class="wrap">
+  <div class="hero">
+    <div class="copy">
+      <div class="brand"><img src="promo/mz-logo.png" alt="" width="52" height="40">Mandarin Zest Club</div>
+      <h1>You understand Chinese.<br>But you <span class="hl">freeze when you speak.</span></h1>
+      <p class="lead">The fix is simple: speak every week, with real people. The Club gives you <b>20+ live speaking sessions a month</b>, at US-friendly times, for about <b>$1 a session</b>.</p>
+      <span class="offer">LIMITED OFFER · 20% OFF <span><s data-cfg="was">US$25</s> <b data-cfg="now">US$20</b>/month</span></span>
+      <div class="ctas">
+        <a class="btn" data-cta="join" href="#" target="_blank" rel="noopener">Join the Club · <span><span data-cfg="now">US$20</span>/month</span> →</a>
+        <a class="link" data-cta="trial" href="#" target="_blank" rel="noopener">Or try one session first ($2.50) ↗</a>
       </div>
-      <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#e0f4e0;color:#1b5e1b;font-weight:700;font-size:13px;letter-spacing:.06em">
-        <span style="width:10px;height:10px;border-radius:50%;background:#1b8f1b;display:inline-block"></span>
-        LIVE ONLINE &middot; AFTERNOONS &amp; EVENINGS US TIME
-      </span>
-      <h1 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(40px,6vw,68px);line-height:1.04;font-weight:800;letter-spacing:-.03em;color:#2a2420">You've studied Chinese.<br>Now <span style="background:#f8dacd;padding:0 10px;border-radius:12px">actually speak it.</span></h1>
-      <p style="margin:0;font-size:20px;line-height:1.55;color:#5a4a40;max-width:560px">Small, friendly speaking sessions with other learners and a host, every week on Google Meet. Sessions by level, from HSK 1 to advanced. Try one for US$2.50, no subscription.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
-        <a href="#sessions" data-scroll="sessions" style="display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:0 28px;border-radius:999px;background:#f37a48;color:#2a2420;font-weight:800;font-size:18px;text-decoration:none">Book my trial session &rarr;</a>
-        <a href="#how" data-scroll="how" style="display:inline-flex;align-items:center;min-height:56px;padding:0 20px;font-weight:700;font-size:17px;color:#a8431a">How it works</a>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:15px;color:#5a4a40">
-        <div style="display:flex">
-          <span style="width:34px;height:34px;border-radius:50%;background:#4f7a94;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:2px solid #fffaf6">N</span>
-          <span style="width:34px;height:34px;border-radius:50%;background:#1b6f1b;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:2px solid #fffaf6;margin-left:-8px">D</span>
-          <span style="width:34px;height:34px;border-radius:50%;background:#a8431a;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:2px solid #fffaf6;margin-left:-8px">A</span>
-        </div>
-        <span>Members from New York to Seattle practice here every week</span>
-      </div>
+      <div class="fine"><span>Cancel anytime</span><span>No contract, no commitment</span><span>Onboarding call included</span></div>
     </div>
-
-    <div style="flex:1 1 360px;min-width:0;position:relative;display:flex;justify-content:center">
-      <iframe src="call-scene.html" title="A live Mandarin Zest Club session" scrolling="no" style="width:100%;max-width:520px;aspect-ratio:520/432;border:0;display:block"></iframe>
+    <div class="visual">
+      <iframe src="call-scene.html" title="A live Mandarin Zest Club session" scrolling="no" style="width:100%;max-width:500px;aspect-ratio:520/432;border:0;display:block"></iframe>
     </div>
-  </div>
-
-  <!-- REAL SESSIONS (screenshots) -->
-  <div style="padding:8px 0 56px">
-    <div style="max-width:1160px;margin:0 auto;padding:0 24px 6px;display:flex;flex-direction:column;gap:6px">
-      <span style="font-size:14px;font-weight:700;color:#a8431a;letter-spacing:.06em">REAL SESSIONS, REAL PEOPLE</span>
-      <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(24px,3vw,32px);line-height:1.15;font-weight:800;letter-spacing:-.01em;color:#2a2420">A peek inside our weekly Club sessions</h2>
-    </div>
-    <iframe src="session-photos.html" title="Screenshots of Mandarin Zest Club sessions" scrolling="no" loading="lazy" style="width:100%;border:0;display:block;height:max(180px, min(250px, calc((100vw - 700px) * 1000)))"></iframe>
-  </div>
-
-  <!-- PROBLEM -->
-  <div style="background:#2a2420;color:#fffaf6">
-    <div style="max-width:1160px;margin:0 auto;padding:72px 24px;display:flex;flex-direction:column;gap:36px">
-      <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;max-width:760px;color:#fffaf6">Apps teach you words. They don't get you talking.</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
-        <div style="display:flex;flex-direction:column;gap:8px;padding:24px;border-radius:20px;background:#3a322d">
-          <span style="font-weight:800;font-size:20px">No one to practice with</span>
-          <span style="font-size:16px;line-height:1.55;color:#e8dcd4">Self-study gets you far, until you need a real person to answer back.</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;padding:24px;border-radius:20px;background:#3a322d">
-          <span style="font-weight:800;font-size:20px">Tutors add up fast</span>
-          <span style="font-size:16px;line-height:1.55;color:#e8dcd4">One-on-one lessons are great, but most learners can't book them every week.</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;padding:24px;border-radius:20px;background:#3a322d">
-          <span style="font-weight:800;font-size:20px">The freeze</span>
-          <span style="font-size:16px;line-height:1.55;color:#e8dcd4">You know the words, then go blank the moment someone speaks to you.</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HOW IT WORKS -->
-  <div id="how" style="max-width:1160px;margin:0 auto;padding:88px 24px;display:flex;flex-direction:column;gap:36px">
-    <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:#2a2420">How the trial works</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">
-      <div style="display:flex;flex-direction:column;gap:10px;padding:28px;border-radius:24px;background:#fff;border:1px solid #ecdcd2">
-        <span style="width:44px;height:44px;border-radius:50%;background:#f8dacd;color:#a8431a;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:20px">1</span>
-        <span style="font-weight:800;font-size:21px">Pick a session at your level</span>
-        <span style="font-size:16px;line-height:1.55;color:#5a4a40">Each one is labelled by HSK level, from beginner to advanced. Times show in your own time zone.</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;padding:28px;border-radius:24px;background:#fff;border:1px solid #ecdcd2">
-        <span style="width:44px;height:44px;border-radius:50%;background:#f8dacd;color:#a8431a;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:20px">2</span>
-        <span style="font-weight:800;font-size:21px">Join on Google Meet and talk</span>
-        <span style="font-size:16px;line-height:1.55;color:#5a4a40">A host guides a small group through a topic. Everyone speaks, mistakes are welcome.</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;padding:28px;border-radius:24px;background:#fff;border:1px solid #ecdcd2">
-        <span style="width:44px;height:44px;border-radius:50%;background:#f8dacd;color:#a8431a;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:20px">3</span>
-        <span style="font-weight:800;font-size:21px">Liked it? Join the Club</span>
-        <span style="font-size:16px;line-height:1.55;color:#5a4a40">Unlimited sessions for US$25 a month. No obligation: the trial is a one-time US$2.50.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- SESSIONS (live widget) -->
-  <div id="sessions" style="background:#fdf1ea">
-    <div style="max-width:1160px;margin:0 auto;padding:88px 24px;display:flex;flex-direction:column;gap:24px">
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:#2a2420">Pick your trial session</h2>
-        <p style="margin:0;font-size:17px;color:#5a4a40">US$2.50, one-time. Times are shown in your own time zone.</p>
-      </div>
-      <iframe src="trial.html?v=5" data-fit title="Upcoming trial sessions" scrolling="no" style="width:100%;border:0;display:block;height:max(380px, min(440px, calc((448px - 100vw) * 10000)), min(500px, calc((348px - 100vw) * 10000)))" loading="lazy"></iframe>
-    </div>
-  </div>
-
-  <!-- REVIEWS -->
-  <div style="max-width:1160px;margin:0 auto;padding:88px 24px;display:flex;flex-direction:column;gap:32px">
-    <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:#2a2420">What members say</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
-      <div style="display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:28px;border-radius:24px;background:#e0f4e0">
-        <p style="margin:0;font-size:19px;line-height:1.5;font-weight:600;color:#213b21">&ldquo;There's truly nothing else out there like this club. The community is so supportive.&rdquo;</p>
-        <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:40px;border-radius:50%;background:#1b6f1b;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800">D</span><div style="display:flex;flex-direction:column"><span style="font-weight:800">Debbie</span><span style="font-size:14px;color:#3d6a3d">Seattle, WA</span></div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:28px;border-radius:24px;background:#e0f4e0">
-        <p style="margin:0;font-size:19px;line-height:1.5;font-weight:600;color:#213b21">&ldquo;The challenging weekly readings are exactly what I was looking for, and the discussions give me a chance to actively use new vocabulary in conversation.&rdquo;</p>
-        <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:40px;border-radius:50%;background:#4f7a94;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800">N</span><div style="display:flex;flex-direction:column"><span style="font-weight:800">Nancy</span><span style="font-size:14px;color:#3d6a3d">New York, NY &middot; Advanced Session</span></div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:28px;border-radius:24px;background:#e0f4e0">
-        <p style="margin:0;font-size:19px;line-height:1.5;font-weight:600;color:#213b21">&ldquo;An affordable way to practice your speaking compared to paying for 1-1 classes. Especially if you self-study but have no one to practice with.&rdquo;</p>
-        <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:40px;border-radius:50%;background:#a8431a;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800">A</span><div style="display:flex;flex-direction:column"><span style="font-weight:800">Agnieszka</span><span style="font-size:14px;color:#3d6a3d">Krak&oacute;w, Poland</span></div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:28px;border-radius:24px;background:#e0f4e0">
-        <p style="margin:0;font-size:19px;line-height:1.5;font-weight:600;color:#213b21">&ldquo;The teachers are friendly, patient, and supportive, and the learning materials are excellent and easy to follow. I've learned a lot in a short time.&rdquo;</p>
-        <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:40px;border-radius:50%;background:#7d5a8c;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800">M</span><div style="display:flex;flex-direction:column"><span style="font-weight:800">Matt</span><span style="font-size:14px;color:#3d6a3d">South Africa</span></div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HOSTS -->
-  <div style="background:#fff;border-top:1px solid #ecdcd2;border-bottom:1px solid #ecdcd2">
-    <div style="max-width:1160px;margin:0 auto;padding:80px 24px;display:flex;flex-direction:column;gap:40px">
-      <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
-        <span style="font-size:14px;font-weight:700;color:#a8431a;letter-spacing:.06em">YOUR HOSTS</span>
-        <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(26px,3.4vw,36px);line-height:1.15;font-weight:800;color:#2a2420">A native teacher, and advanced learners who've been where you are</h2>
-        <p style="margin:0;font-size:17px;line-height:1.6;color:#5a4a40">Sessions are led by Vanessa, our native teacher, and by advanced learners who know exactly how it feels to freeze mid-sentence. Every group is relaxed, never like an exam.</p>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:28px 16px">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
-          <img src="about/host-vanessa.jpg" alt="Vanessa" width="150" height="150" style="width:100%;max-width:150px;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:50%">
-          <span style="font-weight:800;font-size:21px">Vanessa</span>
-          <span style="padding:5px 12px;border-radius:999px;background:#f8dacd;color:#8a3612;font-weight:700;font-size:13px">Native teacher</span>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
-          <img src="about/host-dorota.jpg" alt="Dorota" width="150" height="150" style="width:100%;max-width:150px;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:50%">
-          <span style="font-weight:800;font-size:21px">Dorota</span>
-          <span style="padding:5px 12px;border-radius:999px;background:#e0f4e0;color:#1b5e1b;font-weight:700;font-size:13px">Advanced learner</span>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
-          <img src="about/host-antoine.jpg" alt="Antoine" width="150" height="150" style="width:100%;max-width:150px;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:50%">
-          <span style="font-weight:800;font-size:21px">Antoine</span>
-          <span style="padding:5px 12px;border-radius:999px;background:#e0f4e0;color:#1b5e1b;font-weight:700;font-size:13px">Advanced learner</span>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
-          <img src="about/host-gabrielle.jpg" alt="Gabrielle" width="150" height="150" style="width:100%;max-width:150px;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:50%">
-          <span style="font-weight:800;font-size:21px">Gabrielle</span>
-          <span style="padding:5px 12px;border-radius:999px;background:#e0f4e0;color:#1b5e1b;font-weight:700;font-size:13px">Advanced learner</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CLUB APP -->
-  <div style="background:#fdf1ea">
-    <div style="height:72px"></div>
-    <iframe src="club-app.html?cta=none" data-fit title="The Mandarin Zest Club App" scrolling="no" loading="lazy" style="width:100%;border:0;display:block;height:max(700px, min(1180px, calc((1000px - 100vw) * 10000)), min(1300px, calc((340px - 100vw) * 10000)))"></iframe>
-    <div style="height:64px"></div>
-  </div>
-
-  <!-- PRICING -->
-  <div style="max-width:1160px;margin:0 auto;padding:88px 24px;display:flex;flex-direction:column;gap:32px">
-    <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;text-align:center;color:#2a2420">Start with one session</h2>
-    <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center">
-      <div style="flex:1 1 300px;max-width:460px;display:flex;flex-direction:column;gap:16px;padding:32px;border-radius:28px;background:#2a2420;color:#fffaf6">
-        <span style="align-self:flex-start;padding:6px 12px;border-radius:999px;background:#f37a48;color:#2a2420;font-weight:800;font-size:13px;letter-spacing:.04em">START HERE</span>
-        <span style="font-weight:800;font-size:24px">Trial session</span>
-        <span style="font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1">US$2.50</span>
-        <span style="font-size:16px;line-height:1.6;color:#e8dcd4">One live speaking session of your choice. One-time payment, nothing recurring.</span>
-        <a href="#sessions" data-scroll="sessions" style="margin-top:auto;display:inline-flex;justify-content:center;align-items:center;min-height:56px;border-radius:999px;background:#f37a48;color:#2a2420;font-weight:800;font-size:18px;text-decoration:none">Choose my session</a>
-      </div>
-      <div style="flex:1 1 300px;max-width:460px;display:flex;flex-direction:column;gap:16px;padding:32px;border-radius:28px;background:#fff;border:1px solid #ecdcd2">
-        <span style="align-self:flex-start;padding:6px 12px;border-radius:999px;background:#e0f4e0;color:#1b5e1b;font-weight:800;font-size:13px;letter-spacing:.04em">AFTER YOUR TRIAL</span>
-        <span style="font-weight:800;font-size:24px">Mandarin Zest Club</span>
-        <span style="font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1">US$25<span style="font-size:20px;font-weight:600;color:#5a4a40"> / month</span></span>
-        <div style="display:flex;flex-direction:column;gap:8px;font-size:16px;color:#3b322d">
-          <span>&#10003; Unlimited speaking sessions</span>
-          <span>&#10003; Access to the Mandarin Zest Club App</span>
-          <span>&#10003; Private Discord community</span>
-          <span>&#10003; 50% off all our materials</span>
-        </div>
-        <a href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" style="margin-top:auto;font-size:15px;font-weight:700;color:#a8431a">See Club plans (or US$250 a year) &rarr;</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- FAQ -->
-  <div style="background:#fdf1ea">
-    <div style="max-width:820px;margin:0 auto;padding:80px 24px;display:flex;flex-direction:column;gap:14px">
-      <h2 style="margin:0 0 12px;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(28px,3.6vw,38px);font-weight:800;letter-spacing:-.02em;color:#2a2420">Questions</h2>
-      <div style="padding:22px 24px;border-radius:18px;background:#fff;display:flex;flex-direction:column;gap:6px"><span style="font-weight:800;font-size:18px">What level do I need?</span><span style="font-size:16px;line-height:1.55;color:#5a4a40">If you can introduce yourself in Chinese, there's a session for you. Every session is labelled by HSK level.</span></div>
-      <div style="padding:22px 24px;border-radius:18px;background:#fff;display:flex;flex-direction:column;gap:6px"><span style="font-weight:800;font-size:18px">I'm nervous about speaking. Is that OK?</span><span style="font-size:16px;line-height:1.55;color:#5a4a40">That's exactly who the Club is for. Groups are small and supportive; nobody is graded.</span></div>
-      <div style="padding:22px 24px;border-radius:18px;background:#fff;display:flex;flex-direction:column;gap:6px"><span style="font-weight:800;font-size:18px">Will I be charged after the trial?</span><span style="font-size:16px;line-height:1.55;color:#5a4a40">No. The trial is a one-time US$2.50. You only join the Club if you want to.</span></div>
-    </div>
-  </div>
-
-  <!-- FINAL CTA -->
-  <div style="max-width:1160px;margin:0 auto;padding:88px 24px 104px;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center">
-    <img src="promo/mz-logo.png" alt="Mandarin Zest" width="110" height="84" style="width:110px;height:84px">
-    <h2 style="margin:0;font-family:'Outfit',system-ui,sans-serif;font-size:clamp(32px,4.4vw,48px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:#2a2420">Your next Chinese conversation is this week.</h2>
-    <a href="#sessions" data-scroll="sessions" style="display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:0 30px;border-radius:999px;background:#f37a48;color:#2a2420;font-weight:800;font-size:18px;text-decoration:none">Book my trial &middot; US$2.50 &rarr;</a>
   </div>
 </div>
 
+<!-- PRESS -->
+<div class="press">
+  <div class="wrap">
+    <p>Featured &amp; mentioned in</p>
+    <div class="logos">
+      <img src="press/thinkchinese.png" alt="ThinkChinese" style="height:30px">
+      <img src="press/asiaglot.png" alt="Asiaglot" style="height:36px">
+      <img src="press/jagiellonian.png" alt="Jagiellonian University" style="height:46px">
+      <img src="press/polyglot-conference.png" alt="Polyglot Conference" style="height:52px">
+      <img src="press/expolingua.png" alt="Expolingua Berlin" style="height:36px">
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM → SOLUTION -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Why you're stuck, and how the Club fixes it</span>
+    <div class="ps">
+      <div class="ps-row"><div class="ps-p"><b>No one to practice with.</b> Apps and textbooks never answer back.</div><div class="arrow" aria-hidden="true">→</div><div class="ps-s"><b>20+ live sessions every month,</b> in small groups, sorted by level from HSK 1 to advanced.</div></div>
+      <div class="ps-row"><div class="ps-p"><b>Tutors add up fast.</b> Weekly 1-on-1 lessons cost a lot.</div><div class="arrow" aria-hidden="true">→</div><div class="ps-s"><b>About $1 per session.</b> Join as many as you like for one monthly price.</div></div>
+      <div class="ps-row"><div class="ps-p"><b>You go blank under pressure.</b> Speaking feels scary.</div><div class="arrow" aria-hidden="true">→</div><div class="ps-s"><b>Relaxed groups with a native teacher</b> and friendly hosts. Mistakes welcome.</div></div>
+      <div class="ps-row"><div class="ps-p"><b>Generic classes</b> don't fit your goals.</div><div class="arrow" aria-hidden="true">→</div><div class="ps-s"><b>An onboarding call</b> to hear your needs. We add sessions based on what members ask for.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REAL SESSIONS -->
+<div style="padding:0 0 40px">
+  <div class="wrap" style="padding-bottom:4px"><span class="eyebrow">Real sessions, real people</span></div>
+  <iframe src="session-photos.html" title="Screenshots of Mandarin Zest Club sessions" scrolling="no" loading="lazy" style="width:100%;border:0;display:block;height:max(180px, min(250px, calc((100vw - 700px) * 1000)))"></iframe>
+</div>
+
+<!-- VALUE -->
+<section style="background:var(--peach-l)">
+  <div class="wrap">
+    <h2>Everything you need to finally speak</h2>
+    <div class="value">
+      <div class="math">
+        <span class="big">≈ $1<small> / session</small></span>
+        <p>20+ live sessions a month for <span data-cfg="now">US$20</span>. Less than a coffee per conversation.</p>
+      </div>
+      <div class="incl">
+        <div><i>1</i><span><b>20+ live speaking sessions a month</b> on Google Meet, at afternoon and evening times for the US</span></div>
+        <div><i>2</i><span><b>A personal onboarding call</b> to understand your level and goals</span></div>
+        <div><i>3</i><span><b>The Club app:</b> session notes, reminders and your progress</span></div>
+        <div><i>4</i><span><b>50% off all our materials</b> and a members-only Discord</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section>
+  <div class="wrap">
+    <h2>Members say it works</h2>
+    <div class="reviews">
+      <div class="rv"><p>“There's truly nothing else out there like this club. The community is so supportive.”</p><div class="who"><span class="av" style="background:#1b6f1b">D</span><span><b>Debbie</b>Seattle, WA</span></div></div>
+      <div class="rv"><p>“The discussions give me a chance to actively use new vocabulary in conversation.”</p><div class="who"><span class="av" style="background:#4f7a94">N</span><span><b>Nancy</b>New York, NY</span></div></div>
+      <div class="rv"><p>“An affordable way to practice your speaking compared to paying for 1-1 classes.”</p><div class="who"><span class="av" style="background:#a8431a">A</span><span><b>Agnieszka</b>Kraków, Poland</span></div></div>
+    </div>
+    <span class="eyebrow" style="display:block;margin-top:40px">Your hosts</span>
+    <div class="hosts">
+      <div class="host"><img src="about/host-vanessa.jpg" alt="Vanessa" width="120" height="120"><b>Vanessa</b><span class="tag t">Native teacher</span></div>
+      <div class="host"><img src="about/host-dorota.jpg" alt="Dorota" width="120" height="120"><b>Dorota</b><span class="tag">Host</span></div>
+      <div class="host"><img src="about/host-antoine.jpg" alt="Antoine" width="120" height="120"><b>Antoine</b><span class="tag">Host</span></div>
+      <div class="host"><img src="about/host-gabrielle.jpg" alt="Gabrielle" width="120" height="120"><b>Gabrielle</b><span class="tag">Host</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL OFFER -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="final">
+      <span class="eyebrow" style="color:#f8b28f">Limited offer · 20% off</span>
+      <h2 style="color:var(--cream)">Start speaking this week</h2>
+      <div class="price"><s data-cfg="was">US$25</s><span data-cfg="now">US$20</span><small> / month</small></div>
+      <a class="btn" data-cta="join" href="#" target="_blank" rel="noopener">Join the Club →</a>
+      <div class="fine"><span>Cancel anytime</span><span>No contract</span><span>Secure payment by Stripe</span></div>
+      <a class="link" data-cta="trial" href="#" target="_blank" rel="noopener">Not sure yet? Try one session for $2.50 ↗</a>
+    </div>
+  </div>
+</section>
+
 <script>
-// Inside an Odoo iframe, #anchor links would only move the frame; scrollIntoView moves the visitor's page.
-document.querySelectorAll('[data-scroll]').forEach(function (a) {
-  a.addEventListener('click', function (e) {
-    var el = document.getElementById(a.getAttribute('data-scroll'));
-    if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// ═══ CONFIG: prices and links ═══
+var CONFIG = {
+  now: "US$20",                                                         // offer price per month
+  was: "US$25",                                                         // regular price (shown crossed out)
+  value: 20,                                                            // number sent to Meta with the click
+  join: "https://buy.stripe.com/eVq00ja8F5r7fa8aKh6oo0h",               // Stripe monthly membership link
+  trial: "https://www.mandarinzest.com/mandarin-zest-club-trial-session" // trial session page
+};
+// ════════════════════════════════
+
+document.querySelectorAll('[data-cfg]').forEach(function (el) { el.textContent = CONFIG[el.getAttribute('data-cfg')]; });
+document.querySelectorAll('[data-cta]').forEach(function (a) {
+  var kind = a.getAttribute('data-cta');
+  a.href = CONFIG[kind];
+  a.addEventListener('click', function () {
+    // Meta Pixel (through the Odoo page's listener): joining = InitiateCheckout, trial link = ViewContent
+    var ev = kind === 'join' ? ['InitiateCheckout', { value: CONFIG.value, currency: 'USD', content_name: 'Club monthly' }]
+                             : ['ViewContent', { content_name: 'Trial session page' }];
+    try { window.top.postMessage({ mz: 'track', event: ev[0], params: ev[1] }, '*'); } catch (e) {}
   });
 });
 
-// The trial sessions and the Club App frames come from the same site, so they can be sized to their content:
-// no scrollbar inside them and nothing cut off, whatever the phone. The CSS heights are only a fallback.
-function fitFrame(f) {
-  try {
-    var d = f.contentDocument; if (!d || !d.body) return;
-    var h = Math.ceil(d.body.getBoundingClientRect().height);
-    if (h > 50) f.style.height = h + 'px';
-  } catch (e) {}
-}
-document.querySelectorAll('iframe[data-fit]').forEach(function (f) {
-  function hook() {
-    fitFrame(f);
-    try { new ResizeObserver(function () { fitFrame(f); }).observe(f.contentDocument.body); } catch (e) {}
-  }
-  f.addEventListener('load', hook);
-  if (f.contentDocument && f.contentDocument.readyState === 'complete') hook();
-});
-window.addEventListener('resize', function () { document.querySelectorAll('iframe[data-fit]').forEach(fitFrame); });
-
-// Tell the Odoo page how tall this page is, so its frame always fits (no cut-off, no empty space).
-// The Odoo site's <head> code listens for {mz:"height"} messages; without it, the frame's CSS height is used.
+// Tell the Odoo page how tall this page is, so its frame always fits (listener in Odoo's <head> code).
 function reportHeight() {
   try { window.top.postMessage({ mz: "height", h: Math.ceil(document.body.getBoundingClientRect().height) }, "*"); } catch (e) {}
 }
