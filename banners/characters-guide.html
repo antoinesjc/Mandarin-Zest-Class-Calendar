@@ -26,7 +26,7 @@
   .btn:focus-visible, .code:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
   .side { font-size: 14px; }
   .banner { background: #e6f4e3; }
-  .visual { flex: 0 0 150px; width: 150px; height: 184px; display: block; }
+  .visual { flex: 0 0 150px; width: 150px; height: 184px; display: block; position: relative; }
   .visual img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 14px; }
   .eyebrow { color: #1b5e1b; }
   h3 { color: #173f17; }
@@ -47,6 +47,13 @@
     h3 { font-size: 21px; }
     .visual { flex: 0 0 auto; }
   }
+  /* seasonal offer (shop/offers.js): small mascot on the covers + the code */
+  .visual .season { position: absolute; border-radius: 0; right: -30px; bottom: -16px; width: 74px; height: 74px; object-fit: contain; z-index: 5; pointer-events: none;
+            animation: mzwave 3.6s ease-in-out infinite; transform-origin: 50% 90%; }
+  @keyframes mzwave { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg) translateY(-3px); } }
+  .eyebrow .deal { color: #e2632f; }
+  @media (max-width: 680px) { .eyebrow .rest { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .season { animation: none; } }
 </style>
 </head>
 <body>
@@ -71,6 +78,7 @@
     </div>
   </div>
 </div>
+<script src="../shop/offers.js"></script>
 <script>
   function reportHeight() {
     var h = Math.ceil(document.querySelector(".banner").getBoundingClientRect().bottom + 6);
@@ -79,12 +87,27 @@
   window.addEventListener("load", reportHeight);
   window.addEventListener("resize", reportHeight);
   if (document.fonts) document.fonts.ready.then(reportHeight);
-  var label = document.getElementById("codeLabel");
-  document.getElementById("code").addEventListener("click", function () {
+  // Code, discount and seasonal mascot come from shop/offers.js (same as the shop strip and the website pop-up).
+  var o = window.OFFER || { off: "10% off", code: "WELCOME01" };
+  var pct = (o.off.match(/\d+/) || ["10"])[0];
+  var tapText = pct + "% OFF · TAP TO COPY";
+  var label = document.getElementById("codeLabel"), btn = document.getElementById("code");
+  label.textContent = tapText;
+  btn.querySelector("strong").textContent = o.code;
+  btn.setAttribute("aria-label", "Copy the code " + o.code);
+  if (window.REGULAR && o !== REGULAR) {
+    var eb = document.querySelector(".eyebrow");
+    eb.innerHTML = '<span class="deal">' + o.short.toUpperCase() + '</span><span class="rest"> · ' + eb.innerHTML + '</span>';
+    var m = document.createElement("img"); m.className = "season"; m.src = "../" + o.img; m.alt = "";
+    document.querySelector(".visual").appendChild(m);
+  }
+  var oldP = 19, newP = (oldP * (100 - pct) / 100).toFixed(2).replace(/\.00$/, "");
+  document.querySelector(".price .new").textContent = "US$" + newP;
+  btn.addEventListener("click", function () {
     try {
-      navigator.clipboard.writeText("WELCOME01").then(function () {
+      navigator.clipboard.writeText(o.code).then(function () {
         label.textContent = "COPIED!";
-        setTimeout(function () { label.textContent = "10% OFF · TAP TO COPY"; }, 1800);
+        setTimeout(function () { label.textContent = tapText; }, 1800);
       }, function () {});
     } catch (e) {}
   });

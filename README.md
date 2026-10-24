@@ -317,7 +317,9 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   Halloween: HALLOWEEN26, 30%, until 31 Oct 2026. Preview another day with `?date=2026-11-01`.
   Mascot pictures: white-outlined PNGs in `shop/`.
   Embed: `height:max(150px, min(250px, calc((680px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.
-- Offers (codes, dates, mascots) live in `shop/offers.js`, shared by the strip and the pop-up.
+- Offers (codes, dates, mascots) live in `shop/offers.js`, shared by the strip, the pop-up and the blog banners
+  `banners/shop.html` and `banners/characters-guide.html` (code, % in the tap-to-copy box, guide price, small seasonal mascot).
+  The pasted HTML snippets in `banners/snippets/` can't update themselves and still say WELCOME01.
 - Website pop-up: `shop-popup.html`: offer + code + Copy (top, dark, mascot), "Our materials" with three covers
   (PRODUCTS in the file: `shop/p-*.jpg`, cut from the shop page), "Built by advanced learners, checked by professional
   native teachers" + "Shop now ↗" (bottom). Fixed 4:5 shape that scales with the frame. (`shop-banner.html?layout=square` redirects here.)
