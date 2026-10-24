@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Website pop-up card for the Club, same shape as shop-popup.html: a real session (top), what you get + price (middle),
+     "Try a session" (trial page) and "Discover the Club" (bottom). Fixed 4:5 shape, all sizes in vw so it scales
+     with the frame. Text, price and links: CONFIG below. Embed: see README (aspect-ratio 4/5). */
+  :root { --ink:#2a2420; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; --mint:#e6f1e1; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; overflow:hidden; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:#fff; -webkit-font-smoothing:antialiased; }
+  .card { width:100vw; height:125vw; border-radius:4.5vw; overflow:hidden; display:flex; flex-direction:column; background:var(--ink); }
+
+  .photo { position:relative; flex:0 0 49vw; overflow:hidden; }
+  .photo img { width:100%; height:100%; object-fit:cover; display:block; transform:scale(1.02); animation:zoom 14s ease-in-out infinite alternate; }
+  @keyframes zoom { to { transform:scale(1.09) translate(-1.5%, 1%); } }
+  .photo::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(42,36,32,0) 55%, rgba(42,36,32,1) 100%); }
+  .live { position:absolute; top:4vw; left:4.6vw; z-index:2; display:inline-flex; align-items:center; gap:1.6vw; padding:1.3vw 2.8vw; border-radius:999px;
+          background:rgba(42,36,32,.82); font-size:2.9vw; font-weight:800; letter-spacing:.07em; }
+  .live i { width:1.8vw; height:1.8vw; border-radius:50%; background:#e74c3c; animation:blink 1.4s infinite; }
+  @keyframes blink { 50% { opacity:.25; } }
+
+  .body { flex:1 1 auto; display:flex; flex-direction:column; padding:0 6.5vw; margin-top:-3vw; position:relative; z-index:1; }
+  .eyebrow { font-size:3vw; font-weight:800; letter-spacing:.09em; color:#9fd89f; }
+  h2 { margin:1.2vw 0 0; font-size:8.6vw; font-weight:800; line-height:1.02; letter-spacing:-.01em; }
+  h2 em { font-style:normal; color:var(--orange); }
+  ul { list-style:none; margin:3.2vw 0 0; padding:0; display:flex; flex-direction:column; gap:2vw; }
+  li { display:flex; gap:2.4vw; align-items:flex-start; font-size:3.7vw; line-height:1.3; color:#efe6df; }
+  li svg { flex:none; width:4.4vw; height:4.4vw; margin-top:.3vw; }
+  li b { color:#fff; }
+  .price { margin-top:auto; padding-top:3vw; display:flex; align-items:baseline; gap:2vw; font-size:3.5vw; color:#cbbdb3; }
+  .price b { font-size:6.2vw; font-weight:800; color:#fff; }
+
+  .actions { flex:none; display:flex; gap:2.6vw; padding:3.6vw 6.5vw 5.4vw; }
+  .btn { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:13vw; border-radius:999px;
+         font-size:3.9vw; font-weight:800; text-decoration:none; line-height:1.1; transition:background .2s, transform .2s; }
+  .btn small { font-size:2.6vw; font-weight:600; opacity:.85; margin-top:.4vw; }
+  .btn:hover { transform:translateY(-.4vw); }
+  .btn.main { background:var(--orange); color:var(--ink); } .btn.main:hover { background:var(--orange-d); }
+  .btn.alt { background:var(--mint); color:#173f17; } .btn.alt:hover { background:#d5e9cd; }
+  .btn:focus-visible { outline:.7vw solid #f8b48f; outline-offset:.6vw; }
+  @media (prefers-reduced-motion:reduce) { .photo img, .live i { animation:none; } }
+</style>
+</head>
+<body>
+<section class="card" aria-labelledby="ttl">
+  <div class="photo">
+    <span class="live"><i></i>LIVE ON GOOGLE MEET</span>
+    <img src="sessions/s02.jpg" alt="A Mandarin Zest Club speaking session on Google Meet">
+  </div>
+  <div class="body">
+    <div class="eyebrow">THE MANDARIN ZEST CLUB</div>
+    <h2 id="ttl">Speak Chinese <em>every week</em></h2>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#9fd89f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>20+ live sessions a month</b> in small groups</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#9fd89f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Sorted by level</b>, from HSK 1 to advanced</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#9fd89f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>The Club app</b>: notes, reminders, progress</span></li>
+    </ul>
+    <div class="price"><b id="price"></b><span id="perSession"></span></div>
+  </div>
+  <div class="actions">
+    <a class="btn main" id="trial" target="_blank" rel="noopener">Try a session ↗<small id="trialSmall"></small></a>
+    <a class="btn alt" id="club" target="_blank" rel="noopener">Discover the Club ↗<small>&nbsp;</small></a>
+  </div>
+</section>
+<script>
+  // ═══ CONFIG: price and links ═══
+  var CONFIG = {
+    price: "US$25/month",
+    perSession: "about $1.25 a session",
+    trialPrice: "US$2.50 · one per person",
+    trial: "https://www.mandarinzest.com/mandarin-zest-club-trial-session",
+    club: "https://www.mandarinzest.com/mandarin-zest-club"
+  };
+  document.getElementById("price").textContent = CONFIG.price;
+  document.getElementById("perSession").textContent = CONFIG.perSession;
+  document.getElementById("trialSmall").textContent = CONFIG.trialPrice;
+  document.getElementById("trial").href = CONFIG.trial;
+  document.getElementById("club").href = CONFIG.club;
+</script>
+</body>
+</html>

@@ -324,3 +324,11 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   (PRODUCTS in the file: `shop/p-*.jpg`, cut from the shop page), "Built by advanced learners, checked by professional
   native teachers" + "Shop now ↗" (bottom). Fixed 4:5 shape that scales with the frame. (`shop-banner.html?layout=square` redirects here.)
   Embed: `width:100%;max-width:440px;aspect-ratio:4/5;border:0;display:block;margin:0 auto`, `scrolling="no"`, `allow="clipboard-write"`.
+
+## Club pop-up (website pop-up)
+
+- `club-popup.html`: same 4:5 card shape as `shop-popup.html`. Real session screenshot (`sessions/s02.jpg`, slow zoom, "LIVE ON
+  GOOGLE MEET"), "Speak Chinese every week", three points (20+ sessions a month in small groups, sorted by level HSK 1 to
+  advanced, the Club app), "US$25/month · about $1.25 a session", buttons "Try a session ↗ (US$2.50 · one per person)" →
+  trial page and "Discover the Club ↗" → Club page. Price and links: CONFIG in the file.
+  Embed: `width:100%;max-width:440px;aspect-ratio:4/5;border:0;display:block;margin:0 auto`, `scrolling="no"`.
