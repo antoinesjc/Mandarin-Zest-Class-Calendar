@@ -332,3 +332,11 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   advanced, the Club app), "US$25/month · about $1.25 a session", buttons "Try a session ↗ (US$2.50 · one per person)" →
   trial page and "Discover the Club ↗" → Club page. Price and links: CONFIG in the file.
   Embed: `width:100%;max-width:440px;aspect-ratio:4/5;border:0;display:block;margin:0 auto`, `scrolling="no"`.
+
+## Free PDF for an email (any PDF)
+
+- `free-pdf.html?pdf=<id>`: cover + title + email + consent → Start Here sheet (source `free-pdf | <id>`) → "Download the PDF"
+  (+ "Practise them out loud: try a Club session ↗"). Remembers people who already signed up (per PDF, in the browser).
+- The PDFs are listed in `downloads/free-pdfs.js` (title, text, file, cover). PDFs and covers live in `downloads/hsk/`
+  (cover = page 1 rendered as JPG). Now: `hsk-1`. `hsk-pdfs.html` (all lists) links to the same files.
+- Embed: `height:max(265px, min(410px, calc((640px - 100vw) * 10000)))`, `scrolling="no"`.
