@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   /* Thin banner above the shop's products: "built by advanced learners, checked by professional native teachers"
-     + the current discount code (copy button). Offers: OFFERS list at the bottom of the file; the banner picks
+     + the current discount code (copy button). Offers: OFFERS in shop/offers.js; the banner picks
      the one running now (Taiwan time) and falls back to the regular offer. Embed height: see README.
-     ?layout=square = square card for the website pop-up (same offers). */
+     Offers live in shop/offers.js (shared with shop-popup.html, the website pop-up). */
   :root { --ink:#2a2420; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; }
   * { box-sizing:border-box; }
   html, body { margin:0; height:100%; background:transparent; }
@@ -61,30 +61,6 @@
     .coderow { flex-direction:column; align-items:flex-start; gap:6px; }
     .code { height:34px; font-size:15px; } .copy { height:44px; font-size:14px; padding:0 16px; }
   }
-  .shopnow { display:none; }
-
-  /* ?layout=square: square card for the website pop-up. Everything scales with the frame (vmin). */
-  html.sq body { padding:0; }
-  html.sq .banner { flex-direction:column-reverse; width:100vw; height:100vh; min-height:0; max-width:none; border-radius:4vmin; background:var(--ink); }
-  html.sq .deal { flex:1 1 auto; position:relative; flex-direction:column; align-items:flex-start; justify-content:center; padding:6vmin 7vmin; gap:0; }
-  html.sq .deal img { position:absolute; right:-1vmin; bottom:-1vmin; width:42vmin; height:46vmin; margin:0; }
-  html.sq .dtxt { position:relative; gap:2.8vmin; }
-  html.sq .label { font-size:3.3vmin; white-space:nowrap; }
-  html.sq .off { font-size:6.4vmin; line-height:1.05; }
-  html.sq .off b { display:block; font-size:13.5vmin; line-height:1; letter-spacing:-.02em; white-space:nowrap; }
-  html.sq .coderow { flex-direction:column; align-items:flex-start; flex-wrap:nowrap; gap:2.4vmin; }
-  html.sq .code { height:10.5vmin; padding:0 3.6vmin; border-width:.5vmin; border-radius:2.4vmin; font-size:5.2vmin; }
-  html.sq .copy { height:10.5vmin; padding:0 5vmin; font-size:4.3vmin; }
-  html.sq .shopnow { display:inline-block; font-size:3.8vmin; font-weight:700; color:#f8dacd; text-decoration:none; border-bottom:.3vmin solid rgba(248,218,205,.45); }
-  html.sq .shopnow:hover { color:#fff; border-color:#fff; }
-  html.sq .made { flex:none; gap:3.4vmin; padding:3.2vmin 6vmin; background:#e6f1e1; }
-  html.sq .duo { display:flex; }
-  html.sq .duo span { width:9vmin; height:9vmin; font-size:3.6vmin; }
-  html.sq .duo .t { margin-left:-2.4vmin; }
-  html.sq .eyebrow { font-size:2.6vmin; }
-  html.sq .txt { gap:.8vmin; }
-  html.sq .txt h2 { font-size:3.9vmin; line-height:1.2; }
-  html.sq .txt p { display:none; }
   @media (prefers-reduced-motion:reduce) { .deal img { animation:none; } }
 </style>
 </head>
@@ -107,46 +83,23 @@
         <span class="code" id="code"></span>
         <button type="button" class="copy" id="copy">Copy code</button>
       </div>
-      <a class="shopnow" href="https://www.mandarinzest.com/shop" target="_blank" rel="noopener">Browse the shop ↗</a>
     </div>
   </div>
 </section>
 <script>
-  // ═══ OFFERS: the first one whose dates include today (Taiwan time) is shown. ═══
-  // from / until are dates in Taiwan time, both days included. The REGULAR offer is shown when no seasonal one is running.
-  // For a new celebration: add a line at the top with its code, label, discount, dates and a picture in the shop/ folder.
-  var OFFERS = [
-    { label:"Halloween sale · ends 31 October", short:"Halloween · ends 31 Oct", off:"30% off", code:"HALLOWEEN26",
-      img:"shop/mascot-halloween.png", alt:"Mandarin Zest mascot dressed as a witch with a black cat", from:"2026-10-01", until:"2026-10-31" }
-  ];
-  var REGULAR = { label:"Shop offer", short:"Shop offer", off:"10% off", code:"WELCOME01",
-      img:"shop/mascot-reading.png", alt:"Mandarin Zest mascot reading a book" };
-
-  // today's date in Taiwan (UTC+8), as YYYY-MM-DD; ?date=2026-11-02 previews another day
-  var q = new URLSearchParams(location.search).get("date");
-  var today = /^\d{4}-\d{2}-\d{2}$/.test(q || "") ? q : new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
-  var o = OFFERS.filter(function (x) { return x.from <= today && today <= x.until; })[0] || REGULAR;
-
-  var SQ = new URLSearchParams(location.search).get("layout") === "square";
-  if (SQ) document.documentElement.className = "sq";
-  var phone = matchMedia(SQ ? "(max-width:0px)" : "(max-width:900px)");
+  // ?layout=square was the first pop-up version: send it to the pop-up widget
+  if (new URLSearchParams(location.search).get("layout") === "square") location.replace("shop-popup.html" + location.search.replace(/[?&]layout=square/, "").replace(/^&/, "?"));
+</script>
+<script src="shop/offers.js"></script>
+<script>
+  var o = OFFER;
+  var phone = matchMedia("(max-width:900px)");
   function label() { document.getElementById("label").textContent = phone.matches ? o.short : o.label; }
   label(); phone.addEventListener ? phone.addEventListener("change", label) : phone.addListener(label);
   document.getElementById("off").innerHTML = "<b>" + o.off + "</b> the entire shop";
   document.getElementById("code").textContent = o.code;
   var img = document.getElementById("img"); img.src = o.img; img.alt = o.alt;
-
-  document.getElementById("copy").addEventListener("click", function () {
-    var btn = this;
-    function ok() { btn.textContent = "Copied ✓"; btn.classList.add("done"); setTimeout(function () { btn.textContent = "Copy code"; btn.classList.remove("done"); }, 2200); }
-    function fallback() {
-      var t = document.createElement("textarea"); t.value = o.code; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
-      document.body.appendChild(t); t.select();
-      try { document.execCommand("copy"); ok(); } catch (e) { var r = document.createRange(); r.selectNodeContents(document.getElementById("code")); getSelection().removeAllRanges(); getSelection().addRange(r); }
-      t.remove();
-    }
-    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(o.code).then(ok, fallback); else fallback();
-  });
+  document.getElementById("copy").addEventListener("click", function () { mzCopy(this, o.code); });
 </script>
 </body>
 </html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest shop offer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Website pop-up card: current offer + code (top), three materials (middle), how they're made + shop button (bottom).
+     A fixed 4:5 shape that scales with the frame width (all sizes in vw). Offers: shop/offers.js (shared with
+     shop-banner.html). Products: PRODUCTS below. Embed: see README (aspect-ratio 4/5). */
+  :root { --ink:#2a2420; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; overflow:hidden; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; }
+  .card { width:100vw; height:125vw; border-radius:4.5vw; overflow:hidden; display:flex; flex-direction:column; background:#fffaf6; }
+
+  /* offer */
+  .deal { position:relative; flex:0 0 49vw; background:var(--ink); color:#fff; padding:6vw 6.5vw 0; overflow:hidden; }
+  .label { font-size:3.1vw; font-weight:800; letter-spacing:.09em; color:#f8b48f; text-transform:uppercase; white-space:nowrap; }
+  .off { margin-top:2.2vw; font-size:5.6vw; font-weight:800; line-height:1.05; }
+  .off b { display:block; font-size:13vw; line-height:1; color:var(--orange); letter-spacing:-.02em; white-space:nowrap; }
+  .coderow { display:flex; align-items:center; gap:2.2vw; margin-top:4vw; position:relative; z-index:2; }
+  .code { display:inline-flex; align-items:center; height:10vw; padding:0 3.2vw; border:.5vw dashed var(--orange); border-radius:2.2vw; font-size:4.6vw; font-weight:800; letter-spacing:.06em; user-select:all; background:rgba(42,36,32,.6); }
+  .copy { height:10vw; padding:0 4vw; border:0; border-radius:999px; background:var(--orange); color:var(--ink); font:inherit; font-size:3.9vw; font-weight:800; cursor:pointer; white-space:nowrap; transition:background .2s; }
+  .copy:hover { background:var(--orange-d); } .copy.done { background:#9fd89f; }
+  .copy:focus-visible { outline:.7vw solid #f8b48f; outline-offset:.5vw; }
+  .mascot { position:absolute; right:-3vw; bottom:-1vw; width:37vw; height:40vw; object-fit:contain; object-position:100% 100%;
+            animation:wave 3.6s ease-in-out infinite; transform-origin:50% 90%; }
+  @keyframes wave { 0%,100% { transform:rotate(-3deg); } 50% { transform:rotate(3deg) translateY(-1vw); } }
+
+  /* materials */
+  .mats { flex:1 1 auto; padding:4.6vw 5vw 0; display:flex; flex-direction:column; gap:2.6vw; }
+  .mats h3 { margin:0; font-size:3vw; font-weight:800; letter-spacing:.09em; color:#a8431a; }
+  .row { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:3vw; }
+  .p { display:flex; flex-direction:column; gap:1.4vw; text-decoration:none; color:var(--ink); }
+  .p img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:2.4vw; box-shadow:0 1vw 2.6vw rgba(42,36,32,.14); transition:transform .25s; }
+  .p:hover img { transform:translateY(-.8vw) rotate(-1deg); }
+  .p span { font-size:3.2vw; font-weight:700; line-height:1.2; }
+
+  /* how they're made + shop */
+  .made { flex:none; display:flex; align-items:center; gap:3vw; padding:3.4vw 5vw; background:#e6f1e1; }
+  .duo { flex:none; display:flex; }
+  .duo span { width:8.4vw; height:8.4vw; border-radius:50%; display:grid; place-items:center; font-size:3.4vw; font-weight:800; }
+  .duo .s { background:#fff; color:var(--green); } .duo .t { background:#f8dacd; color:#a8431a; margin-left:-2.2vw; }
+  .made p { margin:0; flex:1; font-size:3.25vw; font-weight:700; line-height:1.25; }
+  .shop { flex:none; display:inline-flex; align-items:center; height:10vw; padding:0 3.8vw; border-radius:999px; background:var(--green); color:#fff; font-size:3.5vw; font-weight:800; text-decoration:none; white-space:nowrap; }
+  .shop:hover { background:#155a15; }
+  @media (prefers-reduced-motion:reduce) { .mascot { animation:none; } }
+</style>
+</head>
+<body>
+<section class="card" aria-label="Mandarin Zest shop offer">
+  <div class="deal">
+    <div class="label" id="label"></div>
+    <div class="off" id="off"></div>
+    <div class="coderow">
+      <span class="code" id="code"></span>
+      <button type="button" class="copy" id="copy" aria-label="Copy the code">Copy</button>
+    </div>
+    <img class="mascot" id="img" src="" alt="">
+  </div>
+  <div class="mats">
+    <h3>OUR MATERIALS</h3>
+    <div class="row" id="row"></div>
+  </div>
+  <div class="made">
+    <div class="duo" aria-hidden="true"><span class="s">学</span><span class="t">师</span></div>
+    <p>Built by advanced learners, checked by professional native teachers</p>
+    <a class="shop" href="https://www.mandarinzest.com/shop" target="_blank" rel="noopener">Shop now ↗</a>
+  </div>
+</section>
+<script src="shop/offers.js"></script>
+<script>
+  // ═══ PRODUCTS: three materials shown in the pop-up (picture in shop/, name, link) ═══
+  var PRODUCTS = [
+    { img:"shop/p-hsk13.jpg", name:"HSK 1–3 Bundle", url:"https://www.mandarinzest.com/shop" },
+    { img:"shop/p-hsk1.jpg", name:"HSK 1 Bundle", url:"https://www.mandarinzest.com/shop/hsk-1-complete-learning-bundle-16" },
+    { img:"shop/p-characters.jpg", name:"Characters Guide", url:"https://www.mandarinzest.com/shop/textbooks-3/unlocking-chinese-characters-a-guide-on-understanding-the-chinese-writing-system-26" }
+  ];
+  var o = OFFER;
+  document.getElementById("label").textContent = o.label;
+  document.getElementById("off").innerHTML = "<b>" + o.off + "</b>the entire shop";
+  document.getElementById("code").textContent = o.code;
+  var img = document.getElementById("img"); img.src = o.img; img.alt = o.alt;
+  document.getElementById("copy").addEventListener("click", function () { var b = this; mzCopy(b, o.code); setTimeout(function () { if (b.textContent === "Copy code") b.textContent = "Copy"; }, 2300); });
+  document.getElementById("row").innerHTML = PRODUCTS.map(function (p) {
+    return '<a class="p" href="' + p.url + '" target="_blank" rel="noopener"><img src="' + p.img + '" alt="' + p.name + '"><span>' + p.name + '</span></a>';
+  }).join("");
+</script>
+</body>
+</html>

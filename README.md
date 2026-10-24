@@ -312,10 +312,13 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 ## Shop banner (above the products)
 
 - `shop-banner.html` + `shop/`: "Built by advanced learners, checked by professional native teachers" on the left, the current
-  discount on the right (mascot, "30% off the entire shop", dashed code, "Copy code" button). OFFERS list at the bottom:
+  discount on the right (mascot, "30% off the entire shop", dashed code, "Copy code" button). OFFERS in `shop/offers.js`:
   each offer has from/until dates (Taiwan time, both days included); outside them the REGULAR offer shows (WELCOME01, 10%).
   Halloween: HALLOWEEN26, 30%, until 31 Oct 2026. Preview another day with `?date=2026-11-01`.
   Mascot pictures: white-outlined PNGs in `shop/`.
   Embed: `height:max(150px, min(250px, calc((680px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.
-- Website pop-up: `shop-banner.html?layout=square` (square card, same offers, + "Browse the shop ↗"). Scales with the frame.
-  Embed: `width:100%;max-width:440px;aspect-ratio:1/1;border:0;display:block;margin:0 auto`, `scrolling="no"`, `allow="clipboard-write"`.
+- Offers (codes, dates, mascots) live in `shop/offers.js`, shared by the strip and the pop-up.
+- Website pop-up: `shop-popup.html`: offer + code + Copy (top, dark, mascot), "Our materials" with three covers
+  (PRODUCTS in the file: `shop/p-*.jpg`, cut from the shop page), "Built by advanced learners, checked by professional
+  native teachers" + "Shop now ↗" (bottom). Fixed 4:5 shape that scales with the frame. (`shop-banner.html?layout=square` redirects here.)
+  Embed: `width:100%;max-width:440px;aspect-ratio:4/5;border:0;display:block;margin:0 auto`, `scrolling="no"`, `allow="clipboard-write"`.
