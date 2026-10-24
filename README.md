@@ -308,3 +308,12 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - `purchase`: writing sheets (when the tool sees the payment); Club and trial through the Stripe redirect
   `?mzp=club-monthly|club-yearly|trial&sid={CHECKOUT_SESSION_ID}` on a mandarinzest.com page
 - `hsk_test_complete` (hsk_level, score), `writing_sheet_made`
+
+## Shop banner (above the products)
+
+- `shop-banner.html` + `shop/`: "Built by advanced learners, checked by professional native teachers" on the left, the current
+  discount on the right (mascot, "30% off the entire shop", dashed code, "Copy code" button). OFFERS list at the bottom:
+  each offer has from/until dates (Taiwan time, both days included); outside them the REGULAR offer shows (WELCOME01, 10%).
+  Halloween: HALLOWEEN26, 30%, until 31 Oct 2026. Preview another day with `?date=2026-11-01`.
+  Mascot pictures: white-outlined PNGs in `shop/`.
+  Embed: `height:max(150px, min(250px, calc((680px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.
