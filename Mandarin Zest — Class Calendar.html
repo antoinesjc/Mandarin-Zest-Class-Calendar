@@ -121,6 +121,13 @@
   .earlier { font-family: inherit; font-size: 14px; font-weight: 700; color: var(--muted); background: #faf6f3; border: 1.5px dashed #e3d3c9; border-radius: 12px; padding: 10px; cursor: pointer; }
   .lday.hidden { display: none; }
 
+  /* desktop: Calendar / List switch (phones always use the list) */
+  .views { display: inline-flex; background: #f3ece7; border-radius: 999px; padding: 3px; gap: 2px; }
+  .views button { font-family: inherit; font-size: 14px; font-weight: 700; border: 0; background: transparent; color: var(--muted); padding: 7px 14px; border-radius: 999px; cursor: pointer; min-height: 36px; }
+  .views button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(42,36,32,.15); }
+  body.force-list .grid { display: none; }
+  body.force-list .list { display: flex; }
+  body.force-list .pop { display: none !important; }
   @media (max-width: 1000px) {
     .month { font-size: 26px; min-width: 180px; }
     .card .title { font-size: 12.5px; } .card .time { font-size: 13.5px; }
@@ -131,6 +138,7 @@
     .nav { width: 100%; justify-content: space-between; }
     .month { font-size: 23px; min-width: 0; }
     .today-btn { display: none; }
+    .views { display: none; }
     .tz { width: 100%; justify-content: space-between; }
     .tz #tzLabel { font-size: 13px; }
     .tz select { max-width: 60%; }
@@ -163,6 +171,7 @@
       <div class="month" id="monthName" aria-live="polite">October 2026</div>
       <button class="round" id="nextBtn" aria-label="Next month">›</button>
       <button class="today-btn" id="todayBtn">Today</button>
+      <span class="views" role="group" aria-label="View"><button type="button" id="viewCal" aria-pressed="true">Calendar</button><button type="button" id="viewList" aria-pressed="false">List</button></span>
     </div>
     <label class="tz">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -376,7 +385,22 @@ function render() {
 /* ---------- details: hover / focus / tap ---------- */
 const pop = $("pop");
 let popFor = null, hideTimer = null;
-const isList = () => window.matchMedia("(max-width: 700px)").matches;
+const isList = () => window.matchMedia("(max-width: 700px)").matches || document.body.classList.contains("force-list");
+// Calendar / List switch on computers. Start view: ?view=list in the embed URL, else the visitor's last choice.
+function setView(v) {
+  document.body.classList.toggle("force-list", v === "list");
+  $("viewCal").setAttribute("aria-pressed", String(v !== "list"));
+  $("viewList").setAttribute("aria-pressed", String(v === "list"));
+  try { localStorage.setItem("mzCalView", v); } catch (e) {}
+  if (typeof hidePop === "function") hidePop();
+}
+$("viewCal").addEventListener("click", () => setView("cal"));
+$("viewList").addEventListener("click", () => setView("list"));
+(function () {
+  let v = new URLSearchParams(location.search).get("view");
+  if (!v) { try { v = localStorage.getItem("mzCalView"); } catch (e) {} }
+  if (v === "list") setView("list");
+})();
 
 function showPop(card) {
   clearTimeout(hideTimer);

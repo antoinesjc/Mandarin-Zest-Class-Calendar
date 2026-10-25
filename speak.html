@@ -111,16 +111,31 @@
       <p class="lead">The fix is simple: speak every week, with real people. The Club gives you <b>20+ live speaking sessions a month</b>, at US-friendly times, for about <b>$1 a session</b>.</p>
       <span class="offer">LIMITED OFFER · 20% OFF <span><s data-cfg="was">US$25</s> <b data-cfg="now">US$20</b>/month</span></span>
       <div class="ctas">
-        <a class="btn" data-cta="join" href="#" target="_blank" rel="noopener">Join the Club · <span><span data-cfg="now">US$20</span>/month</span> →</a>
-        <a class="link" data-cta="trial" href="#" target="_blank" rel="noopener">Or try one session first ($2.50) ↗</a>
+        <a class="btn" href="#sessions" data-scroll="sessions">Try a live session · $2.50 ↓</a>
+        <a class="link" data-cta="join" href="#" target="_blank" rel="noopener">Or join the Club now · <span data-cfg="now">US$20</span>/month ↗</a>
       </div>
-      <div class="fine"><span>Cancel anytime</span><span>No contract, no commitment</span><span>Onboarding call included</span></div>
+      <div class="fine"><span>One trial session, no subscription</span><span>Pick any session that fits your level</span></div>
     </div>
     <div class="visual">
       <iframe src="call-scene.html" title="A live Mandarin Zest Club session" scrolling="no" style="width:100%;max-width:500px;aspect-ratio:520/432;border:0;display:block"></iframe>
     </div>
   </div>
 </div>
+
+<!-- SESSIONS: trial booking first, then the full schedule -->
+<section id="sessions" style="background:var(--peach-l);padding:48px 0">
+  <div class="wrap">
+    <span class="eyebrow">Step 1 · Try it</span>
+    <h2 style="margin-top:6px">Book a trial session for $2.50</h2>
+    <p class="lead" style="margin-top:8px">Pick a session, join on Google Meet and speak. Times are shown in your own time zone.</p>
+  </div>
+  <iframe src="trial.html?v=6" data-fit title="Upcoming trial sessions" scrolling="no" style="width:100%;max-width:1120px;margin:16px auto 0;border:0;display:block;height:460px"></iframe>
+  <div class="wrap" style="margin-top:36px">
+    <span class="eyebrow">All sessions</span>
+    <h2 style="margin-top:6px;font-size:clamp(24px,3vw,32px)">20+ live sessions every month</h2>
+  </div>
+  <iframe src="Mandarin%20Zest%20%E2%80%94%20Class%20Calendar.html?v=2" data-fit title="Mandarin Zest Club session calendar" scrolling="no" style="width:100%;max-width:1120px;margin:12px auto 0;border:0;display:block;height:1060px"></iframe>
+</section>
 
 <!-- PRESS -->
 <div class="press">
@@ -228,6 +243,21 @@ document.querySelectorAll('[data-cta]').forEach(function (a) {
                              : ['ViewContent', { content_name: 'Trial session page' }];
     try { window.top.postMessage({ mz: 'track', event: ev[0], params: ev[1] }, '*'); } catch (e) {}
   });
+});
+
+// "Try a live session" scrolls the visitor's page (not just this frame) down to the sessions.
+document.querySelectorAll('[data-scroll]').forEach(function (a) {
+  a.addEventListener('click', function (e) {
+    var el = document.getElementById(a.getAttribute('data-scroll')); if (!el) return;
+    e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+// Same-site frames (trial cards) take the height of their content.
+function fitFrame(f) { try { var h = Math.ceil(f.contentDocument.body.getBoundingClientRect().height); if (h > 50) f.style.height = h + 'px'; } catch (e) {} }
+document.querySelectorAll('iframe[data-fit]').forEach(function (f) {
+  function hook() { fitFrame(f); try { new ResizeObserver(function () { fitFrame(f); }).observe(f.contentDocument.body); } catch (e) {} }
+  f.addEventListener('load', hook);
+  if (f.contentDocument && f.contentDocument.readyState === 'complete') hook();
 });
 
 // Tell the Odoo page how tall this page is, so its frame always fits (listener in Odoo's <head> code).
