@@ -340,3 +340,12 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - The PDFs are listed in `downloads/free-pdfs.js` (title, text, file, cover). PDFs and covers live in `downloads/hsk/`
   (cover = page 1 rendered as JPG). Now: `hsk-1`. `hsk-pdfs.html` (all lists) links to the same files.
 - Embed: `height:max(265px, min(410px, calc((640px - 100vw) * 10000)))`, `scrolling="no"`.
+
+## Dorota's free guide (email for PDF)
+
+- `dorota-guide.html`: "Chinese learning advice I wish someone gave me 10 years ago" (15-page PDF by Dorota). Cream card with
+  pink circle (guide's look), floating cover; inside pages (p2–p4) fan out from behind on hover (phones: a peek every few
+  seconds, and on tap). Lessons as tags, Dorota's photo + line, email + consent → Start Here sheet (source
+  `free-pdf | dorota-guide`) → "Download the guide", Club trial link, Instagram @dorota_bolan.
+  Files in `downloads/guides/` (PDF, dorota-p1–p4.jpg rendered from the PDF, avatar).
+  Embed: `height:max(345px, min(470px, calc((800px - 100vw) * 10000)))`, `scrolling="no"`.

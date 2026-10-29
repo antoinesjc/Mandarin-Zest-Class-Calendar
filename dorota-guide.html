@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free guide by Dorota · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@900&display=swap" rel="stylesheet">
+<style>
+  /* Dorota's free guide "Chinese learning advice I wish someone gave me 10 years ago" for an email.
+     Email + consent → Start Here sheet (source "free-pdf | dorota-guide") → download button.
+     Files: downloads/guides/ (PDF, cover p1, inside pages p2–p4, avatar). The cover floats; inside pages fan out
+     from behind on hover (on phones: now and then, and on tap). Embed height: see README. */
+  :root { --ink:#231f20; --pink:#b8325f; --pink-d:#8f2449; --blush:#f2c6d1; --cream:#f8f6f2; --muted:#4a4446; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:4px; }
+  .card { position:relative; overflow:hidden; max-width:860px; margin:0 auto; background:var(--cream); border-radius:22px; padding:30px 34px; display:flex; gap:40px; align-items:center; }
+  .blob { position:absolute; left:-90px; top:-110px; width:360px; height:360px; border-radius:50%; background:var(--blush); pointer-events:none; }
+
+  /* guide: floating cover + pages behind it */
+  .guide { flex:none; position:relative; width:170px; height:240px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .float { position:absolute; inset:0; animation:float 4.8s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-8px) rotate(-1.5deg); } }
+  .pg { position:absolute; left:14px; top:12px; width:150px; height:212px; border-radius:7px; object-fit:cover; background:#fff;
+        box-shadow:0 8px 18px rgba(35,31,32,.16); transition:transform .55s cubic-bezier(.2,.9,.25,1.15); }
+  .pg1 { transform:rotate(4deg); } .pg2 { transform:rotate(-2deg); } .pg3 { transform:rotate(7deg); }
+  .cover { position:absolute; left:0; top:0; width:170px; height:240px; border-radius:10px; object-fit:cover; box-shadow:0 14px 30px rgba(35,31,32,.22);
+           transition:transform .5s cubic-bezier(.2,.9,.25,1.1); }
+  .open .pg1 { transform:translate(-28px, 6px) rotate(-14deg); }
+  .open .pg2 { transform:translate(34px, -16px) rotate(9deg); transition-delay:.05s; }
+  .open .pg3 { transform:translate(38px, 26px) rotate(17deg); transition-delay:.1s; }
+  .open .cover { transform:translate(-12px, 4px) rotate(-4deg) scale(.97); }
+  @media (hover:hover) { .guide:hover .pg1 { transform:translate(-28px, 6px) rotate(-14deg); }
+    .guide:hover .pg2 { transform:translate(34px, -16px) rotate(9deg); transition-delay:.05s; }
+    .guide:hover .pg3 { transform:translate(38px, 26px) rotate(17deg); transition-delay:.1s; }
+    .guide:hover .cover { transform:translate(-12px, 4px) rotate(-4deg) scale(.97); } }
+  .badge { position:absolute; right:-14px; bottom:10px; z-index:3; background:#fff; border-radius:999px; padding:6px 12px; font-family:'Montserrat',sans-serif;
+           font-size:12px; font-weight:700; box-shadow:0 6px 14px rgba(35,31,32,.14); white-space:nowrap; transition:opacity .3s; }
+  .tick { position:absolute; right:-12px; top:-10px; z-index:3; width:46px; height:46px; border-radius:50%; background:var(--pink); display:none; place-items:center; box-shadow:0 6px 14px rgba(184,50,95,.35); }
+  .done .tick { display:grid; } .done .badge { opacity:0; }
+
+  .main { flex:1 1 auto; min-width:0; position:relative; display:flex; flex-direction:column; gap:10px; }
+  .eyebrow { font-family:'Montserrat',sans-serif; font-size:11.5px; font-weight:800; letter-spacing:.16em; color:var(--pink); }
+  h2 { margin:0; font-family:'Montserrat',sans-serif; font-size:23px; font-weight:800; line-height:1.2; }
+  h2 span { color:var(--pink); }
+  h2 .zh { font-family:'Noto Sans SC',sans-serif; font-weight:900; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin:0; padding:0; list-style:none; }
+  .chips li { font-size:13px; font-weight:700; padding:4px 10px; border-radius:999px; background:#fff; }
+  .chips b { color:var(--pink); margin-right:3px; }
+  .who { display:flex; gap:10px; align-items:center; }
+  .who img { width:38px; height:38px; border-radius:50%; object-fit:cover; flex:none; }
+  .who span { font-size:13.5px; line-height:1.35; color:var(--muted); }
+  .who b { color:var(--ink); }
+  form { display:flex; flex-direction:column; gap:8px; margin-top:2px; }
+  .row { display:flex; gap:10px; }
+  input[type=email] { flex:1; min-width:0; height:46px; border:2px solid #eadfe2; border-radius:999px; padding:0 18px; font:inherit; font-size:15px; background:#fff; color:var(--ink); }
+  input[type=email]:focus { outline:none; border-color:var(--pink); }
+  .btn { display:inline-flex; align-items:center; justify-content:center; height:46px; padding:0 22px; border:0; border-radius:999px; background:var(--pink); color:#fff;
+         font:inherit; font-size:15px; font-weight:800; white-space:nowrap; cursor:pointer; text-decoration:none; transition:background .2s, transform .2s; }
+  .btn:hover { background:var(--pink-d); transform:translateY(-1px); }
+  .btn.dark { background:var(--ink); } .btn.dark:hover { background:#000; }
+  .btn:focus-visible, input:focus-visible { outline:3px solid var(--pink); outline-offset:2px; }
+  .consent { display:flex; gap:8px; align-items:flex-start; font-size:12px; line-height:1.4; color:var(--muted); cursor:pointer; }
+  .consent input { width:15px; height:15px; margin:1px 0 0; flex:none; accent-color:var(--pink); }
+  .err { color:#a3261a; font-size:13px; font-weight:700; }
+  .err:empty { display:none; }
+  .trap { position:absolute; left:-5000px; }
+  .after { display:none; flex-direction:column; gap:12px; }
+  .done .after { display:flex; } .done .before { display:none; }
+  .after p { margin:0; font-size:15px; line-height:1.45; color:var(--muted); }
+  .links { display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; }
+  .links a.txt, .who a { font-size:14.5px; font-weight:700; color:var(--pink); }
+  .links a.txt:hover, .who a:hover { color:var(--pink-d); }
+
+  /* phones: cover + title side by side on top, the rest stacked */
+  @media (max-width:760px) {
+    body { padding:2px; }
+    .card { flex-direction:column; align-items:stretch; gap:12px; padding:22px 18px; border-radius:20px; }
+    .blob { left:-70px; top:-90px; width:260px; height:260px; }
+    .top { display:flex; gap:22px; align-items:center; position:relative; }
+    .guide { width:96px; height:136px; margin:4px 6px 4px 2px; }
+    .cover { width:96px; height:136px; border-radius:7px; }
+    .pg { left:8px; top:7px; width:84px; height:119px; border-radius:5px; }
+    .open .pg1, .guide:hover .pg1 { transform:translate(-14px, 6px) rotate(-14deg); }
+    .open .pg2, .guide:hover .pg2 { transform:translate(22px, -8px) rotate(9deg); }
+    .open .pg3, .guide:hover .pg3 { transform:translate(24px, 18px) rotate(17deg); }
+    .open .cover, .guide:hover .cover { transform:translate(-6px, 2px) rotate(-4deg) scale(.97); }
+    .badge { display:none; }
+    .tick { width:30px; height:30px; right:-8px; top:-8px; } .tick svg { width:16px; height:16px; }
+    .eyebrow { font-size:10.5px; letter-spacing:.14em; }
+    h2 { font-size:18px; }
+    .chips li { font-size:12.5px; padding:4px 9px; }
+    .who span { font-size:13px; } .who .cred { display:none; }
+    .row { flex-direction:column; } .row input[type=email] { flex:none; height:48px; } .btn { height:48px; }
+    .head-desk { display:none; }
+  }
+  .head-phone { position:relative; z-index:2; }
+  @media (min-width:761px) { .top { display:contents; } .head-phone { display:none; } }
+  @media (prefers-reduced-motion:reduce) { .float { animation:none; } .pg, .cover { transition:none; } }
+</style>
+</head>
+<body>
+<section class="card" id="card" aria-labelledby="ttl">
+  <div class="blob" aria-hidden="true"></div>
+  <div class="top">
+    <div class="guide" id="guide" role="img" aria-label="Cover and pages of the guide">
+      <div class="float">
+        <img class="pg pg1" src="downloads/guides/dorota-p2.jpg" alt="">
+        <img class="pg pg2" src="downloads/guides/dorota-p3.jpg" alt="">
+        <img class="pg pg3" src="downloads/guides/dorota-p4.jpg" alt="">
+        <img class="cover" src="downloads/guides/dorota-p1.jpg" alt="">
+        <span class="badge">15 pages · PDF</span>
+        <span class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      </div>
+    </div>
+    <div class="head-phone">
+      <div class="eyebrow" data-eb>FREE GUIDE · BY DOROTA</div>
+      <h2 data-h>Chinese learning advice I wish someone gave me <span>10 years ago</span></h2>
+    </div>
+  </div>
+  <div class="main">
+    <div class="head-desk">
+      <div class="eyebrow" data-eb>FREE GUIDE · BY DOROTA</div>
+      <h2 id="ttl" data-h style="margin-top:10px">Chinese learning advice I wish someone gave me <span>10 years ago</span></h2>
+    </div>
+    <div class="before">
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <ul class="chips" aria-label="The 5 lessons">
+          <li><b>01</b>Tones</li><li><b>02</b>Characters</li><li><b>03</b>Listening</li><li><b>04</b>HSK</li><li><b>05</b>Community</li>
+        </ul>
+        <div class="who"><img src="downloads/guides/dorota-avatar.png" alt="Dorota"><span>5 lessons from 10 years of learning, studying and interpreting Chinese.<b class="cred"> NTU graduate, Chinese–Polish interpreter.</b></span></div>
+        <form id="form" novalidate>
+          <div class="row">
+            <input type="email" id="email" placeholder="Your email" autocomplete="email" aria-label="Your email">
+            <button class="btn" type="submit">Send me the guide ↓</button>
+          </div>
+          <label class="consent"><input type="checkbox" id="ok">I agree to receive emails from Mandarin Zest. I can unsubscribe at any time.</label>
+          <input class="trap" type="text" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="err" id="err" role="alert"></div>
+        </form>
+      </div>
+    </div>
+    <div class="after" aria-live="polite">
+      <p>Start with lesson 01 on tones: it makes everything else easier.</p>
+      <div class="links">
+        <a class="btn dark" id="dl" href="downloads/guides/Chinese-Learning-Advice-Dorota-Mandarin-Zest.pdf" download target="_blank" rel="noopener">Download the guide ↓</a>
+        <a class="txt" href="https://www.mandarinzest.com/mandarin-zest-club-trial-session" target="_blank" rel="noopener">Speak with Dorota in the Club ↗</a>
+      </div>
+      <div class="who"><img src="downloads/guides/dorota-avatar.png" alt=""><span>More tips from Dorota on Instagram: <a href="https://www.instagram.com/dorota_bolan/" target="_blank" rel="noopener">@dorota_bolan ↗</a></span></div>
+    </div>
+  </div>
+</section>
+<script>
+  var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
+  var ID = "dorota-guide", KEY = "mz-free-pdf-" + ID;
+  var card = document.getElementById("card"), guide = document.getElementById("guide");
+
+  function setDone() {
+    card.classList.add("done");
+    document.querySelectorAll("[data-eb]").forEach(function (e) { e.textContent = "YOU'RE IN"; });
+    document.querySelectorAll("[data-h]").forEach(function (e) { e.innerHTML = 'Your guide is ready. <span class="zh">加油！</span>'; });
+  }
+  try { if (localStorage.getItem(KEY) === "1") setDone(); } catch (e) {}
+
+  // pages: tap to fan out (phones), and a peek now and then where there is no mouse
+  guide.addEventListener("click", function () { guide.classList.toggle("open"); });
+  if (!matchMedia("(hover:hover)").matches && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
+    setInterval(function () { guide.classList.add("open"); setTimeout(function () { guide.classList.remove("open"); }, 1800); }, 6000);
+  }
+
+  document.getElementById("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("email").value.trim(), err = document.getElementById("err");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please enter a valid email."; return; }
+    if (!document.getElementById("ok").checked) { err.textContent = "Please tick the box to get the guide."; return; }
+    err.textContent = "";
+    if (!document.getElementById("website").value) {
+      fetch(SHEET_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" },
+        body: JSON.stringify({ email: email, source: "free-pdf | " + ID, timestamp: new Date().toISOString() }) }).catch(function () {});
+      try { window.top.postMessage({ mz: "track", event: "Lead", params: { content_name: "Dorota's guide" }, ga: { event: "generate_lead", params: { form: "free-pdf", pdf: ID } } }, "*"); } catch (e2) {}
+    }
+    try { localStorage.setItem(KEY, "1"); } catch (e3) {}
+    setDone();
+    guide.classList.add("open"); setTimeout(function () { guide.classList.remove("open"); }, 1600);
+  });
+</script>
+</body>
+</html>
