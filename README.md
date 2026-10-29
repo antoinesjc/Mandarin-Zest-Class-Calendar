@@ -39,7 +39,8 @@ Host: Dorota
   `Listening`, `Reading`, `Vocabulary`, `No agenda`, separated by commas. The first one sets the colour.
 - **Host**: shown on the session on the website ("with Dorota") and in its details.
 - Labels and colours: `categories.js` (shared by the calendar, the trial widget and the next-session strip).
-- No `Level:` line? It is guessed from the title ("Advanced…", or an HSK range like `(HSK 3-4)`), else All levels.
+- No `Level:` line? It is guessed from the title ("Advanced…", or an HSK range like `(HSK 3-4)`), else no level is shown.
+  "All levels" means anyone can join, so it only appears when a host writes `Level: All levels`.
   No `Category:` line? It is guessed from title words (vocab, reading, listening, character, grammar, book club,
   food/holiday/geography → Culture, TopicTBD → No agenda), else Conversation.
 - Visitors filter by level and category above the calendar. A page can open it pre-filtered:

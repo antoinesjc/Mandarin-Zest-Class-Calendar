@@ -162,7 +162,7 @@ def clean_title(raw: str):
 
 
 def parse_level(desc: str, title: str, hsk: str, tags: set) -> str:
-    """Level line > a level word in the title or a #tag > the HSK range in the title > All levels."""
+    """Level line > a level word in the title or a #tag > the HSK range in the title > none (blank)."""
     m = LEVEL_LINE_RE.search(desc)
     if m:
         low = m.group(1).strip().lower().rstrip(".")
@@ -180,7 +180,8 @@ def parse_level(desc: str, title: str, hsk: str, tags: set) -> str:
     if nums:
         mid = (min(nums) + max(nums)) / 2
         return "Beginner" if mid <= 2.5 else "Intermediate" if mid <= 4 else "Advanced"
-    return "All levels"
+    # Unknown: no level shown. "All levels" means anyone can join, so it is only set on purpose.
+    return ""
 
 
 def parse_categories(desc: str, title: str, tags: set) -> list:

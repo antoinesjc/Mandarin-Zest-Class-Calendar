@@ -325,7 +325,8 @@ if (new Date(Date.UTC(todayP.y, todayP.m, todayP.d + 1)).getUTCDate() === 1) { v
 function catsOf(ev) { const k = (ev.cats && ev.cats.length ? ev.cats : [ev.cat]).filter(x => CATEGORIES[x]); return k.length ? k : ["noagenda"]; }
 function catOf(ev) { return CATEGORIES[catsOf(ev)[0]]; }
 
-/* ---------- filters: one level (sessions for "All levels" always match) + any number of categories ---------- */
+/* ---------- filters: one level + any number of categories.
+   "All levels" sessions are open to everyone, so they show whichever level is picked. ---------- */
 const FILTER = { level: "", cats: [] };
 (function () {
   const q = new URLSearchParams(location.search);
@@ -339,7 +340,7 @@ function matches(ev) {
   return true;
 }
 function buildFilters() {
-  $("levelOpts").innerHTML = [["", "All"]].concat(LEVELS.filter(l => l !== "All levels").map(l => [l, l])).map(([v, t]) =>
+  $("levelOpts").innerHTML = [["", "Any level"]].concat(LEVELS.filter(l => l !== "All levels").map(l => [l, l])).map(([v, t]) =>
     `<button type="button" class="fbtn" data-level="${esc(v)}" aria-pressed="${FILTER.level === v}">${esc(t)}</button>`).join("");
   $("catOpts").innerHTML = `<button type="button" class="fbtn" data-cat="" aria-pressed="${!FILTER.cats.length}">All</button>` +
     Object.keys(CATEGORIES).map(k => `<button type="button" class="fbtn" data-cat="${k}" style="--c:${CATEGORIES[k].color}" aria-pressed="${FILTER.cats.indexOf(k) > -1}"><i></i>${esc(CATEGORIES[k].label)}</button>`).join("");
