@@ -391,7 +391,7 @@ function detailsHtml(ev, compact) {
       ? `<button type="button" class="cta trialbtn" data-ref="${esc(trialRef(ev))}">Join as a trial · ${TRIAL_PRICE} ↗</button>`
       : `<a class="cta" href="${esc(trialPayLink(ev))}" target="_blank" rel="noopener">Join as a trial · ${TRIAL_PRICE} ↗</a>`;
   if (ev.trial) h += `<div class="note once-note">☝ Not a member yet? You can join <b>one</b> trial session per person.</div>`;
-  h += `<div class="note">Club members: your link is in the Google Calendar invite.</div>`;
+  h += `<div class="note">Club members: your session link is in the Club app.</div>`;
   return h;
 }
 
