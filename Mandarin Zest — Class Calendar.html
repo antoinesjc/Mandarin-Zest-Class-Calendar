@@ -331,16 +331,17 @@ const FILTER = { level: "", cats: [] };
 (function () {
   const q = new URLSearchParams(location.search);
   const lv = (q.get("level") || "").toLowerCase();
-  FILTER.level = LEVELS.find(l => l.toLowerCase() === lv && l !== "All levels") || "";
+  FILTER.level = LEVELS.find(l => l.toLowerCase() === lv.replace(/[-_+]/g, " ") || (l === "All levels" && lv === "all")) || "";
   FILTER.cats = (q.get("category") || q.get("categories") || "").toLowerCase().split(",").map(x => x.replace(/\s+/g, "")).filter(x => CATEGORIES[x]);
 })();
 function matches(ev) {
+  if (FILTER.level === "All levels" && ev.level !== "All levels") return false;          // only sessions open to everyone
   if (FILTER.level && ev.level && ev.level !== FILTER.level && ev.level !== "All levels") return false;
   if (FILTER.cats.length && !catsOf(ev).some(c => FILTER.cats.indexOf(c) > -1)) return false;
   return true;
 }
 function buildFilters() {
-  $("levelOpts").innerHTML = [["", "Any level"]].concat(LEVELS.filter(l => l !== "All levels").map(l => [l, l])).map(([v, t]) =>
+  $("levelOpts").innerHTML = [["", "Any level"]].concat(LEVELS.map(l => [l, l])).map(([v, t]) =>
     `<button type="button" class="fbtn" data-level="${esc(v)}" aria-pressed="${FILTER.level === v}">${esc(t)}</button>`).join("");
   $("catOpts").innerHTML = `<button type="button" class="fbtn" data-cat="" aria-pressed="${!FILTER.cats.length}">All</button>` +
     Object.keys(CATEGORIES).map(k => `<button type="button" class="fbtn" data-cat="${k}" style="--c:${CATEGORIES[k].color}" aria-pressed="${FILTER.cats.indexOf(k) > -1}"><i></i>${esc(CATEGORIES[k].label)}</button>`).join("");

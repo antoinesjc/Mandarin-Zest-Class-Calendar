@@ -44,7 +44,7 @@ Host: Dorota
   No `Category:` line? It is guessed from title words (vocab, reading, listening, character, grammar, book club,
   food/holiday/geography → Culture, TopicTBD → No agenda), else Conversation.
 - Visitors filter by level and category above the calendar. A page can open it pre-filtered:
-  `…Calendar.html?level=beginner&category=conversation,culture`.
+  `…Calendar.html?level=beginner&category=conversation,culture` (`?level=all-levels` = only sessions open to everyone).
 
 To keep an event off the public calendar, add `#hide` to its title or set
 its visibility to *Private* in Google Calendar. Cancelled events are
