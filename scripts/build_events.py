@@ -5,7 +5,7 @@ private Google Calendar feed.
 
 PRIVACY: the Google Calendar feed contains Google Meet links, descriptions,
 locations and attendee emails. This script copies ONLY an allowlist of
-fields (date, title, level, category, start/end times, and the "Topic:",
+fields (date, title, start/end times, and the "Level:", "Category:", "Topic:",
 "About:" and "Host:" lines a host chooses to write in the description) into
 events.json. Nothing else from the description is ever read.
 Anything that looks like a link is also scrubbed from titles, in case a
@@ -41,18 +41,45 @@ US_TZ = ZoneInfo("America/New_York")
 MONTHS_BACK = 1
 MONTHS_AHEAD = 6
 
-# Category keys must match CATEGORIES in the HTML page.
-# 1) A host can force a category with a tag in the title, e.g. "#advanced".
-# 2) Otherwise the first keyword rule that matches the title wins.
-# 3) Otherwise it is inferred from the HSK level, or falls back to "general".
-CATEGORY_TAGS = {"advanced", "intermediate", "beginner", "native", "character", "general"}
+# LEVELS and CATEGORIES (keys must match categories.js, which holds labels and colours).
+# Hosts set them in the Google Calendar event DESCRIPTION, one line each:
+#     Level: Beginner                      (Beginner, Intermediate, Advanced or All levels)
+#     Category: Conversation, Culture      (one or more, separated by commas)
+#     Host: Dorota
+# Without a Level/Category line, they are guessed from the title (see the rules below).
+LEVELS = ["Beginner", "Intermediate", "Advanced", "All levels"]
+LEVEL_WORDS = {
+    "beginner": "Beginner", "beginners": "Beginner", "elementary": "Beginner", "basic": "Beginner",
+    "intermediate": "Intermediate", "inter": "Intermediate",
+    "advanced": "Advanced",
+    "all": "All levels", "all levels": "All levels", "any": "All levels", "everyone": "All levels", "mixed": "All levels",
+}
+CATEGORIES = ["conversation", "culture", "grammar", "characters", "bookclub", "listening", "reading", "vocabulary", "noagenda"]
+CATEGORY_WORDS = {
+    "conversation": "conversation", "conversations": "conversation", "speaking": "conversation", "talk": "conversation",
+    "culture": "culture", "cultural": "culture",
+    "grammar": "grammar",
+    "characters": "characters", "character": "characters", "hanzi": "characters", "writing": "characters",
+    "book club": "bookclub", "bookclub": "bookclub", "book": "bookclub",
+    "listening": "listening",
+    "reading": "reading",
+    "vocabulary": "vocabulary", "vocab": "vocabulary", "words": "vocabulary",
+    "no agenda": "noagenda", "noagenda": "noagenda", "free talk": "noagenda", "open": "noagenda", "none": "noagenda",
+}
+# Title keywords used only when there is no "Category:" line (several can match).
 KEYWORD_RULES = [
-    ("native", ["native"]),
-    ("advanced", ["advanced"]),
-    ("intermediate", ["intermediate", "hsk review", "listening"]),
-    ("character", ["character", "bopomofo", "zhuyin", "stroke"]),
-    ("beginner", ["beginner", "vocab"]),
+    ("bookclub", ["book club", "bookclub"]),
+    ("characters", ["character", "bopomofo", "zhuyin", "stroke", "hanzi"]),
+    ("grammar", ["grammar"]),
+    ("listening", ["listening", "video comprehension"]),
+    ("reading", ["reading"]),
+    ("vocabulary", ["vocab"]),
+    ("culture", ["culture", "geography", "holiday", "festival", "dumpling", "snack", "food"]),
+    ("noagenda", ["no agenda", "free talk", "topictbd", "topic tbd", "open topic"]),
+    ("conversation", ["conversation", "native", "speaking", "chat"]),
 ]
+LEVEL_LINE_RE = re.compile(r"^\s*level\s*:\s*(.+)$", re.I | re.M)
+CATEGORY_LINE_RE = re.compile(r"^\s*categor(?:y|ies)\s*:\s*(.+)$", re.I | re.M)
 
 URL_RE = re.compile(r"(https?://\S+|www\.\S+|\b[\w.-]+\.(?:com|google\.com|meet|zoom\.us|us|io|net|org)/\S*)", re.I)
 LEVEL_RE = re.compile(r"\(?\s*\b(HSK|TOCFL)\s*(\d)(?:\s*[-–~/]\s*(?:HSK|TOCFL)?\s*(\d))?\s*\)?", re.I)
@@ -71,7 +98,7 @@ TOPIC_RE = re.compile(r"^\s*(?:#trial\b[\s,.:;-]*)?topic\s*:\s*(.+)$", re.I | re
 # up to the first empty line or the next "Something:" line). Only this part is
 # shown in the expanded session on the website. A "Host:" line is shown too.
 ABOUT_RE = re.compile(r"^\s*about\s*:\s*(.*(?:\n(?![ \t]*\n)(?![ \t]*[A-Za-z][\w ]{0,20}:).*)*)", re.I | re.M)
-HOST_RE = re.compile(r"^\s*host(?:ed by)?\s*:\s*(.+)$", re.I | re.M)
+HOST_RE = re.compile(r"^\s*(?:hosts?|hosted by)\s*:\s*(.+)$", re.I | re.M)
 EMAIL_RE = re.compile(r"\S+@\S+\.\S+")
 PHONE_RE = re.compile(r"\+?\d[\d ()./-]{7,}\d")
 
@@ -134,19 +161,48 @@ def clean_title(raw: str):
     return text.strip(), level, tags
 
 
-def pick_category(title: str, level: str, tags: set) -> str:
-    for tag in tags:
-        if tag in CATEGORY_TAGS:
-            return tag
+def parse_level(desc: str, title: str, hsk: str, tags: set) -> str:
+    """Level line > a level word in the title or a #tag > the HSK range in the title > All levels."""
+    m = LEVEL_LINE_RE.search(desc)
+    if m:
+        low = m.group(1).strip().lower().rstrip(".")
+        for word, level in sorted(LEVEL_WORDS.items(), key=lambda x: -len(x[0])):
+            if low.startswith(word):
+                return level
+    for t in tags:
+        if t in LEVEL_WORDS:
+            return LEVEL_WORDS[t]
     low = title.lower()
-    for cat, words in KEYWORD_RULES:
-        if any(w in low for w in words):
-            return cat
-    nums = [int(n) for n in re.findall(r"\d", level)]
+    for word in ("advanced", "intermediate", "beginner"):
+        if word in low:
+            return LEVEL_WORDS[word]
+    nums = [int(n) for n in re.findall(r"\d", hsk)]
     if nums:
-        top = max(nums)
-        return "advanced" if top >= 5 else "intermediate" if top >= 3 else "beginner"
-    return "general"
+        mid = (min(nums) + max(nums)) / 2
+        return "Beginner" if mid <= 2.5 else "Intermediate" if mid <= 4 else "Advanced"
+    return "All levels"
+
+
+def parse_categories(desc: str, title: str, tags: set) -> list:
+    """Category line > #tags > title keywords > conversation."""
+    found = []
+    m = CATEGORY_LINE_RE.search(desc)
+    if m:
+        for part in re.split(r"[,/;&+]|\band\b", m.group(1).lower()):
+            key = CATEGORY_WORDS.get(part.strip().strip(".!"))
+            if key and key not in found:
+                found.append(key)
+    if not found:
+        found = [CATEGORY_WORDS[t] for t in tags if t in CATEGORY_WORDS]
+    if not found:
+        low = title.lower()
+        hits = []
+        for cat, words in KEYWORD_RULES:
+            pos = [low.find(w) for w in words if w in low]
+            if pos:
+                hits.append((min(pos), cat))
+        found = [cat for _, cat in sorted(hits)]   # in the order they appear in the title
+    return found or ["conversation"]
 
 
 def fmt_clock(dt: datetime) -> str:
@@ -214,14 +270,17 @@ def build(ics_bytes: bytes):
         item = {
             "date": day.isoformat(),
             "title": title,
-            "level": level,
-            "cat": pick_category(title, level, tags),
+            "level": "",
+            "cats": [],
             "times": times,
             "start": start_utc,
             "end": end_utc,
             "_sort": sort_key,
         }
         desc = description_text(str(ev.get("DESCRIPTION", "")))
+        item["level"] = parse_level(desc, title, level, tags)
+        item["cats"] = parse_categories(desc, title, tags)
+        item["cat"] = item["cats"][0]
         for key, regex, limit in (("topic", TOPIC_RE, 200), ("about", ABOUT_RE, 600), ("host", HOST_RE, 60)):
             value = find_line(regex, desc, limit)
             if value:

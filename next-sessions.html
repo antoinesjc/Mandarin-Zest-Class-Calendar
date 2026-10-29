@@ -73,16 +73,10 @@
   <span class="label" id="label">Next session</span>
 </div>
 
+<script src="categories.js"></script>
 <script>
 // Same colours as the session calendar.
-const CAT_COLORS = {
-  advanced: "#3f6d5e",
-  intermediate: "#4f7a94",
-  beginner: "#b98a3d",
-  native: "#a63d2f",
-  character: "#7d5a8c",
-  general: "#6b6559",
-};
+const CAT_COLORS = Object.fromEntries(Object.entries(MZ_CATEGORIES).map(([k, c]) => [k, c.color])); // colours: categories.js
 
 const params = new URLSearchParams(location.search);
 const COUNT = Math.min(6, Math.max(1, parseInt(params.get("count"), 10) || 1));
@@ -137,7 +131,7 @@ function render(events) {
   upcoming.forEach(ev => {
     const item = el("div", "session");
     const dot = el("span", "dot");
-    dot.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.general);
+    dot.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.noagenda);
     dot.setAttribute("aria-hidden", "true");
     const text = el("span", "what");
     text.appendChild(el("span", "when", formatWhen(ev)));

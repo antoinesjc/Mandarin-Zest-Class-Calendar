@@ -128,11 +128,14 @@
   .once .x { position: absolute; top: 8px; right: 8px; margin: 0; font-size: 20px; width: 32px; height: 32px; padding: 0; }
   @keyframes oncefade { from { opacity: 0; } }
   @keyframes oncein { from { opacity: 0; transform: translateY(8px) scale(.97); } }
+  .lvl .host { font-weight: 500; }
+  .lvl .host b { font-weight: 700; }
 </style>
 </head>
 <body>
 <div id="root" aria-live="polite"></div>
 
+<script src="categories.js"></script>
 <script>
 // Price and booking link for every trial session. Change them here.
 const PRICE = "US$2.50";
@@ -144,10 +147,7 @@ const SEATS_URL = "https://script.google.com/macros/s/AKfycbyUmZxGz3BZIeQQcp3SbF
 const MAX_SEATS = 6;
 let TAKEN = {};
 
-const CAT_COLORS = {
-  advanced: "#3f6d5e", intermediate: "#4f7a94", beginner: "#b98a3d",
-  native: "#a63d2f", character: "#7d5a8c", general: "#6b6559",
-};
+const CAT_COLORS = Object.fromEntries(Object.entries(MZ_CATEGORIES).map(([k, c]) => [k, c.color])); // colours: categories.js
 
 const params = new URLSearchParams(location.search);
 const COUNT = Math.min(8, Math.max(1, parseInt(params.get("count"), 10) || 8));
@@ -172,10 +172,11 @@ function refOf(ev) {
 }
 function card(ev) {
   const c = el("div", "card");
-  c.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.general);
+  c.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.noagenda);
 
   const top = el("div", "top");
-  top.appendChild(el("span", "lvl", ev.level || "All levels"));
+  const lv = el("span", "lvl", ev.level || "All levels");
+  if (ev.host) { const hs = el("span", "host", " · with "); hs.appendChild(el("b", null, ev.host)); lv.after ? null : 0; top.appendChild(lv); top.lastChild.appendChild(hs); } else top.appendChild(lv);
   const left = Math.max(0, MAX_SEATS - (TAKEN[refOf(ev)] || 0));
   const seats = el("span", "seats" + (left === 0 ? " full" : left <= 2 ? " few" : ""),
     left === 0 ? "Sold out" : left === 1 ? "Last seat!" : `${left} seats left`);

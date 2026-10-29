@@ -24,17 +24,26 @@ settings screen and paste the new one into the GitHub secret.
 
 ## For hosts: how to name sessions
 
-Write the session name with the level in brackets. A leading "MZ Club" is
-removed automatically. For example:
+Give the session a short name (a leading "MZ Club" is removed automatically), then set its
+**level**, **category** and **host** with one line each in the Google Calendar event description:
 
-- `Advanced Chinese (HSK 4-6)`
-- `Vocab + Reading Practice (HSK 1-4)`
-- `Native Teacher Conversation (HSK 3-4)`
+```
+Level: Beginner
+Category: Conversation, Culture
+Host: Dorota
+```
 
-The colour is picked automatically from words in the title (advanced,
-intermediate, beginner, vocab, native, character, bopomofo…) or from the
-HSK level. To force a colour, add a tag: `#advanced`, `#intermediate`,
-`#beginner`, `#native`, `#character` or `#general`.
+- **Level**: `Beginner`, `Intermediate`, `Advanced` or `All levels` (one per session).
+  Visitors who filter on a level also see the "All levels" sessions.
+- **Category**: one or more of `Conversation`, `Culture`, `Grammar`, `Characters`, `Book club`,
+  `Listening`, `Reading`, `Vocabulary`, `No agenda`, separated by commas. The first one sets the colour.
+- **Host**: shown on the session on the website ("with Dorota") and in its details.
+- Labels and colours: `categories.js` (shared by the calendar, the trial widget and the next-session strip).
+- No `Level:` line? It is guessed from the title ("Advanced…", or an HSK range like `(HSK 3-4)`), else All levels.
+  No `Category:` line? It is guessed from title words (vocab, reading, listening, character, grammar, book club,
+  food/holiday/geography → Culture, TopicTBD → No agenda), else Conversation.
+- Visitors filter by level and category above the calendar. A page can open it pre-filtered:
+  `…Calendar.html?level=beginner&category=conversation,culture`.
 
 To keep an event off the public calendar, add `#hide` to its title or set
 its visibility to *Private* in Google Calendar. Cancelled events are
@@ -44,7 +53,7 @@ skipped automatically.
 
 Hovering (or tapping) a session on the website shows its time in the
 visitor's own time zone, plus anything you choose to publish from the
-description. Only these lines are ever read from the description:
+description. Only these lines are ever read from the description (plus `Level:` and `Category:`):
 
 ```
 Topic: Ordering bubble tea like a local

@@ -128,11 +128,35 @@
   body.force-list .grid { display: none; }
   body.force-list .list { display: flex; }
   body.force-list .pop { display: none !important; }
+  /* filters: level + categories */
+  .filters { min-width: 0; max-width: 100%; overflow: hidden; display: flex; flex-direction: column; gap: 8px; margin: 0 0 10px; padding: 10px 14px; background: #faf6f3; border-radius: 16px; }
+  .frow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+  .flabel { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--soft); text-transform: uppercase; min-width: 82px; }
+  .fopts { display: flex; gap: 6px; flex-wrap: wrap; min-width: 0; max-width: 100%; }
+  .fbtn { font-family: inherit; font-size: 13.5px; font-weight: 700; color: var(--ink); background: #fff; border: 1.5px solid #ecdcd2; border-radius: 999px;
+          padding: 4px 12px; min-height: 32px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: background .15s, border-color .15s, color .15s; }
+  .fbtn i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+  .fbtn:hover { border-color: var(--c, var(--orange)); }
+  .fbtn[aria-pressed="true"] { background: var(--c, var(--ink)); border-color: var(--c, var(--ink)); color: #fff; }
+  .fbtn[aria-pressed="true"] i { background: #fff; }
+  .fcount { margin-left: auto; font-size: 13px; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+  .fclear { font-family: inherit; font-size: 13px; font-weight: 700; color: #a8431a; background: none; border: 0; cursor: pointer; text-decoration: underline; padding: 4px; }
+  .card .hostline { font-size: 12px; color: var(--muted); line-height: 1.2; }
+  .card .hostline b { color: var(--ink); font-weight: 700; }
+  .badge.lv { background: #fff; color: var(--ink); border: 1.5px solid #d9c9be; }
+
   @media (max-width: 1000px) {
     .month { font-size: 26px; min-width: 180px; }
     .card .title { font-size: 12.5px; } .card .time { font-size: 13.5px; }
   }
   @media (max-width: 700px) {
+    .filters { padding: 10px; gap: 8px; }
+    .frow { flex-direction: column; align-items: stretch; gap: 5px; }
+    .flabel { min-width: 0; font-size: 11px; }
+    .fopts { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+    .fopts::-webkit-scrollbar { display: none; }
+    .fbtn { white-space: nowrap; font-size: 13px; }
+    .fcount { margin-left: 0; justify-content: space-between; width: 100%; }
     body { padding: 14px 14px 24px; }
     .head { justify-content: center; }
     .nav { width: 100%; justify-content: space-between; }
@@ -180,6 +204,11 @@
     </label>
   </div>
 
+  <div class="filters" id="filters" role="group" aria-label="Filter sessions">
+    <div class="frow"><span class="flabel" id="lvLabel">Level</span><div class="fopts" id="levelOpts" role="group" aria-labelledby="lvLabel"></div><span class="fcount" id="fcount" aria-live="polite"></span></div>
+    <div class="frow"><span class="flabel" id="catLabel">Category</span><div class="fopts" id="catOpts" role="group" aria-labelledby="catLabel"></div></div>
+  </div>
+
   <div class="grid" id="grid"></div>
   <div class="list" id="list"></div>
   <div class="empty-month" id="emptyMsg" style="display:none;">No sessions scheduled yet for this month. Check back soon.</div>
@@ -189,20 +218,16 @@
 
 <div class="pop" id="pop" role="dialog" aria-live="polite"></div>
 
+<script src="categories.js"></script>
 <script>
 /* ============================================================
-   EDIT YOUR COLORS HERE. Change a hex code and the cards and the
-   legend update automatically. The keys must match the categories
-   in scripts/build_events.py.
+   LEVELS AND CATEGORIES: edit categories.js (labels and colours).
+   Hosts choose them per session in the Google Calendar description:
+   "Level: Beginner", "Category: Conversation, Culture", "Host: Dorota".
    ============================================================ */
-const CATEGORIES = {
-  advanced:     { label: "Advanced",        color: "#3f6d5e" },
-  intermediate: { label: "Intermediate",    color: "#4f7a94" },
-  beginner:     { label: "Beginner",        color: "#a8741f" },
-  native:       { label: "Native Teacher",  color: "#a63d2f" },
-  character:    { label: "Character Focus", color: "#7d5a8c" },
-  general:      { label: "Open Topic",      color: "#6b6559" },
-};
+// Levels, categories and their colours live in categories.js (shared with the trial and next-session widgets).
+const CATEGORIES = MZ_CATEGORIES;
+const LEVELS = MZ_LEVELS;
 
 // The orange "Try it" tag on trial sessions (every session unless marked #notrial in Google Calendar) opens this page, in a new tab.
 const TRIAL_URL = "https://www.mandarinzest.com/mandarin-zest-club-trial-session";
@@ -297,7 +322,36 @@ let viewYear = todayP.y, viewMonth = todayP.m;
 // On the last day of the month, open on next month so visitors see what's coming.
 if (new Date(Date.UTC(todayP.y, todayP.m, todayP.d + 1)).getUTCDate() === 1) { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } }
 
-function catOf(ev) { return CATEGORIES[ev.cat] || CATEGORIES.general; }
+function catsOf(ev) { const k = (ev.cats && ev.cats.length ? ev.cats : [ev.cat]).filter(x => CATEGORIES[x]); return k.length ? k : ["noagenda"]; }
+function catOf(ev) { return CATEGORIES[catsOf(ev)[0]]; }
+
+/* ---------- filters: one level (sessions for "All levels" always match) + any number of categories ---------- */
+const FILTER = { level: "", cats: [] };
+(function () {
+  const q = new URLSearchParams(location.search);
+  const lv = (q.get("level") || "").toLowerCase();
+  FILTER.level = LEVELS.find(l => l.toLowerCase() === lv && l !== "All levels") || "";
+  FILTER.cats = (q.get("category") || q.get("categories") || "").toLowerCase().split(",").map(x => x.replace(/\s+/g, "")).filter(x => CATEGORIES[x]);
+})();
+function matches(ev) {
+  if (FILTER.level && ev.level && ev.level !== FILTER.level && ev.level !== "All levels") return false;
+  if (FILTER.cats.length && !catsOf(ev).some(c => FILTER.cats.indexOf(c) > -1)) return false;
+  return true;
+}
+function buildFilters() {
+  $("levelOpts").innerHTML = [["", "All"]].concat(LEVELS.filter(l => l !== "All levels").map(l => [l, l])).map(([v, t]) =>
+    `<button type="button" class="fbtn" data-level="${esc(v)}" aria-pressed="${FILTER.level === v}">${esc(t)}</button>`).join("");
+  $("catOpts").innerHTML = `<button type="button" class="fbtn" data-cat="" aria-pressed="${!FILTER.cats.length}">All</button>` +
+    Object.keys(CATEGORIES).map(k => `<button type="button" class="fbtn" data-cat="${k}" style="--c:${CATEGORIES[k].color}" aria-pressed="${FILTER.cats.indexOf(k) > -1}"><i></i>${esc(CATEGORIES[k].label)}</button>`).join("");
+}
+$("filters").addEventListener("click", e => {
+  const b = e.target.closest(".fbtn, .fclear"); if (!b) return;
+  if (b.classList.contains("fclear")) { FILTER.level = ""; FILTER.cats = []; }
+  else if (b.dataset.level !== undefined) FILTER.level = b.dataset.level;
+  else if (b.dataset.cat === "") FILTER.cats = [];
+  else { const k = b.dataset.cat, i = FILTER.cats.indexOf(k); if (i > -1) FILTER.cats.splice(i, 1); else FILTER.cats.push(k); }
+  buildFilters(); render();
+});
 function tint(hex, a) {
   const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
   const m = c => Math.round(c * a + 255 * (1 - a));
@@ -311,6 +365,7 @@ function cardHtml(ev, withMore) {
   return `<div class="card" tabindex="0" role="button" aria-expanded="false" data-i="${ev.idx}" style="--cat:${c.color};--tint:${tint(c.color, .13)}">
     <span class="time">${esc(ev.time)}</span>
     <span class="title">${esc(ev.title)}</span>
+    ${ev.host ? `<span class="hostline">with <b>${esc(ev.host)}</b></span>` : ""}
     ${chips ? `<span class="chips">${chips}</span>` : ""}
     ${withMore ? `<div class="more">${detailsHtml(ev, true)}</div>` : ""}
   </div>`;
@@ -326,7 +381,8 @@ function detailsHtml(ev, compact) {
   if (!compact && when) h += `<div class="when">${when}</div>`;
   if (ev.topic && !isTopicDup) h += `<div class="topic">${esc(ev.topic)}</div>`;
   if (ev.about) h += `<p class="about">${esc(ev.about)}</p>`;
-  if (ev.host) h += `<div class="host">Host: ${esc(ev.host)}</div>`;
+  if (compact) h += `<div class="row1" style="display:flex;gap:6px;flex-wrap:wrap">${catsOf(ev).map(k => `<span class="badge" style="background:${CATEGORIES[k].color}">${esc(CATEGORIES[k].label)}</span>`).join("")}</div>`;
+  if (ev.host) h += `<div class="host">Host: <b>${esc(ev.host)}</b></div>`;
   if (ev.trial) h += trialFull(ev)
     ? `<span class="cta" style="background:#e9e2dc;color:#8a7d74;pointer-events:none">Trial seats sold out</span>`
     : SEATS_URL
@@ -342,7 +398,7 @@ let SHOWN = [];
 function render() {
   hidePop();
   $("monthName").textContent = `${EN_MONTHS[viewMonth]} ${viewYear}`;
-  const all = localEvents();
+  const all = localEvents().filter(matches);
   const monthKey = `${viewYear}-${pad(viewMonth + 1)}`;
   const byDay = {};
   all.forEach((e, i) => { e.idx = i; (byDay[e.key] = byDay[e.key] || []).push(e); });
@@ -379,6 +435,11 @@ function render() {
 
   const eb = $("earlierBtn");
   if (eb) eb.addEventListener("click", () => { document.querySelectorAll(".lday.hidden").forEach(x => x.classList.remove("hidden")); eb.remove(); });
+  const filtered = FILTER.level || FILTER.cats.length;
+  const n = all.filter(e => e.key.slice(0, 7) === monthKey).length;
+  $("fcount").innerHTML = `<span>${n} session${n === 1 ? "" : "s"} in ${EN_MONTHS[viewMonth]}${filtered ? " match your filters" : ""}</span>` +
+    (filtered ? `<button type="button" class="fclear">Clear filters</button>` : "");
+  $("emptyMsg").textContent = filtered ? "No sessions match these filters this month. Try another month or clear the filters." : "No sessions scheduled yet for this month. Check back soon.";
   $("emptyMsg").style.display = days.length ? "none" : "block";
 }
 
@@ -411,7 +472,7 @@ function showPop(card) {
   card.classList.add("open"); card.setAttribute("aria-expanded", "true");
   const dayName = ev.startD ? new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric", month: "short" }).format(ev.startD) : ev.date;
   pop.style.setProperty("--cat", c.color);
-  pop.innerHTML = `<div class="row1"><span class="badge">${esc(c.label)}</span>${ev.level ? `<span class="badge" style="background:#fff;color:${c.color};border:1.5px solid ${c.color}">${esc(ev.level)}</span>` : ""}<span class="day">${esc(dayName)}</span></div>
+  pop.innerHTML = `<div class="row1">${catsOf(ev).map(k => `<span class="badge" style="background:${CATEGORIES[k].color}">${esc(CATEGORIES[k].label)}</span>`).join("")}${ev.level ? `<span class="badge lv">${esc(ev.level)}</span>` : ""}<span class="day">${esc(dayName)}</span></div>
     <h3>${esc(ev.title)}</h3>${detailsHtml(ev, false)}`;
   pop.classList.add("show");
   popFor = card;
@@ -499,15 +560,14 @@ document.addEventListener("focusin", e => { const card = e.target.closest && e.t
 window.addEventListener("resize", hidePop);
 
 /* ---------- legend + navigation ---------- */
-$("legend").innerHTML = Object.values(CATEGORIES).map(c =>
-  `<span><i style="background:${c.color}"></i>${esc(c.label)}</span>`).join("") +
-  `<span><i class="t">Try it</i>Every session is open to non-members: one trial session per person</span>`;
+$("legend").innerHTML = `<span><i class="t">Try it</i>Every session is open to non-members: one trial session per person</span>`;
 
 $("prevBtn").addEventListener("click", () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } render(); });
 $("nextBtn").addEventListener("click", () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } render(); });
 $("todayBtn").addEventListener("click", () => { viewYear = todayP.y; viewMonth = todayP.m; render(); });
 
 buildTzMenu();
+buildFilters();
 render();
 fetch("events.json", { cache: "no-cache" })
   .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
