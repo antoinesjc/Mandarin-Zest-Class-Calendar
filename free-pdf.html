@@ -83,11 +83,13 @@
     </div>
   </div>
 </section>
-<script src="downloads/free-pdfs.js"></script>
 <script>
+// Load the PDF list fresh every time (browsers may otherwise keep an older copy for 10 minutes).
+function start() {
   var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
   var id = (new URLSearchParams(location.search).get("pdf") || "hsk-1").toLowerCase();
-  var P = FREE_PDFS[id] || FREE_PDFS["hsk-1"];
+  var P = FREE_PDFS[id];
+  if (!P) { document.getElementById("card").innerHTML = '<p style="margin:0">This PDF is coming soon. Please check back later.</p>'; return; }
   var card = document.getElementById("card");
 
   // phones show the title next to the cover, computers next to the form
@@ -121,6 +123,14 @@
     try { localStorage.setItem(KEY, "1"); } catch (e3) {}
     card.classList.add("done"); fill();
   });
+}
+(function () {
+  var sc = document.createElement("script");
+  sc.src = "downloads/free-pdfs.js?v=" + Math.floor(Date.now() / 60000);
+  sc.onload = start;
+  sc.onerror = function () { document.getElementById("card").innerHTML = '<p style="margin:0">The PDF could not load. Please refresh the page.</p>'; };
+  document.head.appendChild(sc);
+})();
 </script>
 </body>
 </html>
