@@ -373,7 +373,8 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   same first name as in the events' `Host:` line. Unknown names show their initial; no host shows the Mandarin Zest logo.
 - Link to one session: each card has "Copy link to this session" →
   `https://www.mandarinzest.com/mandarin-zest-club-trial-session?session=2026-11-05T22-00` (start time in UTC).
-  The board pins that session at the top ("YOUR SESSION") and the page scrolls to it. Needs the `hello`/`scrolltop`
-  lines of `odoo-head-code.html` in Odoo's <head> code. A past session shows "This session has passed".
+  The board pins that session at the top ("YOUR SESSION"). It reads the page address through the embed's
+  `referrerpolicy="no-referrer-when-downgrade"` (no Odoo code needed), or through the `hello` line of `odoo-head-code.html`;
+  with the `scrolltop` line the page also scrolls to the board. A past session shows "This session has passed".
 - Height: resizes itself through the <head> listener (`{mz:"height"}`). Embed with a starting height:
-  `<iframe src="…/trial-board.html" style="width:100%;border:0;height:1700px" scrolling="no"></iframe>`.
+  `<iframe src="…/trial-board.html" referrerpolicy="no-referrer-when-downgrade" style="width:100%;border:0;height:1700px" scrolling="no"></iframe>`.

@@ -204,7 +204,10 @@ const params = new URLSearchParams(location.search);
 const PAGE_URL = "https://www.mandarinzest.com/mandarin-zest-club-trial-session";
 // How many days of sessions show at first, and how many more each "Show more" adds.
 const DAYS_STEP = 14;
-let daysShown = DAYS_STEP, LEVEL = "", PIN = (params.get("session") || "").replace(/[^0-9A-Za-z-]/g, ""), ALL = [];
+// The session to pin: ?session= on the widget itself, or on the Odoo page. The page address comes from document.referrer
+// when the embed has referrerpolicy="no-referrer-when-downgrade", or from the <head> listener (hello/page) otherwise.
+function sessionFrom(url) { try { return (new URL(url).searchParams.get("session") || "").replace(/[^0-9A-Za-z-]/g, ""); } catch (e) { return ""; } }
+let daysShown = DAYS_STEP, LEVEL = "", PIN = (params.get("session") || sessionFrom(document.referrer)).replace(/[^0-9A-Za-z-]/g, ""), ALL = [];
 const root = document.getElementById("root");
 
 function el(tag, cls, text) {
