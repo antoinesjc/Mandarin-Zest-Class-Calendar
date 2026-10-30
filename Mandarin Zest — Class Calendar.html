@@ -68,10 +68,25 @@
   .trial-tag:hover { background: #e2632f; color: var(--ink); }
 
   /* floating details (desktop) */
+  /* details box: same look as the trial board cards (coloured top bar, host photo, tags) */
   .pop {
-    position: absolute; z-index: 20; width: 330px; background: #fff; border-radius: 18px; border: 2px solid var(--cat);
-    box-shadow: 0 24px 50px rgba(42,36,32,.22); padding: 18px 20px; display: none; flex-direction: column; gap: 9px;
+    position: absolute; z-index: 20; width: 340px; background: #fff; border-radius: 20px; border-top: 6px solid var(--cat);
+    box-shadow: 0 1px 0 #efe2d9, 0 24px 50px rgba(42,36,32,.22); padding: 20px 22px 18px; display: none; flex-direction: column; gap: 11px;
   }
+  .pop .ptop { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .pop .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .pop .ph { display: flex; flex: none; }
+  .pop .ph img, .pop .ph span { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(42,36,32,.15); background: #f1ece8; }
+  .pop .ph > * + * { margin-left: -14px; }
+  .pop .ph span { display: grid; place-items: center; font-weight: 800; color: var(--muted); font-size: 18px; }
+  .pop .nm { font-size: 13.5px; color: var(--muted); line-height: 1.25; }
+  .pop .nm b { display: block; color: var(--ink); font-size: 15.5px; }
+  .pop .seats { font-size: 13px; font-weight: 700; color: #a8431a; white-space: nowrap; }
+  .pop .seats.full { color: #8a7d74; }
+  .pop .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pop .tag { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #f1ece8; color: var(--muted); }
+  .pop .tag.cat { color: #fff; }
+  .pop .wday { font-size: 15.5px; font-weight: 800; }
   .pop.show { display: flex; animation: popin .16s ease-out; }
   @keyframes popin { from { opacity: 0; transform: translateY(6px) scale(.98); } }
   .pop .row1 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -322,6 +337,16 @@ let viewYear = todayP.y, viewMonth = todayP.m;
 // On the last day of the month, open on next month so visitors see what's coming.
 if (new Date(Date.UTC(todayP.y, todayP.m, todayP.d + 1)).getUTCDate() === 1) { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } }
 
+// Host photos: hosts.json (built from the Club page's "Meet your hosts" cards at every sync).
+let HOSTS = {};
+fetch("hosts.json", { cache: "no-cache" }).then(r => r.json()).then(d => { HOSTS = d || {}; }).catch(() => {});
+function hostHtml(ev) {
+  const names = String(ev.host || "").split(/\s*(?:&|,|\/|\+|\band\b)\s*/i).filter(Boolean);
+  const ph = names.length ? names.slice(0, 3).map(n => { const h = HOSTS[n.toLowerCase()];
+    return h && h.photo ? `<img src="${esc(h.photo)}" alt="${esc(n)}">` : `<span>${esc(n.charAt(0).toUpperCase())}</span>`; }).join("")
+    : `<img src="promo/mz-logo.png" alt="" style="object-fit:contain;background:#fff">`;
+  return `<div class="who"><div class="ph">${ph}</div><div class="nm">${names.length ? `Hosted by<b>${esc(names.join(" & "))}</b>` : `<b>Mandarin Zest Club</b>`}</div></div>`;
+}
 function catsOf(ev) { const k = (ev.cats && ev.cats.length ? ev.cats : [ev.cat]).filter(x => CATEGORIES[x]); return k.length ? k : ["noagenda"]; }
 function catOf(ev) { return CATEGORIES[catsOf(ev)[0]]; }
 
@@ -373,7 +398,7 @@ function cardHtml(ev, withMore) {
   </div>`;
 }
 
-function detailsHtml(ev, compact) {
+function detailsHtml(ev, compact, noHost) {
   let when = "";
   if (ev.startD) {
     when = `${clock(ev.startD)}${ev.endD ? " – " + clock(ev.endD) : ""} <span>${esc(shortName(TZ, ev.startD))}</span>`;
@@ -384,7 +409,7 @@ function detailsHtml(ev, compact) {
   if (ev.topic && !isTopicDup) h += `<div class="topic">${esc(ev.topic)}</div>`;
   if (ev.about) h += `<p class="about">${esc(ev.about)}</p>`;
   if (compact) h += `<div class="row1" style="display:flex;gap:6px;flex-wrap:wrap">${catsOf(ev).map(k => `<span class="badge" style="background:${CATEGORIES[k].color}">${esc(CATEGORIES[k].label)}</span>`).join("")}</div>`;
-  if (ev.host) h += `<div class="host">Host: <b>${esc(ev.host)}</b></div>`;
+  if (ev.host && !noHost) h += `<div class="host">Host: <b>${esc(ev.host)}</b></div>`;
   if (ev.trial) h += trialFull(ev)
     ? `<span class="cta" style="background:#e9e2dc;color:#8a7d74;pointer-events:none">Trial seats sold out</span>`
     : SEATS_URL
@@ -474,8 +499,12 @@ function showPop(card) {
   card.classList.add("open"); card.setAttribute("aria-expanded", "true");
   const dayName = ev.startD ? new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric", month: "short" }).format(ev.startD) : ev.date;
   pop.style.setProperty("--cat", c.color);
-  pop.innerHTML = `<div class="row1">${catsOf(ev).map(k => `<span class="badge" style="background:${CATEGORIES[k].color}">${esc(CATEGORIES[k].label)}</span>`).join("")}${ev.level ? `<span class="badge lv">${esc(ev.level)}</span>` : ""}<span class="day">${esc(dayName)}</span></div>
-    <h3>${esc(ev.title)}</h3>${detailsHtml(ev, false)}`;
+  const longDay = ev.startD ? new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).format(ev.startD) : ev.date;
+  const seatsLeft = Math.max(0, MAX_SEATS - (TAKEN[trialRef(ev)] || 0));
+  pop.innerHTML = `<div class="ptop">${hostHtml(ev)}${ev.trial ? `<span class="seats${seatsLeft ? "" : " full"}">${seatsLeft ? (seatsLeft === 1 ? "Last seat!" : seatsLeft + " seats left") : "Sold out"}</span>` : ""}</div>
+    <h3>${esc(ev.title)}</h3>
+    <div class="tags">${ev.level ? `<span class="tag">${esc(ev.level)}</span>` : ""}${catsOf(ev).map(k => `<span class="tag cat" style="background:${CATEGORIES[k].color}">${esc(CATEGORIES[k].label)}</span>`).join("")}</div>
+    <div class="wday">${esc(longDay)}</div>${detailsHtml(ev, false, true)}`;
   pop.classList.add("show");
   popFor = card;
   // place it beside the card, inside the frame
