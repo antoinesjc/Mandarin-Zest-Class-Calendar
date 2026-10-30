@@ -371,7 +371,7 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - Host photo on each card: `hosts.json` (name → photo), built by `scripts/build_hosts.py` from the "Meet your hosts" cards on
   mandarinzest.com/mandarin-zest-club (photo + bold name) at every calendar sync. New host = add a card there with the
   same first name as in the events' `Host:` line. Unknown names show their initial; no host shows the Mandarin Zest logo.
-- Link to one session: each card has "Copy link to this session" →
+- Link to one session (no button on the cards, at Antoine's request; the id is the UTC start time) →
   `https://www.mandarinzest.com/mandarin-zest-club-trial-session?session=2026-11-05T22-00` (start time in UTC).
   The board pins that session at the top ("YOUR SESSION"). It reads the page address through the embed's
   `referrerpolicy="no-referrer-when-downgrade"` (no Odoo code needed), or through the `hello` line of `odoo-head-code.html`;

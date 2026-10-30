@@ -279,10 +279,6 @@ function card(ev) {
     bottom.appendChild(a);
   }
   c.appendChild(bottom);
-  const sh = el("button", "share"); sh.type = "button";
-  sh.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Copy link to this session</span>';
-  sh.addEventListener("click", () => copyText(PAGE_URL + "?session=" + idOf(ev), sh.querySelector("span")));
-  c.appendChild(sh);
   c.id = "s-" + idOf(ev);
   return c;
 }
