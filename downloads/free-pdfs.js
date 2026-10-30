@@ -50,6 +50,16 @@ var FREE_PDFS = {
     file: "downloads/hsk/New-HSK-6-Vocab-List-Mandarin-Zest.pdf",
     cover: "downloads/hsk/cover-hsk-6.jpg"
   }
+  ,
+  "phrases": {
+    tag: "Phrases", color: "#4f9a4f",
+    title: "Get the Essential Mandarin Phrases guide",
+    text: "100 phrases for everyday life: greetings, ordering food, getting around, paying and asking for help, with pinyin and when to use each one.",
+    done: "Your phrase guide is ready",
+    after: "Start with the 10 must-know phrases on page 2, and say them out loud.",
+    file: "downloads/guides/Essential-Mandarin-Phrases-Mandarin-Zest.pdf",
+    cover: "downloads/guides/cover-phrases.jpg"
+  }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" },
 };

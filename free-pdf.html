@@ -101,7 +101,7 @@ function start() {
     var isDone = card.classList.contains("done");
     document.querySelectorAll("[data-eb]").forEach(function (e) { e.textContent = isDone ? "YOU'RE IN · 谢谢！" : "FREE PDF"; });
     document.querySelectorAll("[data-h]").forEach(function (e) { e.textContent = isDone ? P.done : P.title; });
-    document.getElementById("text").textContent = isDone ? "Save it, print it, and tick off the words you know." : P.text;
+    document.getElementById("text").textContent = isDone ? (P.after || "Save it, print it, and tick off the words you know.") : P.text;
   }
   var cover = document.getElementById("cover"); cover.src = P.cover; cover.alt = "Cover of the " + P.tag + " PDF";
   document.getElementById("dl").href = P.file;
