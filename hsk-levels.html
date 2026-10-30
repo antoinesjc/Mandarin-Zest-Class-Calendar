@@ -10,7 +10,8 @@
 <style>
   /* Interactive "New HSK 3.0 vs old HSK 2.0" table: words per level, tap a level for details
      and a link to its vocab list (new tab). Numbers and links: LEVELS at the bottom of the file.
-     Embed height: see README. */
+     Embed height: see README.
+     Bottom: email capture for all HSK 1–6 PDFs at once (downloads/hsk/…zip). */
   :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --orange:#f37a48; --orange-d:#e2632f;
           --el:#4f9a4f; --el-t:#e6f1e1; --in:#e0835f; --in-t:#f8dacd; --ad:#d5602f; --ad-t:#fbe3d6; --old:#cfc4bc; }
   * { box-sizing:border-box; }
@@ -63,7 +64,38 @@
   .nav button:disabled { opacity:.35; cursor:default; }
   .note { font-size:12px; color:var(--muted); margin-top:14px; }
 
+
+  /* email capture: all HSK 1–6 lists at once (ZIP), saved in the Start Here sheet (source "hsk-levels | all 1-6") */
+  .get { margin-top:18px; background:#f8dacd; border-radius:20px; padding:20px 22px; display:flex; gap:24px; align-items:center; }
+  .stack { flex:none; position:relative; width:150px; height:118px; }
+  .stack img { position:absolute; top:4px; width:70px; border-radius:5px; box-shadow:0 6px 14px rgba(42,36,32,.18); transition:transform .4s cubic-bezier(.2,.9,.25,1.1); }
+  .get:hover .stack img { transform:translate(var(--dx), -4px) rotate(var(--rh)); }
+  .gtxt { flex:1; min-width:0; display:flex; flex-direction:column; gap:7px; }
+  .gtxt .eb { font-size:12px; font-weight:800; letter-spacing:.09em; color:#a8431a; }
+  .gtxt h3 { margin:0; font-size:20px; font-weight:800; line-height:1.2; }
+  .gtxt p { margin:0; font-size:14px; line-height:1.45; color:#4a3c34; }
+  .gform { display:flex; flex-direction:column; gap:7px; margin-top:2px; }
+  .grow { display:flex; gap:8px; }
+  .gform input[type=email] { flex:1; min-width:0; height:44px; border:2px solid transparent; border-radius:999px; padding:0 16px; font:inherit; font-size:15px; background:#fff; color:var(--ink); }
+  .gform input[type=email]:focus { outline:none; border-color:var(--orange-d); }
+  .gbtn { display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 20px; border:0; border-radius:999px; background:var(--orange); color:var(--ink); font:inherit; font-size:15px; font-weight:800; white-space:nowrap; cursor:pointer; text-decoration:none; }
+  .gbtn:hover { background:var(--orange-d); }
+  .gbtn.dark { background:var(--ink); color:#fff; } .gbtn.dark:hover { background:#000; }
+  .consent { display:flex; gap:7px; align-items:flex-start; font-size:12px; line-height:1.4; color:#4a3c34; cursor:pointer; }
+  .consent input { width:15px; height:15px; margin:1px 0 0; flex:none; accent-color:var(--orange-d); }
+  .gerr { color:#a3261a; font-size:12.5px; font-weight:700; } .gerr:empty { display:none; }
+  .trap { position:absolute; left:-5000px; }
+  .gdone { display:none; flex-direction:column; gap:9px; }
+  .got .gdone { display:flex; } .got .gform { display:none; }
+  .files { display:flex; flex-wrap:wrap; gap:6px; }
+  .files a { font-size:13px; font-weight:700; color:var(--ink); background:#fff; border-radius:999px; padding:5px 11px; text-decoration:none; }
+  .files a:hover { background:#fff3ec; }
+
   @media (max-width:760px) {
+    .get { flex-direction:column; align-items:stretch; gap:12px; padding:16px; }
+    .stack { display:none; }
+    .grow { flex-direction:column; } .gform input[type=email] { flex:none; }
+    .gtxt h3 { font-size:18px; }
     body { padding:2px; }
     .card { padding:18px 14px 16px; border-radius:20px; }
     .top { margin-bottom:14px; } .top h2 { font-size:18px; }
@@ -94,6 +126,27 @@
     <aside class="detail" id="detail" aria-live="polite"></aside>
   </div>
   <div class="note">Tap a level to see the details. Word counts from the 2026 HSK syllabus; levels 7–9 share one list.</div>
+  <div class="get" id="get">
+    <div class="stack" id="stack" aria-hidden="true"></div>
+    <div class="gtxt">
+      <div class="eb" id="geb">FREE DOWNLOAD</div>
+      <h3 id="gh">Get all the vocab lists from HSK 1 to 6 at once</h3>
+      <p id="gp">6 printable PDFs with pinyin, word type and meaning for every word, in one download.</p>
+      <form class="gform" id="gform" novalidate>
+        <div class="grow">
+          <input type="email" id="gemail" placeholder="Your email" autocomplete="email" aria-label="Your email">
+          <button class="gbtn" type="submit">Get the 6 PDFs ↓</button>
+        </div>
+        <label class="consent"><input type="checkbox" id="gok">I agree to receive emails from Mandarin Zest. I can unsubscribe at any time.</label>
+        <input class="trap" type="text" id="gweb" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="gerr" id="gerr" role="alert"></div>
+      </form>
+      <div class="gdone" aria-live="polite">
+        <a class="gbtn dark" style="align-self:flex-start" href="downloads/hsk/New-HSK-1-to-6-Vocab-Lists-Mandarin-Zest.zip" download target="_blank" rel="noopener">Download all 6 lists (ZIP) ↓</a>
+        <div class="files" id="gfiles"></div>
+      </div>
+    </div>
+  </div>
 </section>
 <script>
   // ═══ LEVELS: word counts (total = everything up to and including this level) and list links ═══
@@ -188,6 +241,43 @@
   show(Math.max(0, Math.min(LEVELS.length - 1, start - 1)));
   // bars grow in once
   list.querySelectorAll(".bar .b").forEach(function (b) { var w = b.style.width; b.style.width = "0"; requestAnimationFrame(function () { requestAnimationFrame(function () { b.style.width = w; }); }); });
+
+  // ═══ "All HSK 1–6 lists at once": email → Start Here sheet → ZIP download (+ each PDF on its own) ═══
+  (function () {
+    var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
+    var KEY = "mz-hsk-1-6", get = document.getElementById("get");
+    var st = document.getElementById("stack"), rot = [-12, -7, -2, 3, 8, 13];
+    for (var i = 1; i <= 6; i++) {
+      var im = document.createElement("img"); im.src = "downloads/hsk/cover-hsk-" + i + ".jpg"; im.alt = "";
+      im.style.left = (i - 1) * 16 + "px"; im.style.transform = "rotate(" + rot[i - 1] + "deg)";
+      im.style.setProperty("--dx", ((i - 3.5) * 6) + "px"); im.style.setProperty("--rh", (rot[i - 1] * 1.4) + "deg"); im.style.zIndex = i;
+      st.appendChild(im);
+    }
+    document.getElementById("gfiles").innerHTML = [1, 2, 3, 4, 5, 6].map(function (n) {
+      return '<a href="downloads/hsk/New-HSK-' + n + '-Vocab-List-Mandarin-Zest.pdf" download target="_blank" rel="noopener">HSK ' + n + ' PDF ↓</a>';
+    }).join("");
+    function done() {
+      get.classList.add("got");
+      document.getElementById("geb").textContent = "YOU'RE IN · 谢谢！";
+      document.getElementById("gh").textContent = "Your HSK 1 to 6 lists are ready";
+      document.getElementById("gp").textContent = "Download them all in one ZIP file, or just the level you need.";
+    }
+    try { if (localStorage.getItem(KEY) === "1") done(); } catch (e) {}
+    document.getElementById("gform").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = document.getElementById("gemail").value.trim(), err = document.getElementById("gerr");
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please enter a valid email."; return; }
+      if (!document.getElementById("gok").checked) { err.textContent = "Please tick the box to get the PDFs."; return; }
+      err.textContent = "";
+      if (!document.getElementById("gweb").value) {
+        fetch(SHEET_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" },
+          body: JSON.stringify({ email: email, source: "hsk-levels | all 1-6", timestamp: new Date().toISOString() }) }).catch(function () {});
+        try { window.top.postMessage({ mz: "track", event: "Lead", params: { content_name: "HSK 1-6 vocab lists" }, ga: { event: "generate_lead", params: { form: "hsk-levels", pdf: "hsk-1-6" } } }, "*"); } catch (e2) {}
+      }
+      try { localStorage.setItem(KEY, "1"); } catch (e3) {}
+      done();
+    });
+  })();
 </script>
 </body>
 </html>

@@ -287,7 +287,9 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 - `hsk-levels.html`: interactive "New HSK 3.0 vs old HSK 2.0" table. Bars per level (HSK 3.0 by band colour, HSK 2.0 grey),
   switch "Total words" / "New at this level", tap a level for the details and "Open the HSK n vocab list ↗" (new tab).
   Phones: the details open under the chosen level. Numbers and links: LEVELS in the file. `?level=4` opens on HSK 4.
-  Embed: `height:max(600px, min(900px, calc((800px - 100vw) * 10000)))`, `scrolling="no"`.
+  Bottom: email capture "Get all the vocab lists from HSK 1 to 6 at once" (Start Here sheet, source `hsk-levels | all 1-6`)
+  → "Download all 6 lists (ZIP)" (`downloads/hsk/New-HSK-1-to-6-Vocab-Lists-Mandarin-Zest.zip`, rebuild it when a PDF changes) + one link per PDF.
+  Embed: `height:max(850px, min(1230px, calc((800px - 100vw) * 10000)))`, `scrolling="no"`.
 - `hsk-pdfs.html`: "Get all the new HSK vocab lists at once". Optional level chips + email + consent → Start Here sheet
   (source `hsk-vocab-pdfs | <level>`) → download buttons appear (remembered in the browser). PDFS list in the file;
   until the PDFs are added the buttons open the level pages. `ALL_URL` = one file with everything (zip or combined PDF).
