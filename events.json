@@ -671,8 +671,8 @@
   },
   {
    "date": "2026-10-31",
-   "title": "Native Conversation",
-   "level": "Beginner",
+   "title": "Taiwanese Mandarin Conversation",
+   "level": "Intermediate",
    "cats": [
     "conversation"
    ],
@@ -870,8 +870,8 @@
   },
   {
    "date": "2026-11-15",
-   "title": "Native Conversation",
-   "level": "",
+   "title": "Taiwanese Mandarin Conversation",
+   "level": "Intermediate",
    "cats": [
     "conversation"
    ],
@@ -888,7 +888,7 @@
    "start": "2026-11-15T14:00:00Z",
    "end": "2026-11-15T15:00:00Z",
    "cat": "conversation",
-   "topic": "Real life conversation with a native Taiwanese teacher",
+   "topic": "Practice real life conversation with a native teacher from Taiwan",
    "host": "Vanessa",
    "trial": true
   },
@@ -1044,8 +1044,8 @@
   },
   {
    "date": "2026-11-29",
-   "title": "Native Conversation",
-   "level": "",
+   "title": "Taiwanese Mandarin Conversation",
+   "level": "Intermediate",
    "cats": [
     "conversation"
    ],
@@ -1062,7 +1062,7 @@
    "start": "2026-11-29T14:00:00Z",
    "end": "2026-11-29T15:00:00Z",
    "cat": "conversation",
-   "topic": "Practice real life conversation with a native teacher from Taiwan ",
+   "topic": "Practice real life conversation with a native teacher from Taiwan",
    "host": "Vanessa",
    "trial": true
   },
