@@ -68,6 +68,15 @@ var FREE_PDFS = {
     after: "Pick the section you need most this week, then try its reading practice at the end.",
     file: "downloads/guides/Adult-Vocabulary-in-Chinese-Mandarin-Zest.pdf",
     cover: "downloads/guides/cover-adult.jpg"
+  },
+  "slang": {
+    tag: "Slang", color: "#e0835f",
+    title: "Get 20 must-know Chinese slang words",
+    text: "Sound like a native with 牛, 哇塞, 酷, 哥们 and more: each with pinyin, meaning, the English equivalent and an example.",
+    done: "Your slang guide is ready",
+    after: "Pick 3 words and try them in your next chat with a Chinese speaker.",
+    file: "downloads/guides/20-Chinese-Slang-Words-Mandarin-Zest.pdf",
+    cover: "downloads/guides/cover-slang.jpg"
   }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" },
