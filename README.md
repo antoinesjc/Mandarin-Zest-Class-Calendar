@@ -350,7 +350,7 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - `free-pdf.html?pdf=<id>`: cover + title + email + consent → Start Here sheet (source `free-pdf | <id>`) → "Download the PDF"
   (+ "Practise them out loud: try a Club session ↗"). Remembers people who already signed up (per PDF, in the browser).
 - The PDFs are listed in `downloads/free-pdfs.js` (title, text, file, cover). PDFs and covers live in `downloads/hsk/`
-  (cover = page 1 rendered as JPG). Now: `hsk-1` to `hsk-6`, `phrases` (Essential Mandarin Phrases, in downloads/guides/). Optional `after:` = text shown after sign-up. `hsk-pdfs.html` (all lists) links to the same files.
+  (cover = page 1 rendered as JPG). Now: `hsk-1` to `hsk-6`, `phrases` (Essential Mandarin Phrases) and `adult` (Adult Vocabulary in Chinese), both in downloads/guides/. Optional `after:` = text shown after sign-up. `hsk-pdfs.html` (all lists) links to the same files.
 - Embed: `height:max(265px, min(410px, calc((640px - 100vw) * 10000)))`, `scrolling="no"`.
 
 ## Dorota's free guide (email for PDF)

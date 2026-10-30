@@ -59,6 +59,15 @@ var FREE_PDFS = {
     after: "Start with the 10 must-know phrases on page 2, and say them out loud.",
     file: "downloads/guides/Essential-Mandarin-Phrases-Mandarin-Zest.pdf",
     cover: "downloads/guides/cover-phrases.jpg"
+  },
+  "adult": {
+    tag: "Adult vocabulary", color: "#e0835f",
+    title: "Get the Adult Vocabulary booklet",
+    text: "The grown-up words textbooks skip: work, housing, money, insurance, health and legal life, with pinyin and real-life examples.",
+    done: "Your booklet is ready",
+    after: "Pick the section you need most this week, then try its reading practice at the end.",
+    file: "downloads/guides/Adult-Vocabulary-in-Chinese-Mandarin-Zest.pdf",
+    cover: "downloads/guides/cover-adult.jpg"
   }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" },
