@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's your Chinese zodiac sign?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* Blog banner: "Don't know your Chinese zodiac sign?" → the zodiac checker page.
+     EDIT TEXT AND THE LINK DIRECTLY IN THE HTML BELOW. Pictures: ../zodiac/<animal>.png */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 4px; }
+  .banner {
+    max-width: 760px; margin: 0 auto; border-radius: 20px; padding: 22px 26px;
+    display: flex; gap: 24px; align-items: center; background: #e6f4e3;
+    text-decoration: none; color: inherit; position: relative; overflow: hidden;
+  }
+  .banner:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+
+  /* the animal "wheel" */
+  .visual { flex: 0 0 132px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .disc { width: 132px; height: 132px; border-radius: 50%; background: #fff; position: relative;
+          box-shadow: 0 0 0 6px rgba(255,255,255,.55); }
+  .disc img { position: absolute; inset: 14px; width: calc(100% - 28px); height: calc(100% - 28px); object-fit: contain;
+              opacity: 0; transform: scale(.7) rotate(-8deg); transition: opacity .35s ease, transform .45s cubic-bezier(.3,1.6,.5,1); }
+  .disc img.on { opacity: 1; transform: none; }
+  .q { position: absolute; right: -6px; top: -4px; width: 38px; height: 38px; border-radius: 50%; background: #f37a48;
+       color: #2a2420; font-weight: 800; font-size: 22px; display: grid; place-items: center; box-shadow: 0 2px 0 rgba(0,0,0,.08); }
+  .name { font-size: 14px; font-weight: 600; color: #2c4a2c; min-height: 22px; white-space: nowrap; }
+  .name b { font-family: 'Noto Serif SC', serif; font-size: 18px; color: #173f17; margin-right: 4px; }
+
+  .text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 9px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #1b5e1b; }
+  .eyebrow span { font-family: 'Noto Serif SC', serif; letter-spacing: .04em; }
+  h3 { margin: 0; font-size: 24px; font-weight: 800; line-height: 1.2; color: #173f17; }
+  p { margin: 0; font-size: 15px; line-height: 1.5; color: #2c4a2c; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-top: 4px; }
+  .btn { display: inline-block; font-weight: 800; font-size: 16px; padding: 12px 22px; border-radius: 999px; background: #f37a48; color: #2a2420; transition: background .2s; }
+  .banner:hover .btn { background: #e2632f; }
+  .side { font-size: 13px; color: #3d5a3d; }
+
+  @media (max-width: 560px) {
+    .banner { flex-direction: column; align-items: flex-start; padding: 20px; gap: 14px; }
+    .visual { flex-direction: row; gap: 14px; }
+    .disc { width: 96px; height: 96px; }
+    .disc img { inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); }
+    .q { width: 30px; height: 30px; font-size: 18px; }
+    h3 { font-size: 21px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .disc img { transition: none; } }
+</style>
+</head>
+<body>
+<a class="banner" href="https://www.mandarinzest.com/your-zodiac-sign" target="_blank" rel="noopener">
+  <div class="visual" aria-hidden="true">
+    <div class="disc" id="disc"><span class="q">?</span></div>
+    <div class="name" id="name"></div>
+  </div>
+  <div class="text">
+    <div class="eyebrow">CHINESE ZODIAC · <span>你属什么？</span></div>
+    <h3>Don't know your Chinese zodiac sign?</h3>
+    <p>Enter your birthday and find your animal in seconds. We check the exact Chinese New Year date, so January and February birthdays get the right animal too.</p>
+    <div class="actions">
+      <span class="btn">Find my animal ↗</span>
+      <span class="side">Free · 12 animals · 1924 to 2044</span>
+    </div>
+  </div>
+</a>
+<script>
+  // Cycles through the 12 animals (stops on one if the visitor prefers less motion).
+  var A = [["rat","鼠","shǔ","Rat"],["ox","牛","niú","Ox"],["tiger","虎","hǔ","Tiger"],["rabbit","兔","tù","Rabbit"],
+           ["dragon","龙","lóng","Dragon"],["snake","蛇","shé","Snake"],["horse","马","mǎ","Horse"],["goat","羊","yáng","Goat"],
+           ["monkey","猴","hóu","Monkey"],["rooster","鸡","jī","Rooster"],["dog","狗","gǒu","Dog"],["pig","猪","zhū","Pig"]];
+  var disc = document.getElementById("disc"), nameEl = document.getElementById("name");
+  var imgs = A.map(function (a) { var i = new Image(); i.src = "../zodiac/" + a[0] + ".png"; i.alt = ""; disc.appendChild(i); return i; });
+  var k = 6; // start on the Horse (2026)
+  function show() {
+    imgs.forEach(function (im, j) { im.classList.toggle("on", j === k); });
+    nameEl.innerHTML = "<b>" + A[k][1] + "</b>" + A[k][2] + " · " + A[k][3];
+  }
+  show();
+  var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!still) setInterval(function () { k = (k + 1) % 12; show(); }, 1600);
+
+  function reportHeight() {
+    var h = Math.ceil(document.querySelector(".banner").getBoundingClientRect().bottom + 6);
+    try { parent.postMessage({ mzBanner: "zodiac-check", height: h }, "*"); parent.postMessage({ mz: "height", h: h }, "*"); } catch (e) {}
+  }
+  window.addEventListener("load", reportHeight);
+  window.addEventListener("resize", reportHeight);
+  if (document.fonts) document.fonts.ready.then(reportHeight);
+</script>
+</body>
+</html>
