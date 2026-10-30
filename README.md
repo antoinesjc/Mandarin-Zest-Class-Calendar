@@ -126,6 +126,11 @@ that opens the trial page in a new tab.
   `bootcamps.html` (all bootcamps; "Open now / Next cohort" line updates itself,
   300px frame) and `bootcamp.html?bootcamp=<page-address-ending>` (one
   bootcamp, filled in from its page: picture, status, dates, price; 320px frame).
+  Zodiac posts: `zodiac-check.html` ("Don't know your Chinese zodiac sign?",
+  cycling animals from `zodiac/`, whole card links to /your-zodiac-sign; frame
+  `max(280px, min(480px, calc((600px - 100vw) * 10000)))`) and
+  `zodiac-workbook.html` (compact one-row card for the Great Race workbook,
+  HSK 3-4, US$8 with the shop/offers.js code; 200px frame).
   All links open in a new tab. `banners/snippets/` holds frame-free
   versions to paste straight into an Odoo Embed Code block (they always
   display in full, but text changes must be made in each article).
