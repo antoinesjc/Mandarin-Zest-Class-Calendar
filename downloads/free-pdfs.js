@@ -25,7 +25,15 @@ var FREE_PDFS = {
     done: "Your HSK 3 list is ready",
     file: "downloads/hsk/New-HSK-3-Vocab-List-Mandarin-Zest.pdf",
     cover: "downloads/hsk/cover-hsk-3.jpg"
+  },
+  "hsk-4": {
+    tag: "HSK 4", color: "#e0835f",
+    title: "Get the New HSK 4 vocabulary list",
+    text: "The 1,000 new words of HSK 4, with pinyin, word type and meaning, plus a box to tick when you know it. Ready to print.",
+    done: "Your HSK 4 list is ready",
+    file: "downloads/hsk/New-HSK-4-Vocab-List-Mandarin-Zest.pdf",
+    cover: "downloads/hsk/cover-hsk-4.jpg"
   }
-  // "hsk-4": { tag: "HSK 4", color: "#e0835f", title: "Get the New HSK 4 vocabulary list", text: "…", done: "Your HSK 4 list is ready",
-  //            file: "downloads/hsk/New-HSK-4-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-4.jpg" },
+  // "hsk-5": { tag: "HSK 5", color: "#e0835f", title: "Get the New HSK 5 vocabulary list", text: "…", done: "Your HSK 5 list is ready",
+  //            file: "downloads/hsk/New-HSK-5-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-5.jpg" },
 };
