@@ -36,4 +36,9 @@ jobs:
           git add bootcamps.json
           git commit -m "Update bootcamps from the website"
           git pull --rebase
-          git push
+          # Someone may have pushed while this ran: put our commit on top and retry.
+          for i in 1 2 3; do
+            git pull --rebase --quiet && git push && exit 0
+            sleep 10
+          done
+          exit 1
