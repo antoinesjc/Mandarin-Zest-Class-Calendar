@@ -359,9 +359,11 @@ function askEmail(c, bottom, ev) {
   });
 }
 
+// Sessions further ahead than this are not shown (in months).
+const MAX_MONTHS = 2;
 function upcoming(events) {
-  const now = new Date();
-  return events.filter(ev => ev.trial && new Date(ev.start || ev.date + "T23:59:00") > now)
+  const now = new Date(), until = new Date(now); until.setMonth(until.getMonth() + MAX_MONTHS);
+  return events.filter(ev => { const t = new Date(ev.start || ev.date + "T23:59:00"); return ev.trial && t > now && t <= until; })
     .sort((a, b) => new Date(a.start || a.date) - new Date(b.start || b.date));
 }
 function levelOk(ev) {
@@ -401,7 +403,7 @@ function render() {
   const list = trials.filter(levelOk);
   const limit = new Date(); limit.setDate(limit.getDate() + daysShown);
   const shown = list.filter(ev => new Date(ev.start || ev.date) <= limit);
-  const cnt = el("span", "count", `${list.length} upcoming session${list.length === 1 ? "" : "s"}` + (shown.length < list.length ? ` · next ${daysShown} days shown` : ""));
+  const cnt = el("span", "count", `${list.length} session${list.length === 1 ? "" : "s"} in the next ${MAX_MONTHS} months` + (shown.length < list.length ? ` · next ${daysShown} days shown` : ""));
   bar.appendChild(cnt);
   board.appendChild(bar);
 

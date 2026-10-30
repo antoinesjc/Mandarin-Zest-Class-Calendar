@@ -365,7 +365,8 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 ## Trial board (trial page)
 
 - `trial-board.html`: every upcoming session open for a trial, as a board grouped by week (no swiping). Level filter
-  (Any level / Beginner / Intermediate / Advanced / All levels), next 14 days first, "Show more sessions" adds 14 days.
+  (Any level / Beginner / Intermediate / Advanced / All levels), next 14 days first, "Show more sessions" adds 14 days,
+  up to 2 months ahead (MAX_MONTHS in the file).
   Same booking flow as `trial.html` (email check, one trial per person, Stripe, seats left).
 - Host photo on each card: `hosts.json` (name → photo), built by `scripts/build_hosts.py` from the "Meet your hosts" cards on
   mandarinzest.com/mandarin-zest-club (photo + bold name) at every calendar sync. New host = add a card there with the
