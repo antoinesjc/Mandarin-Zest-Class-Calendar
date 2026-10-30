@@ -361,3 +361,18 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   `free-pdf | dorota-guide`) → "Download the guide", Club trial link, Instagram @dorota_bolan.
   Files in `downloads/guides/` (PDF, dorota-p1–p4.jpg rendered from the PDF, avatar).
   Embed: `height:max(345px, min(470px, calc((800px - 100vw) * 10000)))`, `scrolling="no"`.
+
+## Trial board (trial page)
+
+- `trial-board.html`: every upcoming session open for a trial, as a board grouped by week (no swiping). Level filter
+  (Any level / Beginner / Intermediate / Advanced / All levels), next 14 days first, "Show more sessions" adds 14 days.
+  Same booking flow as `trial.html` (email check, one trial per person, Stripe, seats left).
+- Host photo on each card: `hosts.json` (name → photo), built by `scripts/build_hosts.py` from the "Meet your hosts" cards on
+  mandarinzest.com/mandarin-zest-club (photo + bold name) at every calendar sync. New host = add a card there with the
+  same first name as in the events' `Host:` line. Unknown names show their initial; no host shows the Mandarin Zest logo.
+- Link to one session: each card has "Copy link to this session" →
+  `https://www.mandarinzest.com/mandarin-zest-club-trial-session?session=2026-11-05T22-00` (start time in UTC).
+  The board pins that session at the top ("YOUR SESSION") and the page scrolls to it. Needs the `hello`/`scrolltop`
+  lines of `odoo-head-code.html` in Odoo's <head> code. A past session shows "This session has passed".
+- Height: resizes itself through the <head> listener (`{mz:"height"}`). Embed with a starting height:
+  `<iframe src="…/trial-board.html" style="width:100%;border:0;height:1700px" scrolling="no"></iframe>`.

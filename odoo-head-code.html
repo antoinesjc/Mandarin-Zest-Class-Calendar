@@ -1,6 +1,6 @@
 <!--
   Mandarin Zest: the code in Odoo's <head> code injection (Website → Site → Code injection, or the website record's
-  "custom_code_head"). Keep this file and Odoo in sync. Previous version (Meta Pixel + listener only) replaced 23 Oct 2026.
+  "custom_code_head"). Keep this file and Odoo in sync. Previous version (Meta Pixel + listener only) replaced 23 Oct 2026; hello/scrolltop added 30 Oct 2026 (trial board links).
 
   1. Meta Pixel. Waits for the cookie banner: it only sends anything once the visitor clicks "I agree"
      (Odoo saves the choice in the website_cookies_bar cookie as {"optional": true}).
@@ -8,6 +8,9 @@
      {mz:"track", event, params}  → Meta Pixel event (trial steps)
      {mz:"track", ga:{event, params}} → Google Analytics event (sign-ups, checkouts, HSK test…)
      {mz:"height", h}             → resizes the frame that sent it
+     {mz:"hello"}                 → answers {mz:"page", search, hash} so a widget can read the page address
+                                    (trial board: ?session=<id> pins that session)
+     {mz:"scrolltop"}             → scrolls the page to the top of the frame that sent it
   3. Stripe purchases for GA: a Payment Link's "After payment" redirect goes to a page on mandarinzest.com with
      ?mzp=<product>&sid={CHECKOUT_SESSION_ID}. The page then records a GA "purchase" once per checkout.
      Products: club-monthly (25), club-yearly (250), trial (2.50). Add new ones to P below.
@@ -31,6 +34,8 @@ window.addEventListener('message',function(e){
 if(e.origin!=='https://antoinesjc.github.io'||!e.data)return;var d=e.data;
 if(d.mz==='track'){if(d.event&&window.fbq)fbq('track',d.event,d.params||{});if(d.ga&&d.ga.event)ga('event',d.ga.event,d.ga.params||{});}
 if(d.mz==='height'&&d.h>200){document.querySelectorAll('iframe').forEach(function(f){if(f.contentWindow===e.source)f.style.height=d.h+'px';});}
+if(d.mz==='hello'&&e.source){e.source.postMessage({mz:'page',search:location.search,hash:location.hash},e.origin);}
+if(d.mz==='scrolltop'){document.querySelectorAll('iframe').forEach(function(f){if(f.contentWindow===e.source){var y=f.getBoundingClientRect().top+window.scrollY-90;window.scrollTo({top:Math.max(0,y),behavior:'smooth'});}});}
 });
 var P={'club-monthly':['Club membership (monthly)',25],'club-yearly':['Club membership (yearly)',250],'trial':['Club trial session',2.5]};
 window.addEventListener('load',function(){

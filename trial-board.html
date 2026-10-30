@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Club trial sessions board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
+<style>
+  /* Shows the upcoming Club sessions (every session is open for a trial unless marked #notrial
+     in Google Calendar). Each card says "one trial session per person" (checked by email).
+     Shows every upcoming trial session (up to 8). Two fit side by side; when there
+     are more, visitors swipe or use the arrows. Optional: ?count=2 to limit. Use a 340px frame. */
+  :root {
+    --ink: #2a2420;
+    --muted: #5c4f47;
+    --green: #1b6f1b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', 'Noto Serif SC', system-ui, sans-serif; color: var(--ink); padding: 16px 16px 8px; }
+  .shell { position: relative; max-width: 1060px; margin: 0 auto; }
+  .shell.has-more { padding: 0 30px; }
+  .cards {
+    display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 4px 4px 14px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .cards::-webkit-scrollbar { display: none; }
+  .card { flex: 0 0 calc((100% - 24px) / 2); min-width: 280px; scroll-snap-align: start; }
+  .card:first-child { margin-left: auto; } .card:last-child { margin-right: auto; }
+  .arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0;
+    background: #fff; box-shadow: 0 6px 18px rgba(42,36,32,.18); font-size: 22px; cursor: pointer; display: none; z-index: 2; font-family: inherit; color: var(--ink);
+  }
+  .arrow.l { left: -6px; } .arrow.r { right: -6px; }
+  .has-more .arrow { display: block; }
+  .dots { display: none; justify-content: center; gap: 6px; }
+  .has-more .dots { display: flex; }
+  .dots i { width: 6px; height: 6px; border-radius: 3px; background: #e3d3c9; transition: width .2s, background .2s; }
+  .dots i.on { background: #1b6f1b; width: 16px; }
+  .card {
+    background: #ffffff;
+    border-radius: 20px;
+    border-top: 6px solid var(--cat, #6b6559);
+    padding: 26px 28px;
+    box-shadow: 0 1px 0 #efe2d9, 0 8px 24px rgba(42, 36, 32, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .lvl { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: #f1ece8; color: var(--muted); }
+  .seats { font-size: 13px; font-weight: 700; color: #a8431a; }
+  h3 { margin: 0; font-size: 23px; font-weight: 800; line-height: 1.2; }
+  .when { display: flex; flex-direction: column; gap: 3px; font-size: 16px; }
+  .when span { color: var(--muted); font-size: 15px; }
+  .topic { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 6px; flex-wrap: wrap; }
+  .price { font-size: 28px; font-weight: 800; }
+  .pricebox { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
+  .oncetag { font-size: 12.5px; font-weight: 700; color: #a8431a; white-space: nowrap; }
+  .btn {
+    background: var(--green);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 13px 26px;
+    border-radius: 999px;
+  }
+  .btn:hover { background: #145514; }
+  .btn:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .soon { font-size: 15px; font-weight: 600; color: var(--muted); }
+  .btn.out { background: #e9e2dc; color: #8a7d74; pointer-events: none; }
+  .seats.few { color: #c4521f; }
+  .seats.full { color: #8a7d74; }
+  /* email step: label, then the email box, then Continue, always stacked full width */
+  .ask { display: flex; flex-direction: column; align-items: stretch; gap: 8px; width: 100%; }
+  .asklbl { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .ask input { width: 100%; min-width: 0; font: inherit; font-size: 16px; padding: 12px 16px; border: 1.5px solid #cdb9ac; border-radius: 999px; background: #fffaf6; color: var(--ink); }
+  .ask input::placeholder { color: #8a7d74; }
+  .ask .btn { width: 100%; flex: none; text-align: center; white-space: normal; line-height: 1.25; }
+  .ask .go-short { display: none; }
+  @media (max-width: 360px) { .ask .go-long { display: none; } .ask .go-short { display: inline; } }
+  .ask input:focus { outline: none; border-color: #f37a48; }
+  .ask .btn { border: 0; cursor: pointer; font-family: inherit; }
+  .askmsg { font-size: 13.5px; color: var(--muted); line-height: 1.4; min-height: 0; }
+  .askmsg.warn { color: #a8431a; font-weight: 600; }
+  .askmsg a { color: #1b6f1b; font-weight: 700; }
+  .empty {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .empty strong { display: block; color: var(--ink); font-size: 20px; margin-bottom: 6px; }
+  @media (max-width: 760px) {
+    body { padding: 10px 0 4px; }
+    .shell.has-more { padding: 0; }
+    .cards { gap: 14px; padding: 4px 16px 10px; scroll-padding-left: 16px; }
+    .card { flex-basis: 86%; max-width: 420px; min-width: 0; padding: 18px 20px; gap: 9px; }
+    .arrow { display: none !important; }
+    h3 { font-size: 20px; } .when { font-size: 15px; } .when span { font-size: 13.5px; }
+    .bottom { flex-wrap: nowrap; gap: 10px; padding-top: 2px; }
+    .price { font-size: 23px; } .btn { padding: 11px 18px; font-size: 15px; white-space: nowrap; }
+  }
+  @media (max-width: 440px) {
+    /* narrow phones: button under the price, full width, so it never gets cut off */
+    .bottom { flex-wrap: wrap; }
+    .bottom .btn { flex: 1 1 100%; text-align: center; }
+  }
+
+  /* "one trial per person" pop-up (placed next to the form, works inside a full-height frame) */
+  .once-bg { position: absolute; left: 0; top: 0; width: 100%; background: rgba(42,36,32,.32); z-index: 50; animation: oncefade .15s ease-out; }
+  .once { position: absolute; z-index: 51; width: min(360px, calc(100% - 24px)); background: #fffaf6; border-radius: 20px; padding: 22px 20px 18px; box-shadow: 0 18px 50px rgba(42,36,32,.28); text-align: center; font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; animation: oncein .18s ease-out; }
+  .once .em { font-size: 34px; line-height: 1; }
+  .once h4 { margin: 8px 0 6px; font-size: 19px; font-weight: 800; }
+  .once p { margin: 0 0 14px; font-size: 14.5px; line-height: 1.5; color: #5c4f47; }
+  .once a.go { display: block; background: #1b6f1b; color: #fff; font-weight: 800; font-size: 15px; padding: 12px; border-radius: 999px; text-decoration: none; }
+  .once a.go:hover { background: #173f17; color: #fff; }
+  .once button { margin-top: 8px; border: 0; background: none; font: inherit; font-size: 14px; color: #8a7d74; cursor: pointer; padding: 6px 10px; }
+  .once .x { position: absolute; top: 8px; right: 8px; margin: 0; font-size: 20px; width: 32px; height: 32px; padding: 0; }
+  @keyframes oncefade { from { opacity: 0; } }
+  @keyframes oncein { from { opacity: 0; transform: translateY(8px) scale(.97); } }
+  .lvl .host { font-weight: 500; }
+  .lvl .host b { font-weight: 700; }
+
+  /* TRIAL BOARD: every upcoming session open for a trial, as a board grouped by day (no swiping).
+     Level filter, host photo on each card (hosts.json, built from the "Meet your hosts" cards on the Club page),
+     and a "Copy link" on each card: mandarinzest.com/mandarin-zest-club-trial-session?session=<id> opens the board
+     with that session pinned at the top (needs the Odoo <head> listener, see odoo-head-code.html).
+     Height: the frame resizes itself through the same <head> listener ({mz:"height"}). */
+  .board { max-width: 1100px; margin: 0 auto; }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 4px 6px; }
+  .bar .lab { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: #8a7d74; text-transform: uppercase; margin-right: 2px; }
+  .fbtn { font-family: inherit; font-size: 14px; font-weight: 700; color: var(--ink); background: #fff; border: 1.5px solid #ecdcd2; border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; }
+  .fbtn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .bar .count { margin-left: auto; font-size: 13.5px; color: var(--muted); }
+  .day { margin: 22px 4px 10px; font-size: 15px; font-weight: 800; display: flex; align-items: baseline; gap: 10px; }
+  .day small { font-size: 13px; font-weight: 600; color: var(--muted); }
+  .day::after { content: ""; flex: 1; height: 1px; background: #efe2d9; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0 4px; }
+  .grid .card, .pin .card { margin: 0 !important; flex: none; min-width: 0; padding: 18px 20px 18px; gap: 10px; border-radius: 18px; }
+  .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .ph { display: flex; flex: none; }
+  .ph img, .ph span { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(42,36,32,.15); background: #f1ece8; }
+  .ph > * + * { margin-left: -14px; }
+  .ph span { display: grid; place-items: center; font-weight: 800; color: var(--muted); font-size: 16px; }
+  .who .nm { font-size: 13.5px; color: var(--muted); line-height: 1.25; min-width: 0; }
+  .who .nm b { display: block; color: var(--ink); font-size: 15px; }
+  .grid .top { align-items: flex-start; }
+  .grid h3 { font-size: 19px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #f1ece8; color: var(--muted); }
+  .chip.cat { color: #fff; background: var(--c); }
+  .grid .when { font-size: 15px; } .grid .when span { font-size: 13.5px; }
+  .grid .topic { font-size: 14px; }
+  .grid .price { font-size: 22px; }
+  .grid .btn { padding: 11px 20px; font-size: 15px; }
+  .share { align-self: flex-start; font-family: inherit; font-size: 12.5px; font-weight: 700; color: #8a7d74; background: none; border: 0; padding: 2px 0; cursor: pointer; display: inline-flex; gap: 5px; align-items: center; }
+  .share:hover { color: var(--ink); }
+  .share svg { width: 14px; height: 14px; }
+  .pin { margin: 0 4px 6px; padding: 14px; background: #fdeee6; border-radius: 22px; }
+  .pin > p { margin: 0 4px 10px; font-size: 13px; font-weight: 800; letter-spacing: .08em; color: #a8431a; }
+  .pin .card { box-shadow: 0 0 0 3px #f37a48, 0 8px 24px rgba(42,36,32,.08); max-width: 520px; }
+  .pin .gone { margin: 0 4px; font-size: 14.5px; color: #4a3c34; }
+  .more { display: block; margin: 22px auto 6px; font-family: inherit; font-size: 15px; font-weight: 800; color: var(--ink); background: #fff; border: 1.5px solid #e3d3c9; border-radius: 999px; padding: 12px 24px; cursor: pointer; }
+  .more:hover { border-color: #f37a48; }
+  .empty-f { text-align: center; color: var(--muted); padding: 24px 0 8px; font-size: 15px; }
+  @media (max-width: 760px) {
+    body { padding: 8px 0 4px; }
+    .bar, .day, .grid, .pin { margin-left: 12px; margin-right: 12px; } .grid { padding: 0; }
+    .bar .count { margin-left: 0; width: 100%; }
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .grid .card { padding: 16px 18px; }
+  }
+</style>
+</head>
+<body>
+<div id="root" aria-live="polite"></div>
+
+<script src="categories.js"></script>
+<script>
+// Price and booking link for every trial session. Change them here.
+const PRICE = "US$2.50";
+// Shown under the email box in the booking step.
+const ASK_NOTE = "Only used to send your Meet link. No newsletter, no subscription. Secure payment by Stripe; one trial per person.";
+const BOOK_URL = "https://buy.stripe.com/cNi6oH94B8Dj6DCf0x6oo0k";
+// Seats: the trial-bookings Apps Script tells how many of the 6 trial seats are taken (leave empty to hide).
+const SEATS_URL = "https://script.google.com/macros/s/AKfycbyUmZxGz3BZIeQQcp3SbFPtnFCv0FgFebbct-3UBsmhzgp9gVZbN7zuGDA18QcPhfK0/exec";
+const MAX_SEATS = 6;
+let TAKEN = {};
+
+const CAT_COLORS = Object.fromEntries(Object.entries(MZ_CATEGORIES).map(([k, c]) => [k, c.color])); // colours: categories.js
+
+const params = new URLSearchParams(location.search);
+// The trial page on the website (used for the "Copy link to this session" links).
+const PAGE_URL = "https://www.mandarinzest.com/mandarin-zest-club-trial-session";
+// How many days of sessions show at first, and how many more each "Show more" adds.
+const DAYS_STEP = 14;
+let daysShown = DAYS_STEP, LEVEL = "", PIN = (params.get("session") || "").replace(/[^0-9A-Za-z-]/g, ""), ALL = [];
+const root = document.getElementById("root");
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+
+function reportHeight() {
+  const h = Math.ceil(Math.max(root.getBoundingClientRect().bottom, document.body.scrollHeight) + 16);
+  try { parent.postMessage({ mz: "height", h: h }, "*"); parent.postMessage({ mzTrialHeight: h }, "*"); } catch (e) {}
+}
+new ResizeObserver(() => reportHeight()).observe(document.body);
+window.addEventListener("resize", reportHeight);
+if (document.fonts) document.fonts.ready.then(reportHeight);
+
+function refOf(ev) {
+  return "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : "");
+}
+function card(ev) {
+  const c = el("div", "card");
+  c.style.setProperty("--cat", CAT_COLORS[ev.cat] || CAT_COLORS.noagenda);
+
+  const top = el("div", "top");
+  top.appendChild(whoEl(ev));
+  const left = Math.max(0, MAX_SEATS - (TAKEN[refOf(ev)] || 0));
+  const seats = el("span", "seats" + (left === 0 ? " full" : left <= 2 ? " few" : ""),
+    left === 0 ? "Sold out" : left === 1 ? "Last seat!" : `${left} seats left`);
+  top.appendChild(seats);
+  c.appendChild(top);
+  c.appendChild(el("h3", null, ev.title));
+  const chips = el("div", "chips");
+  if (ev.level) chips.appendChild(el("span", "chip", ev.level));
+  (ev.cats && ev.cats.length ? ev.cats : [ev.cat]).forEach(k => { if (!MZ_CATEGORIES[k]) return; const ch = el("span", "chip cat", MZ_CATEGORIES[k].label); ch.style.setProperty("--c", MZ_CATEGORIES[k].color); chips.appendChild(ch); });
+  if (chips.children.length) c.appendChild(chips);
+
+  const when = el("div", "when");
+  const d = new Date(ev.start || ev.date + "T12:00:00");
+  when.appendChild(el("strong", null, d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })));
+  if (ev.start) {
+    const local = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    const both = (ev.times || []).map(t => t.time).join(" / ");
+    when.appendChild(el("span", null, local + " your time" + (both ? " (" + both + ")" : "")));
+  }
+  c.appendChild(when);
+
+  if (ev.topic) c.appendChild(el("p", "topic", ev.topic));
+
+  const bottom = el("div", "bottom");
+  const pr = el("div", "pricebox");
+  pr.appendChild(el("span", "price", PRICE));
+  pr.appendChild(el("span", "oncetag", "☝ One trial per person"));
+  bottom.appendChild(pr);
+  // client_reference_id tells you in Stripe which session was booked,
+  // e.g. "trial-2026-11-08-1300-utc".
+  if (left === 0) {
+    const out = el("span", "btn out", "Sold out");
+    out.setAttribute("aria-disabled", "true");
+    bottom.appendChild(out);
+  } else {
+    const a = el("a", "btn", "Book my seat");
+    a.href = BOOK_URL + "?client_reference_id=" + encodeURIComponent(refOf(ev));
+    a.target = "_blank";
+    a.rel = "noopener";
+    // One trial per person: ask for the email first and check it, then go to Stripe with that email locked.
+    a.addEventListener("click", () => mzTrack("InitiateCheckout", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" }, { event: "begin_checkout", params: GA_TRIAL }));
+    if (SEATS_URL) a.addEventListener("click", e => { e.preventDefault(); askEmail(c, bottom, ev); });
+    bottom.appendChild(a);
+  }
+  c.appendChild(bottom);
+  const sh = el("button", "share"); sh.type = "button";
+  sh.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Copy link to this session</span>';
+  sh.addEventListener("click", () => copyText(PAGE_URL + "?session=" + idOf(ev), sh.querySelector("span")));
+  c.appendChild(sh);
+  c.id = "s-" + idOf(ev);
+  return c;
+}
+
+// Host photos: hosts.json (name -> photo), built from the Club page's "Meet your hosts" cards at every sync.
+let HOSTS = {};
+function whoEl(ev) {
+  const w = el("div", "who"), ph = el("div", "ph");
+  const names = String(ev.host || "").split(/\s*(?:&|,|\/|\+|\band\b)\s*/i).filter(Boolean);
+  names.slice(0, 3).forEach(n => {
+    const h = HOSTS[n.toLowerCase()];
+    if (h && h.photo) { const i = el("img"); i.src = h.photo; i.alt = n; i.loading = "lazy"; ph.appendChild(i); }
+    else ph.appendChild(el("span", null, n.charAt(0).toUpperCase()));
+  });
+  if (!names.length) { const i = el("img"); i.src = "promo/mz-logo.png"; i.alt = ""; i.style.objectFit = "contain"; i.style.background = "#fff"; ph.appendChild(i); }
+  w.appendChild(ph);
+  const nm = el("div", "nm");
+  if (names.length) { nm.append("Hosted by"); nm.appendChild(el("b", null, names.join(" & "))); }
+  else nm.appendChild(el("b", null, "Mandarin Zest Club"));
+  w.appendChild(nm);
+  return w;
+}
+function idOf(ev) { return refOf(ev).replace(/^trial-/, "").replace(/-utc$/, ""); }
+function copyText(t, label) {
+  const done = () => { const o = label.textContent; label.textContent = "Link copied ✓"; setTimeout(() => label.textContent = o, 2000); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, () => prompt("Copy this link:", t));
+  else prompt("Copy this link:", t);
+}
+
+// Meta Pixel: tell the Odoo page (which runs the pixel) what the visitor did. The page listens with the
+// small "mz-track" snippet in Odoo's <head> code injection (see README). Harmless if nobody listens.
+// Google Analytics gets the same steps (GA names in `ga`), sent to GA by the same listener.
+function mzTrack(event, params, ga) {
+  try { window.top.postMessage({ mz: "track", event: event, params: params || {}, ga: ga }, "*"); } catch (e) {}
+}
+const GA_TRIAL = { currency: "USD", value: 2.5, items: [{ item_id: "club-trial", item_name: "Club trial session", price: 2.5, quantity: 1 }] };
+// The booking button: full wording on wider cards, a short one on small phones (switched by CSS).
+function setGo(b) {
+  b.innerHTML = "";
+  b.append(el("span", "go-long", "Continue to payment · " + PRICE), el("span", "go-short", "Pay " + PRICE + " →"));
+}
+
+function askEmail(c, bottom, ev) {
+  bottom.innerHTML = "";
+  const f = el("form", "ask");
+  const lid = "em-" + Math.random().toString(36).slice(2, 8);
+  const lbl = el("label", "asklbl", "Where should we send your Meet link?"); lbl.htmlFor = lid;
+  const inp = el("input"); inp.id = lid; inp.type = "email"; inp.placeholder = "you@email.com"; inp.required = true; inp.autocomplete = "email"; inp.inputMode = "email";
+  const go = el("button", "btn"); setGo(go); go.type = "submit";
+  f.append(lbl, inp, go);
+  const msg = el("div", "askmsg", ASK_NOTE);
+  bottom.append(f);
+  c.appendChild(msg);
+  setTimeout(() => inp.focus(), 30);
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = inp.value.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = "askmsg warn"; msg.textContent = "Please check your email address."; return; }
+    go.disabled = true; go.textContent = "Checking…";
+    let used = false;
+    try { used = (await (await fetch(SEATS_URL + "?check=" + encodeURIComponent(email))).json()).used; } catch (err) {}
+    go.disabled = false; setGo(go);
+    if (used) {
+      msg.className = "askmsg"; msg.textContent = ASK_NOTE;
+      showOnceOnly(f);
+      return;
+    }
+    const url = BOOK_URL + "?client_reference_id=" + encodeURIComponent(refOf(ev)) + "&prefilled_email=" + encodeURIComponent(email) + "&locked_prefilled_email=true";
+    mzTrack("AddPaymentInfo", { value: 2.50, currency: "USD", content_name: ev.title || "Trial session" }, { event: "add_payment_info", params: GA_TRIAL });
+    const w = window.open(url, "_blank");
+    if (w) { msg.className = "askmsg"; msg.textContent = "Payment opened in a new tab. Your Meet link arrives by email within 5 minutes."; return; }
+    // the browser blocked the new tab: give a real link to click instead
+    const a = document.createElement("a"); a.className = "btn"; a.href = url; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = "Go to secure payment ↗"; a.style.display = "block"; a.style.textAlign = "center";
+    f.replaceWith(a);
+    msg.className = "askmsg"; msg.textContent = "Your Meet link arrives by email within 5 minutes of paying.";
+  });
+}
+
+function upcoming(events) {
+  const now = new Date();
+  return events.filter(ev => ev.trial && new Date(ev.start || ev.date + "T23:59:00") > now)
+    .sort((a, b) => new Date(a.start || a.date) - new Date(b.start || b.date));
+}
+function levelOk(ev) {
+  if (!LEVEL) return true;
+  if (LEVEL === "All levels") return ev.level === "All levels";
+  return !ev.level || ev.level === LEVEL || ev.level === "All levels";
+}
+const LEVELS = ["", "Beginner", "Intermediate", "Advanced", "All levels"];
+
+function render() {
+  root.innerHTML = "";
+  const trials = ALL;
+  if (!trials.length) {
+    const box = el("div", "empty");
+    box.appendChild(el("strong", null, "New trial dates coming soon"));
+    box.appendChild(document.createTextNode("New sessions are added every week. Check back in a few days."));
+    root.appendChild(box); reportHeight(); return;
+  }
+  const board = el("div", "board");
+
+  // a session linked from an email (?session=…) is pinned at the top
+  if (PIN) {
+    const pin = el("div", "pin");
+    const ev = trials.find(e => idOf(e) === PIN);
+    if (ev) { pin.appendChild(el("p", null, "YOUR SESSION")); pin.appendChild(card(ev)); }
+    else { pin.appendChild(el("p", null, "THIS SESSION HAS PASSED")); pin.appendChild(el("div", "gone", "That session already took place. Pick another one below: new sessions are added every week.")); }
+    board.appendChild(pin);
+  }
+
+  const bar = el("div", "bar");
+  bar.appendChild(el("span", "lab", "Level"));
+  LEVELS.forEach(l => {
+    const b = el("button", "fbtn", l || "Any level"); b.type = "button"; b.setAttribute("aria-pressed", String(LEVEL === l));
+    b.addEventListener("click", () => { LEVEL = l; render(); });
+    bar.appendChild(b);
+  });
+  const list = trials.filter(levelOk);
+  const limit = new Date(); limit.setDate(limit.getDate() + daysShown);
+  const shown = list.filter(ev => new Date(ev.start || ev.date) <= limit);
+  const cnt = el("span", "count", `${list.length} upcoming session${list.length === 1 ? "" : "s"}` + (shown.length < list.length ? ` · next ${daysShown} days shown` : ""));
+  bar.appendChild(cnt);
+  board.appendChild(bar);
+
+  if (!list.length) board.appendChild(el("div", "empty-f", "No upcoming sessions at this level yet. Try another level."));
+  // grouped by week (Monday to Sunday, in the visitor's time zone); each card shows its own day and time
+  let lastWeek = "", grid = null;
+  const monday = dt => { const m = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); m.setDate(m.getDate() - ((m.getDay() + 6) % 7)); return m; };
+  const thisMon = monday(new Date());
+  shown.forEach(ev => {
+    const d = new Date(ev.start || ev.date + "T12:00:00"), mon = monday(d), key = mon.toDateString();
+    if (key !== lastWeek) {
+      lastWeek = key;
+      const weeks = Math.round((mon - thisMon) / 6048e5), sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+      const fmt = x => x.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+      const h = el("div", "day", weeks === 0 ? "This week" : weeks === 1 ? "Next week" : "Week of " + fmt(mon));
+      h.appendChild(el("small", null, fmt(mon) + " – " + fmt(sun)));
+      board.appendChild(h);
+      grid = el("div", "grid"); board.appendChild(grid);
+    }
+    grid.appendChild(card(ev));
+  });
+  if (shown.length < list.length) {
+    const more = el("button", "more", `Show more sessions (${list.length - shown.length})`); more.type = "button";
+    more.addEventListener("click", () => { daysShown += DAYS_STEP; render(); });
+    board.appendChild(more);
+  }
+  root.appendChild(board);
+  reportHeight();
+}
+
+// Ask the Odoo page for its address, so mandarinzest.com/…?session=<id> pins that session (see odoo-head-code.html).
+window.addEventListener("message", e => {
+  const d = e.data || {};
+  if (d.mz !== "page" || PIN) return;
+  const s = new URLSearchParams(d.search || "").get("session") || (String(d.hash || "").match(/session=([0-9A-Za-z-]+)/) || [])[1];
+  if (s) { PIN = s.replace(/[^0-9A-Za-z-]/g, ""); if (ALL.length) { render(); try { parent.postMessage({ mz: "scrolltop" }, "*"); } catch (x) {} } }
+});
+try { parent.postMessage({ mz: "hello" }, "*"); } catch (e) {}
+
+const hostsReady = fetch("hosts.json", { cache: "no-cache" }).then(r => r.json()).then(d => { HOSTS = d || {}; }).catch(() => {});
+const seatsReady = SEATS_URL
+  ? fetch(SEATS_URL).then(r => r.json()).then(d => { TAKEN = d.taken || {}; }).catch(() => {})
+  : Promise.resolve();
+Promise.all([fetch("events.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }), seatsReady, hostsReady])
+  .then(([data]) => { ALL = upcoming(Array.isArray(data.events) ? data.events : []); render(); if (PIN) try { parent.postMessage({ mz: "scrolltop" }, "*"); } catch (x) {} })
+  .catch(() => { ALL = []; render(); });
+
+// Pop-up shown when an email has already had its trial session.
+function showOnceOnly(anchor) {
+  document.querySelectorAll(".once, .once-bg").forEach(x => x.remove());
+  const bg = document.createElement("div"); bg.className = "once-bg";
+  bg.style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + "px";
+  const box = document.createElement("div"); box.className = "once"; box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true");
+  box.innerHTML = `<button type="button" class="x" aria-label="Close">×</button>
+    <div class="em" aria-hidden="true">🍊</div>
+    <h4>One trial session per person</h4>
+    <p>You've already had your trial session with this email. Enjoyed the experience? Become a Club member and join as many speaking sessions as you like.</p>
+    <a class="go" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Become a Club member ↗</a>
+    <button type="button" class="ok">Close</button>`;
+  document.body.append(bg, box);
+  const r = anchor.getBoundingClientRect(), docH = parseFloat(bg.style.height);
+  let top = r.top + window.scrollY + r.height / 2 - box.offsetHeight / 2;
+  top = Math.max(window.scrollY + 8, Math.min(top, docH - box.offsetHeight - 8));
+  box.style.top = Math.max(8, top) + "px";
+  box.style.left = Math.max(12, (document.documentElement.clientWidth - box.offsetWidth) / 2) + "px";
+  const close = () => { box.remove(); bg.remove(); document.removeEventListener("keydown", esc); };
+  const esc = e => { if (e.key === "Escape") close(); };
+  bg.addEventListener("click", close); box.querySelector(".x").addEventListener("click", close); box.querySelector(".ok").addEventListener("click", close);
+  box.querySelector(".go").addEventListener("click", () => setTimeout(close, 100));
+  document.addEventListener("keydown", esc);
+  box.querySelector(".go").focus({ preventScroll: true });
+}
+</script>
+</body>
+</html>
