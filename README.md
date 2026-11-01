@@ -356,13 +356,12 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   Chinese New Year date (table CNY, 1900–2099) → birth chart card (year pillar 干支, yin/yang, year element and the animal's
   own element, hours, lucky numbers and colours, best matches, clash, traits, next 本命年). Two card looks, chosen by the
   visitor: Mandarin Zest and Ink & brush (traditional characters in the Yuji Syuku brush font; 雞 is written 鷄 because the
-  font has no 雞). "Read about the X ↗" (blog post), Share (phone share sheet with the picture, else copies the link) and
-  Download PNG (1080×1350, drawn on a canvas with the logo). The "this year / next up" band, race-order grid tags and FAQ
+  font has no 雞). "Read about the X ↗" (blog post) and Download PNG (1080×1350, drawn on a canvas with the logo). The "this year / next up" band, race-order grid tags and FAQ
   answers follow today's date, so they change by themselves at every Chinese New Year. 12 animals in race order link to the
   blog posts (BLOG + post in the A list). Free PDF `downloads/zodiac/` for an email (Start Here sheet, source
   `free-pdf | zodiac | <animal>`), Club trial, FAQ. Pictures: `zodiac/` (grid, 200px), `zodiac/lg/` (card,
   400px), `zodiac/logo-*.png`. Lucky data from China Highlights (same as the blog posts). Frame resizes itself;
-  fallback `height:max(3350px, calc(10600px - 600vw))`, `scrolling="no"`, `allow="web-share; clipboard-write"`.
+  fallback `height:max(3350px, calc(10600px - 600vw))`, `scrolling="no"`, `allow="clipboard-write"`.
   Test with `?date=1991-01-20&style=ink`.
 - `free-pdf.html?pdf=<id>`: cover + title + email + consent → Start Here sheet (source `free-pdf | <id>`) → "Download the PDF"
   (+ "Practise them out loud: try a Club session ↗"). Remembers people who already signed up (per PDF, in the browser).

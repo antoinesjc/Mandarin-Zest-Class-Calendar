@@ -10,7 +10,7 @@
 <style>
 /* ═══ Chinese zodiac checker page (mandarinzest.com/your-zodiac-sign) ═══
    Birthday → animal (exact Chinese New Year dates 1900–2099), birth chart card in two looks
-   (Mandarin Zest / Ink & brush), Share + Download PNG, this year's animal (updates itself from
+   (Mandarin Zest / Ink & brush), Download PNG, this year's animal (updates itself from
    today's date), the 12 animals in race order linking to the blog posts, free zodiac PDF for an email,
    Club trial, FAQ. Animal data: A list in the script. Blog links: BLOG. All links open in a new tab. */
 :root { --ink:#173d17; --ink2:#2f5a2f; --ink3:#4b6b4b; --mint:#eef8ea; --mint2:#e3f5de; --cream:#fffaf6; --line:#b9d6ad;
@@ -266,7 +266,6 @@ details p { margin: 10px 0 0; line-height: 1.55; color: var(--ink2); }
       <div class="actions" style="margin-top:12px">
         <a class="btn btn-orange" id="readMore" href="#" target="_blank" rel="noopener">Read about the Horse ↗</a>
         <div class="right">
-          <button class="btn btn-line" type="button" id="shareBtn"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>Share</button>
           <button class="btn btn-line" type="button" id="dlBtn"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>Download PNG</button>
         </div>
       </div>
@@ -354,7 +353,6 @@ details p { margin: 10px 0 0; line-height: 1.55; color: var(--ink2); }
 var CNY = [131,219,208,129,216,204,125,213,202,122,210,130,218,206,126,214,203,123,211,201,220,208,128,216,205,124,213,202,123,210,130,217,206,126,214,204,124,211,131,219,208,127,215,205,125,213,202,122,210,129,217,206,127,214,203,124,212,131,218,208,128,215,205,125,213,202,121,209,130,217,206,127,215,203,123,211,131,218,207,128,216,205,125,213,202,220,209,129,217,206,127,215,204,123,210,131,219,207,128,216,205,124,212,201,122,209,129,218,207,126,214,203,123,210,131,219,208,128,216,205,125,212,201,122,210,129,217,206,126,213,203,123,211,131,219,208,128,215,204,124,212,201,122,210,130,217,206,126,214,202,123,211,201,219,208,128,215,204,124,212,202,121,209,129,217,205,126,214,203,123,211,131,219,207,127,215,205,124,212,202,122,209,129,217,206,126,214,203,124,210,130,218,207,127,215,205,125,212,201,121];
 var FIRST = 1900, LAST = 2098;
 var BLOG = "https://www.mandarinzest.com/blog/chinese-zodiac-5/";
-var SHARE_URL = "https://www.mandarinzest.com/your-zodiac-sign";
 var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
 var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 var STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"], STEM_PY = ["jiǎ","yǐ","bǐng","dīng","wù","jǐ","gēng","xīn","rén","guǐ"];
@@ -779,25 +777,6 @@ $("dlBtn").addEventListener("click", function () {
     setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
     $("status").textContent = "Downloaded ✓";
     track({ ga: { event: "zodiac_download", params: { animal: state.r.a.k, style: state.style } } });
-  });
-});
-$("shareBtn").addEventListener("click", function () {
-  if (!state.r) return;
-  var a = state.r.a, text = "I'm a " + state.r.el[0] + " " + a.en + " (" + state.r.pillar + ") in the Chinese zodiac. 我属" + a.zh + "! Find your animal:";
-  track({ ga: { event: "zodiac_share", params: { animal: a.k, style: state.style } } });
-  function copyLink() {
-    var s = text + " " + SHARE_URL;
-    try { navigator.clipboard.writeText(s).then(function () { $("status").textContent = "Link copied ✓ Paste it anywhere to share."; }, function () { $("status").textContent = s; }); }
-    catch (e) { $("status").textContent = s; }
-  }
-  if (!navigator.share) { copyLink(); return; }
-  $("status").textContent = "Preparing your chart…";
-  makePng().then(function (blob) {
-    $("status").textContent = "";
-    var file = blob ? new File([blob], fileName(), { type: "image/png" }) : null;
-    var data = file && navigator.canShare && navigator.canShare({ files: [file] }) ? { files: [file], title: "My Chinese zodiac", text: text + " " + SHARE_URL }
-                                                                                   : { title: "My Chinese zodiac", text: text, url: SHARE_URL };
-    navigator.share(data).catch(function (err) { if (err && err.name !== "AbortError") copyLink(); });
   });
 });
 
