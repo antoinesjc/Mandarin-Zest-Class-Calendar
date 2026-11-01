@@ -1,336 +1,6 @@
 {
  "events": [
   {
-   "date": "2026-09-01",
-   "title": "Advanced Book Club",
-   "level": "Advanced",
-   "cats": [
-    "bookclub",
-    "reading"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "7pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "1pm ET"
-    }
-   ],
-   "start": "2026-09-01T17:00:00Z",
-   "end": "2026-09-01T18:00:00Z",
-   "cat": "bookclub",
-   "topic": "Practice speaking based on advanced reading content. The book club follows the weekly publication of our substack: ",
-   "host": "Dorota",
-   "trial": true
-  },
-  {
-   "date": "2026-09-01",
-   "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
-   "cats": [
-    "listening"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "11pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "5pm ET"
-    }
-   ],
-   "start": "2026-09-01T21:00:00Z",
-   "end": "2026-09-01T21:45:00Z",
-   "cat": "listening",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-04",
-   "title": "Animals!",
-   "level": "Beginner",
-   "cats": [
-    "conversation"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "11pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "5pm ET"
-    }
-   ],
-   "start": "2026-09-04T21:00:00Z",
-   "end": "2026-09-04T21:45:00Z",
-   "cat": "conversation",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-07",
-   "title": "Advanced Book Club",
-   "level": "Advanced",
-   "cats": [
-    "bookclub",
-    "reading"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "7pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "1pm ET"
-    }
-   ],
-   "start": "2026-09-07T17:00:00Z",
-   "end": "2026-09-07T18:00:00Z",
-   "cat": "bookclub",
-   "topic": "Practice speaking based on advanced reading content. The book club follows the weekly publication of our substack: ",
-   "host": "Dorota",
-   "trial": true
-  },
-  {
-   "date": "2026-09-08",
-   "title": "Vocab + Reading Practice",
-   "level": "Beginner",
-   "cats": [
-    "vocabulary",
-    "reading"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "11pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "5pm ET"
-    }
-   ],
-   "start": "2026-09-08T21:00:00Z",
-   "end": "2026-09-08T21:45:00Z",
-   "cat": "vocabulary",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-11",
-   "title": "Dumplings!",
-   "level": "Beginner",
-   "cats": [
-    "culture"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "11pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "5pm ET"
-    }
-   ],
-   "start": "2026-09-11T21:00:00Z",
-   "end": "2026-09-11T21:45:00Z",
-   "cat": "culture",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-12",
-   "title": "Native Teacher Conversation",
-   "level": "Beginner",
-   "cats": [
-    "conversation"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "4pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "10am ET"
-    }
-   ],
-   "start": "2026-09-12T14:00:00Z",
-   "end": "2026-09-12T15:00:00Z",
-   "cat": "conversation",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-13",
-   "title": "Session on Taiwanese Bopomofo Alphabet",
-   "level": "",
-   "cats": [
-    "characters"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "4pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "10am ET"
-    }
-   ],
-   "start": "2026-09-13T14:00:00Z",
-   "end": "2026-09-13T14:45:00Z",
-   "cat": "characters",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-14",
-   "title": "Advanced Book Club",
-   "level": "Advanced",
-   "cats": [
-    "bookclub",
-    "reading"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "7pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "1pm ET"
-    }
-   ],
-   "start": "2026-09-14T17:00:00Z",
-   "end": "2026-09-14T18:00:00Z",
-   "cat": "bookclub",
-   "topic": "Practice speaking based on advanced reading content. The book club follows the weekly publication of our substack: ",
-   "host": "Dorota",
-   "trial": true
-  },
-  {
-   "date": "2026-09-15",
-   "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
-   "cats": [
-    "listening"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "11pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "5pm ET"
-    }
-   ],
-   "start": "2026-09-15T21:00:00Z",
-   "end": "2026-09-15T21:45:00Z",
-   "cat": "listening",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-19",
-   "title": "Native Teacher Conversation",
-   "level": "Intermediate",
-   "cats": [
-    "conversation"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "4pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "10am ET"
-    }
-   ],
-   "start": "2026-09-19T14:00:00Z",
-   "end": "2026-09-19T15:00:00Z",
-   "cat": "conversation",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-21",
-   "title": "Advanced Book Club",
-   "level": "Advanced",
-   "cats": [
-    "bookclub",
-    "reading"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "7pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "1pm ET"
-    }
-   ],
-   "start": "2026-09-21T17:00:00Z",
-   "end": "2026-09-21T18:00:00Z",
-   "cat": "bookclub",
-   "topic": "Practice speaking based on advanced reading content. The book club follows the weekly publication of our substack: ",
-   "host": "Dorota",
-   "trial": true
-  },
-  {
-   "date": "2026-09-22",
-   "title": "Vocab + Reading Practice",
-   "level": "Beginner",
-   "cats": [
-    "vocabulary",
-    "reading"
-   ],
-   "times": [
-    {
-     "flag": "us",
-     "time": "7pm ET"
-    }
-   ],
-   "start": "2026-09-22T23:00:00Z",
-   "end": "2026-09-22T23:45:00Z",
-   "cat": "vocabulary",
-   "trial": true,
-   "topic": ""
-  },
-  {
-   "date": "2026-09-28",
-   "title": "Advanced Book Club",
-   "level": "Advanced",
-   "cats": [
-    "bookclub",
-    "reading"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "7pm CEST"
-    },
-    {
-     "flag": "us",
-     "time": "1pm ET"
-    }
-   ],
-   "start": "2026-09-28T17:00:00Z",
-   "end": "2026-09-28T18:00:00Z",
-   "cat": "bookclub",
-   "topic": "Practice speaking based on advanced reading content. The book club follows the weekly publication of our substack: ",
-   "host": "Dorota",
-   "trial": true
-  },
-  {
    "date": "2026-10-02",
    "title": "Holidays!",
    "level": "Beginner",
@@ -2299,6 +1969,233 @@
    "cat": "noagenda",
    "topic": "About:",
    "about": "Host: Gabrielle",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-03",
+   "title": "HSK Review + Listening Practice",
+   "level": "Intermediate",
+   "cats": [
+    "listening"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-03T21:00:00Z",
+   "end": "2027-05-03T22:00:00Z",
+   "cat": "listening",
+   "topic": "Practice HSK Vocab and Reading Practice",
+   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-06",
+   "title": "TopicTBD",
+   "level": "Beginner",
+   "cats": [
+    "noagenda"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-06T21:00:00Z",
+   "end": "2027-05-06T22:00:00Z",
+   "cat": "noagenda",
+   "topic": "About:",
+   "about": "Host: Gabrielle",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-10",
+   "title": "Vocab + Reading Practice",
+   "level": "Intermediate",
+   "cats": [
+    "vocabulary",
+    "reading"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-10T21:00:00Z",
+   "end": "2027-05-10T22:00:00Z",
+   "cat": "vocabulary",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-13",
+   "title": "TopicTBD",
+   "level": "Beginner",
+   "cats": [
+    "noagenda"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-13T21:00:00Z",
+   "end": "2027-05-13T22:00:00Z",
+   "cat": "noagenda",
+   "topic": "About:",
+   "about": "Host: Gabrielle",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-17",
+   "title": "HSK Review + Listening Practice",
+   "level": "Intermediate",
+   "cats": [
+    "listening"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-17T21:00:00Z",
+   "end": "2027-05-17T22:00:00Z",
+   "cat": "listening",
+   "topic": "Practice HSK Vocab and Reading Practice",
+   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-20",
+   "title": "TopicTBD",
+   "level": "Beginner",
+   "cats": [
+    "noagenda"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-20T21:00:00Z",
+   "end": "2027-05-20T22:00:00Z",
+   "cat": "noagenda",
+   "topic": "About:",
+   "about": "Host: Gabrielle",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-24",
+   "title": "Vocab + Reading Practice",
+   "level": "Intermediate",
+   "cats": [
+    "vocabulary",
+    "reading"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-24T21:00:00Z",
+   "end": "2027-05-24T22:00:00Z",
+   "cat": "vocabulary",
+   "topic": "New Vocabulary and Reading Practice",
+   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-27",
+   "title": "TopicTBD",
+   "level": "Beginner",
+   "cats": [
+    "noagenda"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-27T21:00:00Z",
+   "end": "2027-05-27T22:00:00Z",
+   "cat": "noagenda",
+   "topic": "About:",
+   "about": "Host: Gabrielle",
+   "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2027-05-31",
+   "title": "HSK Review + Listening Practice",
+   "level": "Intermediate",
+   "cats": [
+    "listening"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "11pm CEST"
+    },
+    {
+     "flag": "us",
+     "time": "5pm ET"
+    }
+   ],
+   "start": "2027-05-31T21:00:00Z",
+   "end": "2027-05-31T22:00:00Z",
+   "cat": "listening",
+   "topic": "Practice HSK Vocab and Reading Practice",
+   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   }
