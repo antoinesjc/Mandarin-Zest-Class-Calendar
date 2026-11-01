@@ -77,6 +77,15 @@ var FREE_PDFS = {
     after: "Pick 3 words and try them in your next chat with a Chinese speaker.",
     file: "downloads/guides/20-Chinese-Slang-Words-Mandarin-Zest.pdf",
     cover: "downloads/guides/cover-slang.jpg"
+  },
+  "zodiac": {
+    tag: "Chinese zodiac", color: "#4f9a4f",
+    title: "Get the Chinese Zodiac Vocabulary guide",
+    text: "The 12 animals with their years, 14 key words and 6 sentences to talk about your sign, and 8 animal idioms to impress.",
+    done: "Your zodiac vocabulary guide is ready",
+    after: "Learn to ask 你属什么？ and answer with your own animal.",
+    file: "downloads/zodiac/Chinese-Zodiac-Vocabulary-Mandarin-Zest.pdf",
+    cover: "downloads/zodiac/cover-zodiac.jpg"
   }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" },

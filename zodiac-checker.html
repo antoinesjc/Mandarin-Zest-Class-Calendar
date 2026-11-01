@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's your Chinese zodiac animal? · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito+Sans:wght@400;600;700;800&family=Noto+Sans+SC:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Yuji+Syuku&display=swap" rel="stylesheet">
+<style>
+/* ═══ Chinese zodiac checker page (mandarinzest.com/your-zodiac-sign) ═══
+   Birthday → animal (exact Chinese New Year dates 1900–2099), birth chart card in two looks
+   (Mandarin Zest / Ink & brush), Share + Download PNG, this year's animal (updates itself from
+   today's date), the 12 animals in race order linking to the blog posts, free zodiac PDF for an email,
+   Club trial, FAQ. Animal data: A list in the script. Blog links: BLOG. All links open in a new tab. */
+:root { --ink:#173d17; --ink2:#2f5a2f; --ink3:#4b6b4b; --mint:#eef8ea; --mint2:#e3f5de; --cream:#fffaf6; --line:#b9d6ad;
+        --orange:#f07d1a; --orange-d:#d96a0c; --peach:#fde3cc; --deep:#1b6f1b; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--mint); }
+body { font-family: 'Nunito Sans', system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+a { color: var(--deep); }
+.zh { font-family: 'Noto Sans SC', sans-serif; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.eyebrow { margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .12em; color: var(--deep); text-transform: uppercase; }
+h1, h2 { font-family: 'Baloo 2', sans-serif; font-weight: 800; margin: 0; line-height: 1.05; }
+h1 { font-size: clamp(38px, 6vw, 60px); }
+h2 { font-size: clamp(30px, 4vw, 40px); }
+.lead { margin: 0; font-size: 18px; line-height: 1.55; color: var(--ink2); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 12px;
+       font: 800 16px 'Nunito Sans', sans-serif; text-decoration: none; cursor: pointer; border: 0; }
+.btn-orange { background: var(--orange); color: #2a1405; }
+.btn-orange:hover { background: var(--orange-d); }
+.btn-green { background: var(--deep); color: #fff; }
+.btn-green:hover { background: #124d12; }
+.btn-line { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+.btn-line:hover { background: rgba(23,61,23,.06); }
+.btn:focus-visible, input:focus-visible, .seg button:focus-visible, .animal:focus-visible, summary:focus-visible { outline: 3px solid #4f7a94; outline-offset: 2px; }
+.btn svg { flex: none; }
+
+/* hero */
+.hero { padding: 48px 0 36px; display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start; }
+.hero-text { flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.form { background: var(--cream); border: 2px solid var(--ink); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px; box-shadow: 6px 6px 0 var(--ink); max-width: 520px; }
+.form label { font-weight: 800; font-size: 15px; }
+.form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.form input[type=date] { flex: 1 1 190px; min-width: 0; height: 52px; padding: 0 14px; font: 600 17px 'Nunito Sans', sans-serif; color: var(--ink);
+       background: #fff; border: 2px solid var(--line); border-radius: 12px; }
+.form .note { margin: 0; font-size: 13px; color: var(--ink3); }
+.form .err { margin: 0; font-size: 14px; font-weight: 700; color: #a3360a; min-height: 0; }
+.result { flex: 1 1 520px; min-width: 0; max-width: 620px; display: flex; flex-direction: column; gap: 12px; }
+.seg { display: inline-flex; background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; align-self: flex-start; }
+.seg button { border: 0; background: transparent; font: 700 14px 'Nunito Sans', sans-serif; color: var(--ink2); padding: 7px 14px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed=true] { background: var(--ink); color: #fff; }
+.seg-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--ink3); font-weight: 700; }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.actions .right { display: flex; gap: 8px; }
+.status { margin: 0; font-size: 14px; font-weight: 700; color: var(--deep); min-height: 20px; }
+
+/* placeholder before a birthday is entered */
+.placeholder { background: var(--cream); border: 2px dashed var(--line); border-radius: 28px; padding: 36px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.disc { width: 170px; height: 170px; border-radius: 50%; background: #fff; position: relative; box-shadow: 0 0 0 8px var(--mint2); }
+.disc img { position: absolute; inset: 18px; width: calc(100% - 36px); height: calc(100% - 36px); object-fit: contain; opacity: 0; transform: scale(.7) rotate(-8deg);
+            transition: opacity .35s ease, transform .45s cubic-bezier(.3,1.6,.5,1); }
+.disc img.on { opacity: 1; transform: none; }
+.disc .q { position: absolute; right: -4px; top: -2px; width: 44px; height: 44px; border-radius: 50%; background: var(--orange); color: #2a1405; font-weight: 800; font-size: 24px; display: grid; place-items: center; }
+.placeholder p { margin: 0; font-size: 17px; color: var(--ink2); }
+
+/* ── card: Mandarin Zest look ── */
+.cz { background: var(--cream); border: 2px solid var(--ink); border-radius: 28px; overflow: hidden; }
+.cz-top { background: var(--mint2); padding: 18px 24px 0; }
+.cz-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.cz-head img { height: 30px; width: auto; }
+.cz-head span { white-space: nowrap; font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--deep); }
+.cz-hero { display: flex; align-items: flex-end; gap: 16px; }
+.cz-hero > img { width: 180px; height: 180px; object-fit: contain; flex: 0 0 auto; }
+.cz-id { padding-bottom: 20px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cz-id .born { margin: 0; font-size: 13px; color: var(--ink2); }
+.cz-id .name { margin: 0; font: 800 50px/0.95 'Baloo 2', sans-serif; }
+.cz-id .chars { margin: 0; font-size: 20px; }
+.cz-id .chars .zh { font-weight: 700; font-size: 34px; vertical-align: -4px; }
+.cz-id .chars .muted { color: var(--ink3); }
+.pill { align-self: flex-start; margin-top: 4px; background: var(--ink); color: var(--cream); font-weight: 800; font-size: 14px; padding: 6px 12px; border-radius: 99px; }
+.cz-body { padding: 18px 24px 20px; display: flex; flex-direction: column; gap: 16px; }
+.cz-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cell { background: var(--mint); border-radius: 14px; padding: 10px 14px; }
+.cell .k { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--deep); text-transform: uppercase; }
+.cell .v { margin: 2px 0 0; font-weight: 700; font-size: 15px; }
+.cell .v.cols { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.sw { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid var(--ink); display: inline-block; flex: none; }
+.cz-row { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }
+.mini { width: 64px; text-align: center; font-size: 13px; font-weight: 700; }
+.mini img { width: 52px; height: 52px; object-fit: contain; display: block; margin: 0 auto 2px; }
+.lbl { margin: 0 0 6px; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--deep); }
+.lbl.red { color: #9a3d0a; }
+.chip { background: var(--peach); color: #6b3306; font-weight: 700; font-size: 13px; padding: 5px 11px; border-radius: 99px; display: inline-block; margin: 0 4px 6px 0; }
+.cz-foot { border-top: 1.5px dashed var(--line); padding-top: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.cz-foot p { margin: 0; font-size: 15px; }
+.cz-foot .zh { font-weight: 700; font-size: 22px; }
+.cz-url { margin: -8px 0 0; font-size: 12px; color: var(--ink3); text-align: right; }
+
+/* ── card: Ink & brush look ── */
+.ci { position: relative; background: #f6f2e9; border: 1px solid #1a1a1a; overflow: hidden; padding: 20px 24px 18px; display: flex; flex-direction: column; gap: 12px;
+      font-family: 'EB Garamond', serif; color: #1a1a1a; }
+.ci .paper { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .35; pointer-events: none; }
+.ci > *:not(.paper) { position: relative; }
+.ci .brush { font-family: 'Yuji Syuku', serif; font-weight: 400; }
+.ci-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.ci-head img { height: 28px; width: auto; filter: brightness(0); }
+.ci-head span { white-space: nowrap; font-size: 15px; font-weight: 700; letter-spacing: .22em; }
+.ci-hero { display: flex; align-items: stretch; gap: 10px; min-height: 260px; }
+.ci-big { flex: 0 0 auto; width: 52%; display: grid; place-items: center; font-size: clamp(130px, 30vw, 210px); line-height: 1; }
+.ci-side { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; gap: 10px; }
+.ci-vert { writing-mode: vertical-rl; white-space: nowrap; font-size: 34px; letter-spacing: .14em; line-height: 1; }
+.ci-id { text-align: right; display: flex; flex-direction: column; gap: 2px; }
+.ci-id p { margin: 0; }
+.ci-id .born { font-size: 16px; font-style: italic; }
+.ci-id .name { font-size: clamp(36px, 7vw, 50px); font-weight: 700; line-height: .9; letter-spacing: .04em; text-transform: uppercase; }
+.ci-id .sub { font-size: 19px; font-weight: 600; }
+.ci-line { display: block; width: 100%; height: 16px; }
+.ci-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #1a1a1a; border-left: 1px solid #1a1a1a; }
+.ci-grid > div { border-right: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; padding: 9px 12px; }
+.ci-grid .k { margin: 0; font-size: 13px; letter-spacing: .14em; font-weight: 700; text-transform: uppercase; }
+.ci-grid .k .brush { letter-spacing: 0; }
+.ci-grid .v { margin: 2px 0 0; font-size: 20px; font-weight: 600; }
+.ci-row { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+.ci-row .k { margin: 0 0 6px; font-size: 13px; letter-spacing: .14em; font-weight: 700; }
+.ci-row .k .brush { letter-spacing: 0; }
+.cmini { width: 58px; text-align: center; font-size: 15px; font-weight: 600; }
+.cmini span { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto 2px; border: 1px solid #1a1a1a; border-radius: 50%; font-size: 30px; line-height: 1; }
+.cmini.clash span { border-style: dashed; color: #6b6b6b; }
+.ci-nature { flex: 1 1 160px; min-width: 0; }
+.ci-nature p { margin: 0; font-size: 18px; font-style: italic; line-height: 1.35; }
+.ci-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; border-top: 1px solid #1a1a1a; padding-top: 10px; }
+.ci-foot p { margin: 0; font-size: 18px; }
+.ci-foot .brush { font-size: 28px; }
+.ci-foot .url { font-size: 14px; letter-spacing: .06em; }
+/* buttons follow the look of the card */
+.result.ink .btn { border-radius: 0; font-family: 'EB Garamond', serif; font-size: 18px; font-weight: 700; }
+.result.ink .btn-orange { background: #1a1a1a; color: #f6f2e9; }
+.result.ink .btn-orange:hover { background: #000; }
+.result.ink .btn-line { border: 1.5px solid #1a1a1a; color: #1a1a1a; }
+
+/* this year band */
+.band { background: var(--ink); color: var(--cream); }
+.band .wrap { padding-top: 22px; padding-bottom: 22px; display: flex; gap: 14px 40px; align-items: center; flex-wrap: wrap; font-size: 17px; }
+.band p { margin: 0; }
+.band a { color: #ffd2a8; font-weight: 800; }
+.band img { width: 46px; height: 46px; object-fit: contain; background: var(--cream); border-radius: 50%; padding: 3px; vertical-align: middle; margin-right: 8px; }
+
+/* race grid */
+.section { padding: 56px 0 8px; }
+.section .lead { max-width: 760px; margin: 8px 0 26px; }
+.grid12 { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 14px; }
+.animal { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 18px 12px 14px; text-decoration: none; color: var(--ink);
+          border-radius: 20px; background: var(--cream); border: 2px solid transparent; transition: transform .15s, border-color .15s; }
+.animal:hover { transform: translateY(-3px); border-color: var(--line); }
+.animal.mine { background: var(--peach); border-color: var(--orange); }
+.animal .n { position: absolute; top: 10px; left: 14px; font-size: 13px; font-weight: 800; color: var(--ink3); }
+.animal .tag { position: absolute; top: 9px; right: 10px; font-size: 11px; font-weight: 800; background: var(--ink); color: #fff; padding: 2px 8px; border-radius: 99px; }
+.animal.mine .tag { background: var(--orange); color: #2a1405; }
+.animal img { width: 112px; height: 112px; object-fit: contain; }
+.animal .c { display: flex; align-items: baseline; gap: 6px; }
+.animal .c .zh { font-weight: 700; font-size: 26px; }
+.animal .c span:last-child { font-weight: 700; color: var(--ink2); }
+.animal .en { font: 800 22px/1 'Baloo 2', sans-serif; }
+.animal .yrs { font-size: 13px; color: var(--ink3); }
+.animal .more { margin-top: 4px; font-size: 13px; font-weight: 800; color: var(--deep); }
+.workbook { margin-top: 18px; background: #fbe4d8; border-radius: 20px; padding: 16px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.workbook img { width: 76px; height: 76px; border-radius: 12px; object-fit: cover; background: #fff; flex: none; }
+.workbook div { flex: 1 1 260px; min-width: 0; }
+.workbook p { margin: 0; color: #55301f; font-size: 15px; line-height: 1.45; }
+.workbook strong { color: #3b1608; }
+
+/* mini lesson */
+.lesson { background: var(--cream); border-radius: 28px; padding: 32px; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+.lesson > div:first-child { flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.tiles { flex: 2 1 460px; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { background: var(--mint); border-radius: 16px; padding: 16px 18px; }
+.tile p { margin: 0; }
+.tile .zh { font-weight: 700; font-size: 26px; }
+.tile .py { margin-top: 2px; font-weight: 700; }
+.tile .en { margin-top: 2px; color: var(--ink3); font-size: 15px; }
+
+/* free PDF + Club */
+.offers { display: flex; flex-wrap: wrap; gap: 20px; padding: 48px 0 8px; }
+.pdf { flex: 1 1 520px; min-width: 0; background: #f8dacd; border-radius: 28px; padding: 26px; display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.pdf .cover { width: 150px; flex: none; border-radius: 8px; box-shadow: 0 10px 24px rgba(90,40,20,.2); transform: rotate(-3deg); background: #fff; }
+.pdf .txt { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.pdf .eyebrow { color: #7a2e10; }
+.pdf h2 { font-size: 30px; }
+.pdf ul { margin: 0; padding: 0 0 0 18px; color: #4a2416; font-size: 15px; line-height: 1.5; }
+.pdf form { display: flex; flex-direction: column; gap: 8px; }
+.pdf .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.pdf input[type=email] { flex: 1 1 200px; min-width: 0; height: 48px; padding: 0 14px; font: 600 16px 'Nunito Sans', sans-serif; border: 2px solid #e2b5a1; border-radius: 12px; background: var(--cream); color: var(--ink); }
+.consent { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; line-height: 1.4; color: #4a3c34; cursor: pointer; }
+.consent input { width: 16px; height: 16px; margin: 1px 0 0; flex: none; accent-color: var(--orange-d); }
+.pdf .err { margin: 0; font-size: 13px; font-weight: 700; color: #a3360a; }
+.pdf .done { display: none; flex-direction: column; gap: 10px; align-items: flex-start; }
+.pdf.is-done form { display: none; }
+.pdf.is-done .done { display: flex; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.club { flex: 1 1 340px; min-width: 0; background: var(--deep); color: #fff; border-radius: 28px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+.club .eyebrow { color: #cdeec4; }
+.club h2 { font-size: 32px; margin-top: 6px; }
+.club p { margin: 8px 0 0; color: #e6f5e0; font-size: 16px; line-height: 1.5; }
+
+/* FAQ */
+.faq { max-width: 860px; margin: 0 auto; padding: 48px 20px 64px; }
+.faq h2 { margin-bottom: 16px; }
+details { background: var(--cream); border-radius: 16px; padding: 15px 20px; margin-bottom: 10px; }
+summary { font-weight: 800; font-size: 17px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-size: 22px; line-height: 1; color: var(--deep); }
+details[open] summary::after { content: "–"; }
+details p { margin: 10px 0 0; line-height: 1.55; color: var(--ink2); }
+
+@media (max-width: 560px) {
+  .hero { padding-top: 28px; gap: 26px; }
+  .cz-id .name { font-size: 40px; }
+  .cz-body, .cz-top { padding-left: 16px; padding-right: 16px; }
+  .ci { padding: 16px; }
+  .ci-hero { min-height: 200px; }
+  .ci-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .actions .btn { padding: 0 13px; }
+  .cz-head span, .ci-head span { display: none; }
+  .cz-hero { align-items: center; padding-bottom: 14px; }
+  .cz-hero > img { width: 112px; height: 112px; }
+  .cz-id { padding-bottom: 0; }
+  .tiles { grid-template-columns: 1fr; }
+  .lesson, .pdf, .club { padding: 22px; }
+  .pdf .cover { width: 110px; }
+}
+@media (prefers-reduced-motion: reduce) { .disc img { transition: none; } .animal { transition: none; } }
+</style>
+</head>
+<body>
+
+<!-- HERO + CHECKER -->
+<div class="wrap">
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">Chinese zodiac · <span class="zh" style="letter-spacing:.04em">十二生肖</span> shí'èr shēngxiào</p>
+    <h1>What's your Chinese zodiac animal?</h1>
+    <p class="lead">Enter your birthday to get your animal and your Chinese birth chart: element, yin or yang, lucky numbers and colours, and the signs you match with. We use the exact Chinese New Year date of your birth year.</p>
+    <form class="form" id="checker" novalidate>
+      <label for="dob">Your date of birth</label>
+      <div class="form-row">
+        <input id="dob" type="date" min="1900-01-31" required>
+        <button class="btn btn-green" type="submit">Find my animal</button>
+      </div>
+      <p class="err" id="dobErr" role="alert"></p>
+      <p class="note">Works for birthdays from 1900 onwards. Nothing is saved.</p>
+    </form>
+  </div>
+
+  <div class="result" id="result">
+    <div class="placeholder" id="placeholder">
+      <div class="disc" id="disc" aria-hidden="true"><span class="q">?</span></div>
+      <p>Your animal and birth chart will appear here.</p>
+    </div>
+    <div id="out" hidden>
+      <div class="seg-row" style="margin-bottom:12px">
+        <span>Card style</span>
+        <div class="seg" role="group" aria-label="Card style">
+          <button type="button" data-style="zest" aria-pressed="true">Mandarin Zest</button>
+          <button type="button" data-style="ink" aria-pressed="false">Ink &amp; brush</button>
+        </div>
+      </div>
+      <div id="card" aria-live="polite"></div>
+      <div class="actions" style="margin-top:12px">
+        <a class="btn btn-orange" id="readMore" href="#" target="_blank" rel="noopener">Read about the Horse ↗</a>
+        <div class="right">
+          <button class="btn btn-line" type="button" id="shareBtn"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>Share</button>
+          <button class="btn btn-line" type="button" id="dlBtn"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>Download PNG</button>
+        </div>
+      </div>
+      <p class="status" id="status" role="status"></p>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- THIS YEAR (updates itself) -->
+<section class="band" aria-label="This year's animal">
+  <div class="wrap" id="band"></div>
+</section>
+
+<!-- 12 ANIMALS IN RACE ORDER -->
+<div class="wrap">
+<section class="section">
+  <h2>The 12 animals, in race order</h2>
+  <p class="lead">Legend says the Jade Emperor held a Great Race across a river to choose the twelve animals of the calendar. The clever Rat won by riding on the Ox's back and jumping off at the finish. The Pig stopped for lunch and a nap, and still made it. Tap an animal to read everything about it: personality, lucky signs, compatibility, famous people and the Chinese words that go with it.</p>
+  <div class="grid12" id="grid12"></div>
+  <div class="workbook">
+    <img src="https://www.mandarinzest.com/web/image/product.template/37/image_1024?unique=53c427a" alt="" onerror="this.src='zodiac/rat.png'">
+    <div><p><strong>Read the whole Great Race in Chinese.</strong> Our HSK 3–4 workbook tells the legend in 9 chapters, with pinyin help, word lists, grammar and exercises.</p></div>
+    <a class="btn btn-orange" href="https://www.mandarinzest.com/shop/workbook-chinese-zodiac-the-story-of-the-great-race-hsk3-4-37" target="_blank" rel="noopener">See the workbook ↗</a>
+  </div>
+</section>
+
+<!-- MINI LESSON -->
+<section class="section">
+  <div class="lesson">
+    <div>
+      <p class="eyebrow">Mini lesson</p>
+      <h2 style="font-size:34px">Ask anyone their sign in Chinese</h2>
+      <p class="lead" style="font-size:17px;margin:0">In Chinese you don't "have" a zodiac sign, you belong to it: <span class="zh">属</span> shǔ. It's classic small talk, and a polite way to guess someone's age.</p>
+    </div>
+    <div class="tiles" id="tiles"></div>
+  </div>
+</section>
+
+<!-- FREE PDF + CLUB -->
+<section class="offers">
+  <div class="pdf" id="pdf">
+    <img class="cover" src="downloads/zodiac/cover-zodiac.jpg" alt="Cover of the Chinese Zodiac Vocabulary guide">
+    <div class="txt">
+      <p class="eyebrow" id="pdfEyebrow">Free PDF</p>
+      <h2 id="pdfTitle">Chinese Zodiac Vocabulary</h2>
+      <ul>
+        <li>The 12 animals with their years</li>
+        <li>14 key words and 6 sentences to talk about your sign</li>
+        <li>8 animal idioms to impress</li>
+      </ul>
+      <form id="pdfForm" novalidate>
+        <div class="row">
+          <label for="pdfEmail" class="hp">Email</label>
+          <input id="pdfEmail" type="email" placeholder="you@email.com" autocomplete="email" aria-label="Your email">
+          <input id="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn btn-green" type="submit">Send me the PDF</button>
+        </div>
+        <label class="consent"><input type="checkbox" id="pdfOk">I agree to receive emails from Mandarin Zest. I can unsubscribe at any time.</label>
+        <p class="err" id="pdfErr" role="alert"></p>
+      </form>
+      <div class="done">
+        <a class="btn btn-green" href="downloads/zodiac/Chinese-Zodiac-Vocabulary-Mandarin-Zest.pdf" target="_blank" rel="noopener" download>Download the PDF ↓</a>
+        <p style="margin:0;font-size:14px;color:#4a2416">4 pages · ready to print</p>
+      </div>
+    </div>
+  </div>
+  <div class="club">
+    <div>
+      <p class="eyebrow">Mandarin Zest Club</p>
+      <h2>Now say it out loud</h2>
+      <p>Ask <span class="zh">你属什么？</span> in a real conversation. Live small-group sessions on Google Meet, by level, 20+ a month.</p>
+    </div>
+    <a class="btn btn-orange" style="align-self:flex-start" href="https://www.mandarinzest.com/mandarin-zest-club-trial-session" target="_blank" rel="noopener">Try a session · US$2.50 ↗</a>
+  </div>
+</section>
+</div>
+
+<!-- FAQ -->
+<section class="faq">
+  <h2>Questions people ask</h2>
+  <div id="faq"></div>
+</section>
+
+<script>
+(function () {
+"use strict";
+// ═══ DATA ═══
+// Chinese New Year date for each year 1900–2099, as MDD (131 = 31 Jan, 219 = 19 Feb)
+var CNY = [131,219,208,129,216,204,125,213,202,122,210,130,218,206,126,214,203,123,211,201,220,208,128,216,205,124,213,202,123,210,130,217,206,126,214,204,124,211,131,219,208,127,215,205,125,213,202,122,210,129,217,206,127,214,203,124,212,131,218,208,128,215,205,125,213,202,121,209,130,217,206,127,215,203,123,211,131,218,207,128,216,205,125,213,202,220,209,129,217,206,127,215,204,123,210,131,219,207,128,216,205,124,212,201,122,209,129,218,207,126,214,203,123,210,131,219,208,128,216,205,125,212,201,122,210,129,217,206,126,213,203,123,211,131,219,208,128,215,204,124,212,201,122,210,130,217,206,126,214,202,123,211,201,219,208,128,215,204,124,212,202,121,209,129,217,205,126,214,203,123,211,131,219,207,127,215,205,124,212,202,122,209,129,217,206,126,214,203,124,210,130,218,207,127,215,205,125,212,201,121];
+var FIRST = 1900, LAST = 2098;
+var BLOG = "https://www.mandarinzest.com/blog/chinese-zodiac-5/";
+var SHARE_URL = "https://www.mandarinzest.com/your-zodiac-sign";
+var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
+var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+var STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"], STEM_PY = ["jiǎ","yǐ","bǐng","dīng","wù","jǐ","gēng","xīn","rén","guǐ"];
+var BRANCHES = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"], BRANCH_PY = ["zǐ","chǒu","yín","mǎo","chén","sì","wǔ","wèi","shēn","yǒu","xū","hài"];
+var ELEM = [["Wood","木"],["Fire","火"],["Earth","土"],["Metal","金"],["Water","水"]];
+// Lucky numbers, colours and flowers: China Highlights (same source as the blog posts). tc = traditional character for the ink card.
+var A = [
+ {k:"rat",en:"Rat",zh:"鼠",tc:"鼠",py:"shǔ",traits:["Quick-witted","Resourceful","Sociable"],nums:"2 · 3",col:[["Blue","#3d6fd1"],["Gold","#d4a017"],["Green","#3d9a3d"]],best:["ox","dragon","monkey"],clash:"horse",fixed:4,hours:"11 pm – 1 am",post:"year-of-the-rat-%E9%BC%A0-113"},
+ {k:"ox",en:"Ox",zh:"牛",tc:"牛",py:"niú",traits:["Diligent","Reliable","Calm"],nums:"1 · 4",col:[["White","#ffffff"],["Yellow","#f2c230"],["Green","#3d9a3d"]],best:["rat","snake","rooster"],clash:"goat",fixed:2,hours:"1 am – 3 am",post:"year-of-the-ox-%E7%89%9B-114"},
+ {k:"tiger",en:"Tiger",zh:"虎",tc:"虎",py:"hǔ",traits:["Brave","Confident","Protective"],nums:"1 · 3 · 4",col:[["Blue","#3d6fd1"],["Grey","#9a9a9a"],["Orange","#f07d1a"]],best:["pig","horse","dog"],clash:"monkey",fixed:0,hours:"3 am – 5 am",post:"year-of-the-tiger-%E8%99%8E-115"},
+ {k:"rabbit",en:"Rabbit",zh:"兔",tc:"兔",py:"tù",traits:["Gentle","Elegant","Diplomatic"],nums:"3 · 4 · 6",col:[["Red","#d43a2f"],["Pink","#f29bb6"],["Purple","#8a4fbf"]],best:["dog","goat","pig"],clash:"rooster",fixed:0,hours:"5 am – 7 am",post:"year-of-the-rabbit-%E5%85%94-116"},
+ {k:"dragon",en:"Dragon",zh:"龙",tc:"龍",py:"lóng",traits:["Ambitious","Charismatic","Energetic"],nums:"1 · 6 · 7",col:[["Gold","#d4a017"],["Silver","#c0c4c8"],["Greyish white","#e6e4df"]],best:["rooster","rat","monkey"],clash:"dog",fixed:2,hours:"7 am – 9 am",post:"year-of-the-dragon-%E9%BE%99-117"},
+ {k:"snake",en:"Snake",zh:"蛇",tc:"蛇",py:"shé",traits:["Wise","Intuitive","Calm"],nums:"2 · 8 · 9",col:[["Black","#1a1a1a"],["Red","#d43a2f"],["Yellow","#f2c230"]],best:["monkey","ox","rooster"],clash:"pig",fixed:1,hours:"9 am – 11 am",post:"year-of-the-snake-%E8%9B%87-118"},
+ {k:"horse",en:"Horse",zh:"马",tc:"馬",py:"mǎ",traits:["Energetic","Independent","Outgoing"],nums:"2 · 3 · 7",col:[["Yellow","#f2c230"],["Green","#3d9a3d"]],best:["goat","tiger","dog"],clash:"rat",fixed:1,hours:"11 am – 1 pm",post:"year-of-the-horse-%E9%A9%AC-119"},
+ {k:"goat",en:"Goat",zh:"羊",tc:"羊",py:"yáng",traits:["Gentle","Creative","Kind"],nums:"2 · 7",col:[["Brown","#8a5a2b"],["Red","#d43a2f"],["Purple","#8a4fbf"]],best:["horse","rabbit","pig"],clash:"ox",fixed:2,hours:"1 pm – 3 pm",post:"year-of-the-goat-%E7%BE%8A-120"},
+ {k:"monkey",en:"Monkey",zh:"猴",tc:"猴",py:"hóu",traits:["Witty","Curious","Inventive"],nums:"4 · 9",col:[["White","#ffffff"],["Blue","#3d6fd1"],["Gold","#d4a017"]],best:["snake","rat","dragon"],clash:"tiger",fixed:3,hours:"3 pm – 5 pm",post:"year-of-the-monkey-%E7%8C%B4-121"},
+ {k:"rooster",en:"Rooster",zh:"鸡",tc:"鷄",py:"jī",traits:["Confident","Honest","Organised"],nums:"5 · 7 · 8",col:[["Gold","#d4a017"],["Brown","#8a5a2b"],["Yellow","#f2c230"]],best:["dragon","ox","snake"],clash:"rabbit",fixed:3,hours:"5 pm – 7 pm",post:"year-of-the-rooster-%E9%B8%A1-122"},
+ {k:"dog",en:"Dog",zh:"狗",tc:"狗",py:"gǒu",traits:["Loyal","Fair","Protective"],nums:"3 · 4 · 9",col:[["Red","#d43a2f"],["Green","#3d9a3d"],["Purple","#8a4fbf"]],best:["rabbit","tiger","horse"],clash:"dragon",fixed:2,hours:"7 pm – 9 pm",post:"year-of-the-dog-%E7%8B%97-123"},
+ {k:"pig",en:"Pig",zh:"猪",tc:"豬",py:"zhū",traits:["Generous","Sincere","Easygoing"],nums:"2 · 5 · 8",col:[["Yellow","#f2c230"],["Grey","#9a9a9a"],["Brown","#8a5a2b"]],best:["tiger","rabbit","goat"],clash:"snake",fixed:4,hours:"9 pm – 11 pm",post:"year-of-the-pig-%E7%8C%AA-124"}
+];
+var BY = {}; A.forEach(function (a, i) { a.i = i; BY[a.k] = a; });
+function img(k) { return "zodiac/" + k + ".png"; }
+function imgLg(k) { return "zodiac/lg/" + k + ".png"; }
+function blog(a) { return BLOG + a.post; }
+
+// ═══ CALENDAR ═══
+function cny(y) { var v = CNY[y - FIRST]; return new Date(Date.UTC(y, Math.floor(v / 100) - 1, v % 100)); }
+function zodiacYearOf(d) { var y = d.getUTCFullYear(); return d < cny(y) ? y - 1 : y; }
+function animalOf(zy) { return A[((zy - 4) % 12 + 12) % 12]; }
+function stemOf(zy) { return ((zy - 4) % 10 + 10) % 10; }
+function elementOf(zy) { return ELEM[stemOf(zy) >> 1]; }
+function fmt(d, short) { return d.getUTCDate() + " " + (short ? MONTHS[d.getUTCMonth()].slice(0, 3) : MONTHS[d.getUTCMonth()]) + " " + d.getUTCFullYear(); }
+function dayBefore(d) { return new Date(d.getTime() - 864e5); }
+var now = new Date(), TODAY = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+var CUR = zodiacYearOf(TODAY), CUR_A = animalOf(CUR), NEXT_A = animalOf(CUR + 1);
+
+function compute(str) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str || "");
+  if (!m) return { err: "Please enter your full date of birth." };
+  var d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  if (isNaN(d) || d.getUTCDate() !== +m[3]) return { err: "That date doesn't exist. Please check it." };
+  if (d > TODAY) return { err: "That date is in the future. Please enter your date of birth." };
+  if (d < cny(FIRST)) return { err: "Please enter a birthday from 31 January 1900 onwards." };
+  var zy = zodiacYearOf(d), a = animalOf(zy), s = stemOf(zy), el = elementOf(zy), yang = s % 2 === 0;
+  var next = (CUR - zy) % 12 === 0 ? CUR : zy + 12 * Math.ceil((CUR - zy) / 12);
+  return {
+    a: a, zy: zy, born: fmt(d), start: fmt(cny(zy), true), end: fmt(dayBefore(cny(zy + 1)), true),
+    el: el, fixed: ELEM[a.fixed], yang: yang,
+    pillar: STEMS[s] + BRANCHES[a.i], pillarPy: STEM_PY[s] + BRANCH_PY[a.i],
+    next: next, nextIsNow: next === CUR
+  };
+}
+
+// ═══ CARD HTML ═══
+var ICON_PAPER = '<svg class="paper" aria-hidden="true"><filter id="mzpaper"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 0.35  0 0 0 0 0.3  0 0 0 0 0.25  0 0 0 0.18 0"/></filter><filter id="mzbrush" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.035 0.6" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter><rect width="100%" height="100%" filter="url(#mzpaper)"/></svg>';
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+function cardZest(r) {
+  var a = r.a;
+  var best = a.best.map(function (k) { return '<div class="mini"><img src="' + img(k) + '" alt="">' + BY[k].en + '</div>'; }).join("");
+  var cols = a.col.map(function (c) { return '<span class="sw" style="background:' + c[1] + '"></span>' + c[0]; }).join(" ");
+  return '<article class="cz">' +
+    '<div class="cz-top"><div class="cz-head"><img src="zodiac/logo-color.png" alt="Mandarin Zest"><span>MY CHINESE ZODIAC</span></div>' +
+    '<div class="cz-hero"><img src="' + imgLg(a.k) + '" alt="' + a.en + ' illustration"><div class="cz-id">' +
+    '<p class="born">Born ' + r.born + '</p><p class="name">' + a.en + '</p>' +
+    '<p class="chars"><span class="zh">' + a.zh + '</span> <strong>' + a.py + '</strong>' + (a.tc !== a.zh ? ' <span class="muted">· <span class="zh" style="font-size:20px;vertical-align:0">' + a.tc.replace("鷄", "雞") + '</span></span>' : '') + '</p>' +
+    '<span class="pill">' + r.el[0] + ' ' + a.en + ' · <span class="zh">' + r.pillar + '</span> ' + r.pillarPy + '</span></div></div></div>' +
+    '<div class="cz-body"><div class="cz-grid">' +
+    '<div class="cell"><p class="k">Zodiac year</p><p class="v">' + r.start + ' – ' + r.end + '</p></div>' +
+    '<div class="cell"><p class="k">Yin or yang</p><p class="v">' + (r.yang ? 'Yang <span class="zh">阳</span>' : 'Yin <span class="zh">阴</span>') + '</p></div>' +
+    '<div class="cell"><p class="k">Year element</p><p class="v">' + r.el[0] + ' <span class="zh">' + r.el[1] + '</span> · animal\'s own: ' + r.fixed[0] + ' <span class="zh">' + r.fixed[1] + '</span></p></div>' +
+    '<div class="cell"><p class="k">Hours of the ' + a.en + '</p><p class="v">' + a.hours + ' · <span class="zh">' + BRANCHES[a.i] + '时</span></p></div>' +
+    '<div class="cell"><p class="k">Lucky numbers</p><p class="v" style="font-size:18px;font-weight:800;letter-spacing:.06em">' + a.nums + '</p></div>' +
+    '<div class="cell"><p class="k">Lucky colours</p><p class="v cols">' + cols + '</p></div></div>' +
+    '<div class="cz-row"><div><p class="lbl">BEST MATCHES</p><div style="display:flex;gap:6px">' + best + '</div></div>' +
+    '<div><p class="lbl red">CLASSIC CLASH</p><div class="mini"><img src="' + img(a.clash) + '" alt="" style="opacity:.7">' + BY[a.clash].en + '</div></div>' +
+    '<div style="flex:1 1 150px"><p class="lbl">TRAITS</p>' + a.traits.map(function (t) { return '<span class="chip">' + t + '</span>'; }).join("") + '</div></div>' +
+    '<div class="cz-foot"><p><span class="zh">我属' + a.zh + '。</span> <strong>Wǒ shǔ ' + a.py + '.</strong> I\'m a ' + a.en + '.</p>' +
+    '<p style="font-size:14px;color:var(--ink2)">' + (r.nextIsNow ? 'Your <span class="zh">本命年</span> is <strong>now (' + r.next + ')</strong>' : 'Next <span class="zh">本命年</span>: <strong>' + r.next + '</strong>') + '</p></div>' +
+    '<p class="cz-url">mandarinzest.com/your-zodiac-sign</p></div></article>';
+}
+
+function cardInk(r) {
+  var a = r.a;
+  var best = a.best.map(function (k) { return '<div class="cmini"><span class="brush">' + BY[k].tc + '</span>' + BY[k].en + '</div>'; }).join("");
+  return '<article class="ci">' + ICON_PAPER +
+    '<div class="ci-head"><img src="zodiac/logo-white.png" alt="Mandarin Zest"><span>MY CHINESE ZODIAC</span></div>' +
+    '<div class="ci-hero"><div class="ci-big brush" aria-hidden="true">' + a.tc + '</div><div class="ci-side">' +
+    '<div class="ci-vert brush" aria-hidden="true">' + r.pillar + '屬' + a.tc + '</div>' +
+    '<div class="ci-id"><p class="born">born ' + r.born + '</p><p class="name">' + a.en + '</p><p class="sub">' + a.py + ' · ' + r.el[0] + ' ' + a.en + ' <span class="brush">' + r.pillar + '</span></p></div></div></div>' +
+    '<svg class="ci-line" viewBox="0 0 584 16" preserveAspectRatio="none" aria-hidden="true"><path d="M 4 9 C 120 4 260 12 400 7 C 470 5 540 9 580 6" fill="none" stroke="#141414" stroke-width="5" stroke-linecap="round" filter="url(#mzbrush)"/></svg>' +
+    '<div class="ci-grid">' +
+    '<div><p class="k">Year pillar <span class="brush">年柱</span></p><p class="v"><span class="brush">' + r.pillar + '</span> ' + r.pillarPy + '</p></div>' +
+    '<div><p class="k">Yin · Yang <span class="brush">陰陽</span></p><p class="v">' + (r.yang ? 'Yang <span class="brush">陽</span>' : 'Yin <span class="brush">陰</span>') + '</p></div>' +
+    '<div><p class="k">Element <span class="brush">五行</span></p><p class="v">' + r.el[0] + ' <span class="brush">' + r.el[1] + '</span></p></div>' +
+    '<div><p class="k">Hours <span class="brush">時辰</span></p><p class="v">' + a.hours + '</p></div>' +
+    '<div><p class="k">Numbers <span class="brush">吉數</span></p><p class="v">' + a.nums + '</p></div>' +
+    '<div><p class="k">Colours <span class="brush">吉色</span></p><p class="v">' + a.col.map(function (c) { return c[0]; }).join(", ") + '</p></div></div>' +
+    '<div class="ci-row"><div><p class="k">BEST MATCHES <span class="brush">相合</span></p><div style="display:flex;gap:8px">' + best + '</div></div>' +
+    '<div><p class="k">CLASH <span class="brush">相衝</span></p><div class="cmini clash"><span class="brush">' + BY[a.clash].tc + '</span>' + BY[a.clash].en + '</div></div>' +
+    '<div class="ci-nature"><p class="k">NATURE <span class="brush">性格</span></p><p>' + a.traits.join(", ").toLowerCase().replace(/^./, function (c) { return c.toUpperCase(); }) + '. ' +
+    (r.nextIsNow ? 'Your <span class="brush" style="font-style:normal">本命年</span> is now.' : 'Next <span class="brush" style="font-style:normal">本命年</span> in ' + r.next + '.') + '</p></div></div>' +
+    '<div class="ci-foot"><p><span class="brush">我屬' + a.tc + '</span> &#160;Wǒ shǔ ' + a.py + ' · I\'m a ' + a.en + '</p><p class="url">mandarinzest.com</p></div></article>';
+}
+
+// ═══ PAGE ═══
+var $ = function (id) { return document.getElementById(id); };
+var state = { r: null, style: "zest" };
+try { if (localStorage.getItem("mz-zodiac-style") === "ink") state.style = "ink"; } catch (e) {}
+
+function renderCard() {
+  if (!state.r) return;
+  $("card").innerHTML = state.style === "ink" ? cardInk(state.r) : cardZest(state.r);
+  $("result").classList.toggle("ink", state.style === "ink");
+  document.querySelectorAll(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.style === state.style ? "true" : "false"); });
+  $("readMore").href = blog(state.r.a);
+  $("readMore").textContent = "Read about the " + state.r.a.en + " ↗";
+  $("status").textContent = "";
+  renderGrid();
+  reportHeight();
+}
+
+$("checker").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var r = compute($("dob").value);
+  if (r.err) { $("dobErr").textContent = r.err; return; }
+  $("dobErr").textContent = "";
+  state.r = r;
+  $("placeholder").hidden = true; $("out").hidden = false;
+  renderCard();
+  track({ ga: { event: "zodiac_check", params: { animal: r.a.k } } });
+  if (window.innerWidth < 900) $("result").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("dob").max = TODAY.toISOString().slice(0, 10);
+document.querySelectorAll(".seg button").forEach(function (b) {
+  b.addEventListener("click", function () {
+    state.style = b.dataset.style;
+    try { localStorage.setItem("mz-zodiac-style", state.style); } catch (e) {}
+    renderCard();
+  });
+});
+
+// placeholder: cycle the animals
+(function () {
+  var disc = $("disc"), k = CUR_A.i;
+  var ims = A.map(function (a) { var i = new Image(); i.src = img(a.k); i.alt = ""; disc.appendChild(i); return i; });
+  function show() { ims.forEach(function (im, j) { im.classList.toggle("on", j === k); }); }
+  show();
+  if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) setInterval(function () { if (!$("placeholder").hidden) { k = (k + 1) % 12; show(); } }, 1600);
+})();
+
+// this year band (from today's date)
+(function () {
+  var endCur = dayBefore(cny(CUR + 1)), el = elementOf(CUR), elN = elementOf(CUR + 1);
+  $("band").innerHTML =
+    '<p><img src="' + img(CUR_A.k) + '" alt=""><strong>' + (TODAY.getUTCFullYear() === CUR ? TODAY.getUTCFullYear() : CUR + "–" + (CUR + 1)) + ' is the Year of the ' + el[0] + ' ' + CUR_A.en + '</strong> <span class="zh">' + CUR_A.zh + '年</span>, until ' + fmt(endCur) + '. <a href="' + blog(CUR_A) + '" target="_blank" rel="noopener">Read about the ' + CUR_A.en + ' ↗</a></p>' +
+    '<p><img src="' + img(NEXT_A.k) + '" alt="">Next up: <strong>the ' + elN[0] + ' ' + NEXT_A.en + '</strong> <span class="zh">' + NEXT_A.zh + '年</span>, from ' + fmt(cny(CUR + 1)) + '.</p>';
+})();
+
+// race grid
+function renderGrid() {
+  var mine = state.r ? state.r.a.k : null;
+  $("grid12").innerHTML = A.map(function (a, i) {
+    var yrs = []; for (var y = CUR + 11; y >= FIRST && yrs.length < 4; y--) if (animalOf(y) === a) yrs.unshift(y);
+    var tag = a.k === mine ? '<span class="tag">You</span>' : (a === CUR_A ? '<span class="tag">This year</span>' : '');
+    return '<a class="animal' + (a.k === mine ? ' mine' : '') + '" href="' + blog(a) + '" target="_blank" rel="noopener" aria-label="Year of the ' + a.en + ', read the article">' +
+      '<span class="n">' + (i + 1) + '</span>' + tag + '<img src="' + img(a.k) + '" alt="">' +
+      '<span class="c"><span class="zh">' + a.zh + '</span><span>' + a.py + '</span></span><span class="en">' + a.en + '</span>' +
+      '<span class="yrs">' + yrs.join(" · ") + '</span><span class="more">Read more ↗</span></a>';
+  }).join("");
+}
+renderGrid();
+
+// mini lesson tiles
+$("tiles").innerHTML = [
+  ["你属什么？", "Nǐ shǔ shénme?", "What's your zodiac sign?"],
+  ["我属" + CUR_A.zh + "。", "Wǒ shǔ " + CUR_A.py + ".", "I'm a " + CUR_A.en + "."],
+  ["生肖", "shēngxiào", "Chinese zodiac sign"],
+  ["本命年", "běnmìngnián", "your own zodiac year (wear red!)"]
+].map(function (t) { return '<div class="tile"><p class="zh">' + t[0] + '</p><p class="py">' + t[1] + '</p><p class="en">' + t[2] + '</p></div>'; }).join("");
+
+// FAQ (answers follow today's date)
+var cnyN = cny(CUR + 1);
+var FAQ = [
+  ["Which animal is " + TODAY.getUTCFullYear() + "?", TODAY < cny(TODAY.getUTCFullYear()) ?
+      "Until " + fmt(dayBefore(cny(TODAY.getUTCFullYear()))) + " it's still the Year of the " + elementOf(CUR)[0] + " " + CUR_A.en + ". The Year of the " + elementOf(CUR + 1)[0] + " " + NEXT_A.en + " starts on " + fmt(cny(CUR + 1)) + "." :
+      TODAY.getUTCFullYear() + " is the Year of the " + elementOf(CUR)[0] + " " + CUR_A.en + " (" + CUR_A.zh + "年), from " + fmt(cny(CUR)) + " to " + fmt(dayBefore(cnyN)) + "."],
+  ["Why does my birth month matter?", "The zodiac year starts on Chinese New Year, which moves between 21 January and 20 February. If you were born in January or early February, you may belong to the previous year's animal. This checker uses the exact date for every year."],
+  ["What does the element (Fire, Water…) mean?", "Each year also carries one of five elements: Wood, Fire, Earth, Metal or Water. It changes every two years, so the same animal comes back with a new element every 12 years, and a full cycle takes 60 years. Your year pillar (for example 庚午 gēngwǔ) combines the element's heavenly stem and the animal's earthly branch."],
+  ["What is a 本命年 (běnmìngnián)?", "Your own zodiac year, which comes back every 12 years. Tradition says it can be a bumpy one, so people wear red, often a red bracelet or red underwear, all year for protection."],
+  ["Is it the Year of the Goat or the Sheep?", "Both. 羊 yáng covers goats, sheep and rams, so either translation is correct."],
+  ["Does the zodiac really decide my personality?", "It's a cultural tradition, not science. It is, however, a great conversation starter in Chinese."]
+];
+$("faq").innerHTML = FAQ.map(function (f, i) { return '<details' + (i === 0 ? ' open' : '') + '><summary>' + esc(f[0]) + '</summary><p>' + esc(f[1]) + '</p></details>'; }).join("");
+$("faq").addEventListener("toggle", reportHeight, true);
+
+// free PDF form (same Start Here sheet as free-pdf.html, source "free-pdf | zodiac")
+(function () {
+  var KEY = "mz-free-pdf-zodiac", box = $("pdf");
+  function done() { box.classList.add("is-done"); $("pdfEyebrow").textContent = "YOU'RE IN · 谢谢！"; $("pdfTitle").textContent = "Your zodiac vocabulary guide is ready"; reportHeight(); }
+  try { if (localStorage.getItem(KEY) === "1") done(); } catch (e) {}
+  $("pdfForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = $("pdfEmail").value.trim(), err = $("pdfErr");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please enter a valid email."; return; }
+    if (!$("pdfOk").checked) { err.textContent = "Please tick the box to get the PDF."; return; }
+    err.textContent = "";
+    if (!$("website").value) {
+      fetch(SHEET_URL, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ email: email, source: "free-pdf | zodiac" + (state.r ? " | " + state.r.a.k : ""), timestamp: new Date().toISOString() }) }).catch(function () {});
+      track({ event: "Lead", params: { content_name: "Free PDF Chinese Zodiac" }, ga: { event: "generate_lead", params: { form: "free-pdf", pdf: "zodiac" } } });
+    }
+    try { localStorage.setItem(KEY, "1"); } catch (e2) {}
+    done();
+  });
+})();
+
+// ═══ PNG (1080 × 1350), drawn on a canvas so it looks the same everywhere ═══
+var IMG_CACHE = {};
+function loadImg(src) {
+  if (IMG_CACHE[src]) return IMG_CACHE[src];
+  return (IMG_CACHE[src] = new Promise(function (res) { var i = new Image(); i.onload = function () { res(i); }; i.onerror = function () { res(null); }; i.src = src; }));
+}
+function fontsFor(r) {
+  var a = r.a, chars = "我属屬是年柱陰陽阴阳五行時辰时吉數色相合衝性格本命" + r.pillar + a.zh + a.tc + BRANCHES.join("") + "金木水火土" +
+    a.best.map(function (k) { return BY[k].zh + BY[k].tc; }).join("") + BY[a.clash].zh + BY[a.clash].tc;
+  if (!document.fonts || !document.fonts.load) return Promise.resolve();
+  return Promise.all([
+    document.fonts.load('800 40px "Baloo 2"'), document.fonts.load('800 20px "Nunito Sans"'), document.fonts.load('700 20px "Nunito Sans"'),
+    document.fonts.load('400 20px "Nunito Sans"'), document.fonts.load('700 30px "Noto Sans SC"', chars),
+    document.fonts.load('700 30px "EB Garamond"'), document.fonts.load('600 30px "EB Garamond"'), document.fonts.load('500 30px "EB Garamond"'), document.fonts.load('italic 400 30px "EB Garamond"'),
+    document.fonts.load('400 60px "Yuji Syuku"', chars)
+  ]).catch(function () {});
+}
+function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function txt(c, s, x, y, font, color, align, spacing) {
+  c.font = font; c.fillStyle = color; c.textAlign = align || "left"; c.textBaseline = "alphabetic";
+  if (!spacing) { c.fillText(s, x, y); return c.measureText(s).width; }
+  var w = 0, chars = s.split(""); chars.forEach(function (ch) { w += c.measureText(ch).width + spacing; }); w -= spacing;
+  var sx = align === "right" ? x - w : align === "center" ? x - w / 2 : x;
+  c.textAlign = "left"; chars.forEach(function (ch) { c.fillText(ch, sx, y); sx += c.measureText(ch).width + spacing; });
+  return w;
+}
+function runs(c, parts, x, y, align) { // parts: [text, font, color]
+  var w = 0; parts.forEach(function (p) { c.font = p[1]; w += c.measureText(p[0]).width; });
+  var sx = align === "right" ? x - w : align === "center" ? x - w / 2 : x;
+  parts.forEach(function (p) { c.font = p[1]; c.fillStyle = p[2]; c.textAlign = "left"; c.fillText(p[0], sx, y); sx += c.measureText(p[0]).width; });
+  return w;
+}
+function fitSize(c, s, mk, size, maxW) { c.font = mk(size); while (size > 12 && c.measureText(s).width > maxW) { size -= 1; c.font = mk(size); } return size; }
+function wrapLines(c, s, font, maxW) { c.font = font; var words = s.split(" "), lines = [], cur = ""; words.forEach(function (w) { var t = cur ? cur + " " + w : w; if (c.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; }); if (cur) lines.push(cur); return lines; }
+function drawImg(c, im, x, y, w, h, alpha) { if (!im) return; c.save(); if (alpha != null) c.globalAlpha = alpha; c.drawImage(im, x, y, w, h); c.restore(); }
+
+function drawZest(c, r, I) {
+  var a = r.a, W = 1080, H = 1350, G = "#173d17", G2 = "#2f5a2f", G3 = "#4b6b4b", D = "#1b6f1b";
+  var NS = '"Nunito Sans", sans-serif', SC = '"Noto Sans SC", sans-serif', BA = '"Baloo 2", sans-serif';
+  c.fillStyle = "#eef8ea"; c.fillRect(0, 0, W, H);
+  var X = 44, Y = 44, CW = W - 88, CH = H - 88;
+  c.save(); rr(c, X, Y, CW, CH, 48); c.clip();
+  c.fillStyle = "#fffaf6"; c.fillRect(X, Y, CW, CH);
+  c.fillStyle = "#e3f5de"; c.fillRect(X, Y, CW, 470);
+  c.restore();
+  c.lineWidth = 4; c.strokeStyle = G; rr(c, X, Y, CW, CH, 48); c.stroke();
+  var L = X + 48, R = X + CW - 48;
+  if (I.logo) drawImg(c, I.logo, L, Y + 34, 52 * I.logo.width / I.logo.height, 52);
+  txt(c, "MY CHINESE ZODIAC", R, Y + 70, "800 20px " + NS, D, "right", 3);
+  drawImg(c, I.hero, L - 6, Y + 112, 340, 340);
+  var tx = L + 360;
+  txt(c, "Born " + r.born, tx, Y + 196, "400 24px " + NS, G2);
+  txt(c, a.en, tx, Y + 292, "800 104px " + BA, G);
+  runs(c, [[a.zh + " ", "700 62px " + SC, G], [a.py, "800 34px " + NS, G], [a.tc !== a.zh ? "  · " + a.tc.replace("鷄", "雞") : "", "700 30px " + SC, G3]], tx, Y + 364);
+  c.font = "800 26px " + NS; var pillTxt1 = r.el[0] + " " + a.en + " · ", pillW = c.measureText(pillTxt1).width; c.font = "700 26px " + SC; pillW += c.measureText(r.pillar).width; c.font = "800 26px " + NS; pillW += c.measureText(" " + r.pillarPy).width;
+  c.fillStyle = G; rr(c, tx, Y + 388, pillW + 40, 52, 26); c.fill();
+  runs(c, [[pillTxt1, "800 26px " + NS, "#fffaf6"], [r.pillar, "700 26px " + SC, "#fffaf6"], [" " + r.pillarPy, "800 26px " + NS, "#fffaf6"]], tx + 20, Y + 424);
+  // chart grid
+  var cells = [
+    ["ZODIAC YEAR", [[r.start + " – " + r.end, "700 27px " + NS, G]]],
+    ["YIN OR YANG", [[r.yang ? "Yang " : "Yin ", "700 27px " + NS, G], [r.yang ? "阳" : "阴", "700 27px " + SC, G]]],
+    ["YEAR ELEMENT", [[r.el[0] + " ", "700 27px " + NS, G], [r.el[1], "700 27px " + SC, G], [" · animal's own: " + r.fixed[0], "700 23px " + NS, G2]]],
+    ["HOURS OF THE " + a.en.toUpperCase(), [[a.hours + " · ", "700 27px " + NS, G], [BRANCHES[a.i] + "时", "700 27px " + SC, G]]],
+    ["LUCKY NUMBERS", [[a.nums, "800 32px " + NS, G]]],
+    ["LUCKY COLOURS", null]
+  ];
+  var gx = L, gy = Y + 506, cw = (R - L - 18) / 2, chh = 104;
+  cells.forEach(function (cl, i) {
+    var x = gx + (i % 2) * (cw + 18), y = gy + Math.floor(i / 2) * (chh + 16);
+    c.fillStyle = "#eef8ea"; rr(c, x, y, cw, chh, 22); c.fill();
+    txt(c, cl[0], x + 24, y + 38, "800 18px " + NS, D, "left", 1.5);
+    if (cl[1]) runs(c, cl[1], x + 24, y + 80);
+    else {
+      var fz = 25, tot; do { c.font = "700 " + fz + "px " + NS; tot = 0; a.col.forEach(function (co) { tot += 32 + c.measureText(co[0]).width + 18; }); if (tot - 18 > cw - 44) fz--; else break; } while (fz > 16);
+      var sx = x + 24; a.col.forEach(function (co) {
+        c.beginPath(); c.arc(sx + 13, y + 71, 13, 0, Math.PI * 2); c.fillStyle = co[1]; c.fill(); c.lineWidth = 2.5; c.strokeStyle = G; c.stroke();
+        sx += 32; sx += txt(c, co[0], sx, y + 80, "700 " + fz + "px " + NS, G) + 18;
+      });
+    }
+  });
+  // matches + traits
+  var my = gy + 3 * (chh + 16) + 20;
+  txt(c, "BEST MATCHES", L, my + 18, "800 18px " + NS, D, "left", 1.5);
+  a.best.forEach(function (k, i) { var x = L + i * 112; drawImg(c, I.best[i], x + 8, my + 34, 92, 92); txt(c, BY[k].en, x + 54, my + 156, "700 22px " + NS, G, "center"); });
+  var cx = L + 3 * 112 + 30;
+  txt(c, "CLASSIC CLASH", cx, my + 18, "800 18px " + NS, "#9a3d0a", "left", 1.5);
+  drawImg(c, I.clash, cx + 8, my + 34, 92, 92, 0.7); txt(c, BY[a.clash].en, cx + 54, my + 156, "700 22px " + NS, G, "center");
+  var tx2 = cx + 190;
+  txt(c, "TRAITS", tx2, my + 18, "800 18px " + NS, D, "left", 1.5);
+  var ty = my + 40; a.traits.forEach(function (t) {
+    c.font = "700 22px " + NS; var w = c.measureText(t).width + 32;
+    c.fillStyle = "#fde3cc"; rr(c, tx2, ty, w, 40, 20); c.fill(); txt(c, t, tx2 + 16, ty + 28, "700 22px " + NS, "#6b3306"); ty += 50;
+  });
+  // footer
+  var fy = Y + CH - 140;
+  c.save(); c.setLineDash([10, 8]); c.lineWidth = 2.5; c.strokeStyle = "#b9d6ad"; c.beginPath(); c.moveTo(L, fy); c.lineTo(R, fy); c.stroke(); c.restore();
+  runs(c, [["我属" + a.zh + "。", "700 40px " + SC, G], ["  Wǒ shǔ " + a.py + ".", "800 27px " + NS, G], ["  I'm a " + a.en + ".", "400 27px " + NS, G]], L, fy + 62);
+  runs(c, [[r.nextIsNow ? "Your " : "Next ", "400 24px " + NS, G2], ["本命年", "700 24px " + SC, G2], [r.nextIsNow ? ": now (" + r.next + ")" : ": " + r.next, "800 24px " + NS, G]], R, fy + 60, "right");
+  txt(c, "Find yours at mandarinzest.com/your-zodiac-sign", R, fy + 104, "600 21px " + NS, G3, "right");
+}
+
+function brushLine(c, x1, y, x2, wgt) {
+  c.save(); c.fillStyle = "#141414";
+  var seed = 7; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  for (var p = 0; p < 4; p++) {
+    c.globalAlpha = p === 0 ? 0.92 : 0.25;
+    c.beginPath(); var steps = 60, pts = [];
+    for (var i = 0; i <= steps; i++) { var t = i / steps, x = x1 + (x2 - x1) * t; var th = wgt * (0.35 + 0.65 * Math.sin(Math.PI * Math.min(1, t * 1.15))) * (0.85 + rnd() * 0.3); pts.push([x, y + Math.sin(t * 5) * 2.2 + (rnd() - 0.5) * 1.2, th]); }
+    c.moveTo(pts[0][0], pts[0][1] - pts[0][2] / 2);
+    pts.forEach(function (q) { c.lineTo(q[0], q[1] - q[2] / 2 - p * 0.6); });
+    for (var j = pts.length - 1; j >= 0; j--) c.lineTo(pts[j][0], pts[j][1] + pts[j][2] / 2 + p * 0.6);
+    c.closePath(); c.fill();
+  }
+  c.restore();
+}
+function blackLogo(im) { // the white outline logo turned black
+  var cv = document.createElement("canvas"); cv.width = im.width; cv.height = im.height;
+  var x = cv.getContext("2d"); x.drawImage(im, 0, 0); x.globalCompositeOperation = "source-in"; x.fillStyle = "#111"; x.fillRect(0, 0, cv.width, cv.height); return cv;
+}
+function drawInk(c, r, I) {
+  var a = r.a, W = 1080, H = 1350, K = "#1a1a1a";
+  var CG = '"EB Garamond", serif', YS = '"Yuji Syuku", serif';
+  c.fillStyle = "#e9e5dc"; c.fillRect(0, 0, W, H);
+  var X = 44, Y = 44, CW = W - 88, CH = H - 88;
+  c.fillStyle = "#f6f2e9"; c.fillRect(X, Y, CW, CH);
+  var seed = 3; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  for (var i = 0; i < 5200; i++) { c.fillStyle = "rgba(90,76,60," + (0.03 + rnd() * 0.09).toFixed(3) + ")"; c.fillRect(X + rnd() * CW, Y + rnd() * CH, 1 + rnd() * 1.6, 1 + rnd() * 1.6); }
+  c.lineWidth = 2; c.strokeStyle = K; c.strokeRect(X, Y, CW, CH);
+  var L = X + 50, R = X + CW - 50;
+  if (I.logo) { var bl = blackLogo(I.logo); c.drawImage(bl, L, Y + 36, 50 * bl.width / bl.height, 50); }
+  txt(c, "MY CHINESE ZODIAC", R, Y + 72, "700 25px " + CG, K, "right", 5);
+  // big character + side
+  txt(c, a.tc, L + 235, Y + 515, "400 400px " + YS, K, "center");
+  c.font = "400 58px " + YS; c.fillStyle = K; c.textAlign = "center";
+  (r.pillar + "屬" + a.tc).split("").forEach(function (ch, k) { c.fillText(ch, R - 30, Y + 170 + k * 70); });
+  txt(c, "born " + r.born, R, Y + 470, "italic 400 28px " + CG, K, "right");
+  var nsz = fitSize(c, a.en.toUpperCase(), function (z) { return "700 " + z + "px " + CG; }, 92, 380); txt(c, a.en.toUpperCase(), R, Y + 548, "700 " + nsz + "px " + CG, K, "right", 3);
+  runs(c, [[a.py + " · " + r.el[0] + " " + a.en + " ", "500 32px " + CG, K], [r.pillar, "400 32px " + YS, K]], R, Y + 596, "right");
+  brushLine(c, L, Y + 640, R, 9);
+  // grid 3 × 2
+  var cells = [
+    ["YEAR PILLAR ", "年柱", [[r.pillar + " ", "400 34px " + YS], [r.pillarPy, "500 34px " + CG]]],
+    ["YIN · YANG ", "陰陽", [[r.yang ? "Yang " : "Yin ", "500 34px " + CG], [r.yang ? "陽" : "陰", "400 34px " + YS]]],
+    ["ELEMENT ", "五行", [[r.el[0] + " ", "500 34px " + CG], [r.el[1], "400 34px " + YS]]],
+    ["HOURS ", "時辰", [[a.hours, "500 32px " + CG]]],
+    ["NUMBERS ", "吉數", [[a.nums, "500 34px " + CG]]],
+    ["COLOURS ", "吉色", [[a.col.map(function (q) { return q[0]; }).join(", "), "COLFONT"]]]
+  ];
+  var gy = Y + 680, cw = (R - L) / 3, chh = 112;
+  c.lineWidth = 1.5; c.strokeStyle = K;
+  cells.forEach(function (cl, i) {
+    var x = L + (i % 3) * cw, y = gy + Math.floor(i / 3) * chh;
+    c.strokeRect(x, y, cw, chh);
+    runs(c, [[cl[0], "700 21px " + CG, K], [cl[1], "400 22px " + YS, K]], x + 18, y + 38);
+    runs(c, cl[2].map(function (p) { var f = p[1]; if (f === "COLFONT") { var z = fitSize(c, p[0], function (q) { return "500 " + q + "px " + CG; }, 32, cw - 36); f = "500 " + z + "px " + CG; } return [p[0], f, K]; }), x + 18, y + 88);
+  });
+  // matches, clash, nature
+  var my = gy + 2 * chh + 46;
+  runs(c, [["BEST MATCHES ", "700 21px " + CG, K], ["相合", "400 22px " + YS, K]], L, my);
+  a.best.forEach(function (k, j) {
+    var cx = L + 46 + j * 104, cy = my + 62;
+    c.beginPath(); c.arc(cx, cy, 42, 0, Math.PI * 2); c.lineWidth = 1.5; c.strokeStyle = K; c.stroke();
+    txt(c, BY[k].tc, cx, cy + 19, "400 52px " + YS, K, "center"); txt(c, BY[k].en, cx, cy + 82, "600 26px " + CG, K, "center");
+  });
+  var kx = L + 340;
+  runs(c, [["CLASH ", "700 21px " + CG, K], ["相衝", "400 22px " + YS, K]], kx, my);
+  c.save(); c.setLineDash([6, 5]); c.beginPath(); c.arc(kx + 46, my + 62, 42, 0, Math.PI * 2); c.stroke(); c.restore();
+  txt(c, BY[a.clash].tc, kx + 46, my + 81, "400 52px " + YS, "#6b6b6b", "center"); txt(c, BY[a.clash].en, kx + 46, my + 144, "600 26px " + CG, K, "center");
+  var nx = kx + 140;
+  runs(c, [["NATURE ", "700 21px " + CG, K], ["性格", "400 22px " + YS, K]], nx, my);
+  var nat = a.traits.join(", ").toLowerCase().replace(/^./, function (q) { return q.toUpperCase(); }) + ".";
+  var nl = wrapLines(c, nat, "italic 400 30px " + CG, R - nx); nl.forEach(function (ln, j) { txt(c, ln, nx, my + 50 + j * 40, "italic 400 30px " + CG, K); });
+  runs(c, [[r.nextIsNow ? "Your " : "Next ", "italic 400 30px " + CG, K], ["本命年", "400 30px " + YS, K], [r.nextIsNow ? " is now." : " in " + r.next + ".", "italic 400 30px " + CG, K]], nx, my + 52 + nl.length * 40);
+  // footer
+  var fy = Y + CH - 110;
+  c.lineWidth = 1.5; c.beginPath(); c.moveTo(L, fy); c.lineTo(R, fy); c.stroke();
+  runs(c, [["我屬" + a.tc, "400 50px " + YS, K], ["   Wǒ shǔ " + a.py + " · I'm a " + a.en, "600 30px " + CG, K]], L, fy + 64);
+  txt(c, "mandarinzest.com/your-zodiac-sign", R, fy + 62, "600 22px " + CG, K, "right", 1);
+}
+
+function makePng() {
+  var r = state.r, a = r.a, ink = state.style === "ink";
+  return Promise.all([
+    fontsFor(r),
+    loadImg(ink ? "zodiac/logo-white.png" : "zodiac/logo-color.png"),
+    ink ? null : loadImg(imgLg(a.k)),
+    ink ? null : Promise.all(a.best.map(function (k) { return loadImg(img(k)); })),
+    ink ? null : loadImg(img(a.clash))
+  ]).then(function (v) {
+    var cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1350;
+    var c = cv.getContext("2d");
+    (ink ? drawInk : drawZest)(c, r, { logo: v[1], hero: v[2], best: v[3] || [], clash: v[4] });
+    return new Promise(function (res) { cv.toBlob(function (b) { res(b); }, "image/png"); });
+  });
+}
+function fileName() { return "my-chinese-zodiac-" + state.r.a.k + (state.style === "ink" ? "-ink" : "") + ".png"; }
+
+$("dlBtn").addEventListener("click", function () {
+  if (!state.r) return;
+  $("status").textContent = "Preparing your chart…";
+  makePng().then(function (blob) {
+    if (!blob) { $("status").textContent = "Sorry, the picture couldn't be made on this browser."; return; }
+    var url = URL.createObjectURL(blob), link = document.createElement("a");
+    link.href = url; link.download = fileName(); document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    $("status").textContent = "Downloaded ✓";
+    track({ ga: { event: "zodiac_download", params: { animal: state.r.a.k, style: state.style } } });
+  });
+});
+$("shareBtn").addEventListener("click", function () {
+  if (!state.r) return;
+  var a = state.r.a, text = "I'm a " + state.r.el[0] + " " + a.en + " (" + state.r.pillar + ") in the Chinese zodiac. 我属" + a.zh + "! Find your animal:";
+  track({ ga: { event: "zodiac_share", params: { animal: a.k, style: state.style } } });
+  function copyLink() {
+    var s = text + " " + SHARE_URL;
+    try { navigator.clipboard.writeText(s).then(function () { $("status").textContent = "Link copied ✓ Paste it anywhere to share."; }, function () { $("status").textContent = s; }); }
+    catch (e) { $("status").textContent = s; }
+  }
+  if (!navigator.share) { copyLink(); return; }
+  $("status").textContent = "Preparing your chart…";
+  makePng().then(function (blob) {
+    $("status").textContent = "";
+    var file = blob ? new File([blob], fileName(), { type: "image/png" }) : null;
+    var data = file && navigator.canShare && navigator.canShare({ files: [file] }) ? { files: [file], title: "My Chinese zodiac", text: text + " " + SHARE_URL }
+                                                                                   : { title: "My Chinese zodiac", text: text, url: SHARE_URL };
+    navigator.share(data).catch(function (err) { if (err && err.name !== "AbortError") copyLink(); });
+  });
+});
+
+// ═══ frame height + tracking (Odoo head code listens) ═══
+function track(msg) { try { msg.mz = "track"; window.top.postMessage(msg, "*"); } catch (e) {} }
+var lastH = 0;
+function reportHeight() {
+  var h = Math.ceil(document.body.getBoundingClientRect().height);
+  if (Math.abs(h - lastH) < 2) return; lastH = h;
+  try { parent.postMessage({ mz: "height", h: h }, "*"); } catch (e) {}
+}
+window.addEventListener("load", reportHeight);
+window.addEventListener("resize", function () { lastH = 0; reportHeight(); });
+if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(document.body);
+if (document.fonts) document.fonts.ready.then(reportHeight);
+document.addEventListener("load", function (e) { if (e.target.tagName === "IMG") reportHeight(); }, true);
+
+// ?date=1991-01-20 shows a result straight away (handy for testing); ?style=ink picks the look
+var q = new URLSearchParams(location.search);
+if (q.get("style") === "ink" || q.get("style") === "zest") state.style = q.get("style");
+if (q.get("date")) { $("dob").value = q.get("date"); $("checker").dispatchEvent(new Event("submit", { cancelable: true })); }
+})();
+</script>
+</body>
+</html>
