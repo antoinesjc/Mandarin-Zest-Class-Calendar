@@ -360,7 +360,7 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   Download PNG (1080×1350, drawn on a canvas with the logo). The "this year / next up" band, race-order grid tags and FAQ
   answers follow today's date, so they change by themselves at every Chinese New Year. 12 animals in race order link to the
   blog posts (BLOG + post in the A list). Free PDF `downloads/zodiac/` for an email (Start Here sheet, source
-  `free-pdf | zodiac | <animal>`), workbook link, Club trial, FAQ. Pictures: `zodiac/` (grid, 200px), `zodiac/lg/` (card,
+  `free-pdf | zodiac | <animal>`), Club trial, FAQ. Pictures: `zodiac/` (grid, 200px), `zodiac/lg/` (card,
   400px), `zodiac/logo-*.png`. Lucky data from China Highlights (same as the blog posts). Frame resizes itself;
   fallback `height:max(3350px, calc(10600px - 600vw))`, `scrolling="no"`, `allow="web-share; clipboard-write"`.
   Test with `?date=1991-01-20&style=ink`.
