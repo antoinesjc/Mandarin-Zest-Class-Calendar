@@ -439,6 +439,30 @@
    "trial": true
   },
   {
+   "date": "2026-11-07",
+   "title": "Taiwanese Mandarin Conversation",
+   "level": "Intermediate",
+   "cats": [
+    "conversation"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ],
+   "start": "2026-11-07T14:00:00Z",
+   "end": "2026-11-07T15:00:00Z",
+   "cat": "conversation",
+   "topic": "Practice real life conversation with a native teacher from Taiwan",
+   "host": "Vanessa",
+   "trial": true
+  },
+  {
    "date": "2026-11-09",
    "title": "Advanced Book Club",
    "level": "Advanced",
@@ -539,7 +563,7 @@
    "trial": true
   },
   {
-   "date": "2026-11-15",
+   "date": "2026-11-14",
    "title": "Taiwanese Mandarin Conversation",
    "level": "Intermediate",
    "cats": [
@@ -555,8 +579,8 @@
      "time": "9am ET"
     }
    ],
-   "start": "2026-11-15T14:00:00Z",
-   "end": "2026-11-15T15:00:00Z",
+   "start": "2026-11-14T14:00:00Z",
+   "end": "2026-11-14T15:00:00Z",
    "cat": "conversation",
    "topic": "Practice real life conversation with a native teacher from Taiwan",
    "host": "Vanessa",
@@ -710,30 +734,6 @@
    "topic": "New Vocabulary and Reading Practice",
    "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
-   "trial": true
-  },
-  {
-   "date": "2026-11-29",
-   "title": "Taiwanese Mandarin Conversation",
-   "level": "Intermediate",
-   "cats": [
-    "conversation"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "3pm CET"
-    },
-    {
-     "flag": "us",
-     "time": "9am ET"
-    }
-   ],
-   "start": "2026-11-29T14:00:00Z",
-   "end": "2026-11-29T15:00:00Z",
-   "cat": "conversation",
-   "topic": "Practice real life conversation with a native teacher from Taiwan",
-   "host": "Vanessa",
    "trial": true
   },
   {
