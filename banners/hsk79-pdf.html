@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New HSK 7–9 Vocabulary List (PDF)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Banner for the HSK 7–9 vocab list article: "want this list as a structured PDF?" → shop product (new tab).
+     Price and product link: CONFIG at the bottom. The discount code comes from shop/offers.js (seasonal or WELCOME01).
+     Embed height: see README. */
+  :root { --ink:#2a2420; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:4px; }
+  .banner { max-width:820px; margin:0 auto; border-radius:22px; padding:24px 28px; display:flex; gap:26px; align-items:center; background:#e6f1e1; }
+  .visual { flex:none; display:block; width:170px; border-radius:16px; overflow:hidden; box-shadow:0 10px 24px rgba(27,111,27,.22); transform:rotate(-2.5deg); transition:transform .3s; }
+  .visual:hover { transform:rotate(0) translateY(-3px); }
+  .visual img { display:block; width:100%; height:auto; }
+  .text { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:9px; }
+  .eyebrow { font-size:12px; font-weight:800; letter-spacing:.09em; color:var(--green); }
+  h3 { margin:0; font-size:23px; font-weight:800; line-height:1.2; }
+  p { margin:0; font-size:15px; line-height:1.5; color:#3f4a3c; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin:0; padding:0; list-style:none; }
+  .chips li { background:#fff; border-radius:999px; padding:4px 11px; font-size:13px; font-weight:700; color:#2c4a2c; }
+  .actions { display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; margin-top:4px; }
+  .btn { display:inline-flex; align-items:center; height:48px; padding:0 22px; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:16px; text-decoration:none; white-space:nowrap; transition:background .2s, transform .2s; }
+  .btn:hover { background:var(--orange-d); transform:translateY(-1px); }
+  .btn:focus-visible, .code:focus-visible { outline:3px solid #4f7a94; outline-offset:3px; }
+  .code { border:0; background:none; padding:0; font:inherit; font-size:13.5px; color:#3f4a3c; cursor:pointer; text-align:left; }
+  .code b { font-weight:800; color:var(--ink); border:1.5px dashed var(--green); border-radius:7px; padding:2px 7px; margin:0 2px; background:#fff; letter-spacing:.04em; }
+  .code u { text-decoration:none; color:var(--green); font-weight:700; }
+  @media (max-width:600px) {
+    .banner { flex-direction:column; align-items:stretch; gap:16px; padding:20px 18px; border-radius:20px; }
+    .top { display:flex; gap:16px; align-items:center; }
+    .visual { width:104px; border-radius:12px; }
+    h3 { font-size:19px; } p { font-size:14px; }
+    .btn { height:46px; font-size:15px; width:100%; justify-content:center; }
+  }
+  @media (min-width:601px) { .top { display:contents; } .head-phone { display:none; } }
+  @media (max-width:600px) { .head-desk { display:none; } }
+</style>
+</head>
+<body>
+<section class="banner" aria-labelledby="ttl">
+  <div class="top">
+    <a class="visual" id="pic" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="product-hsk79.jpg" alt=""></a>
+    <div class="head-phone">
+      <div class="eyebrow">PREFER IT AS A PDF?</div>
+      <h3>Get this whole list as a printable PDF</h3>
+    </div>
+  </div>
+  <div class="text">
+    <div class="head-desk">
+      <div class="eyebrow">PREFER IT AS A PDF?</div>
+      <h3 id="ttl" style="margin-top:6px">Get this whole list as a structured, printable PDF</h3>
+    </div>
+    <p>All 5,615 words in pinyin order with A–Z sections, a tick box next to every word, and a bonus list of all 384 chengyu. Study offline, print it, track what you know.</p>
+    <ul class="chips" aria-label="What's inside">
+      <li>112 pages</li><li>5,615 words</li><li>384 chengyu</li><li>Instant download</li>
+    </ul>
+    <div class="actions">
+      <a class="btn" id="buy" target="_blank" rel="noopener"></a>
+      <button class="code" id="code" type="button"></button>
+    </div>
+  </div>
+</section>
+<script src="../shop/offers.js"></script>
+<script>
+  // ═══ CONFIG: product link and price ═══
+  var CONFIG = {
+    url: "https://www.mandarinzest.com/shop/new-hsk-7-9-vocabulary-list-65",
+    price: 5
+  };
+  var o = window.OFFER || { off: "10% off", code: "WELCOME01" };
+  var pct = +((o.off.match(/\d+/) || ["10"])[0]);
+  var fmt = function (n) { return "US$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, ""); };
+  document.getElementById("buy").href = CONFIG.url;
+  document.getElementById("pic").href = CONFIG.url;
+  document.getElementById("buy").textContent = "Get the PDF · " + fmt(CONFIG.price) + " ↗";
+  var code = document.getElementById("code");
+  function label(copied) {
+    code.innerHTML = copied ? "<u>Code copied ✓</u> paste it at checkout"
+      : pct + "% off with <b>" + o.code + "</b> (" + fmt(CONFIG.price * (100 - pct) / 100) + ") <u>tap to copy</u>";
+  }
+  label(false);
+  code.setAttribute("aria-label", "Copy the code " + o.code);
+  code.addEventListener("click", function () {
+    var done = function () { label(true); setTimeout(function () { label(false); }, 2200); };
+    if (window.mzCopy) { mzCopy({ set textContent(v) {}, classList: { add: function () {}, remove: function () {} } }, o.code); done(); }
+  });
+</script>
+</body>
+</html>

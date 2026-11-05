@@ -337,6 +337,9 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - Offers (codes, dates, mascots) live in `shop/offers.js`, shared by the strip, the pop-up and the blog banners
   `banners/shop.html` and `banners/characters-guide.html` (code, % in the tap-to-copy box, guide price, small seasonal mascot).
   The pasted HTML snippets in `banners/snippets/` can't update themselves and still say WELCOME01.
+- `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
+  product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
+  Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.
 - Website pop-up: `shop-popup.html`: offer + code + Copy (top, dark, mascot), "Our materials" with three covers
   (PRODUCTS in the file: `shop/p-*.jpg`, cut from the shop page), "Built by advanced learners, checked by professional
   native teachers" + "Shop now ↗" (bottom). Fixed 4:5 shape that scales with the frame. (`shop-banner.html?layout=square` redirects here.)
