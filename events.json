@@ -515,30 +515,6 @@
   },
   {
    "date": "2026-11-12",
-   "title": "Chinese Character Game",
-   "level": "All levels",
-   "cats": [
-    "characters"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "3pm CET"
-    },
-    {
-     "flag": "us",
-     "time": "9am ET"
-    }
-   ],
-   "start": "2026-11-12T14:00:00Z",
-   "end": "2026-11-12T15:00:00Z",
-   "cat": "characters",
-   "topic": "Learn new Chinese character through games designed by Mandarin Zest",
-   "host": "Antoine",
-   "trial": true
-  },
-  {
-   "date": "2026-11-12",
    "title": "School Subjects",
    "level": "Beginner",
    "cats": [
