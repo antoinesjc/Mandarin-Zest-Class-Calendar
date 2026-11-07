@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your first Chinese conversation · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Last block of the homepage: a real Club session screenshot + "Your first Chinese conversation is closer than you think",
+     trial button and free guide. Screenshots: ../sessions/ (SHOTS below; it shows a different one on each visit).
+     Links: CONFIG below, open in a new tab. Embed height: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:22px 12px 26px; }
+  .wrap { max-width:1080px; margin:0 auto; display:flex; gap:44px; align-items:center; }
+  .shot { flex:0 0 46%; position:relative; }
+  .frame { background:#1f1b18; border-radius:18px; padding:8px; box-shadow:0 18px 40px rgba(42,36,32,.22); transform:rotate(-1.5deg); transition:transform .4s; }
+  .shot:hover .frame { transform:rotate(0) translateY(-3px); }
+  .frame .top { display:flex; align-items:center; gap:6px; padding:3px 6px 8px; }
+  .frame .top i { width:9px; height:9px; border-radius:50%; background:#5a4f47; }
+  .frame .top i:first-child { background:#f37a48; }
+  .frame .top span { margin-left:6px; font-size:11.5px; font-weight:600; color:#cdbfb5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .frame img { display:block; width:100%; border-radius:10px; aspect-ratio:2 / 1; object-fit:cover; }
+  .live { position:absolute; left:-10px; bottom:-14px; background:#fff; border-radius:999px; padding:8px 14px; font-size:13px; font-weight:800; box-shadow:0 8px 20px rgba(42,36,32,.15); display:flex; align-items:center; gap:7px; }
+  .live b { width:9px; height:9px; border-radius:50%; background:#e0492b; box-shadow:0 0 0 0 rgba(224,73,43,.5); animation:pulse 1.8s infinite; }
+  @keyframes pulse { 70% { box-shadow:0 0 0 8px rgba(224,73,43,0); } 100% { box-shadow:0 0 0 0 rgba(224,73,43,0); } }
+  .txt { flex:1; min-width:0; display:flex; flex-direction:column; gap:16px; }
+  h2 { margin:0; font-size:36px; line-height:1.15; font-weight:800; }
+  p { margin:0; font-size:17px; line-height:1.55; color:var(--muted); }
+  .btns { display:flex; flex-wrap:wrap; gap:12px; }
+  .btn { display:inline-flex; align-items:center; min-height:54px; padding:0 24px; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:16px; text-decoration:none; transition:background .2s, transform .2s; }
+  .btn:hover { background:var(--orange-d); transform:translateY(-1px); }
+  .btn.alt { background:#fff; font-weight:700; box-shadow:inset 0 0 0 2px var(--line); }
+  .btn.alt:hover { background:#fff3ec; }
+  .btn:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+  .small { font-size:13.5px; color:var(--muted); }
+  @media (max-width:760px) {
+    .wrap { flex-direction:column; gap:30px; align-items:stretch; }
+    .shot { flex:none; }
+    h2 { font-size:28px; } p { font-size:15.5px; }
+    .btn { width:100%; justify-content:center; }
+  }
+  @media (prefers-reduced-motion:reduce) { .live b { animation:none; } .frame { transition:none; } }
+</style>
+</head>
+<body>
+<section class="wrap" aria-labelledby="ttl">
+  <div class="shot">
+    <div class="frame">
+      <div class="top" aria-hidden="true"><i></i><i></i><i></i><span id="cap"></span></div>
+      <img id="img" alt="">
+    </div>
+    <div class="live" aria-hidden="true"><b></b>Live every week</div>
+  </div>
+  <div class="txt">
+    <h2 id="ttl">Your first Chinese conversation is closer than you think</h2>
+    <p>Join a real Club session, at your level, with a host who keeps it relaxed. Turn your camera on or off, it's up to you.</p>
+    <div class="btns">
+      <a class="btn" id="trial" target="_blank" rel="noopener"></a>
+      <a class="btn alt" id="guide" target="_blank" rel="noopener">Get the free guide</a>
+    </div>
+    <span class="small">One trial session per person.</span>
+  </div>
+</section>
+<script>
+  // ═══ CONFIG ═══
+  var CONFIG = {
+    trialPrice: "US$2.50",
+    trialUrl: "https://www.mandarinzest.com/mandarin-zest-club",
+    guideUrl: "https://www.mandarinzest.com/new-to-chinese-start-here"
+  };
+  // Real session screenshots (members' faces covered). One is picked at random on each visit.
+  var SHOTS = [
+    { src: "../sessions/s01.jpg", cap: "HSK 2–3 speaking practice", alt: "A Club session on video call: a question in simplified and traditional Chinese with pinyin, and members on camera" },
+    { src: "../sessions/s02.jpg", cap: "Taiwan-style conversation", alt: "A Taiwan-style pronunciation and conversation session with members on camera" },
+    { src: "../sessions/s03.jpg", cap: "Advanced reading session", alt: "An advanced session reading a Chinese article together, with members on camera" },
+    { src: "../sessions/s04.jpg", cap: "Taiwanese sounds", alt: "A slide on Taiwanese retroflex sounds during a Club session" }
+  ];
+  var s = SHOTS[Math.floor(Math.random() * SHOTS.length)];
+  var img = document.getElementById("img"); img.src = s.src; img.alt = s.alt;
+  document.getElementById("cap").textContent = "Mandarin Zest Club · " + s.cap;
+  var t = document.getElementById("trial"); t.href = CONFIG.trialUrl; t.textContent = "Try a Club session · " + CONFIG.trialPrice + " ↗";
+  document.getElementById("guide").href = CONFIG.guideUrl;
+  function track(name) { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:name }, ga:{ event:"select_content", params:{ content_type:"home_final_cta", item_id:name } } }, "*"); } catch (e) {} }
+  t.addEventListener("click", function () { track("trial"); });
+  document.getElementById("guide").addEventListener("click", function () { track("free guide"); });
+  // tell the website how tall this is (the <head> listener resizes the frame)
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+</script>
+</body>
+</html>

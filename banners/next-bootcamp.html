@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Next bootcamp · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Homepage "Next bootcamp" strip. Picks the soonest bootcamp you can still sign up for from ../bootcamps.json
+     (same feed as the Bootcamps page). Nothing open? It shows the next one on the waitlist instead.
+     Everything (dates, prices, early bird, Club price, sign-up date) updates itself. Links open in a new tab. Embed height: README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --peach:#f8dacd; --brick:#a8431a; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:4px; }
+  .strip { max-width:1180px; margin:0 auto; background:var(--peach); border-radius:26px; display:flex; overflow:hidden; min-height:230px; opacity:0; transition:opacity .4s; }
+  .strip.on { opacity:1; }
+  .pic { flex:0 0 240px; position:relative; background:#e9c3b2; }
+  .pic img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .pic .fb { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Noto Sans SC',sans-serif; font-size:84px; font-weight:700; color:var(--brick); }
+  .body { flex:1; min-width:0; padding:28px 32px; display:flex; flex-wrap:wrap; gap:22px 28px; align-items:center; }
+  .txt { flex:2 1 400px; min-width:0; display:flex; flex-direction:column; gap:9px; }
+  .eb { font-size:13px; font-weight:800; letter-spacing:.09em; color:var(--brick); }
+  h2 { margin:0; font-size:30px; line-height:1.15; font-weight:800; }
+  p { margin:0; font-size:15.5px; line-height:1.55; color:#3d322b; }
+  .chips { list-style:none; margin:4px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:7px; }
+  .chips li { background:#fff; border-radius:999px; padding:5px 12px; font-size:13.5px; font-weight:700; }
+  .buy { flex:1 1 230px; min-width:0; display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+  .price { font-size:30px; font-weight:800; line-height:1.1; }
+  .price s { font-size:18px; font-weight:600; color:var(--muted); margin-left:6px; }
+  .price small { display:block; font-size:14px; font-weight:600; color:var(--muted); margin-top:3px; }
+  .btn { display:inline-flex; align-items:center; min-height:50px; padding:0 24px; border-radius:999px; background:var(--ink); color:#fff; font-weight:800; font-size:16px; text-decoration:none; transition:background .2s, transform .2s; }
+  .btn:hover { background:#000; transform:translateY(-1px); }
+  .btn:focus-visible, .more a:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+  .note { font-size:13.5px; color:#3d322b; }
+  .note b { color:var(--brick); }
+  .more { font-size:13.5px; color:#3d322b; }
+  .more a { color:var(--green); font-weight:700; }
+  @media (max-width:760px) {
+    .strip { flex-direction:column; border-radius:22px; }
+    .pic { flex:none; height:150px; }
+    .body { padding:20px 18px 22px; gap:16px; }
+    h2 { font-size:24px; } p { font-size:14.5px; }
+    .buy { width:100%; } .btn { width:100%; justify-content:center; }
+  }
+</style>
+</head>
+<body>
+<section class="strip" id="strip" aria-live="polite"></section>
+<script>
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var DAY = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  function d(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2], 23, 59, 59); }
+  function label(iso, wd) { var x = d(iso); return (wd ? DAY[x.getDay()] + " " : "") + x.getDate() + " " + MON[x.getMonth()]; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]; }); }
+  var now = new Date();
+  var FALLBACK = [[/taiwan/i, "台"], [/pronunc|tone|speak/i, "音"], [/character|hanzi|writ/i, "字"], [/./, "学"]];
+
+  // open = you can sign up now (same rules as the Bootcamps page)
+  function isOpen(b) {
+    var s = (b.status || "").toLowerCase();
+    if (/sold|full|wait|soon/.test(s)) return false;
+    if (/open/.test(s)) return true;
+    if (b.month || b.datesTbd) return false;
+    if (b.signupBy) return now <= d(b.signupBy);
+    return !!(b.start && now < d(b.start));
+  }
+  // next cohort announced but not open yet (month only / dates TBD / "waitlist" or "soon" status)
+  function upcoming(b) { var s = (b.status || "").toLowerCase(); return !/sold|full/.test(s) && !!(b.month || b.datesTbd || /wait|soon/.test(s)); }
+  function track(name) { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:name }, ga:{ event:"select_content", params:{ content_type:"next_bootcamp", item_id:name } } }, "*"); } catch (e) {} }
+
+  fetch("../bootcamps.json?v=" + Math.floor(Date.now() / 600000)).then(function (r) { return r.json(); }).then(function (data) {
+    var all = data.bootcamps || [];
+    var open = all.filter(isOpen).sort(function (a, b) { return (a.start || "9") < (b.start || "9") ? -1 : 1; });
+    var later = all.filter(function (b) { return !isOpen(b) && upcoming(b); });
+    var b = open[0] || later[0];
+    var strip = document.getElementById("strip");
+    if (!b) { strip.style.display = "none"; return; }
+    var isO = !!open[0];
+    var others = all.filter(function (x) { return x !== b && (isOpen(x) || upcoming(x)); });
+
+    var eb, note = "";
+    if (isO) {
+      eb = "NEXT BOOTCAMP" + (b.start ? " · STARTS " + label(b.start, true).toUpperCase() : "");
+      if (b.signupBy) {
+        var days = Math.ceil((d(b.signupBy) - now) / 864e5);
+        note = days <= 7 ? "<b>Last " + (days <= 1 ? "day" : days + " days") + " to sign up</b> · closes " + label(b.signupBy) : "Sign up by " + label(b.signupBy);
+      }
+    } else {
+      eb = "NEXT BOOTCAMP" + (b.month ? " · " + b.month.toUpperCase() : " · DATES SOON");
+      note = "Dates coming soon. Join the waitlist to hear first.";
+    }
+    var chips = [];
+    if (isO && b.dates) chips.push(b.dates);
+    if (b.format) chips.push(b.format.replace(/, Sat & Sun/, ", Sat and Sun"));
+    if (b.level) chips.push(b.level.replace(/ \(.*\)/, ""));
+    if (b.group) chips.push(b.group);
+
+    var priceHtml = "";
+    if (isO) {
+      var early = b.early && (!b.earlyEnds || now <= d(b.earlyEnds));
+      var main = early ? b.early : b.price;
+      if (main) priceHtml = '<div class="price">' + esc(main) + (early && b.price ? "<s>" + esc(b.price) + "</s>" : "") +
+        "<small>" + (early ? "Early bird until " + label(b.earlyEnds) : "") + (b.club ? (early ? " · " : "") + "Club members " + esc(b.club) : "") + "</small></div>";
+    }
+    var fb = FALLBACK.find(function (f) { return f[0].test(b.title); })[1];
+    var more = others.length ? '<div class="more">Also coming: ' + others.map(function (x) {
+      return '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.title) + "</a>" + (x.month ? " (" + esc(x.month) + ")" : x.start ? " (" + label(x.start) + ")" : "");
+    }).join(", ") + "</div>" : "";
+
+    strip.setAttribute("aria-label", "Next bootcamp: " + b.title);
+    strip.innerHTML =
+      '<div class="pic">' + (b.image ? '<img src="' + esc(b.image) + '" alt="">' : '<span class="fb" aria-hidden="true">' + fb + "</span>") + "</div>" +
+      '<div class="body"><div class="txt"><div class="eb">' + esc(eb) + "</div><h2>" + esc(b.title) + "</h2>" +
+      (b.summary ? "<p>" + esc(b.summary) + "</p>" : "") +
+      '<ul class="chips">' + chips.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("") + "</ul></div>" +
+      '<div class="buy">' + priceHtml +
+      '<a class="btn" id="go" href="' + esc(b.url) + '" target="_blank" rel="noopener">' + (isO ? "Save my seat ↗" : "Join the waitlist ↗") + "</a>" +
+      (note ? '<div class="note">' + note + "</div>" : "") + more + "</div></div>";
+    document.getElementById("go").addEventListener("click", function () { track(b.title); });
+    strip.classList.add("on");
+  }).catch(function () { document.getElementById("strip").style.display = "none"; });
+  // tell the website how tall this is (the <head> listener resizes the frame)
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+</script>
+</body>
+</html>

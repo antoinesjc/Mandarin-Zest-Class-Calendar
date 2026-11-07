@@ -351,6 +351,13 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   (US$2.50) + membership price, and the hosts. Hosts = `hosts.json` (photo, name and the line under the name on the Club
   page's "Meet your hosts" cards, rebuilt every sync): add a card on the Club page and it appears here. Prices/links: CONFIG.
   Resizes itself ({mz:"height"}); fallback embed height `max(760px, min(1260px, calc((1000px - 100vw) * 10000)), min(1480px, calc((701px - 100vw) * 10000)))`, `scrolling="no"`.
+- `banners/next-bootcamp.html`: homepage "Next bootcamp" strip. Picks the soonest bootcamp open for sign-up from `bootcamps.json`
+  (picture, dates, format, level, group, early-bird/standard/Club price, "Sign up by", "Last N days" in the final week, "Also
+  coming"). When nothing is open it shows the next announced one (month / dates TBD) with "Join the waitlist ↗". Resizes itself;
+  fallback embed height `max(340px, min(470px, calc((1001px - 100vw) * 10000)), min(730px, calc((761px - 100vw) * 10000)))`, `scrolling="no"`.
+- `banners/first-conversation.html`: last homepage block, "Your first Chinese conversation is closer than you think", with a real
+  session screenshot from `sessions/` (random each visit, SHOTS list), trial button and free guide (CONFIG). Resizes itself;
+  fallback embed height `max(420px, min(490px, calc((1001px - 100vw) * 10000)), min(780px, calc((761px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
   product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
   Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.
