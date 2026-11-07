@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TOCFL Vocabulary Lists · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* "Pick your level" for the TOCFL lists: tap a level for details, leave an email (Start Here sheet) to download its PDF.
+     One email unlocks every free list on this device. Level 5–6 is paid: button to the shop product (new tab).
+     Bottom: all 6 free lists at once (ZIP). Levels, files and price: LEVELS at the bottom of the file. Embed height: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --orange:#f37a48; --orange-d:#e2632f;
+          --nov:#6fae62; --nov-t:#e6f1e1; --a:#3f8a4a; --a-t:#e6f1e1; --b:#e0835f; --b-t:#f8dacd; --c:#d5602f; --c-t:#fbe3d6; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:6px; }
+  .zh { font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif; }
+  .card { max-width:1000px; margin:0 auto; background:#fff; border-radius:24px; padding:26px 28px 24px;
+          box-shadow:0 1px 0 var(--line), 0 10px 28px rgba(42,36,32,.07); }
+  .top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 20px; margin-bottom:16px; }
+  .top h2 { margin:0; font-size:22px; font-weight:800; line-height:1.2; }
+  .top h2 span { color:var(--muted); font-weight:600; }
+  .seg { display:inline-flex; background:#f6efe9; border-radius:999px; padding:4px; }
+  .seg button { border:0; background:none; font:inherit; font-size:14px; font-weight:700; color:var(--muted); padding:8px 14px; border-radius:999px; cursor:pointer; }
+  .seg button[aria-pressed="true"] { background:#fff; color:var(--ink); box-shadow:0 1px 4px rgba(42,36,32,.12); }
+
+  .wrap { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:26px; align-items:start; }
+  .band { display:flex; align-items:center; gap:10px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin:12px 0 4px; }
+  .band:first-child { margin-top:0; }
+  .band::after { content:""; flex:1; height:1px; background:var(--line); }
+  .band b { color:var(--muted); font-weight:600; letter-spacing:0; text-transform:none; }
+  .row { display:grid; grid-template-columns:96px minmax(0,1fr); align-items:center; gap:12px; width:100%; border:0; background:none; font:inherit; color:inherit; text-align:left;
+         padding:8px 10px; border-radius:12px; cursor:pointer; transition:background .2s; min-height:48px; }
+  .row:hover { background:#fbf6f2; }
+  .row[aria-selected="true"] { background:var(--tint); }
+  .row:focus-visible { outline:3px solid var(--orange); outline-offset:1px; }
+  .lvl { display:flex; flex-direction:column; line-height:1.15; }
+  .lvl b { font-weight:800; font-size:15px; white-space:nowrap; }
+  .lvl .zh { font-size:12.5px; color:var(--muted); }
+  .bar { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; }
+  .bar span.b { height:12px; border-radius:6px; min-width:6px; width:0; background:var(--c0); transition:width .7s cubic-bezier(.2,.8,.2,1); }
+  .paid { font-size:11px; font-weight:800; letter-spacing:.04em; color:#a8431a; background:#fbe3d6; border-radius:999px; padding:2px 8px; margin-left:2px; }
+
+  .detail { position:sticky; top:6px; background:var(--tint,#e6f1e1); border-radius:20px; padding:20px; display:flex; flex-direction:column; gap:12px; transition:background .3s; }
+  .d-head { display:flex; gap:14px; align-items:flex-start; }
+  .d-cover { width:86px; flex:none; border-radius:6px; box-shadow:0 6px 16px rgba(42,36,32,.18); }
+  .d-band { font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--cd); }
+  .d-lvl { font-size:19px; font-weight:800; margin-top:2px; }
+  .d-lvl .zh { font-weight:700; font-size:16px; margin-left:4px; }
+  .d-big { font-size:38px; font-weight:800; line-height:1; margin-top:6px; }
+  .d-big small { font-size:15px; font-weight:600; color:var(--muted); margin-left:6px; }
+  .facts { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; font-size:14.5px; line-height:1.4; color:#3d322b; }
+  .facts li { display:flex; gap:8px; }
+  .facts li::before { content:"●"; color:var(--cd); font-size:9px; margin-top:5px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:46px; padding:0 20px; border-radius:999px; background:var(--orange); color:var(--ink);
+         font-weight:800; font-size:15px; text-decoration:none; transition:background .2s, transform .2s; border:0; font-family:inherit; cursor:pointer; }
+  .btn:hover { background:var(--orange-d); transform:translateY(-1px); }
+  .btn.dark { background:var(--ink); color:#fff; } .btn.dark:hover { background:#000; }
+  .small { font-size:12.5px; color:var(--muted); line-height:1.4; }
+  .note { font-size:12px; color:var(--muted); margin-top:14px; }
+
+  /* email forms (level panel + bottom box) */
+  .gform { display:flex; flex-direction:column; gap:7px; }
+  .grow { display:flex; gap:8px; }
+  .gform input[type=email] { flex:1; min-width:0; height:46px; border:2px solid transparent; border-radius:999px; padding:0 16px; font:inherit; font-size:15px; background:#fff; color:var(--ink); }
+  .gform input[type=email]:focus { outline:none; border-color:var(--orange-d); }
+  .consent { display:flex; gap:7px; align-items:flex-start; font-size:12px; line-height:1.4; color:#4a3c34; cursor:pointer; }
+  .consent input { width:15px; height:15px; margin:1px 0 0; flex:none; accent-color:var(--orange-d); }
+  .gerr { color:#a3261a; font-size:12.5px; font-weight:700; } .gerr:empty { display:none; }
+  .trap { position:absolute; left:-5000px; }
+
+  .get { margin-top:18px; background:#f8dacd; border-radius:20px; padding:20px 22px; display:flex; gap:24px; align-items:center; }
+  .stack { flex:none; position:relative; width:150px; height:118px; }
+  .stack img { position:absolute; top:4px; width:70px; border-radius:5px; box-shadow:0 6px 14px rgba(42,36,32,.18); transition:transform .4s cubic-bezier(.2,.9,.25,1.1); }
+  .get:hover .stack img { transform:translate(var(--dx), -4px) rotate(var(--rh)); }
+  .gtxt { flex:1; min-width:0; display:flex; flex-direction:column; gap:7px; }
+  .gtxt .eb { font-size:12px; font-weight:800; letter-spacing:.09em; color:#a8431a; }
+  .gtxt h3 { margin:0; font-size:20px; font-weight:800; line-height:1.2; }
+  .gtxt p { margin:0; font-size:14px; line-height:1.45; color:#4a3c34; }
+  .gdone { display:none; flex-direction:column; gap:9px; }
+  .got .gdone { display:flex; } .got #gform { display:none; }
+  .files { display:flex; flex-wrap:wrap; gap:6px; }
+  .files a { font-size:13px; font-weight:700; color:var(--ink); background:#fff; border-radius:999px; padding:5px 11px; text-decoration:none; }
+  .files a:hover { background:#fff3ec; }
+
+  @media (max-width:760px) {
+    body { padding:2px; }
+    .card { padding:18px 14px 16px; border-radius:20px; }
+    .top { margin-bottom:12px; } .top h2 { font-size:18px; }
+    .seg button { font-size:13px; padding:7px 11px; }
+    .wrap { display:block; }
+    .row { grid-template-columns:84px minmax(0,1fr); padding:6px 8px; }
+    .detail { position:static; margin:6px 0 4px; padding:16px; gap:10px; border-radius:16px; }
+    .d-cover { width:70px; } .d-big { font-size:32px; }
+    .facts { font-size:13.5px; }
+    .grow { flex-direction:column; } .gform input[type=email] { flex:none; }
+    .get { flex-direction:column; align-items:stretch; gap:12px; padding:16px; }
+    .stack { display:none; } .gtxt h3 { font-size:18px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .bar span.b, .detail, .stack img { transition:none; } }
+</style>
+</head>
+<body>
+<section class="card" aria-labelledby="ttl">
+  <div class="top">
+    <h2 id="ttl">TOCFL vocabulary lists <span>· Traditional characters, Taiwan pinyin</span></h2>
+    <div class="seg" role="group" aria-label="Show">
+      <button type="button" data-mode="t" aria-pressed="true">Total words</button>
+      <button type="button" data-mode="n" aria-pressed="false">New at this level</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <div id="list" role="listbox" aria-label="TOCFL levels"></div>
+    <aside class="detail" id="detail" aria-live="polite"></aside>
+  </div>
+  <div class="note">Tap a level to see what's inside and download its list. Word counts from the official TOCFL vocabulary list. Levels 5 and 6 share one list.</div>
+
+  <div class="get" id="get">
+    <div class="stack" id="stack" aria-hidden="true"></div>
+    <div class="gtxt">
+      <div class="eb" id="geb">FREE DOWNLOAD</div>
+      <h3 id="gh">Get the first 6 TOCFL lists at once</h3>
+      <p id="gp">Novice 1 to Level 4: 4,741 words with pinyin, word type and meaning, in one download.</p>
+      <form class="gform" id="gform" novalidate>
+        <div class="grow">
+          <input type="email" id="gemail" placeholder="Your email" autocomplete="email" aria-label="Your email">
+          <button class="btn" type="submit">Get the 6 PDFs ↓</button>
+        </div>
+        <label class="consent"><input type="checkbox" id="gok">I agree to receive emails from Mandarin Zest. I can unsubscribe at any time.</label>
+        <input class="trap" type="text" id="gweb" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="gerr" id="gerr" role="alert"></div>
+      </form>
+      <div class="gdone" aria-live="polite">
+        <a class="btn dark" id="zip" style="align-self:flex-start" download target="_blank" rel="noopener">Download all 6 lists (ZIP) ↓</a>
+        <div class="files" id="gfiles"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  // ═══ LEVELS (n = new words at this level, t = total from Novice 1). file = free PDF; buy = paid product (no file) ═══
+  var LEVELS = [
+    { id:"novice-1", name:"Novice 1", zh:"準一 · 準備級一級", band:"nov", cefr:"Before A1", n:160,  t:160,  pages:11, topic:true,
+      desc:"The very first words: yourself, numbers, people and simple daily needs.", file:"downloads/tocfl/TOCFL-Novice-1-Vocab-List-Mandarin-Zest.pdf" },
+    { id:"novice-2", name:"Novice 2", zh:"準二 · 準備級二級", band:"nov", cefr:"Before A1", n:234,  t:394,  pages:14, topic:true,
+      desc:"Basic words for food, travel, school and home.", file:"downloads/tocfl/TOCFL-Novice-2-Vocab-List-Mandarin-Zest.pdf" },
+    { id:"level-1",  name:"Level 1",  zh:"入門級",            band:"a",   cefr:"CEFR A1",   n:347,  t:741,  pages:17, topic:true,
+      desc:"Everyday words to handle simple, familiar situations.", file:"downloads/tocfl/TOCFL-Level-1-Vocab-List-Mandarin-Zest.pdf" },
+    { id:"level-2",  name:"Level 2",  zh:"基礎級",            band:"a",   cefr:"CEFR A2",   n:485,  t:1226, pages:21, topic:true,
+      desc:"Words for routine tasks and talking about your life and surroundings.", file:"downloads/tocfl/TOCFL-Level-2-Vocab-List-Mandarin-Zest.pdf" },
+    { id:"level-3",  name:"Level 3",  zh:"進階級",            band:"b",   cefr:"CEFR B1",   n:1173, t:2399, pages:46,
+      desc:"Words to talk about experiences, plans and opinions with ease.", file:"downloads/tocfl/TOCFL-Level-3-Vocab-List-Mandarin-Zest.pdf" },
+    { id:"level-4",  name:"Level 4",  zh:"高階級",            band:"b",   cefr:"CEFR B2",   n:2342, t:4741, pages:47,
+      desc:"Words for detailed discussions, news and work topics.", file:"downloads/tocfl/TOCFL-Level-4-Vocab-List-Mandarin-Zest.pdf" },
+    { id:"level-5-6", name:"Level 5–6", zh:"流利級 · 精通級", zs:"流利 · 精通", band:"c",   cefr:"CEFR C1–C2", n:2776, t:7517, pages:54,
+      desc:"Advanced words for complex, nuanced and formal Chinese. Levels 5 and 6 share this one list.",
+      buy:{ url:"https://www.mandarinzest.com/shop/tocfl-level-5-vocabulary-list-67", price:"US$6" } }
+  ];
+  var ZIP = "downloads/tocfl/TOCFL-Novice-1-to-Level-4-Vocab-Lists-Mandarin-Zest.zip";
+  var BANDS = { nov:{ title:"Novice", sub:"準備級 · before A1" }, a:{ title:"Band A", sub:"Levels 1–2" }, b:{ title:"Band B", sub:"Levels 3–4" }, c:{ title:"Band C", sub:"Levels 5–6" } };
+  var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
+  var KEY = "mz-tocfl"; // one email unlocks every free list on this device
+
+  var css = getComputedStyle(document.documentElement);
+  function v(n) { return css.getPropertyValue(n).trim(); }
+  var COL = { nov:[v("--nov"), v("--nov-t"), "#1b6f1b"], a:[v("--a"), v("--a-t"), "#1b6f1b"], b:[v("--b"), v("--b-t"), "#a8431a"], c:[v("--c"), v("--c-t"), "#a8431a"] };
+  var fmt = function (n) { return n.toLocaleString("en-US"); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
+  function cover(l) { return "downloads/tocfl/cover-" + l.id + ".jpg"; }
+  function unlocked() { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
+
+  var mode = "t", sel = 0, list = document.getElementById("list"), detail = document.getElementById("detail");
+  var narrow = matchMedia("(max-width:760px)");
+
+  function build() {
+    var html = "", last = "";
+    LEVELS.forEach(function (l, i) {
+      if (l.band !== last) { last = l.band; html += '<div class="band" style="color:' + COL[l.band][2] + '">' + BANDS[l.band].title + ' <b>' + BANDS[l.band].sub + '</b></div>'; }
+      html += '<button type="button" class="row" role="option" data-i="' + i + '" style="--c0:' + COL[l.band][0] + ';--tint:' + COL[l.band][1] + '">' +
+        '<span class="lvl"><b>' + l.name + '</b><span class="zh">' + (l.zs || l.zh.split(" · ")[0]) + '</span></span>' +
+        '<span class="bar"><span class="b"></span><span class="t"></span>' + (l.buy ? '<span class="paid">PDF ' + l.buy.price + '</span>' : '') + '</span></button>';
+    });
+    list.innerHTML = html;
+  }
+
+  function draw() {
+    var max = Math.max.apply(null, LEVELS.map(function (l) { return l[mode]; }));
+    list.querySelectorAll(".row").forEach(function (r, i) {
+      var l = LEVELS[i];
+      r.querySelector(".b").style.width = (l[mode] / max * 62) + "%";
+      r.querySelector(".t").textContent = (mode === "n" && i ? "+" : "") + fmt(l[mode]);
+      r.setAttribute("aria-selected", i === sel ? "true" : "false");
+      r.setAttribute("aria-label", l.name + ": " + fmt(l.n) + " new words, " + fmt(l.t) + " in total" + (l.buy ? ", paid list" : ", free list"));
+    });
+  }
+
+  function action(l) {
+    if (l.buy) return '<a class="btn" href="' + l.buy.url + '" target="_blank" rel="noopener">Get the ' + l.name + ' list · ' + l.buy.price + ' ↗</a>' +
+      '<div class="small">Instant PDF download from our shop. Want to start for free? Novice 1 to Level 4 are free above.</div>';
+    if (unlocked()) return '<a class="btn dark" href="' + l.file + '" download target="_blank" rel="noopener">Download the ' + l.name + ' PDF ↓</a>';
+    return '<form class="gform" data-lvl="' + l.id + '" novalidate>' +
+      '<div class="grow"><input type="email" placeholder="Your email" autocomplete="email" aria-label="Your email"><button class="btn" type="submit">Get the PDF ↓</button></div>' +
+      '<label class="consent"><input type="checkbox">I agree to receive emails from Mandarin Zest. I can unsubscribe at any time.</label>' +
+      '<input class="trap" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<div class="gerr" role="alert"></div></form>' +
+      '<div class="small">Free. One email unlocks every free TOCFL list.</div>';
+  }
+
+  function show(i) {
+    sel = i; var l = LEVELS[i], p = LEVELS[i - 1], c = COL[l.band];
+    detail.style.setProperty("--tint", c[1]); detail.style.setProperty("--cd", c[2]);
+    var facts = [esc(l.desc)];
+    facts.push(p ? "<b>" + fmt(l.t) + " words in total</b> from Novice 1 up to this level" : "Your first step in the TOCFL: start here");
+    facts.push(l.topic ? "Sorted by topic, as in the official list" : "In pinyin order with A–Z sections");
+    facts.push(l.pages + " pages · characters, pinyin, word type, meaning and a tick box");
+    detail.innerHTML = '<div class="d-head"><img class="d-cover" src="' + cover(l) + '" alt="Cover of the TOCFL ' + l.name + ' list">' +
+      '<div><div class="d-band">' + BANDS[l.band].title + ' · ' + l.cefr + '</div>' +
+      '<div class="d-lvl">TOCFL ' + l.name + '<span class="zh">' + (l.zs || l.zh.split(" · ")[0]) + '</span></div>' +
+      '<div class="d-big">' + fmt(l.n) + '<small>new words</small></div></div></div>' +
+      '<ul class="facts">' + facts.map(function (f) { return "<li><span>" + f + "</span></li>"; }).join("") + '</ul>' + action(l);
+    var row = list.querySelector('.row[data-i="' + i + '"]');
+    if (narrow.matches) row.after(detail); else if (detail.previousElementSibling !== list) list.after(detail);
+    draw();
+  }
+
+  // send the email to the Start Here sheet (+ Meta Pixel / GA through the website's head code)
+  function lead(email, source, name) {
+    fetch(SHEET_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ email: email, source: source, timestamp: new Date().toISOString() }) }).catch(function () {});
+    try { window.top.postMessage({ mz:"track", event:"Lead", params:{ content_name: name }, ga:{ event:"generate_lead", params:{ form:"tocfl-levels", pdf: source } } }, "*"); } catch (e) {}
+    try { localStorage.setItem(KEY, "1"); } catch (e2) {}
+  }
+  function check(form) {
+    var email = form.querySelector('input[type=email]').value.trim(), err = form.querySelector(".gerr");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please enter a valid email."; return null; }
+    if (!form.querySelector('.consent input').checked) { err.textContent = "Please tick the box to get the PDF."; return null; }
+    err.textContent = ""; return email;
+  }
+  function startDownload(href) { var a = document.createElement("a"); a.href = href; a.download = ""; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+
+  // level panel form
+  detail.addEventListener("submit", function (e) {
+    var form = e.target.closest("form[data-lvl]"); if (!form) return;
+    e.preventDefault();
+    var email = check(form); if (!email) return;
+    var l = LEVELS[sel];
+    if (!form.querySelector(".trap").value) lead(email, "tocfl-levels | " + l.id, "TOCFL " + l.name + " vocab list");
+    else { try { localStorage.setItem(KEY, "1"); } catch (e3) {} }
+    allDone(); show(sel); startDownload(l.file);
+  });
+
+  // bottom box: the first 6 lists at once
+  var get = document.getElementById("get");
+  document.getElementById("zip").href = ZIP;
+  (function () {
+    var st = document.getElementById("stack"), rot = [-12, -7, -2, 3, 8, 13];
+    LEVELS.filter(function (l) { return l.file; }).forEach(function (l, i) {
+      var im = document.createElement("img"); im.src = cover(l); im.alt = "";
+      im.style.left = i * 16 + "px"; im.style.transform = "rotate(" + rot[i] + "deg)";
+      im.style.setProperty("--dx", ((i - 2.5) * 6) + "px"); im.style.setProperty("--rh", (rot[i] * 1.4) + "deg"); im.style.zIndex = i + 1;
+      st.appendChild(im);
+    });
+    document.getElementById("gfiles").innerHTML = LEVELS.filter(function (l) { return l.file; }).map(function (l) {
+      return '<a href="' + l.file + '" download target="_blank" rel="noopener">' + l.name + ' PDF ↓</a>';
+    }).join("");
+  })();
+  function allDone() {
+    get.classList.add("got");
+    document.getElementById("geb").textContent = "YOU'RE IN · 謝謝！";
+    document.getElementById("gh").textContent = "Your TOCFL lists are ready";
+    document.getElementById("gp").textContent = "Download Novice 1 to Level 4 in one ZIP file, or just the level you need.";
+  }
+  document.getElementById("gform").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var form = e.target, email = check(form); if (!email) return;
+    if (!document.getElementById("gweb").value) lead(email, "tocfl-levels | all 6", "TOCFL Novice 1 to Level 4 vocab lists");
+    else { try { localStorage.setItem(KEY, "1"); } catch (e4) {} }
+    allDone(); show(sel); startDownload(ZIP);
+  });
+
+  build();
+  list.addEventListener("click", function (e) { var r = e.target.closest(".row"); if (r) show(+r.dataset.i); });
+  list.addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault(); var n = Math.max(0, Math.min(LEVELS.length - 1, sel + (e.key === "ArrowDown" ? 1 : -1)));
+    show(n); list.querySelector('.row[data-i="' + n + '"]').focus();
+  });
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      mode = b.dataset.mode;
+      document.querySelectorAll(".seg button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      draw();
+    });
+  });
+  narrow.addEventListener ? narrow.addEventListener("change", function () { show(sel); }) : narrow.addListener(function () { show(sel); });
+  if (unlocked()) allDone();
+  var q = new URLSearchParams(location.search).get("level"), start = 0;
+  LEVELS.forEach(function (l, i) { if (l.id === q) start = i; });
+  show(start);
+  list.querySelectorAll(".bar .b").forEach(function (b) { var w = b.style.width; b.style.width = "0"; requestAnimationFrame(function () { requestAnimationFrame(function () { b.style.width = w; }); }); });
+</script>
+</body>
+</html>
