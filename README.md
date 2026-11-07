@@ -209,7 +209,7 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
 
 ## Club reviews as message cards
 
-- `club-reviews.html`: the Club page reviews (Nancy, Agnieszka, a US Club member from Discord, Debbie, Matt) shown as chat-style message cards;
+- `club-reviews.html`: the Club page reviews (Nancy, Agnieszka, Allan, Debbie, Matt) shown as chat-style message cards;
   messages "arrive" one by one with a typing indicator when scrolled into view. Edit the REVIEWS list
   (`==text==` = highlighted). Four visible from 1180px with ‹ › arrows for the rest, swipe below.
   Embed: `height:740px` with `scrolling="no"` (4 cards: ~720px on wide screens and phones, less in between).
