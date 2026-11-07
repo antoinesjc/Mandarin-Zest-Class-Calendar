@@ -343,6 +343,10 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   lists at once (ZIP, source "tocfl-levels | all 6"). Files in `downloads/tocfl/` (the paid Level 5 PDF is NOT in the repo).
   `?level=level-3` opens a level. Levels, files and price: LEVELS in the file.
   Embed: `height:max(990px, min(1540px, calc((761px - 100vw) * 10000)))`, `scrolling="no"`.
+- `banners/tocfl-beyond.html`: "Go beyond the list" for the TOCFL page: TOCFL Novice 1 textbook (BOOK in the file: link, US$15,
+  cover), Taiwanese Mini Bootcamp (dates, format, Club price from `bootcamps.json`; after the sign-up date it says "Next dates
+  coming soon"), the Club (host photos from `hosts.json`). Whole cards are links, new tab.
+  Embed: `height:max(590px, min(930px, calc((861px - 100vw) * 10000)), min(1390px, calc((561px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
   product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
   Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.

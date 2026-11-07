@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Go beyond the list · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* "Go beyond the list" for the TOCFL page: TOCFL Novice 1 textbook, Taiwanese Mini Bootcamp, the Club. All links open in a new tab.
+     Bootcamp dates/price come from ../bootcamps.json (same feed as the bootcamps widget); host photos from ../hosts.json.
+     Textbook link/price: BOOK below. Embed height: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --orange:#f37a48; --orange-d:#e2632f; --green:#1b6f1b; --brick:#a8431a; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:6px; }
+  .wrap { max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:18px; }
+  .eb { font-size:13px; font-weight:800; letter-spacing:.09em; color:var(--brick); }
+  h2 { margin:4px 0 0; font-size:34px; line-height:1.12; font-weight:800; }
+  .grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:18px; }
+  .card { background:#fff; border-radius:22px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 1px 0 var(--line), 0 8px 24px rgba(42,36,32,.07);
+          text-decoration:none; color:inherit; transition:transform .25s, box-shadow .25s; }
+  .card:hover { transform:translateY(-3px); box-shadow:0 1px 0 var(--line), 0 14px 30px rgba(42,36,32,.12); }
+  .card:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+  .pic { height:170px; position:relative; overflow:hidden; }
+  .pic img { width:100%; height:100%; object-fit:cover; display:block; }
+  .book .pic { background:#e6f1e1; display:flex; align-items:center; justify-content:center; }
+  .book .pic img { width:auto; height:150px; object-fit:contain; border-radius:6px; box-shadow:0 8px 18px rgba(42,36,32,.18); transform:rotate(-3deg); transition:transform .3s; }
+  .book:hover .pic img { transform:rotate(0) scale(1.04); }
+  .club .pic { background:#2a2420; display:flex; align-items:center; justify-content:center; }
+  .faces { display:flex; }
+  .faces img { width:62px; height:62px; border-radius:50%; object-fit:cover; border:3px solid #2a2420; margin-left:-14px; }
+  .faces img:first-child { margin-left:0; }
+  .tag { position:absolute; top:12px; left:12px; font-size:12px; font-weight:800; letter-spacing:.06em; border-radius:999px; padding:5px 11px; }
+  .body { padding:20px 22px 22px; display:flex; flex-direction:column; gap:9px; flex:1; }
+  h3 { margin:0; font-size:21px; font-weight:800; line-height:1.2; }
+  p { margin:0; font-size:15px; line-height:1.5; color:var(--muted); }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin:2px 0 0; padding:0; list-style:none; }
+  .chips li { background:#faf6f3; border-radius:999px; padding:4px 10px; font-size:12.5px; font-weight:700; }
+  .when { font-size:14px; font-weight:700; color:var(--green); }
+  .grow { flex:1; }
+  .btn { align-self:flex-start; display:inline-flex; align-items:center; min-height:44px; padding:0 18px; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:15px; margin-top:6px; transition:background .2s; }
+  .card:hover .btn { background:var(--orange-d); }
+  .btn.line { background:#fff; box-shadow:inset 0 0 0 2px var(--ink); }
+  .card.club:hover .btn.line, .btn.line:hover { background:#fff3ec; }
+  @media (max-width:860px) {
+    .grid { grid-template-columns:minmax(0,1fr); }
+    .card { flex-direction:row; }
+    .pic { width:150px; height:auto; flex:none; }
+    .book .pic img { height:130px; }
+    .faces img { width:44px; height:44px; margin-left:-12px; }
+    .club .pic .faces { flex-wrap:wrap; justify-content:center; width:110px; row-gap:4px; }
+  }
+  @media (max-width:560px) {
+    h2 { font-size:26px; }
+    .card { flex-direction:column; }
+    .pic { width:auto; height:140px; }
+    .book .pic img { height:120px; }
+    .club .pic .faces { flex-wrap:nowrap; width:auto; }
+    .body { padding:16px 16px 18px; }
+    .btn { align-self:stretch; justify-content:center; }
+  }
+  @media (prefers-reduced-motion:reduce) { .card, .book .pic img { transition:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="eb">LEARNING CHINESE FOR TAIWAN?</div>
+    <h2>Go beyond the list</h2>
+  </div>
+  <div class="grid">
+    <a class="card book" id="book" target="_blank" rel="noopener">
+      <div class="pic"><span class="tag" style="background:#fff;color:#1b6f1b">TEXTBOOK</span><img id="bookimg" alt="TOCFL Novice 1 textbook cover"></div>
+      <div class="body">
+        <h3>TOCFL Novice 1 textbook</h3>
+        <p class="grow">Learn the Novice 1 words in 10 real conversations set in Taipei, in Traditional characters with pinyin on every sentence.</p>
+        <ul class="chips"><li>150 pages</li><li>221 characters</li><li>160 exercises</li></ul>
+        <span class="btn" id="bookbtn">See the book ↗</span>
+      </div>
+    </a>
+    <a class="card camp" id="camp" target="_blank" rel="noopener" href="https://www.mandarinzest.com/taiwanese-mini-bootcamp">
+      <div class="pic"><span class="tag" style="background:#f8dacd;color:#a8431a">BOOTCAMP</span><img id="campimg" alt="Taipei street at night"></div>
+      <div class="body">
+        <h3>Taiwanese Mini Bootcamp</h3>
+        <p class="grow" id="camptxt">Learned Chinese from mainland textbooks? Get the words, accent and manners Taiwanese people actually use, from the MRT to the night market.</p>
+        <span class="when" id="campwhen"></span>
+        <ul class="chips" id="campchips"></ul>
+        <span class="btn line">See the bootcamp ↗</span>
+      </div>
+    </a>
+    <a class="card club" id="club" target="_blank" rel="noopener" href="https://www.mandarinzest.com/mandarin-zest-club">
+      <div class="pic"><span class="tag" style="background:#f37a48;color:#2a2420">THE CLUB</span><div class="faces" id="faces"></div></div>
+      <div class="body">
+        <h3>Use these words out loud</h3>
+        <p class="grow">20+ live speaking sessions a month with native teachers and advanced learners, including hosts who lived in Taiwan.</p>
+        <ul class="chips"><li>Cancel anytime</li><li>50% off our materials</li></ul>
+        <span class="btn">Join the Club ↗</span>
+      </div>
+    </a>
+  </div>
+</div>
+<script>
+  // ═══ BOOK: textbook link, price and cover ═══
+  var BOOK = {
+    url: "https://www.mandarinzest.com/shop/textbooks-3/tocfl-novice-1-beginner-mandarin-one-real-conversation-at-a-time-60",
+    price: "US$15",
+    image: "https://www.mandarinzest.com/web/image/product.template/60/image_1024?unique=6328570"
+  };
+  document.getElementById("book").href = BOOK.url;
+  document.getElementById("bookimg").src = BOOK.image;
+  document.getElementById("bookbtn").textContent = "See the book · " + BOOK.price + " ↗";
+
+  var camp = document.getElementById("campimg");
+  camp.src = "https://www.mandarinzest.com/unsplash/qJX_J6U5Vm4/5435/taipei.jpg?unique=d39d6a55";
+  var v = "?v=" + Math.floor(Date.now() / 600000);
+
+  // bootcamp dates + price from the shared feed; after the sign-up date it says the next dates are coming
+  fetch("../bootcamps.json" + v).then(function (r) { return r.json(); }).then(function (d) {
+    var b = (d.bootcamps || []).filter(function (x) { return /taiwanese/i.test(x.url); })[0]; if (!b) return;
+    if (b.image) camp.src = b.image;
+    var today = new Date().toISOString().slice(0, 10), open = b.signupBy ? today <= b.signupBy : (b.start ? today < b.start : false);
+    var chips = [];
+    if (open && !b.datesTbd && b.dates) {
+      var by = b.signupBy ? new Date(b.signupBy + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "";
+      document.getElementById("campwhen").textContent = b.dates + (by ? " · sign up by " + by : "");
+      if (b.format) chips.push(b.format.replace(/, Sat & Sun/, ""));
+      if (b.club) chips.push("Club price " + b.club);
+    } else {
+      document.getElementById("campwhen").textContent = "Next dates coming soon";
+    }
+    if (b.level) chips.push(b.level.replace(/ \(.*\)/, ""));
+    document.getElementById("campchips").innerHTML = chips.map(function (c) { return "<li>" + c.replace(/</g, "&lt;") + "</li>"; }).join("");
+  }).catch(function () {});
+
+  // Club host photos from the Club page (same file as the calendar)
+  fetch("../hosts.json" + v).then(function (r) { return r.json(); }).then(function (h) {
+    document.getElementById("faces").innerHTML = Object.keys(h).filter(function (k) { return h[k].photo; }).slice(0, 5).map(function (k) {
+      return '<img src="' + h[k].photo + '" alt="' + h[k].name.replace(/"/g, "") + '">';
+    }).join("");
+  }).catch(function () {});
+</script>
+</body>
+</html>
