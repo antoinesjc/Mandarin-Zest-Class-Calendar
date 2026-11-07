@@ -1,22 +1,27 @@
 {
  "vanessa": {
   "name": "Vanessa",
-  "photo": "https://www.mandarinzest.com/web/image/5436-8552dcd2/profile%20and%20logo%20-%202026-08-30T230101.359.webp"
+  "photo": "https://www.mandarinzest.com/web/image/5436-8552dcd2/profile%20and%20logo%20-%202026-08-30T230101.359.webp",
+  "bio": "Taiwanese tutor from Taichung with 500+ hours of online teaching."
  },
  "xiaojing": {
   "name": "Xiaojing",
-  "photo": "https://www.mandarinzest.com/web/image/6412-b8995f72/profile%20and%20logo%20-%202026-10-29T115341.932.webp"
+  "photo": "https://www.mandarinzest.com/web/image/6412-b8995f72/profile%20and%20logo%20-%202026-10-29T115341.932.webp",
+  "bio": "Chinese tutor from Shanxi in China with BA in Chinese Language and Literature."
  },
  "gabrielle": {
   "name": "Gabrielle",
-  "photo": "https://www.mandarinzest.com/web/image/2568-0748936a/profile%20and%20logo%20%2883%29.webp"
+  "photo": "https://www.mandarinzest.com/web/image/2568-0748936a/profile%20and%20logo%20%2883%29.webp",
+  "bio": "From Ohio. BA in Chinese, Fulbright summer in Taipei."
  },
  "dorota": {
   "name": "Dorota",
-  "photo": "https://www.mandarinzest.com/web/image/2569-523f2c7c/profile%20and%20logo%20%2881%29.webp"
+  "photo": "https://www.mandarinzest.com/web/image/2569-523f2c7c/profile%20and%20logo%20%2881%29.webp",
+  "bio": "From Poland. Lived in mainland China and Taiwan, Chinese-taught Master's at NTU."
  },
  "antoine": {
   "name": "Antoine",
-  "photo": "https://www.mandarinzest.com/web/image/2565-ebc7e58a/profile%20and%20logo%20%2882%29.webp"
+  "photo": "https://www.mandarinzest.com/web/image/2565-ebc7e58a/profile%20and%20logo%20%2882%29.webp",
+  "bio": "From Belgium. 6+ years in Taiwan, Chinese-taught Master's at NTU."
  }
 }

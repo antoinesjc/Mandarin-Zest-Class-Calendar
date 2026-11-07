@@ -347,6 +347,10 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   cover), Taiwanese Mini Bootcamp (dates, format, Club price from `bootcamps.json`; after the sign-up date it says "Next dates
   coming soon"), the Club (host photos from `hosts.json`). Whole cards are links, new tab.
   Embed: `height:max(590px, min(930px, calc((861px - 100vw) * 10000)), min(1390px, calc((561px - 100vw) * 10000)))`, `scrolling="no"`.
+- `club-home.html`: homepage Club section ("Speak Chinese every week, with real people"): what you get, trial card
+  (US$2.50) + membership price, and the hosts. Hosts = `hosts.json` (photo, name and the line under the name on the Club
+  page's "Meet your hosts" cards, rebuilt every sync): add a card on the Club page and it appears here. Prices/links: CONFIG.
+  Resizes itself ({mz:"height"}); fallback embed height `max(760px, min(1260px, calc((1000px - 100vw) * 10000)), min(1480px, calc((701px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
   product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
   Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.

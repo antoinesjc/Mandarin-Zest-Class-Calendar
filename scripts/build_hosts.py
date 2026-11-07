@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build hosts.json (host name -> photo) from the "Meet your hosts" cards on the Club page.
+Build hosts.json (host name -> photo + the line under the name) from the "Meet your hosts" cards on the Club page.
 
 Each card on https://www.mandarinzest.com/mandarin-zest-club is a picture followed by the host's
 name in bold. Add a new card there (photo + bold name) and the next sync picks it up; the trial
@@ -24,9 +24,15 @@ PAGE = "https://www.mandarinzest.com/mandarin-zest-club"
 SITE = "https://www.mandarinzest.com"
 
 CARD_RE = re.compile(
-    r'<img\b[^>]*?\bsrc="([^"]+)"[^>]*>(?:(?!<img\b).)*?card-title[^>]*>(.*?)</p>',
+    r'<img\b[^>]*?\bsrc="([^"]+)"[^>]*>(?:(?!<img\b).)*?card-title[^>]*>(.*?)</p>'
+    r'((?:(?!<img\b).)*?card-text[^>]*>(.*?)</p>)?',
     re.S | re.I,
 )
+
+
+def clean(fragment: str) -> str:
+    text = html.unescape(re.sub(r"<[^>]+>", " ", fragment or ""))
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def build(page: str) -> dict:
@@ -37,13 +43,15 @@ def build(page: str) -> dict:
     end = page.find("<h2", start + 50)
     block = page[start:end if end > 0 else len(page)]
     hosts = {}
-    for src, title in CARD_RE.findall(block):
-        name = html.unescape(re.sub(r"<[^>]+>", " ", title))
-        name = re.sub(r"\s+", " ", name).strip()
+    for src, title, _, text in CARD_RE.findall(block):
+        name = clean(title)
         if not name or len(name) > 40:
             continue
         url = src if src.startswith("http") else SITE + src
         hosts[name.lower()] = {"name": name, "photo": url}
+        bio = clean(text)
+        if bio:
+            hosts[name.lower()]["bio"] = bio[:200]   # the line under the name on the Club page
     return hosts
 
 
