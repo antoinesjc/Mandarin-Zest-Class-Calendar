@@ -149,7 +149,7 @@ that opens the trial page in a new tab.
 - `journey.html`: the homepage "Where are you on your Chinese journey?" cards
   (beginner → Start Here, HSK/TOCFL → shop, speaking → Club, level up fast →
   bootcamps). 4 in a row on desktop, swipeable on phones; use a 290px frame.
-- `reviews.html`: learner reviews sliding in from the side in an endless loop
+- `reviews.html` (homepage): Club members' reviews only (since 7 Nov 2026), sliding in from the side in an endless loop
   (pauses on hover or tap). Edit the REVIEWS list at the bottom of the file;
   `club: true` makes a green Club card. Use a 250px frame.
 - `our-story.html`: the founders' story as a timeline for the About us page
@@ -209,9 +209,9 @@ Local test: `python scripts/build_events.py --ics-file some-calendar.ics`
 
 ## Club reviews as message cards
 
-- `club-reviews.html`: the Club page reviews (Matt, Nancy, Agnieszka, Debbie) shown as chat-style message cards;
+- `club-reviews.html`: the Club page reviews (Nancy, Agnieszka, a US Club member from Discord, Debbie, Matt) shown as chat-style message cards;
   messages "arrive" one by one with a typing indicator when scrolled into view. Edit the REVIEWS list
-  (`==text==` = highlighted). Four side by side from 1180px, swipe below.
+  (`==text==` = highlighted). Four visible from 1180px with ‹ › arrows for the rest, swipe below.
   Embed: `height:740px` with `scrolling="no"` (4 cards: ~720px on wide screens and phones, less in between).
 
 ## Trial bookings (automatic invites + seat limit)
