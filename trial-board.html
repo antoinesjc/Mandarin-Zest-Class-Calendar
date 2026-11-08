@@ -144,35 +144,7 @@
   .vsw input:checked + .tg { background: var(--green); }
   .vsw input:checked + .tg::after { transform: translateX(16px); }
   .vsw input:focus-visible + .tg { outline: 3px solid #f37a48; outline-offset: 2px; }
-  .cal { background: #fff; border-radius: 20px; padding: 16px 16px 12px; margin: 14px 4px 0; box-shadow: 0 1px 0 #efe2d9, 0 8px 24px rgba(42,36,32,.06); }
-  .calhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-  .calhead h3 { font-size: 20px; }
-  .calhead button { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid #ecdcd2; background: #fff; font: inherit; font-size: 20px; font-weight: 800; color: var(--ink); cursor: pointer; }
-  .calhead button:disabled { opacity: .3; cursor: default; }
-  .cgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
-  .wd { font-size: 12px; font-weight: 800; letter-spacing: .06em; color: #8a7d74; text-align: center; padding: 4px 0; text-transform: uppercase; }
-  .cday { font: inherit; color: inherit; text-align: left; border: 0; background: #faf6f3; border-radius: 10px; min-height: 92px; padding: 6px 6px 5px; display: flex; flex-direction: column; gap: 3px; cursor: pointer; min-width: 0; }
-  .cday:disabled { cursor: default; background: transparent; }
-  .cday.out { visibility: hidden; }
-  .cday .n { font-size: 13px; font-weight: 700; color: var(--muted); }
-  .cday.today .n { color: #fff; background: #f37a48; border-radius: 999px; padding: 0 7px; align-self: flex-start; }
-  .cday.past .n { color: #c8bbb2; }
-  .cday:not(:disabled):hover { background: #fdf1ea; }
-  .cday[aria-pressed="true"] { background: #fff3ec; box-shadow: inset 0 0 0 2px #f37a48; }
-  .cday:focus-visible { outline: 3px solid #f37a48; outline-offset: 1px; }
-  .ev { display: block; font-size: 11.5px; line-height: 1.25; font-weight: 700; color: #fff; background: var(--c); border-radius: 6px; padding: 2px 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ev.dot { display: none; }
-  .plus { font-size: 11.5px; font-weight: 700; color: var(--muted); }
-  .dayhead { margin: 22px 4px 10px; font-size: 17px; font-weight: 800; }
-  @media (max-width: 640px) {
-    .cal { padding: 12px 8px 10px; border-radius: 16px; }
-    .cgrid { gap: 3px; }
-    .cday { min-height: 54px; padding: 5px 3px; align-items: center; }
-    .cday .evs { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
-    .ev { width: 8px; height: 8px; padding: 0; border-radius: 50%; font-size: 0; }
-    .plus { display: none; }
-    .wd { font-size: 10.5px; letter-spacing: 0; }
-  }
+  .calframe { display: block; width: 100%; border: 0; height: 900px; margin-top: 8px; border-radius: 18px; background: #fff; }
   .board { max-width: 1100px; margin: 0 auto; }
   .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 4px 6px; }
   .bar .lab { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: #8a7d74; text-transform: uppercase; margin-right: 2px; }
@@ -244,7 +216,7 @@ const DAYS_STEP = 14;
 // The session to pin: ?session= on the widget itself, or on the Odoo page. The page address comes from document.referrer
 // when the embed has referrerpolicy="no-referrer-when-downgrade", or from the <head> listener (hello/page) otherwise.
 function sessionFrom(url) { try { return (new URL(url).searchParams.get("session") || "").replace(/[^0-9A-Za-z-]/g, ""); } catch (e) { return ""; } }
-let VIEW = "tiles", CAL_M = null, CAL_DAY = "";   // tiles by default; "cal" = month calendar
+let VIEW = "tiles";   // tiles by default; "cal" = the regular Club calendar
 let daysShown = DAYS_STEP, LEVEL = "", PIN = (params.get("session") || sessionFrom(document.referrer)).replace(/[^0-9A-Za-z-]/g, ""), ALL = [];
 const root = document.getElementById("root");
 
@@ -431,6 +403,13 @@ function render() {
   }
 
   const bar = el("div", "bar");
+  if (VIEW === "cal") {
+    const sw = el("label", "vsw"), cb = el("input"); cb.type = "checkbox"; cb.checked = true;
+    sw.append(cb, el("span", "tg"), document.createTextNode("Calendar view"));
+    cb.addEventListener("change", () => { VIEW = "tiles"; render(); });
+    sw.style.marginLeft = "auto"; bar.appendChild(sw); board.appendChild(bar);
+    calendarView(board); root.appendChild(board); reportHeight(); return;
+  }
   bar.appendChild(el("span", "lab", "Level"));
   LEVELS.forEach(l => {
     const b = el("button", "fbtn", l || "Any level"); b.type = "button"; b.setAttribute("aria-pressed", String(LEVEL === l));
@@ -445,11 +424,9 @@ function render() {
   // tiles / calendar switch
   const sw = el("label", "vsw"), cb = el("input"); cb.type = "checkbox"; cb.checked = VIEW === "cal";
   sw.append(cb, el("span", "tg"), document.createTextNode("Calendar view"));
-  cb.addEventListener("change", () => { VIEW = cb.checked ? "cal" : "tiles"; render(); });
+  cb.addEventListener("change", () => { VIEW = cb.checked ? "cal" : "tiles"; if (calFrame) { calFrame.remove(); calFrame = null; calH = 0; } render(); });
   bar.appendChild(sw);
   board.appendChild(bar);
-
-  if (VIEW === "cal") { calendar(board, list); root.appendChild(board); reportHeight(); return; }
 
   if (!list.length) board.appendChild(el("div", "empty-f", "No upcoming sessions at this level yet. Try another level."));
   // grouped by week (Monday to Sunday, in the visitor's time zone); each card shows its own day and time
@@ -478,68 +455,25 @@ function render() {
   reportHeight();
 }
 
-// ── Calendar view: month grid (Monday to Sunday, visitor's time zone). Tap a day to see its sessions as cards below. ──
-const dkey = d => d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
-const evDate = ev => new Date(ev.start || ev.date + "T12:00:00");
-function calendar(board, list) {
-  const byDay = {};
-  list.forEach(ev => { const k = dkey(evDate(ev)); (byDay[k] = byDay[k] || []).push(ev); });
-  const now = new Date(), firstM = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastEv = list.length ? evDate(list[list.length - 1]) : now, lastM = new Date(lastEv.getFullYear(), lastEv.getMonth(), 1);
-  if (!CAL_M || CAL_M < firstM) CAL_M = firstM;
-  if (CAL_M > lastM) CAL_M = lastM;
-  const y = CAL_M.getFullYear(), m = CAL_M.getMonth();
-  // selected day: keep it if it is in this month and has sessions, else the first day with sessions
-  const inMonth = k => { const p = k.split("-"); return +p[0] === y && +p[1] === m + 1; };
-  if (!CAL_DAY || !byDay[CAL_DAY] || !inMonth(CAL_DAY)) CAL_DAY = Object.keys(byDay).find(inMonth) || "";
-
-  const cal = el("div", "cal");
-  const head = el("div", "calhead");
-  const prev = el("button", null, "‹"), next = el("button", null, "›");
-  prev.type = next.type = "button"; prev.setAttribute("aria-label", "Previous month"); next.setAttribute("aria-label", "Next month");
-  prev.disabled = CAL_M <= firstM; next.disabled = CAL_M >= lastM;
-  prev.addEventListener("click", () => { CAL_M = new Date(y, m - 1, 1); CAL_DAY = ""; render(); });
-  next.addEventListener("click", () => { CAL_M = new Date(y, m + 1, 1); CAL_DAY = ""; render(); });
-  head.append(prev, el("h3", null, CAL_M.toLocaleDateString(undefined, { month: "long", year: "numeric" })), next);
-  cal.appendChild(head);
-
-  const g = el("div", "cgrid");
-  const wdBase = new Date(2026, 0, 5); // a Monday
-  for (let i = 0; i < 7; i++) { const w = new Date(wdBase); w.setDate(5 + i); g.appendChild(el("div", "wd", w.toLocaleDateString(undefined, { weekday: "short" }))); }
-  const start = new Date(y, m, 1); start.setDate(1 - ((start.getDay() + 6) % 7));
-  const end = new Date(y, m + 1, 0); end.setDate(end.getDate() + (7 - ((end.getDay() + 6) % 7) - 1));
-  const today = dkey(now), todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    const k = dkey(d), evs = byDay[k] || [];
-    const c = el("button", "cday" + (d.getMonth() !== m ? " out" : "") + (k === today ? " today" : "") + (d < todayMid ? " past" : ""));
-    c.type = "button";
-    c.appendChild(el("span", "n", String(d.getDate())));
-    const box = el("span", "evs");
-    evs.slice(0, 3).forEach(ev => {
-      const t = ev.start ? evDate(ev).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) + " " : "";
-      const chip = el("span", "ev", t + (ev.title || "Session"));
-      chip.style.setProperty("--c", CAT_COLORS[ev.cat] || CAT_COLORS.noagenda);
-      box.appendChild(chip);
-    });
-    if (evs.length > 3) box.appendChild(el("span", "plus", "+" + (evs.length - 3) + " more"));
-    c.appendChild(box);
-    if (!evs.length || d.getMonth() !== m) c.disabled = true;
-    else {
-      c.setAttribute("aria-pressed", String(k === CAL_DAY));
-      c.setAttribute("aria-label", d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }) + ": " + evs.length + " session" + (evs.length === 1 ? "" : "s"));
-      c.addEventListener("click", () => { CAL_DAY = k; render(); });
-    }
-    g.appendChild(c);
+// ── Calendar view: the regular Club calendar (same look, filters and booking pop-up), embedded below the switch.
+// It reports its height back ({mz:"calheight"}) so this board can grow with it.
+const CAL_URL = "Mandarin%20Zest%20%E2%80%94%20Class%20Calendar.html";
+let calFrame = null, calH = 0;
+function calendarView(board) {
+  if (!calFrame) {
+    calFrame = el("iframe", "calframe");
+    calFrame.title = "Club session calendar";
+    calFrame.loading = "lazy";
+    calFrame.src = CAL_URL + "?embed=trial" + (LEVEL ? "&level=" + encodeURIComponent(LEVEL) : "");
   }
-  cal.appendChild(g);
-  board.appendChild(cal);
-
-  if (!list.length) return;
-  if (!CAL_DAY) { board.appendChild(el("div", "empty-f", "No sessions this month at this level. Try the next month or another level.")); return; }
-  const sel = byDay[CAL_DAY], sd = evDate(sel[0]);
-  board.appendChild(el("div", "dayhead", sd.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }) + " · " + sel.length + " session" + (sel.length === 1 ? "" : "s")));
-  const gr = el("div", "grid"); sel.forEach(ev => gr.appendChild(card(ev))); board.appendChild(gr);
+  if (calH) calFrame.style.height = calH + "px";
+  board.appendChild(calFrame);
 }
+window.addEventListener("message", e => {
+  const d = e.data || {};
+  if (d.mz !== "calheight" || !calFrame || e.source !== calFrame.contentWindow) return;
+  calH = Math.max(300, Math.ceil(+d.h || 0)); calFrame.style.height = calH + "px"; reportHeight();
+});
 
 // Ask the Odoo page for its address, so mandarinzest.com/…?session=<id> pins that session (see odoo-head-code.html).
 window.addEventListener("message", e => {

@@ -405,8 +405,8 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 ## Trial board (trial page)
 
 - `trial-board.html`: every upcoming session open for a trial, as a board grouped by week (no swiping). "Calendar view" switch
-  (off by default): month grid Mon–Sun in the visitor's time zone, sessions as coloured chips (dots on phones); tap a day to see
-  its session cards (with booking) below; ‹ › between months (up to MAX_MONTHS ahead). Level filter
+  (off by default) that shows the regular Club calendar (same look, filters and booking pop-up; loaded with
+  `?embed=trial`, which keeps the "Try it" tags on the page and sends its height back). Level filter
   (Any level / Beginner / Intermediate / Advanced / All levels), next 14 days first, "Show more sessions" adds 14 days,
   up to 2 months ahead (MAX_MONTHS in the file).
   Same booking flow as `trial.html` (email check, one trial per person, Stripe, seats left).

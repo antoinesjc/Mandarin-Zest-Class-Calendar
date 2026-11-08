@@ -246,6 +246,14 @@ const LEVELS = MZ_LEVELS;
 
 // The orange "Try it" tag on trial sessions (every session unless marked #notrial in Google Calendar) opens this page, in a new tab.
 const TRIAL_URL = "https://www.mandarinzest.com/mandarin-zest-club-trial-session";
+// ?embed=trial: shown inside the trial board's "Calendar view" (already on the trial page, so the tag just opens the
+// session's details with the booking form, and the height is sent to the board so it can grow).
+const EMBED_TRIAL = new URLSearchParams(location.search).get("embed") === "trial";
+if (EMBED_TRIAL) {
+  const sendH = () => { try { parent.postMessage({ mz: "calheight", h: document.documentElement.scrollHeight }, "*"); } catch (e) {} };
+  document.addEventListener("DOMContentLoaded", () => { document.documentElement.style.background = "transparent"; document.body.style.background = "transparent"; new ResizeObserver(sendH).observe(document.body); new MutationObserver(sendH).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["class", "style"] }); sendH(); });
+  window.addEventListener("load", sendH);
+}
 const TRIAL_PRICE = "US$2.50";
 // The "Join as a trial" button asks for the email (one trial per person), then opens this Stripe checkout.
 const TRIAL_PAY_URL = "https://buy.stripe.com/cNi6oH94B8Dj6DCf0x6oo0k";
@@ -388,7 +396,8 @@ function tint(hex, a) {
 function cardHtml(ev, withMore) {
   const c = catOf(ev);
   const chips = (ev.level ? `<span class="lvl">${esc(ev.level)}</span>` : "") +
-    (ev.trial ? `<a class="trial-tag" href="${TRIAL_URL}" target="_blank" rel="noopener" title="Open to non-members: book a trial seat">Try it · ${TRIAL_PRICE} ↗</a>` : "");
+    (ev.trial ? (EMBED_TRIAL ? `<span class="trial-tag">Try it · ${TRIAL_PRICE}</span>`
+      : `<a class="trial-tag" href="${TRIAL_URL}" target="_blank" rel="noopener" title="Open to non-members: book a trial seat">Try it · ${TRIAL_PRICE} ↗</a>`) : "");
   return `<div class="card" tabindex="0" role="button" aria-expanded="false" data-i="${ev.idx}" style="--cat:${c.color};--tint:${tint(c.color, .13)}">
     <span class="time">${esc(ev.time)}</span>
     <span class="title">${esc(ev.title)}</span>
