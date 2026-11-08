@@ -358,6 +358,10 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - `banners/first-conversation.html`: last homepage block, "Your first Chinese conversation is closer than you think", with a real
   session screenshot from `sessions/` (random each visit, SHOTS list), trial button and free guide (CONFIG). Resizes itself;
   fallback embed height `max(420px, min(490px, calc((1001px - 100vw) * 10000)), min(780px, calc((761px - 100vw) * 10000)))`, `scrolling="no"`.
+- `banners/characters-logic.html`: Chinese Character Bootcamp page, "Memorizing strokes one by one doesn't scale". Right side
+  animates: a meaning part (green) and a sound part (orange) slide together into the character, with pinyin, meaning and a one-line
+  explanation (妈 = 女 + 马, 休, 明, 晴, 好), Simplified / Traditional switch, dots + pause. Starts when scrolled into view.
+  Examples: EX in the file. Resizes itself; fallback embed height `max(500px, min(745px, calc((881px - 100vw) * 10000)), min(805px, calc((481px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
   product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
   Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.

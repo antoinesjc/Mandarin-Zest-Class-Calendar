@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Characters have a logic · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+  /* Chinese Character Bootcamp: "Memorizing strokes one by one doesn't scale" + an animated right side where two parts
+     slide together into a character (meaning part + sound part), one example after another. Simplified / Traditional switch.
+     Examples: EX below. Resizes itself ({mz:"height"}); fallback height in README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --green:#1b6f1b; --sound:#c4521f; --orange:#f37a48; --mint:#e6f1e1; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:8px; }
+  .wrap { max-width:1180px; margin:0 auto; display:flex; gap:48px; align-items:center; }
+  .txt { flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:16px; }
+  .eb { font-size:13px; font-weight:800; letter-spacing:.09em; color:var(--green); }
+  h2 { margin:0; font-size:42px; line-height:1.12; font-weight:800; }
+  .txt p { margin:0; font-size:18px; line-height:1.6; color:var(--muted); }
+  .demo { flex:1 1 0; min-width:0; background:#fff; border-radius:26px; padding:22px 24px 20px; box-shadow:0 1px 0 var(--line), 0 10px 28px rgba(42,36,32,.08); display:flex; flex-direction:column; gap:14px; }
+  .dtop { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .dtop b { font-size:13px; font-weight:800; letter-spacing:.08em; color:#8a7d74; }
+  .seg { display:inline-flex; background:#f6efe9; border-radius:999px; padding:3px; }
+  .seg button { border:0; background:none; font:inherit; font-size:14px; font-weight:700; color:var(--muted); padding:7px 13px; border-radius:999px; cursor:pointer; min-height:36px; }
+  .seg button[aria-pressed="true"] { background:#fff; color:var(--ink); box-shadow:0 1px 4px rgba(42,36,32,.14); }
+  .seg button:focus-visible, .dots button:focus-visible, .pp:focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+
+  .stage { position:relative; height:250px; display:flex; align-items:center; justify-content:center; }
+  .part { position:absolute; top:22px; display:flex; flex-direction:column; align-items:center; gap:8px; transition:transform .9s cubic-bezier(.6,0,.2,1), opacity .5s; }
+  .part .g { font-family:'Noto Serif SC','Noto Serif TC',serif; font-weight:900; font-size:120px; line-height:1; }
+  .part .lb { font-size:13px; font-weight:800; letter-spacing:.04em; border-radius:999px; padding:4px 11px; white-space:nowrap; }
+  .part.m .g { color:var(--green); } .part.m .lb { background:var(--mint); color:var(--green); }
+  .part.s .g { color:var(--sound); } .part.s .lb { background:#fbe3d6; color:#a8431a; }
+  .part.a { left:calc(50% - 190px); } .part.b { right:calc(50% - 190px); }
+  .plus { position:absolute; top:70px; left:50%; transform:translateX(-50%); font-size:40px; font-weight:800; color:#cdbfb5; transition:opacity .4s; }
+  .result { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; opacity:0; transform:scale(.7); transition:opacity .6s .35s, transform .7s .35s cubic-bezier(.2,.9,.25,1.2); }
+  .result .g { font-family:'Noto Serif SC','Noto Serif TC',serif; font-weight:900; font-size:150px; line-height:1; color:var(--ink); }
+  .result .py { font-size:26px; font-weight:800; color:var(--sound); }
+  .result .mn { font-size:16px; font-weight:600; color:var(--muted); }
+  .stage.merge .part.a { transform:translateX(120px) scale(.6); opacity:0; }
+  .stage.merge .part.b { transform:translateX(-120px) scale(.6); opacity:0; }
+  .stage.merge .plus { opacity:0; }
+  .stage.merge .result { opacity:1; transform:scale(1); }
+  .stage.in .part { opacity:0; transform:translateY(14px); }
+  .stage.in .plus { opacity:0; }
+
+  .why { min-height:48px; text-align:center; font-size:15.5px; line-height:1.5; color:#3d322b; }
+  .why b.m { color:var(--green); } .why b.s { color:var(--sound); }
+  .ctrl { display:flex; align-items:center; justify-content:center; gap:12px; }
+  .dots { display:flex; gap:6px; }
+  .dots button { width:28px; height:28px; border:0; background:none; padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .dots button i { width:8px; height:8px; border-radius:4px; background:#e3d3c9; transition:width .2s, background .2s; }
+  .dots button[aria-current="true"] i { width:22px; background:var(--green); }
+  .pp { width:36px; height:36px; border-radius:50%; border:1.5px solid #ecdcd2; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--ink); }
+
+  @media (max-width:880px) {
+    .wrap { flex-direction:column; align-items:stretch; gap:28px; }
+    h2 { font-size:32px; } .txt p { font-size:16.5px; }
+  }
+  @media (max-width:480px) {
+    body { padding:4px; }
+    .demo { padding:18px 14px 16px; border-radius:22px; }
+    .stage { height:210px; }
+    .part .g { font-size:92px; } .result .g { font-size:116px; } .result .py { font-size:22px; }
+    .part.a { left:calc(50% - 140px); } .part.b { right:calc(50% - 140px); }
+    .stage.merge .part.a { transform:translateX(80px) scale(.6); } .stage.merge .part.b { transform:translateX(-80px) scale(.6); }
+    .plus { top:56px; font-size:32px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .part, .result, .plus { transition:opacity .2s !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="txt">
+    <div class="eb">THE PROBLEM</div>
+    <h2>Memorizing strokes one by one doesn't scale</h2>
+    <p>Most learners copy each character until it sticks, then forget it a week later. But characters are built from a small set of parts that carry meaning and sound. Once you see the system, every new character is easier than the last.</p>
+  </div>
+  <section class="demo" aria-label="How characters are built">
+    <div class="dtop">
+      <b>HOW A CHARACTER IS BUILT</b>
+      <div class="seg" role="group" aria-label="Script">
+        <button type="button" data-s="s" aria-pressed="true">Simplified</button>
+        <button type="button" data-s="t" aria-pressed="false">Traditional</button>
+      </div>
+    </div>
+    <div class="stage" id="stage" aria-live="polite">
+      <div class="part a"><span class="g" id="ga"></span><span class="lb" id="la"></span></div>
+      <span class="plus" aria-hidden="true">+</span>
+      <div class="part b"><span class="g" id="gb"></span><span class="lb" id="lb"></span></div>
+      <div class="result"><span class="g" id="gr"></span><span class="py" id="py"></span><span class="mn" id="mn"></span></div>
+    </div>
+    <div class="why" id="why"></div>
+    <div class="ctrl">
+      <div class="dots" id="dots"></div>
+      <button type="button" class="pp" id="pp" aria-label="Pause"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path id="ppi" d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg></button>
+    </div>
+  </section>
+</div>
+<script>
+  // ═══ EX: [simplified parts, traditional parts, result s/t, pinyin, meaning, labels, explanation] ═══
+  // a = left part, b = right part; kind "m" = meaning part (green), "s" = sound part (orange).
+  var EX = [
+    { s:["女","马","妈"], t:["女","馬","媽"], ka:"m", kb:"s", la:"meaning: woman", lb:"sound: mǎ", py:"mā", mn:"mom",
+      why:'<b class="m">女</b> tells you it is about a woman, <b class="s">马 mǎ</b> tells you how to say it.' },
+    { s:["亻","木","休"], t:["亻","木","休"], ka:"m", kb:"m", la:"meaning: person", lb:"meaning: tree", py:"xiū", mn:"to rest",
+      why:'A <b class="m">person</b> leaning against a <b class="m">tree</b>: taking a rest.' },
+    { s:["日","月","明"], t:["日","月","明"], ka:"m", kb:"m", la:"meaning: sun", lb:"meaning: moon", py:"míng", mn:"bright",
+      why:'The <b class="m">sun</b> and the <b class="m">moon</b> together: bright.' },
+    { s:["日","青","晴"], t:["日","青","晴"], ka:"m", kb:"s", la:"meaning: sun", lb:"sound: qīng", py:"qíng", mn:"sunny, clear sky",
+      why:'<b class="m">日</b> for the sun, <b class="s">青 qīng</b> for the sound.' },
+    { s:["女","子","好"], t:["女","子","好"], ka:"m", kb:"m", la:"meaning: woman", lb:"meaning: child", py:"hǎo", mn:"good",
+      why:'A <b class="m">woman</b> with her <b class="m">child</b>: good.' }
+  ];
+  var script = "s", i = 0, playing = !matchMedia("(prefers-reduced-motion:reduce)").matches, timer = null;
+  var stage = document.getElementById("stage"), dots = document.getElementById("dots");
+  function $(id) { return document.getElementById(id); }
+  EX.forEach(function (e, k) {
+    var b = document.createElement("button"); b.type = "button"; b.innerHTML = "<i></i>";
+    b.setAttribute("aria-label", "Example " + (k + 1) + ": " + e.s[2]);
+    b.addEventListener("click", function () { show(k, true); }); dots.appendChild(b);
+  });
+  function fill(e) {
+    var g = e[script], zh = script === "t" ? "'Noto Serif TC','Noto Serif SC',serif" : "'Noto Serif SC','Noto Serif TC',serif";
+    $("ga").textContent = g[0]; $("gb").textContent = g[1]; $("gr").textContent = g[2];
+    ["ga","gb","gr"].forEach(function (id) { $(id).style.fontFamily = zh; });
+    document.querySelector(".part.a").className = "part a " + e.ka; document.querySelector(".part.b").className = "part b " + e.kb;
+    $("la").textContent = e.la; $("lb").textContent = e.lb.replace("马", script === "t" ? "馬" : "马");
+    $("py").textContent = e.py; $("mn").textContent = e.mn;
+    $("why").innerHTML = script === "t" ? e.why.replace("马 mǎ", "馬 mǎ") : e.why;
+    stage.setAttribute("aria-label", g[0] + " plus " + g[1] + " makes " + g[2] + ", " + e.py + ", " + e.mn);
+  }
+  function show(k, manual) {
+    clearTimeout(timer); i = (k + EX.length) % EX.length;
+    [].forEach.call(dots.children, function (b, n) { b.setAttribute("aria-current", String(n === i)); });
+    stage.className = "stage in"; fill(EX[i]);
+    timer = setTimeout(function () {
+      stage.className = "stage";                      // the two parts appear
+      timer = setTimeout(function () {
+        stage.className = "stage merge";              // they slide together into the character
+        if (playing) timer = setTimeout(function () { show(i + 1); }, 3200);
+      }, 1500);
+    }, manual ? 60 : 300);
+  }
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      script = b.dataset.s;
+      document.querySelectorAll(".seg button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      show(i, true);
+    });
+  });
+  $("pp").addEventListener("click", function () {
+    playing = !playing;
+    $("pp").setAttribute("aria-label", playing ? "Pause" : "Play");
+    $("ppi").setAttribute("d", playing ? "M7 5h4v14H7zM13 5h4v14h-4z" : "M8 5l11 7-11 7z");
+    if (playing) show(i + 1); else clearTimeout(timer);
+  });
+  if (!playing) { $("pp").setAttribute("aria-label", "Play"); $("ppi").setAttribute("d", "M8 5l11 7-11 7z"); }
+  // only animate when visible on the page
+  var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting && !timer) show(0); }, { threshold: .3 });
+  io.observe(stage); fill(EX[0]); [].forEach.call(dots.children, function (b, n) { b.setAttribute("aria-current", String(n === 0)); });
+
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+</script>
+</body>
+</html>
