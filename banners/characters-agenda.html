@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the Chinese Character Bootcamp works · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@900&display=swap" rel="stylesheet">
+<style>
+  /* Chinese Character Bootcamp: "How it works". Weekly rhythm (homework Mon–Fri, rest Sat, live Sun), the three parts
+     of the bootcamp, and the 3 weeks with each Sunday live session in the visitor's own time zone.
+     Dates and topics: WEEKS below. Resizes itself ({mz:"height"}); fallback height in README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --peach:#f8dacd; --orange:#f37a48; --green:#1b6f1b; --brick:#a8431a; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:8px; }
+  .wrap { max-width:1180px; margin:0 auto; display:flex; flex-direction:column; gap:28px; }
+  .eb { font-size:13px; font-weight:800; letter-spacing:.09em; color:var(--brick); }
+  h2 { margin:8px 0 0; font-size:40px; line-height:1.12; font-weight:800; }
+  .sub { margin:10px 0 0; font-size:17px; line-height:1.55; color:var(--muted); max-width:720px; }
+
+  .week { display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:8px; }
+  .d { border-radius:14px; padding:13px 6px; text-align:center; display:flex; flex-direction:column; gap:3px; background:var(--peach); }
+  .d b { font-size:16px; } .d span { font-size:13px; color:#3d322b; }
+  .d.rest { background:#efe8e2; } .d.rest span { color:var(--muted); }
+  .d.live { background:var(--ink); color:#fff; } .d.live span { color:var(--peach); }
+
+  .parts { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+  .p { background:#fff; border-radius:22px; padding:22px 22px 24px; display:flex; flex-direction:column; gap:8px; box-shadow:0 1px 0 var(--line), 0 8px 24px rgba(42,36,32,.06); }
+  .p .ic { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+  .p strong { font-size:19px; font-weight:800; }
+  .p span { font-size:15.5px; line-height:1.55; color:var(--muted); }
+
+  .weeks { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+  .w { position:relative; overflow:hidden; border-radius:22px; padding:22px 22px 20px; background:var(--ink); color:#fff; display:flex; flex-direction:column; gap:10px; }
+  .w .bg { position:absolute; right:-10px; bottom:-30px; font-family:'Noto Serif SC',serif; font-weight:900; font-size:150px; line-height:1; color:#3a312b; pointer-events:none; }
+  .w > * { position:relative; }
+  .w .tag { font-size:12px; font-weight:800; letter-spacing:.08em; color:var(--peach); }
+  .w h3 { margin:0; font-size:21px; line-height:1.2; font-weight:800; }
+  .w p { margin:0; font-size:15px; line-height:1.55; color:#e8ddd5; flex:1; }
+  .w .time { display:flex; flex-direction:column; gap:2px; background:#3a312b; border-radius:14px; padding:10px 12px; font-size:14px; }
+  .w .time b { font-size:15px; color:#fff; } .w .time span { color:#cdbfb5; font-size:13px; }
+  .end { display:flex; gap:14px; align-items:center; background:#e6f1e1; border-radius:20px; padding:16px 20px; font-size:15.5px; line-height:1.5; color:#2c4a2c; }
+  .end svg { flex:none; }
+
+  @media (max-width:900px) {
+    .parts, .weeks { grid-template-columns:minmax(0,1fr); }
+    h2 { font-size:32px; }
+  }
+  @media (max-width:520px) {
+    body { padding:4px; }
+    .week { gap:4px; } .d { padding:10px 2px; border-radius:10px; } .d b { font-size:13.5px; } .d span { font-size:11px; }
+    .sub { font-size:15.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="eb">HOW IT WORKS</div>
+    <h2>3 weeks, a little writing every day</h2>
+    <p class="sub">A short writing exercise each weekday, with personal feedback from Antoine on every one. Saturday is for rest. On Sunday, a live session pulls the week together.</p>
+  </div>
+
+  <div class="week" aria-label="A week in the bootcamp">
+    <div class="d"><b>Mon</b><span>Homework</span></div>
+    <div class="d"><b>Tue</b><span>Homework</span></div>
+    <div class="d"><b>Wed</b><span>Homework</span></div>
+    <div class="d"><b>Thu</b><span>Homework</span></div>
+    <div class="d"><b>Fri</b><span>Homework</span></div>
+    <div class="d rest"><b>Sat</b><span>Rest</span></div>
+    <div class="d live"><b>Sun</b><span>Live</span></div>
+  </div>
+
+  <div class="parts">
+    <div class="p">
+      <div class="ic" style="background:#f8dacd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a8431a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+      <strong>Daily writing homework</strong>
+      <span>Monday to Friday. Send a photo of your page and get personal feedback on every homework.</span>
+    </div>
+    <div class="p">
+      <div class="ic" style="background:#2a2420"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f8dacd" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg></div>
+      <strong>A live session every Sunday</strong>
+      <span>A short lecture on how characters work, then answers to your questions about the past week's homework.</span>
+    </div>
+    <div class="p">
+      <div class="ic" style="background:#e6f1e1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <strong>1-on-1 feedback at the end</strong>
+      <span>Book a 30-minute 1-on-1 with Antoine to review your progress and plan your next steps.</span>
+    </div>
+  </div>
+
+  <div class="weeks" id="weeks"></div>
+
+  <div class="end">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    <span>All materials and homework come in Traditional or Simplified characters, whichever you choose.</span>
+  </div>
+</div>
+<script>
+  // ═══ WEEKS: live session time in UTC (11 PM Taiwan = 15:00 UTC), topic and text ═══
+  var WEEKS = [
+    { utc:"2027-01-10T15:00:00Z", bg:"甲", title:"Where characters come from",
+      text:"The origin and history of Chinese characters: how they started and how they became the characters you write today." },
+    { utc:"2027-01-17T15:00:00Z", bg:"六", title:"How characters are classified",
+      text:"The main types of characters and how to recognise them, so every new character fits into a system you already know." },
+    { utc:"2027-01-24T15:00:00Z", bg:"書", title:"Traditional vs Simplified, and a natural hand",
+      text:"How the two scripts relate, and the habits that take your handwriting from robotic to natural." }
+  ];
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
+  var tz = ""; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+  document.getElementById("weeks").innerHTML = WEEKS.map(function (w, i) {
+    var d = new Date(w.utc);
+    var mine = d.toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"short" }) + ", " +
+               d.toLocaleTimeString([], { hour:"numeric", minute:"2-digit" });
+    var h = function (zone) { return d.toLocaleTimeString("en-US", { timeZone:zone, hour:"numeric", minute:"2-digit" }).replace(":00", ""); };
+    var tw = h("Asia/Taipei"), cet = h("Europe/Brussels"), et = h("America/New_York");
+    var day = d.toLocaleDateString("en-GB", { timeZone:"Asia/Taipei", weekday:"short", day:"numeric", month:"short" }).replace(",", "").toUpperCase();
+    return '<article class="w"><span class="bg" aria-hidden="true">' + w.bg + '</span>' +
+      '<span class="tag">WEEK ' + (i + 1) + ' · LIVE ' + esc(day) + '</span>' +
+      '<h3>' + esc(w.title) + '</h3><p>' + esc(w.text) + '</p>' +
+      '<div class="time"><b>' + esc(mine) + ' your time</b><span>' + esc(cet) + ' CET · ' + esc(et) + ' ET · ' + esc(tw) + ' Taiwan</span></div></article>';
+  }).join("");
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+</script>
+</body>
+</html>

@@ -362,6 +362,10 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   animates: a meaning part (green) and a sound part (orange) slide together into the character, with pinyin, meaning and a one-line
   explanation (妈 = 女 + 马, 休, 明, 晴, 好), Simplified / Traditional switch, dots + pause. Starts when scrolled into view.
   Examples: EX in the file. Resizes itself; fallback embed height `max(500px, min(745px, calc((881px - 100vw) * 10000)), min(805px, calc((481px - 100vw) * 10000)))`, `scrolling="no"`.
+- `banners/characters-agenda.html`: Chinese Character Bootcamp "How it works": week strip (homework Mon–Fri, rest Sat, live Sun),
+  the 3 parts (daily homework + feedback, Sunday live, 30-min 1-on-1 at the end) and the 3 weeks with each live session's topic
+  and time in the visitor's time zone (+ CET / ET / Taiwan). Dates/topics: WEEKS (times in UTC). Resizes itself; fallback embed
+  height `max(850px, min(1700px, calc((901px - 100vw) * 10000)), min(2090px, calc((521px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
   product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
   Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.
