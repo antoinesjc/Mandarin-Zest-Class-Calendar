@@ -33,6 +33,7 @@
   .terms a { color:var(--green); font-weight:700; }
 
   .prices { flex:1.25 1 0; min-width:0; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; padding-top:12px; }
+  .prices.two { grid-template-columns:repeat(2, minmax(0,1fr)); }
   .t { position:relative; border-radius:22px; padding:24px 20px 20px; display:flex; flex-direction:column; gap:8px; background:#fff; box-shadow:0 1px 0 var(--line), 0 8px 24px rgba(42,36,32,.06); }
   .t .k { font-size:13px; font-weight:800; letter-spacing:.06em; }
   .t .p { font-size:42px; font-weight:800; line-height:1; }
@@ -63,7 +64,7 @@
   }
   @media (max-width:620px) {
     body { padding:14px 4px 4px; }
-    .prices { grid-template-columns:minmax(0,1fr); gap:18px; }
+    .prices, .prices.two { grid-template-columns:minmax(0,1fr); gap:18px; }
     .inc { padding:18px; }
     .book img { width:72px; height:72px; }
   }
@@ -153,11 +154,8 @@
     $("stdN").textContent = "Regular registration price, after " + CONFIG.earlyEndsLabel + (CONFIG.registrationClosesLabel ? " until " + CONFIG.registrationClosesLabel : "") + ".";
     $("stdB").textContent = "Book now ↗";
   } else {
-    $("early").className = "t off";
-    $("earlyBadge").remove();
-    $("earlyN").textContent = "The early bird price ended on " + CONFIG.earlyEndsLabel + ".";
-    $("earlyB").textContent = "Ended";
-    $("earlyB").removeAttribute("href"); $("earlyB").setAttribute("aria-disabled", "true");
+    $("early").remove();                       // early bird over: show only Club + Standard
+    document.querySelector(".prices").classList.add("two");
     $("std").className = "t main";
     $("stdBadge").hidden = false; $("stdBadge").textContent = "Open now";
     $("stdN").textContent = "Regular registration price" + (CONFIG.registrationClosesLabel ? ", until " + CONFIG.registrationClosesLabel : "") + ".";
@@ -166,7 +164,7 @@
 
   // Meta Pixel / GA through the website's head code
   function track(name, value) { try { window.top.postMessage({ mz:"track", event:"InitiateCheckout", params:{ content_name:name, value:value, currency:"USD" }, ga:{ event:"begin_checkout", params:{ currency:"USD", value:value, items:[{ item_id:"character-bootcamp", item_name:name, price:value, quantity:1 }] } } }, "*"); } catch (e) {} }
-  $("earlyB").addEventListener("click", function () { track("Character Bootcamp (early bird)", CONFIG.earlyPrice); });
+  if ($("earlyB")) $("earlyB").addEventListener("click", function () { track("Character Bootcamp (early bird)", CONFIG.earlyPrice); });
   $("stdB").addEventListener("click", function () { track("Character Bootcamp (standard)", CONFIG.standardPrice); });
 
   function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }

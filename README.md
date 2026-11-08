@@ -368,7 +368,7 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   height `max(850px, min(1700px, calc((901px - 100vw) * 10000)), min(2090px, calc((521px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/characters-pricing.html`: Chinese Character Bootcamp "Save your spot": what's included (Unlocking Chinese Characters,
   homework + feedback, 3 live sessions, 1-on-1, materials in either script, 1 free Club session) + Club US$119 (link in Discord,
-  "See the Club"), Early bird US$159 (Stripe, until 4 Dec 23:59 Taiwan time, then shown as ended) and Standard US$189 (Stripe;
+  "See the Club"), Early bird US$159 (Stripe, until 4 Dec 23:59 Taiwan time, then removed) and Standard US$189 (Stripe;
   becomes the main option after the early bird). Prices, dates, links: CONFIG. Resizes itself; fallback embed height
   `max(590px, min(880px, calc((981px - 100vw) * 10000)), min(1450px, calc((621px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),

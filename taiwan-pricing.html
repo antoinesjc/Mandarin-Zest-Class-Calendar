@@ -19,6 +19,7 @@
     position: relative; background: #fff; border: 1px solid #ecdcd2; border-radius: 20px;
     padding: 30px 24px 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0;
   }
+  .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
   .ticket.best { border: 3px solid #f37a48; box-shadow: 0 14px 34px rgba(243,122,72,.16); }
   .ticket.club { background: #e0f4e0; border-color: #e0f4e0; }
   .badge {
@@ -128,17 +129,15 @@
     $("earlyNote").textContent = "Save " + CONFIG.saving + " when you book by " + CONFIG.earlyEndsLabel + ".";
     $("stdNote").textContent = "After " + CONFIG.earlyEndsLabel + ", until registration closes on " + CONFIG.registrationClosesLabel + ".";
   } else {
-    // Early bird is over: grey it out, remove its button, promote the standard ticket.
-    $("early").className = "ticket ended";
-    $("earlyBadge").className = "badge muted";
-    $("earlyBadge").textContent = "Ended";
-    $("earlyNote").textContent = "The early bird price ended on " + CONFIG.earlyEndsLabel + ".";
+    // Early bird is over: remove it, promote the standard ticket, two tickets side by side.
+    $("early").remove();
+    $("row").classList.add("two");
+    var dot = document.querySelector("#hint i:last-child"); if (dot) dot.remove();
     $("standard").className = "ticket best";
     $("stdBadge").hidden = false;
     $("stdBadge").textContent = "Registration closes " + CONFIG.registrationClosesLabel;
     $("stdNote").textContent = "Book by " + CONFIG.registrationClosesLabel + ". Only 6 seats.";
     $("stdBtn").className = "btn primary";
-    $("row").appendChild($("early"));   // move the ended ticket to the end
   }
 
   // Dots under the tickets on phones.
