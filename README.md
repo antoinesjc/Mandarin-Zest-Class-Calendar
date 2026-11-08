@@ -371,6 +371,9 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   "See the Club"), Early bird US$159 (Stripe, until 4 Dec 23:59 Taiwan time, then removed) and Standard US$189 (Stripe;
   becomes the main option after the early bird). Prices, dates, links: CONFIG. Resizes itself; fallback embed height
   `max(590px, min(880px, calc((981px - 100vw) * 10000)), min(1450px, calc((621px - 100vw) * 10000)))`, `scrolling="no"`.
+- `banners/taiwan-reviews.html`: past students' reviews for the Taiwanese Mini Bootcamp page, same message-card look as
+  `club-reviews.html` (3 side by side, swipe on phones, ==highlight==). Edit REVIEWS (name/place shown as "Student · Taiwanese
+  Mini Bootcamp" until names are given). Resizes itself; fallback embed height `max(450px, min(600px, calc((1100px - 100vw) * 10000)))`, `scrolling="no"`.
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
   product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
   Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.

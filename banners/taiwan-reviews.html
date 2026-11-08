@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What past students say · Taiwanese Mini Bootcamp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* Taiwanese Mini Bootcamp: past students' reviews as message "screenshots" (same look as club-reviews.html).
+     Edit the REVIEWS list below (name, place, ==highlight==; av = avatar text, default 台). Desktop: three side by side. Phones: swipe. Embed height: README. */
+  :root { --orange:#f37a48; --peach:#fdf1ea; --peach2:#f8dacd; --green:#1b6f1b; --green-d:#173f17; --mint:#e0f4e0; --ink:#2a2420; --muted:#5c4f47; --line:#ecdcd2; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit','Noto Sans SC',system-ui,sans-serif; color:var(--ink); padding:10px 12px 6px; -webkit-font-smoothing:antialiased; }
+  .row { display:flex; gap:18px; max-width:1180px; margin:0 auto; align-items:flex-start; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:8px 12px 20px; scroll-padding-left:12px; }
+  .row::-webkit-scrollbar { display:none; }
+  .row .shot { flex:0 0 calc((100% - 36px) / 3); scroll-snap-align:start; }
+  .nav { display:flex; justify-content:center; align-items:center; gap:14px; margin-top:6px; }
+  .nav button { width:44px; height:44px; border-radius:50%; border:0; background:#fff; box-shadow:0 1px 0 #efe2d9, 0 4px 12px rgba(42,36,32,.10); font:inherit; font-size:20px; font-weight:800; color:var(--ink); cursor:pointer; }
+  .nav button:disabled { opacity:.35; cursor:default; }
+  .nav button:focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+  .shot { background:#fff; border-radius:26px; box-shadow:0 1px 0 #efe2d9, 0 14px 34px rgba(42,36,32,.10); overflow:hidden; transform:translateY(14px) rotate(var(--r,0deg)); opacity:0; transition:transform .6s cubic-bezier(.2,.9,.3,1.2), opacity .5s; }
+  .shot.in { transform:translateY(0) rotate(var(--r,0deg)); opacity:1; }
+  .bar { display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid var(--line); background:#fffaf6; }
+  .av { font-family:"Noto Sans SC",sans-serif; width:38px; height:38px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; color:#fff; }
+  .who { min-width:0; flex:1; line-height:1.2; }
+  .who b { display:block; font-size:15px; }
+  .who span { font-size:12.5px; color:var(--muted); }
+  .tag { font-size:11px; font-weight:800; letter-spacing:.04em; color:var(--green); background:var(--mint); border-radius:999px; padding:4px 8px; white-space:nowrap; }
+  .chat { padding:16px 14px 18px; display:flex; flex-direction:column; gap:6px; background:linear-gradient(#fff, #fffdfb); }
+  .msg { align-self:flex-start; max-width:94%; background:var(--peach); color:var(--ink); border-radius:18px 18px 18px 18px; padding:10px 13px; font-size:15px; line-height:1.48; opacity:0; transform:translateY(6px) scale(.98); transform-origin:left bottom; transition:opacity .35s, transform .35s; }
+  .msg:first-of-type { border-top-left-radius:6px; }
+  .msg.show { opacity:1; transform:none; }
+  .msg mark { background:linear-gradient(transparent 55%, #ffd7c2 55%); color:inherit; font-weight:700; padding:0 1px; }
+  .typing { align-self:flex-start; background:var(--peach); border-radius:18px; padding:12px 14px; display:flex; gap:4px; }
+  .typing i { width:7px; height:7px; border-radius:50%; background:#c9a493; animation:blink 1s infinite; }
+  .typing i:nth-child(2) { animation-delay:.15s; } .typing i:nth-child(3) { animation-delay:.3s; }
+  @keyframes blink { 0%,60%,100% { opacity:.3; transform:translateY(0); } 30% { opacity:1; transform:translateY(-3px); } }
+  .meta { align-self:flex-start; font-size:11.5px; color:#9a8b82; margin:2px 4px 0; }
+  .react { display:inline-flex; gap:4px; align-self:flex-start; margin-top:-2px; margin-left:8px; background:#fff; border:1px solid var(--line); border-radius:999px; padding:2px 8px; font-size:13px; opacity:0; transition:opacity .3s .2s; }
+  .msg.show + .react, .react.show { opacity:1; }
+  .dots { display:flex; justify-content:center; gap:6px; }
+  .dots i { width:6px; height:6px; border-radius:3px; background:#e3d3c9; transition:width .2s, background .2s; }
+  .dots i.on { width:16px; background:var(--green); }
+
+  @media (max-width:899px) {
+    body { padding:8px 0 4px; }
+    .row { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:4px 16px 16px; scroll-padding-left:16px; align-items:flex-start; }
+    .row::-webkit-scrollbar { display:none; }
+    .row .shot { flex:0 0 86%; max-width:400px; scroll-snap-align:start; --r:0deg !important; }
+    .nav button { display:none; }
+  }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } .shot, .msg { opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+<div class="row" id="row"></div>
+<div class="nav"><button type="button" id="prev" aria-label="Previous reviews">‹</button><div class="dots" id="dots" aria-hidden="true"></div><button type="button" id="next" aria-label="More reviews">›</button></div>
+
+<script>
+// Real reviews from past Taiwanese Mini Bootcamp students. Split each into short messages; ==text== is highlighted.
+const REVIEWS = [
+  { name: "Student", place: "Taiwanese Mini Bootcamp", color: "#a8431a", r: "-.8deg",
+    msgs: [
+      "The mini bootcamp covered ==practical and fun topics==, and vocabulary that we could practice with a native speaker.",
+      "To complement the language instruction, we also had cultural lessons to help our understanding of Taiwan.",
+      "Would highly recommend to anyone with an interest in Taiwan and/or planning to visit!",
+    ] },
+  { name: "Student", place: "Taiwanese Mini Bootcamp", color: "#1b6f1b", r: ".7deg",
+    msgs: [
+      "All lessons were really cool and ==I liked the weekly split of one speaking and one more theoretical lesson==.",
+      "As others mentioned all lessons were super practical and will benefit for anyone preparing to go to Taiwan right away.",
+    ] },
+  { name: "Student", place: "Taiwanese Mini Bootcamp", color: "#4f7a94", r: "-.5deg",
+    msgs: [
+      "One of my favourite trips ever was to Taiwan in 2019, and I really want to learn to read Traditional Characters.",
+      "==The teachers at Mandarin Zest were really friendly and supportive.==",
+    ] },
+];
+
+const row = document.getElementById("row"), dotsEl = document.getElementById("dots");
+const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const fmt = s => esc(s).replace(/==(.+?)==/g, "<mark>$1</mark>");
+
+REVIEWS.forEach((rv, k) => {
+  const el = document.createElement("article");
+  el.className = "shot"; el.style.setProperty("--r", rv.r);
+  el.setAttribute("aria-label", `Review from ${rv.name}, ${rv.place}`);
+  el.innerHTML = `
+    <div class="bar">
+      <div class="av" style="background:${rv.color}" aria-hidden="true">${esc(rv.av || "台")}</div>
+      <div class="who"><b>${esc(rv.name)}</b><span>${esc(rv.place)}</span></div>
+      <span class="tag">PAST STUDENT</span>
+    </div>
+    <div class="chat">
+      ${rv.msgs.map(m => `<div class="msg">${fmt(m)}</div>`).join("")}
+      ${rv.react ? `<span class="react" aria-hidden="true">${rv.react}</span>` : ""}
+    </div>`;
+  row.appendChild(el);
+  dotsEl.appendChild(document.createElement("i"));
+});
+
+// Messages "arrive" one by one, with a typing indicator, when a card scrolls into view.
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function play(card) {
+  if (card.dataset.played) return; card.dataset.played = 1;
+  card.classList.add("in");
+  const msgs = [...card.querySelectorAll(".msg")], chat = card.querySelector(".chat"), react = card.querySelector(".react");
+  if (reduce) { msgs.forEach(m => m.classList.add("show")); if (react) react.classList.add("show"); return; }
+  let i = 0;
+  const next = () => {
+    if (i >= msgs.length) { if (react) react.classList.add("show"); return; }
+    const t = document.createElement("div"); t.className = "typing"; t.innerHTML = "<i></i><i></i><i></i>";
+    // the typing bubble takes the place of the next message, so the card never jumps in height
+    t.style.position = "absolute"; t.style.visibility = "hidden";
+    chat.appendChild(t);
+    const m = msgs[i];
+    const r = m.getBoundingClientRect(), c = chat.getBoundingClientRect();
+    t.style.left = (r.left - c.left) + "px"; t.style.top = (r.top - c.top) + "px"; t.style.visibility = "visible";
+    setTimeout(() => { t.remove(); m.classList.add("show"); i++; setTimeout(next, 260); }, i === 0 ? 500 : 650);
+  };
+  setTimeout(next, 200);
+}
+document.querySelectorAll(".chat").forEach(c => c.style.position = "relative");
+const cards = [...document.querySelectorAll(".shot")];
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } }), { threshold: .35 });
+  cards.forEach((c, k) => setTimeout(() => io.observe(c), k * 450));
+} else cards.forEach(play);
+
+// phone dots
+const upd = () => {
+  const w = cards[0].getBoundingClientRect().width + 14;
+  let i = Math.round(row.scrollLeft / w);
+  if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 4) i = cards.length - 1;
+  [...dotsEl.children].forEach((d, k) => d.classList.toggle("on", k === i));
+};
+row.addEventListener("scroll", upd, { passive: true }); upd();
+// desktop arrows (one card at a time)
+const prev = document.getElementById("prev"), nextB = document.getElementById("next");
+const step = d => row.scrollBy({ left: d * (cards[0].getBoundingClientRect().width + 18), behavior: reduce ? "auto" : "smooth" });
+prev.addEventListener("click", () => step(-1)); nextB.addEventListener("click", () => step(1));
+const arrows = () => { const fits = row.scrollWidth <= row.clientWidth + 4; prev.hidden = nextB.hidden = dotsEl.hidden = fits; prev.disabled = row.scrollLeft < 4; nextB.disabled = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4; };
+row.addEventListener("scroll", arrows, { passive: true }); addEventListener("resize", arrows); arrows();
+// cards that scroll into view later still play
+row.addEventListener("scroll", () => cards.forEach(c => { const r = c.getBoundingClientRect(), w = row.getBoundingClientRect(); if (r.left < w.right - 40 && r.right > w.left + 40) play(c); }), { passive: true });
+// tell the website how tall this is (the <head> listener resizes the frame)
+function report() { try { parent.postMessage({ mz: "height", h: Math.ceil(document.body.getBoundingClientRect().height + 10) }, "*"); } catch (e) {} }
+new ResizeObserver(report).observe(document.body); addEventListener("load", report);
+</script>
+</body>
+</html>
