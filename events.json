@@ -216,9 +216,10 @@
   {
    "date": "2026-10-19",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -233,8 +234,7 @@
    "start": "2026-10-19T21:00:00Z",
    "end": "2026-10-19T22:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -291,10 +291,10 @@
   {
    "date": "2026-10-26",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -308,9 +308,8 @@
    ],
    "start": "2026-10-26T21:00:00Z",
    "end": "2026-10-26T22:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -391,9 +390,10 @@
   {
    "date": "2026-11-02",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -408,8 +408,7 @@
    "start": "2026-11-02T22:00:00Z",
    "end": "2026-11-02T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -490,10 +489,10 @@
   {
    "date": "2026-11-09",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -507,9 +506,8 @@
    ],
    "start": "2026-11-09T22:00:00Z",
    "end": "2026-11-09T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -518,7 +516,9 @@
    "title": "School Subjects",
    "level": "Beginner",
    "cats": [
-    "conversation"
+    "vocabulary",
+    "conversation",
+    "listening"
    ],
    "times": [
     {
@@ -532,9 +532,8 @@
    ],
    "start": "2026-11-12T22:00:00Z",
    "end": "2026-11-12T23:00:00Z",
-   "cat": "conversation",
-   "topic": "School Subjects and University Majors",
-   "about": "Learn vocab about general school subjects and some common university majors",
+   "cat": "vocabulary",
+   "topic": "Learn vocab about general school subjects and some common university majors",
    "host": "Gabrielle",
    "trial": true
   },
@@ -590,9 +589,10 @@
   {
    "date": "2026-11-16",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -607,8 +607,7 @@
    "start": "2026-11-16T22:00:00Z",
    "end": "2026-11-16T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -617,6 +616,8 @@
    "title": "Chinese Video Comprehension Practice",
    "level": "Beginner",
    "cats": [
+    "vocabulary",
+    "conversation",
     "listening"
    ],
    "times": [
@@ -631,9 +632,8 @@
    ],
    "start": "2026-11-19T22:00:00Z",
    "end": "2026-11-19T23:00:00Z",
-   "cat": "listening",
-   "topic": "Chinese Video Comprehension Practice and Discussion",
-   "about": "Watch a few short videos (first with only Chinese subtitles) and then discuss the topic of the video (then watch again with English subtitles)",
+   "cat": "vocabulary",
+   "topic": "Watch a few short videos (first with only Chinese subtitles) and then discuss the topic of the video (then watch again with English subtitles)",
    "host": "Gabrielle",
    "trial": true
   },
@@ -689,10 +689,10 @@
   {
    "date": "2026-11-23",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -706,9 +706,8 @@
    ],
    "start": "2026-11-23T22:00:00Z",
    "end": "2026-11-23T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -740,9 +739,10 @@
   {
    "date": "2026-11-30",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -757,8 +757,7 @@
    "start": "2026-11-30T22:00:00Z",
    "end": "2026-11-30T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -767,6 +766,7 @@
    "title": "Winter Activities",
    "level": "Beginner",
    "cats": [
+    "vocabulary",
     "conversation"
    ],
    "times": [
@@ -781,9 +781,8 @@
    ],
    "start": "2026-12-03T22:00:00Z",
    "end": "2026-12-03T23:00:00Z",
-   "cat": "conversation",
-   "topic": "Winter and Snow Day Activities",
-   "about": "Learn vocab related to fun things to do in the winter",
+   "cat": "vocabulary",
+   "topic": "Learn vocab related to fun things to do in the winter",
    "host": "Gabrielle",
    "trial": true
   },
@@ -815,10 +814,10 @@
   {
    "date": "2026-12-07",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -832,9 +831,8 @@
    ],
    "start": "2026-12-07T22:00:00Z",
    "end": "2026-12-07T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -843,7 +841,8 @@
    "title": "Food Descriptors",
    "level": "Beginner",
    "cats": [
-    "culture"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -857,9 +856,8 @@
    ],
    "start": "2026-12-10T22:00:00Z",
    "end": "2026-12-10T23:00:00Z",
-   "cat": "culture",
-   "topic": "How to Describe Foods",
-   "about": "Learn how to describe how a food looks, tastes, and smells",
+   "cat": "vocabulary",
+   "topic": "Learn how to describe how a food looks, tastes, and smells",
    "host": "Gabrielle",
    "trial": true
   },
@@ -891,9 +889,10 @@
   {
    "date": "2026-12-14",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -908,8 +907,7 @@
    "start": "2026-12-14T22:00:00Z",
    "end": "2026-12-14T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -918,7 +916,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -932,9 +931,8 @@
    ],
    "start": "2026-12-17T22:00:00Z",
    "end": "2026-12-17T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
@@ -966,10 +964,10 @@
   {
    "date": "2026-12-21",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -983,34 +981,8 @@
    ],
    "start": "2026-12-21T22:00:00Z",
    "end": "2026-12-21T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
-   "host": "Gabrielle",
-   "trial": true
-  },
-  {
-   "date": "2026-12-24",
-   "title": "TopicTBD",
-   "level": "Beginner",
-   "cats": [
-    "noagenda"
-   ],
-   "times": [
-    {
-     "flag": "eu",
-     "time": "11pm CET"
-    },
-    {
-     "flag": "us",
-     "time": "5pm ET"
-    }
-   ],
-   "start": "2026-12-24T22:00:00Z",
-   "end": "2026-12-24T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1042,9 +1014,10 @@
   {
    "date": "2026-12-28",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1059,8 +1032,7 @@
    "start": "2026-12-28T22:00:00Z",
    "end": "2026-12-28T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1069,7 +1041,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1083,19 +1056,18 @@
    ],
    "start": "2026-12-31T22:00:00Z",
    "end": "2026-12-31T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-01-04",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1109,9 +1081,8 @@
    ],
    "start": "2027-01-04T22:00:00Z",
    "end": "2027-01-04T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1120,7 +1091,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1134,18 +1106,18 @@
    ],
    "start": "2027-01-07T22:00:00Z",
    "end": "2027-01-07T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-01-11",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1160,8 +1132,7 @@
    "start": "2027-01-11T22:00:00Z",
    "end": "2027-01-11T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1170,7 +1141,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1184,19 +1156,18 @@
    ],
    "start": "2027-01-14T22:00:00Z",
    "end": "2027-01-14T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-01-18",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1210,9 +1181,8 @@
    ],
    "start": "2027-01-18T22:00:00Z",
    "end": "2027-01-18T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1221,7 +1191,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1235,18 +1206,18 @@
    ],
    "start": "2027-01-21T22:00:00Z",
    "end": "2027-01-21T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-01-25",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1261,8 +1232,7 @@
    "start": "2027-01-25T22:00:00Z",
    "end": "2027-01-25T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1271,7 +1241,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1285,19 +1256,18 @@
    ],
    "start": "2027-01-28T22:00:00Z",
    "end": "2027-01-28T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-02-01",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1311,9 +1281,8 @@
    ],
    "start": "2027-02-01T22:00:00Z",
    "end": "2027-02-01T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1322,7 +1291,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1336,18 +1306,18 @@
    ],
    "start": "2027-02-04T22:00:00Z",
    "end": "2027-02-04T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-02-08",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1362,8 +1332,7 @@
    "start": "2027-02-08T22:00:00Z",
    "end": "2027-02-08T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1372,7 +1341,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1386,19 +1356,18 @@
    ],
    "start": "2027-02-11T22:00:00Z",
    "end": "2027-02-11T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-02-15",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1412,9 +1381,8 @@
    ],
    "start": "2027-02-15T22:00:00Z",
    "end": "2027-02-15T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1423,7 +1391,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1437,18 +1406,18 @@
    ],
    "start": "2027-02-18T22:00:00Z",
    "end": "2027-02-18T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-02-22",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1463,8 +1432,7 @@
    "start": "2027-02-22T22:00:00Z",
    "end": "2027-02-22T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1473,7 +1441,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1487,19 +1456,18 @@
    ],
    "start": "2027-02-25T22:00:00Z",
    "end": "2027-02-25T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-03-01",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1513,9 +1481,8 @@
    ],
    "start": "2027-03-01T22:00:00Z",
    "end": "2027-03-01T23:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1524,7 +1491,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1538,18 +1506,18 @@
    ],
    "start": "2027-03-04T22:00:00Z",
    "end": "2027-03-04T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-03-08",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1564,8 +1532,7 @@
    "start": "2027-03-08T22:00:00Z",
    "end": "2027-03-08T23:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1574,7 +1541,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1588,19 +1556,18 @@
    ],
    "start": "2027-03-11T22:00:00Z",
    "end": "2027-03-11T23:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-03-15",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1614,9 +1581,8 @@
    ],
    "start": "2027-03-15T21:00:00Z",
    "end": "2027-03-15T22:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1625,7 +1591,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1639,18 +1606,18 @@
    ],
    "start": "2027-03-18T21:00:00Z",
    "end": "2027-03-18T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-03-22",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1665,8 +1632,7 @@
    "start": "2027-03-22T21:00:00Z",
    "end": "2027-03-22T22:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1675,7 +1641,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1689,19 +1656,18 @@
    ],
    "start": "2027-03-25T21:00:00Z",
    "end": "2027-03-25T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-03-29",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1715,9 +1681,8 @@
    ],
    "start": "2027-03-29T21:00:00Z",
    "end": "2027-03-29T22:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1726,7 +1691,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1740,18 +1706,18 @@
    ],
    "start": "2027-04-01T21:00:00Z",
    "end": "2027-04-01T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-04-05",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1766,8 +1732,7 @@
    "start": "2027-04-05T21:00:00Z",
    "end": "2027-04-05T22:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1776,7 +1741,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1790,19 +1756,18 @@
    ],
    "start": "2027-04-08T21:00:00Z",
    "end": "2027-04-08T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-04-12",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1816,9 +1781,8 @@
    ],
    "start": "2027-04-12T21:00:00Z",
    "end": "2027-04-12T22:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1827,7 +1791,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1841,18 +1806,18 @@
    ],
    "start": "2027-04-15T21:00:00Z",
    "end": "2027-04-15T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-04-19",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1867,8 +1832,7 @@
    "start": "2027-04-19T21:00:00Z",
    "end": "2027-04-19T22:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1877,7 +1841,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1891,19 +1856,18 @@
    ],
    "start": "2027-04-22T21:00:00Z",
    "end": "2027-04-22T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-04-26",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1917,9 +1881,8 @@
    ],
    "start": "2027-04-26T21:00:00Z",
    "end": "2027-04-26T22:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1928,7 +1891,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1942,18 +1906,18 @@
    ],
    "start": "2027-04-29T21:00:00Z",
    "end": "2027-04-29T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-05-03",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -1968,8 +1932,7 @@
    "start": "2027-05-03T21:00:00Z",
    "end": "2027-05-03T22:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -1978,7 +1941,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -1992,19 +1956,18 @@
    ],
    "start": "2027-05-06T21:00:00Z",
    "end": "2027-05-06T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-05-10",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -2018,9 +1981,8 @@
    ],
    "start": "2027-05-10T21:00:00Z",
    "end": "2027-05-10T22:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -2029,7 +1991,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -2043,18 +2006,18 @@
    ],
    "start": "2027-05-13T21:00:00Z",
    "end": "2027-05-13T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-05-17",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -2069,8 +2032,7 @@
    "start": "2027-05-17T21:00:00Z",
    "end": "2027-05-17T22:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   },
@@ -2079,7 +2041,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -2093,19 +2056,18 @@
    ],
    "start": "2027-05-20T21:00:00Z",
    "end": "2027-05-20T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-05-24",
    "title": "Vocab + Reading Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "vocabulary",
-    "reading"
+    "reading",
+    "vocabulary"
    ],
    "times": [
     {
@@ -2119,9 +2081,8 @@
    ],
    "start": "2027-05-24T21:00:00Z",
    "end": "2027-05-24T22:00:00Z",
-   "cat": "vocabulary",
-   "topic": "New Vocabulary and Reading Practice",
-   "about": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
+   "cat": "reading",
+   "topic": "Using prepared texts, learn new vocab and practice reading characters without relying on pinyin",
    "host": "Gabrielle",
    "trial": true
   },
@@ -2130,7 +2091,8 @@
    "title": "TopicTBD",
    "level": "Beginner",
    "cats": [
-    "noagenda"
+    "vocabulary",
+    "conversation"
    ],
    "times": [
     {
@@ -2144,18 +2106,18 @@
    ],
    "start": "2027-05-27T21:00:00Z",
    "end": "2027-05-27T22:00:00Z",
-   "cat": "noagenda",
-   "topic": "About:",
-   "about": "Host: Gabrielle",
+   "cat": "vocabulary",
+   "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
    "trial": true
   },
   {
    "date": "2027-05-31",
    "title": "HSK Review + Listening Practice",
-   "level": "Intermediate",
+   "level": "Beginner",
    "cats": [
-    "listening"
+    "listening",
+    "vocabulary"
    ],
    "times": [
     {
@@ -2170,8 +2132,7 @@
    "start": "2027-05-31T21:00:00Z",
    "end": "2027-05-31T22:00:00Z",
    "cat": "listening",
-   "topic": "Practice HSK Vocab and Listening Practice",
-   "about": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
+   "topic": "Learn vocab from HSK 1-4 (level will depend on the members who join), then practice listening to simple sentences from a video",
    "host": "Gabrielle",
    "trial": true
   }
