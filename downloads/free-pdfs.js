@@ -87,6 +87,16 @@ var FREE_PDFS = {
     file: "downloads/zodiac/Chinese-Zodiac-Vocabulary-Mandarin-Zest.pdf",
     cover: "downloads/zodiac/cover-zodiac.jpg"
   }
+  ,
+  "radicals": {
+    tag: "Radicals", color: "#4f9a4f",
+    title: "Get the list of all 214 Chinese radicals",
+    text: "Every Kangxi radical, sorted by stroke count, with its variants, pinyin and meaning, plus a box to tick when you recognize it.",
+    done: "Your radicals list is ready",
+    after: "Start with the radicals you already see everywhere, like 亻, 氵 and 口.",
+    file: "downloads/guides/214-Chinese-Radicals-Mandarin-Zest.pdf",
+    cover: "downloads/guides/cover-radicals.jpg"
+  }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" },
 };
