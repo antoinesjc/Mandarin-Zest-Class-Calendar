@@ -374,6 +374,11 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - `banners/taiwan-reviews.html`: past students' reviews for the Taiwanese Mini Bootcamp page, same message-card look as
   `club-reviews.html` (3 side by side, swipe on phones, ==highlight==). Edit REVIEWS (name/place shown as "Student · Taiwanese
   Mini Bootcamp" until names are given). Resizes itself; fallback embed height `max(450px, min(600px, calc((1100px - 100vw) * 10000)))`, `scrolling="no"`.
+- `club-offer.js`: seasonal Club membership offers (CLUB_OFFERS: dates, % off, months, price, Stripe promotion code), used by
+  `club-popup.html`, `club-home.html`, `pricing.html`, `trial-booked.html` and `banners/club.html`. Outside the dates every widget
+  shows the regular price. Preview with `?date=2026-11-26`. Black Friday 2026: 25–30 Nov, 20% off the first 3 months (US$20),
+  code BLACKFRIDAY26 (Stripe promotion code on the regular monthly link). Shop: Black Friday 50% off in `shop/offers.js`
+  (code BLACKFRIDAY26, mascot `shop/mascot-blackfriday.png`).
 - `banners/hsk79-pdf.html`: for the HSK 7–9 vocab list article. "Prefer it as a PDF?" → shop product (US$5, new tab),
   product picture `banners/product-hsk79.jpg`, current code from `shop/offers.js` with the discounted price.
   Embed: `height:max(335px, min(440px, calc((700px - 100vw) * 10000)))`, `scrolling="no"`, `allow="clipboard-write"`.

@@ -36,6 +36,9 @@
   li b { color:#fff; }
   .price { margin-top:auto; padding-top:3vw; display:flex; align-items:baseline; gap:2vw; font-size:3.5vw; color:#cbbdb3; }
   .price b { font-size:6.2vw; font-weight:800; color:#fff; }
+  .price s { color:#a89a90; font-size:4.2vw; }
+  .deal { display:inline-block; margin-top:2vw; background:#f37a48; color:#2a2420; font-weight:800; font-size:3.2vw; border-radius:99px; padding:1vw 2.6vw; }
+  .deal[hidden] { display:none; }
 
   .actions { flex:none; display:flex; gap:2.6vw; padding:3.6vw 6.5vw 5.4vw; }
   .btn { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:13vw; border-radius:999px;
@@ -63,12 +66,14 @@
       <li><svg viewBox="0 0 24 24" fill="none" stroke="#9fd89f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>The Club app</b>: notes, reminders, progress</span></li>
     </ul>
     <div class="price"><b id="price"></b><span id="perSession"></span></div>
+    <span class="deal" id="deal" hidden></span>
   </div>
   <div class="actions">
     <a class="btn main" id="trial" target="_blank" rel="noopener">Try a session ↗<small id="trialSmall"></small></a>
     <a class="btn alt" id="club" target="_blank" rel="noopener">Discover the Club ↗<small>&nbsp;</small></a>
   </div>
 </section>
+<script src="club-offer.js?v=1"></script>
 <script>
   // ═══ CONFIG: price and links ═══
   var CONFIG = {
@@ -80,6 +85,13 @@
   };
   document.getElementById("price").textContent = CONFIG.price;
   document.getElementById("perSession").textContent = CONFIG.perSession;
+  // seasonal Club offer (club-offer.js): discounted price + code, then back to normal by itself
+  if (window.CLUB_OFFER) {
+    var co = CLUB_OFFER;
+    document.getElementById("price").innerHTML = "<s>" + co.regular + "</s> " + co.price + "/month";
+    document.getElementById("perSession").textContent = "code " + co.code;
+    var eb = document.querySelector(".eyebrow"); eb.textContent = (co.name + " · " + co.pct + "% off your first " + co.months + " months").toUpperCase(); eb.style.color = "#f8b28f";
+  }
   document.getElementById("trialSmall").textContent = CONFIG.trialPrice;
   document.getElementById("trial").href = CONFIG.trial;
   document.getElementById("club").href = CONFIG.club;

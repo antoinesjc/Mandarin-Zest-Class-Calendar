@@ -37,6 +37,11 @@
   .price b { font-size:18px; font-weight:800; }
   .price b small { font-weight:500; color:var(--muted); font-size:15px; }
   .link { font-size:15px; font-weight:700; color:#1b6f1b; }
+  .deal { display:flex; flex-direction:column; gap:8px; background:var(--peach); border-radius:16px; padding:14px 16px; }
+  .deal[hidden] { display:none; }
+  .deal b { font-size:13px; font-weight:800; letter-spacing:.08em; color:#a8431a; }
+  .deal span { font-size:15px; line-height:1.45; color:var(--ink); }
+  .deal button { align-self:flex-start; border:1.5px dashed #a8431a; background:#fff; border-radius:10px; padding:6px 12px; font:inherit; font-weight:800; font-size:14px; color:var(--ink); cursor:pointer; min-height:36px; }
   .hosts { display:flex; flex-direction:column; gap:16px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(176px, 1fr)); gap:14px; }
   .host { background:var(--ink2); border-radius:18px; padding:18px 16px; display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
@@ -72,6 +77,7 @@
       <a class="btn" id="trialBtn" target="_blank" rel="noopener">See trial sessions ↗</a>
       <div class="hr"></div>
       <div class="price"><span>Membership</span><b id="price"></b></div>
+      <div class="deal" id="deal" hidden><b id="dealT"></b><span id="dealS"></span><button type="button" id="dealC"></button></div>
       <p>Cancel anytime. No contract. <a class="link" id="clubLink" target="_blank" rel="noopener">About the Club ↗</a></p>
     </div>
   </div>
@@ -80,6 +86,7 @@
     <div class="grid" id="grid" aria-live="polite"></div>
   </div>
 </section>
+<script src="club-offer.js?v=1"></script>
 <script>
   // ═══ CONFIG: prices and links ═══
   var CONFIG = {
@@ -93,6 +100,15 @@
   document.getElementById("trialBtn").href = CONFIG.trialUrl;
   document.getElementById("clubLink").href = CONFIG.clubUrl;
   document.getElementById("price").innerHTML = CONFIG.monthly + " <small>or " + CONFIG.yearly + "</small>";
+  // seasonal Club offer (club-offer.js), back to normal by itself after the last day
+  if (window.CLUB_OFFER) {
+    var co = CLUB_OFFER;
+    document.getElementById("deal").hidden = false;
+    document.getElementById("dealT").textContent = co.name.toUpperCase() + " · " + co.pct + "% OFF · ENDS " + co.ends.toUpperCase();
+    document.getElementById("dealS").textContent = co.price + "/month for your first " + co.months + " months instead of " + co.regular + ". Use the code at checkout.";
+    var cb = document.getElementById("dealC"); cb.textContent = co.code + " · tap to copy";
+    cb.addEventListener("click", function () { clubCopy(cb, co.code); });
+  }
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
   function track(name) { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:name }, ga:{ event:"select_content", params:{ content_type:"club_home", item_id:name } } }, "*"); } catch (e) {} }

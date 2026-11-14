@@ -2,6 +2,8 @@
 // The first offer whose dates include today (Taiwan time, both days included) is shown; otherwise REGULAR.
 // For a new celebration: add a line at the top with its code, label, discount, dates and a picture in the shop/ folder.
 var OFFERS = [
+  { label:"Black Friday · 25 to 30 November", short:"Black Friday · ends 30 Nov", off:"50% off", code:"BLACKFRIDAY26",
+    img:"shop/mascot-blackfriday.png", alt:"Mandarin Zest mascot in an autumn scarf and pilgrim hat, on a laptop", from:"2026-11-25", until:"2026-11-30" },
   { label:"Halloween sale · ends 31 October", short:"Halloween · ends 31 Oct", off:"30% off", code:"HALLOWEEN26",
     img:"shop/mascot-halloween.png", alt:"Mandarin Zest mascot dressed as a witch with a black cat", from:"2026-10-01", until:"2026-10-31" }
 ];

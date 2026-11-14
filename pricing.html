@@ -72,6 +72,10 @@
   }
   li { display: flex; gap: 10px; align-items: flex-start; }
   li svg { flex: 0 0 auto; margin-top: 2px; }
+  .deal { background: #f37a48; color: #2a2420; }
+  .deal[hidden] { display: none; }
+  .amount s { font-size: 24px; color: #a89a90; font-weight: 700; margin-right: 6px; }
+  .codebtn { border: 1.5px dashed #a8431a; background: #fff; border-radius: 9px; padding: 3px 9px; font: inherit; font-weight: 800; color: #2a2420; cursor: pointer; }
   .small { font-size: 14px; color: var(--muted); margin-top: auto; padding-top: 4px; }
   .btn {
     display: block;
@@ -97,7 +101,8 @@
 
   <div class="plan">
     <h2>Monthly</h2>
-    <div class="price"><span class="amount">US$25</span><span class="per">/ month</span></div>
+    <span class="badge deal" id="deal" hidden></span>
+    <div class="price" id="mprice"><span class="amount">US$25</span><span class="per">/ month</span></div>
     <ul>
       <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Unlimited speaking sessions</li>
       <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Access to the Mandarin Zest Club App</li>
@@ -105,7 +110,7 @@
       <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>50% off all our materials</li>
       <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#228b22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Special prices on bootcamps and trips</li>
     </ul>
-    <div class="small">Cancel anytime</div>
+    <div class="small" id="msmall">Cancel anytime</div>
     <a class="btn" data-plan="monthly" href="https://buy.stripe.com/4gM6oH94BcTz2nm4lT6oo0p" target="_blank" rel="noopener">Join monthly</a>
   </div>
 
@@ -125,12 +130,22 @@
   </div>
 
 </div>
+<script src="club-offer.js?v=1"></script>
 <script>
+  // seasonal Club offer (club-offer.js) on the monthly plan; back to normal by itself after the last day
+  if (window.CLUB_OFFER) {
+    var co = CLUB_OFFER;
+    var dl = document.getElementById("deal"); dl.hidden = false; dl.textContent = co.name + " · " + co.pct + "% off";
+    document.getElementById("mprice").innerHTML = '<span class="amount"><s>' + co.regular + '</s>' + co.price + '</span><span class="per">/ month for ' + co.months + ' months</span>';
+    var ms = document.getElementById("msmall");
+    ms.innerHTML = 'Then ' + co.regular + '/month. Code <button type="button" class="codebtn" id="code">' + co.code + '</button> at checkout, until ' + co.ends + '. Cancel anytime.';
+    document.getElementById("code").addEventListener("click", function () { clubCopy(this, co.code); });
+  }
   // Google Analytics: tell the Odoo page what happened (no personal data). The page's <head> listener sends it to GA.
   function mzGA(name, params) { try { (window.opener || window.top).postMessage({ mz: "track", ga: { event: name, params: params || {} } }, "*"); } catch (e) {} }
   document.querySelectorAll("a[data-plan]").forEach(function (a) {
     a.addEventListener("click", function () {
-      var y = a.getAttribute("data-plan") === "yearly", v = y ? 250 : 25;
+      var y = a.getAttribute("data-plan") === "yearly", v = y ? 250 : (window.CLUB_OFFER ? CLUB_OFFER.value : 25);
       mzGA("begin_checkout", { currency: "USD", value: v, items: [{ item_id: y ? "club-yearly" : "club-monthly", item_name: y ? "Club membership (yearly)" : "Club membership (monthly)", price: v, quantity: 1 }] });
     });
   });
