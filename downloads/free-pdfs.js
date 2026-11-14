@@ -97,6 +97,16 @@ var FREE_PDFS = {
     file: "downloads/guides/214-Chinese-Radicals-Mandarin-Zest.pdf",
     cover: "downloads/guides/cover-radicals.jpg"
   }
+  ,
+  "huang": {
+    tag: "Character challenge", color: "#e0835f",
+    title: "Learn to write huáng, the 172-stroke character",
+    text: "A step-by-step guide that breaks huáng into 12 building blocks you already know, then builds it row by row in 9 steps.",
+    done: "Your huáng guide is ready",
+    after: "Print it, grab a pen, and build it one block at a time.",
+    file: "downloads/guides/How-to-Write-Huang-Mandarin-Zest.pdf",
+    cover: "downloads/guides/cover-huang.jpg"
+  }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" },
 };
