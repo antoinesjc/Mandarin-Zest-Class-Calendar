@@ -1,26 +1,6 @@
 {
  "bootcamps": [
   {
-   "url": "https://www.mandarinzest.com/taiwanese-mini-bootcamp",
-   "title": "Taiwanese Mini Bootcamp",
-   "summary": "Learned Chinese from mainland textbooks? In 3 weekends, get the words, accent and manners Taiwanese people actually use, from the MRT to the night market.",
-   "image": "https://www.mandarinzest.com/unsplash/qJX_J6U5Vm4/5435/taipei.jpg?unique=d39d6a55",
-   "dates": "Sat 21 Nov – Sun 6 Dec",
-   "time": "3 PM CET · 9 AM ET · 10 PM Taiwan",
-   "format": "6 live online sessions, Sat & Sun",
-   "level": "HSK 2–3 (lower intermediate)",
-   "group": "Max 6 students",
-   "status": "",
-   "month": "",
-   "start": "2026-11-21",
-   "datesTbd": false,
-   "early": "US$111",
-   "earlyEnds": "2026-12-15",
-   "price": "US$139",
-   "club": "US$92",
-   "signupBy": "2026-11-15"
-  },
-  {
    "url": "https://www.mandarinzest.com/chinese-character-bootcamp",
    "title": "Chinese Character Bootcamp",
    "summary": "In 3 weeks, understand how characters are built, remember them with far less effort, and move from robotic strokes towards a natural handwriting. Daily homework with personal feedback, one live session every Sunday.",
@@ -39,6 +19,26 @@
    "price": "US$189",
    "club": "US$119",
    "signupBy": "2026-12-31"
+  },
+  {
+   "url": "https://www.mandarinzest.com/taiwanese-mini-bootcamp",
+   "title": "Taiwanese Mini Bootcamp",
+   "summary": "Learned Chinese from mainland textbooks? In 3 weekends, get the words, accent and manners Taiwanese people actually use, from the MRT to the night market.",
+   "image": "https://www.mandarinzest.com/unsplash/qJX_J6U5Vm4/5435/taipei.jpg?unique=d39d6a55",
+   "dates": "Sat 16 Jan – Sun 31 Jan",
+   "time": "3 PM CET · 9 AM ET · 10 PM Taiwan",
+   "format": "6 live online sessions, Sat & Sun",
+   "level": "HSK 2–3 (lower intermediate)",
+   "group": "Max 6 students",
+   "status": "",
+   "month": "",
+   "start": "2027-01-16",
+   "datesTbd": false,
+   "early": "US$111",
+   "earlyEnds": "2026-12-15",
+   "price": "US$139",
+   "club": "US$92",
+   "signupBy": "2027-01-09"
   },
   {
    "url": "https://www.mandarinzest.com/chinese-pronunciation-bootcamp",
