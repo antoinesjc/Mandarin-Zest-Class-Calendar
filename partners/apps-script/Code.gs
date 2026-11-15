@@ -19,7 +19,7 @@ const CONFIG = {
   PROGRAM_START: '2026-12-01',
 
   // Your Club monthly Stripe Payment Link (used to build each partner's ready-made link).
-  MONTHLY_LINK: 'https://buy.stripe.com/REPLACE_MONTHLY',
+  MONTHLY_LINK: 'https://buy.stripe.com/4gM6oH94BcTz2nm4lT6oo0p',
 
   RATE: 0.20,              // partner share of the standard monthly price (US$25 -> US$5)
   PAID_MONTHS: 3,          // paid months that earn commission
