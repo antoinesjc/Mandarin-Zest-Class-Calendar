@@ -1,5 +1,5 @@
 /**
- * Mandarin Zest – Club Partner Program (monthly membership only)
+ * Mandarin Zest - Club Partner Program (monthly membership only)
  * Google Apps Script bound to the "MZ Club Partners" Google Sheet.
  *
  * What it does
@@ -13,7 +13,7 @@
  * Setup: see the "Club Partner Program: Setup Guide" doc.
  */
 
-// ───────────────────────── Settings ─────────────────────────
+// ----- Settings -----
 const CONFIG = {
   // Program start: payments before this date are ignored.
   PROGRAM_START: '2026-12-01',
@@ -21,7 +21,7 @@ const CONFIG = {
   // Your Club monthly Stripe Payment Link (used to build each partner's ready-made link).
   MONTHLY_LINK: 'https://buy.stripe.com/REPLACE_MONTHLY',
 
-  RATE: 0.20,              // partner share of the standard monthly price (US$25 → US$5)
+  RATE: 0.20,              // partner share of the standard monthly price (US$25 -> US$5)
   PAID_MONTHS: 3,          // paid months that earn commission
   HOLD_DAYS: 14,           // commission becomes payable after this many days (refund window)
   PAYOUT_MIN: 50,          // USD
@@ -45,7 +45,7 @@ const TABS = {
   Monthly: ['Month', 'Member commissions', 'Bonuses', 'Total partner cost'],
 };
 
-// ───────────────────────── Menu & triggers ─────────────────────────
+// ----- Menu & triggers -----
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Partners')
     .addItem('Sync now', 'syncAll')
@@ -80,7 +80,7 @@ function installTrigger() {
   ScriptApp.newTrigger('syncAll').timeBased().everyMinutes(15).create();
 }
 
-// ───────────────────────── Main sync ─────────────────────────
+// ----- Main sync -----
 function syncAll() {
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(30000)) return;
@@ -110,7 +110,7 @@ function buildPromoMap_(partners) {
   return map;
 }
 
-// New completed monthly Checkout Sessions that used a partner code → Referrals.
+// New completed monthly Checkout Sessions that used a partner code -> Referrals.
 function importSessions_(promoMap) {
   const props = PropertiesService.getScriptProperties();
   const start = Math.floor(new Date(CONFIG.PROGRAM_START + 'T00:00:00Z').getTime() / 1000);
@@ -149,7 +149,7 @@ function importSessions_(promoMap) {
   props.setProperty('LAST_SESSION_CREATED', String(maxCreated));
 }
 
-// First 3 paid invoices of each referred subscription → Commissions.
+// First 3 paid invoices of each referred subscription -> Commissions.
 function importPayments_(partners) {
   const comms = readTable_('Commissions');
   const recorded = new Set(comms.map(c => c['Payment ID']));
@@ -182,7 +182,7 @@ function importPayments_(partners) {
   });
 }
 
-// Pending → Payable after the hold period, or Refunded if Stripe shows a refund.
+// Pending -> Payable after the hold period, or Refunded if Stripe shows a refund.
 function updateCommissionStatuses_() {
   const now = Date.now();
   readTable_('Commissions').forEach(c => {
@@ -320,7 +320,7 @@ function writeMonthly_() {
      round2_(months[m].members + months[m].bonus)]));
 }
 
-// ───────────────────────── Partner dashboard API ─────────────────────────
+// ----- Partner dashboard API -----
 // The dashboard page lives on GitHub Pages and calls this web app.
 // It POSTs {"email": "...", "code": "..."} as plain text (no CORS preflight) and gets JSON back.
 function doPost(e) {
@@ -352,7 +352,7 @@ function getDashboard(email, code) {
     String(x.Email || '').trim().toLowerCase() === email && up_(x.Code) === code);
   if (!email || !code || !p) {
     cache.put(failKey, String(fails + 1), 900);
-    throw new Error('We couldn’t find a partner with that email and code.');
+    throw new Error("We couldn't find a partner with that email and code.");
   }
 
   const key = up_(p.Code);
@@ -405,10 +405,10 @@ function getDashboard(email, code) {
   };
 }
 
-// ───────────────────────── Stripe helpers ─────────────────────────
+// ----- Stripe helpers -----
 function stripe_(path, params) {
   const key = PropertiesService.getScriptProperties().getProperty('STRIPE_KEY');
-  if (!key) throw new Error('Add STRIPE_KEY in Project Settings → Script properties.');
+  if (!key) throw new Error('Add STRIPE_KEY in Project Settings -> Script properties.');
   const res = UrlFetchApp.fetch('https://api.stripe.com/v1/' + path + (params ? '?' + params : ''), {
     headers: { Authorization: 'Bearer ' + key, 'Stripe-Version': CONFIG.STRIPE_VERSION },
     muteHttpExceptions: true,
@@ -431,10 +431,10 @@ function stripeList_(path, params) {
   return all;
 }
 
-// ───────────────────────── Sheet helpers ─────────────────────────
+// ----- Sheet helpers -----
 function sheet_(name) {
   const sh = SpreadsheetApp.getActive().getSheetByName(name);
-  if (!sh) throw new Error('Missing tab "' + name + '". Run Partners → Create tabs.');
+  if (!sh) throw new Error('Missing tab "' + name + '". Run Partners -> Create tabs.');
   return sh;
 }
 
@@ -472,7 +472,7 @@ function replaceBody_(name, rows) {
   if (rows.length) sh.getRange(2, 1, rows.length, width).setValues(rows);
 }
 
-// ───────────────────────── Small utilities ─────────────────────────
+// ----- Small utilities -----
 function up_(v) { return String(v || '').trim().toUpperCase(); }
 function round2_(n) { return Math.round(Number(n) * 100) / 100; }
 function enc_(s) { return encodeURIComponent(s); }
