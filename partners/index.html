@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandarin Zest Partner Dashboard</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2b8a3e; --gd: #1d5e2b; --gl: #e4f1e1; --gll: #f3f9f2;
+    --or: #ec7a36; --or-dark: #d9672a; --or-light: #ffb37c; --peach: #fbe3d6;
+    --ink: #1f2a24; --mut: #5f6b64; --line: #dde5dc; --cream: #fffaf5; --white: #fff;
+    --shadow: 0 14px 30px rgba(29, 94, 43, .10);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--ink);
+         font-family: 'Nunito', system-ui, sans-serif; font-weight: 600; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 20px 16px 56px; position: relative; }
+  h1, h2, h3, .num, .kicker, .brand b { font-family: 'Montserrat', system-ui, sans-serif; }
+
+  /* Brand header */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 44px; height: 44px; }
+  .brand b { display: block; font-weight: 900; font-size: 17px; color: var(--gd); }
+  .brand span { display: block; font-size: 13px; color: var(--mut); }
+  .ghost { white-space: nowrap; font: inherit; font-weight: 700; font-size: 14px; color: var(--mut); background: none;
+           border: 0; padding: 8px 10px; cursor: pointer; border-radius: 10px; }
+  .ghost:hover { color: var(--gd); background: var(--gll); }
+
+  .kicker { color: var(--or); font-weight: 800; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+  h1 { font-weight: 900; color: var(--gd); font-size: 32px; line-height: 1.1; margin: 6px 0 4px; }
+  h1 em { color: var(--or); font-style: normal; }
+  .sub { color: var(--mut); margin: 0; font-size: 14px; }
+
+  /* Login */
+  .login { max-width: 420px; margin: 40px auto 0; background: var(--white); border-radius: 24px;
+           box-shadow: var(--shadow); padding: 32px 26px 26px; text-align: center; position: relative; overflow: hidden; }
+  .login::before { content: ''; position: absolute; right: -60px; top: -60px; width: 180px; height: 180px;
+                   background: var(--peach); border-radius: 50%; }
+  .login > * { position: relative; }
+  .login img { width: 96px; height: 96px; }
+  .login h1 { font-size: 26px; }
+  .login p { color: var(--mut); margin: 6px 0 18px; }
+  .login form { text-align: left; }
+  label { display: block; font-weight: 800; font-size: 14px; margin: 14px 0 6px; color: var(--gd); }
+  input { width: 100%; padding: 13px 14px; font: inherit; font-size: 16px; border: 1.5px solid var(--line);
+          border-radius: 12px; background: var(--white); color: var(--ink); }
+  input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px var(--gl); }
+  .primary { width: 100%; margin-top: 20px; padding: 14px; font: inherit; font-weight: 800; font-size: 16px;
+             color: #fff; background: var(--or); border: 0; border-radius: 999px; cursor: pointer; }
+  .primary:hover { background: var(--or-dark); }
+  .primary:disabled { opacity: .6; cursor: default; }
+  .error { color: #b4443b; font-size: 14px; margin-top: 12px; min-height: 18px; }
+
+  /* Dashboard */
+  .hero { margin-top: 26px; }
+  .grid { display: grid; gap: 14px; margin-top: 20px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .grid > * { min-width: 0; }
+  .g-main { grid-template-columns: 1.3fr 1fr 1fr; }
+  .g-two { grid-template-columns: 1fr 1fr; }
+  .card { background: var(--white); border-radius: 20px; box-shadow: var(--shadow); padding: 18px 20px; }
+  .label { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .08em;
+           text-transform: uppercase; color: var(--mut); }
+  .num { font-weight: 900; font-size: 30px; color: var(--gd); margin-top: 6px; }
+  .note { color: var(--mut); font-size: 13px; margin-top: 4px; }
+  .balance { background: var(--gd); color: #fff; position: relative; overflow: hidden; }
+  .balance::after { content: ''; position: absolute; right: -40px; bottom: -50px; width: 150px; height: 150px;
+                    border-radius: 50%; background: rgba(255, 179, 124, .18); }
+  .balance .label { color: var(--or-light); }
+  .balance .num { color: #fff; font-size: 38px; }
+  .balance .note { color: rgba(255, 255, 255, .8); }
+  .bar { height: 10px; background: rgba(255, 255, 255, .18); border-radius: 99px; overflow: hidden; margin: 12px 0 6px; }
+  .bar span { display: block; height: 100%; background: var(--or-light); border-radius: 99px; }
+
+  .dots { display: flex; gap: 8px; margin: 12px 0 8px; }
+  .dots i { width: 30px; height: 30px; border-radius: 50%; background: var(--gll); border: 2px dashed var(--line); }
+  .dots i.on { background: var(--or); border: 2px solid var(--or); box-shadow: inset -4px -4px 0 rgba(0,0,0,.08); }
+  .big { font-weight: 800; font-size: 17px; margin-top: 8px; color: var(--ink); }
+  .access-tag { display: inline-block; margin-top: 10px; padding: 6px 12px; border-radius: 999px;
+                background: var(--gl); color: var(--gd); font-weight: 800; font-size: 14px; }
+
+  .share { background: var(--peach); box-shadow: none; }
+  .share-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .codechip { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 26px; letter-spacing: .06em;
+              color: var(--or); background: var(--white); border: 2px dashed var(--or); border-radius: 14px; padding: 8px 18px; }
+  .linkbox { flex: 1; min-width: 200px; background: var(--white); border-radius: 12px; padding: 11px 14px;
+             font-size: 13px; color: var(--mut); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy { font: inherit; font-weight: 800; font-size: 14px; color: #fff; background: var(--green); border: 0;
+          border-radius: 999px; padding: 10px 16px; cursor: pointer; white-space: nowrap; }
+  .copy:hover { background: var(--gd); }
+
+  section { margin-top: 30px; }
+  h2 { font-weight: 900; font-size: 20px; color: var(--gd); margin: 0 0 12px; }
+  .table { background: var(--white); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th { text-align: left; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11px;
+       letter-spacing: .08em; text-transform: uppercase; color: var(--mut); padding: 12px 18px;
+       background: var(--gll); border-bottom: 1px solid var(--line); }
+  td { padding: 13px 18px; border-bottom: 1px solid var(--line); }
+  tr:last-child td { border-bottom: 0; }
+  .r { text-align: right; }
+  td.r { font-weight: 800; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+  .pill.Active, .pill.Payable { background: var(--gl); color: var(--gd); }
+  .pill.Pending { background: var(--peach); color: #a8431a; }
+  .pill.Cancelled, .pill.Refunded { background: #eef0ee; color: var(--mut); }
+  .empty { padding: 20px 18px; color: var(--mut); }
+  .foot { margin-top: 30px; padding: 18px 20px; border-radius: 20px; background: var(--gll);
+          color: var(--mut); font-size: 14px; line-height: 1.6; }
+  .foot b { color: var(--gd); }
+  input::placeholder { text-transform: none; }
+  .payreq { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--gll);
+            box-shadow: none; border: 1.5px solid var(--gl); }
+  .payreq a { color: var(--green); text-decoration: none; }
+  .payreq a:hover { text-decoration: underline; }
+  .embedded .top .brand { visibility: hidden; }  /* the website already shows the logo */
+  .hidden { display: none !important; }
+
+  @media (max-width: 760px) {
+    h1 { font-size: 26px; }
+    .g-main, .g-two { grid-template-columns: 1fr 1fr; }
+    .balance { grid-column: 1 / -1; }
+    .g-two > .card { grid-column: 1 / -1; }
+    .num { font-size: 24px; }
+    th, td { padding: 11px 12px; }
+    .hide-sm { display: none; }
+    .payreq { flex-direction: column; align-items: flex-start; }
+    .linkbox { flex: 1 1 100%; min-width: 0; order: 3; }
+    #copyLink { order: 4; }
+    .top { align-items: flex-start; }
+    .top > div:last-child { display: flex; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Login -->
+  <div id="loginView" class="login">
+    <img src="mz-mark.png" alt="Mandarin Zest">
+    <div class="kicker" style="margin-top:10px">Club partners</div>
+    <h1>Welcome <em>back</em></h1>
+    <p>Log in with your email and your discount code.</p>
+    <form id="loginForm" autocomplete="on">
+      <label for="email">Email</label>
+      <input id="email" type="email" required autocomplete="email" placeholder="you@example.com">
+      <label for="code">Discount code</label>
+      <input id="code" type="text" required autocomplete="off" placeholder="e.g. LINA" style="text-transform:uppercase">
+      <button class="primary" id="loginBtn" type="submit">See my dashboard</button>
+      <div class="error" id="loginError"></div>
+    </form>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashView" class="hidden">
+    <div class="top">
+      <div class="brand"><img src="mz-mark.png" alt=""><div><b>Mandarin Zest</b><span>Club partner dashboard</span></div></div>
+      <div><button class="ghost" id="refreshBtn" type="button">Refresh</button><button class="ghost" id="logoutBtn" type="button">Log out</button></div>
+    </div>
+
+    <div class="hero">
+      <div class="kicker">Your partner stats</div>
+      <h1 id="hello"></h1>
+      <p class="sub" id="updated"></p>
+    </div>
+
+    <div class="grid g-main">
+      <div class="card balance">
+        <div class="label">Balance</div>
+        <div class="num" id="balance"></div>
+        <div class="bar"><span id="payoutBar"></span></div>
+        <div class="note" id="payoutNote"></div>
+      </div>
+      <div class="card"><div class="label">Total earned</div><div class="num" id="earned"></div><div class="note" id="pendingNote"></div></div>
+      <div class="card"><div class="label">Active members</div><div class="num" id="active"></div><div class="note" id="totalMembers"></div></div>
+    </div>
+
+    <div class="grid">
+      <div class="card payreq">
+        <div>
+          <div class="label" style="color:var(--gd)">Request a payout</div>
+          <div class="note" style="color:var(--ink);font-size:14px;margin-top:6px">No payment information is saved in this dashboard. Once your balance reaches at least <b>US$<span class="minPay"></span></b>, email us at <a id="mailLink" href="#"><b id="mailText"></b></a> to request payment through the method of your choice (PayPal, bank transfer, invoice, etc.).</div>
+        </div>
+        <button class="copy" type="button" id="copyMail">Copy email</button>
+      </div>
+    </div>
+
+    <div class="grid g-two">
+      <div class="card" id="bonusCard">
+        <div class="label">US$25 bonus</div>
+        <div class="dots" id="dots"></div>
+        <div class="big" id="bonusText"></div>
+        <div class="note" id="bonusNote"></div>
+      </div>
+      <div class="card">
+        <div class="label">Your free Club access</div>
+        <div class="access-tag" id="accessText"></div>
+        <div class="note" id="accessNote" style="margin-top:10px"></div>
+        <div class="note">Rule: bring at least one new member every 3 months to keep your free access.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card share">
+        <div class="label" style="color:#a8431a">Share your code</div>
+        <div class="note" style="color:var(--ink)">Your audience gets <b>20% off their first 3 months</b> of the Club. You earn <b>US$5 a month</b> for each member's first 3 months.</div>
+        <div class="share-row">
+          <div class="codechip" id="codeChip"></div>
+          <button class="copy" type="button" id="copyCode">Copy code</button>
+          <div class="linkbox" id="link"></div>
+          <button class="copy" type="button" id="copyLink">Copy link</button>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <h2>Members you brought</h2>
+      <div class="table" id="membersTable"></div>
+    </section>
+
+    <section>
+      <h2>Commissions</h2>
+      <div class="table" id="commTable"></div>
+    </section>
+
+    <section>
+      <h2>Payouts</h2>
+      <p class="sub" style="margin:-6px 0 12px">Paid out so far: <b id="paid"></b></p>
+      <div class="table" id="payoutTable"></div>
+    </section>
+
+    <div class="foot">
+      <b>How it works:</b> commissions become payable 14 days after each payment, and refunded payments earn nothing.
+      Once your balance reaches US$<span id="minFoot"></span>, email us to request a payout and send an invoice or signed payment request for our accounting.
+      Questions? Write to <span id="mailFoot"></span>.
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Settings ─────────────────────────────────────────────
+  // Paste the Apps Script web app URL (ends in /exec) here.
+  var API_URL = 'PASTE_WEB_APP_URL';
+  // Open the page with ?demo=1 to preview the design with sample data (no login needed).
+  var SAMPLE = {
+    name: 'Lina Wu', code: 'LINA', link: 'https://buy.stripe.com/your-club-link?prefilled_promo_code=LINA',
+    access: { active: true, until: '1 Apr 2027', periodEnd: '1 Jan 2027', newThisPeriod: 4 },
+    contactEmail: 'contact@mandarinzest.com',
+    totals: { earned: 25, pending: 10, payable: 15, paid: 0, balance: 15 }, payoutMin: 50,
+    activeMembers: 3, totalMembers: 4,
+    bonus: { awarded: false, active: 3, needed: 5, amount: 25, deadline: '1 Jan 2027', open: true },
+    members: [
+      { member: 'Member 4', date: '11 Nov 2026', status: 'Active', months: '1 of 3' },
+      { member: 'Member 3', date: '24 Oct 2026', status: 'Active', months: '1 of 3' },
+      { member: 'Member 2', date: '9 Oct 2026', status: 'Cancelled', months: '1 of 3' },
+      { member: 'Member 1', date: '3 Oct 2026', status: 'Active', months: '2 of 3' } ],
+    commissions: [
+      { date: '11 Nov 2026', member: 'Member 4', type: 'Monthly', month: '1', amount: 5, status: 'Pending' },
+      { date: '3 Nov 2026', member: 'Member 1', type: 'Monthly', month: '2', amount: 5, status: 'Pending' },
+      { date: '24 Oct 2026', member: 'Member 3', type: 'Monthly', month: '1', amount: 5, status: 'Payable' },
+      { date: '9 Oct 2026', member: 'Member 2', type: 'Monthly', month: '1', amount: 5, status: 'Payable' },
+      { date: '3 Oct 2026', member: 'Member 1', type: 'Monthly', month: '1', amount: 5, status: 'Payable' } ],
+    payouts: [], updated: '15 Nov 2026, 11:45'
+  };
+</script>
+<script>
+  var creds = null;
+  var params = new URLSearchParams(location.search);
+
+  function $(id) { return document.getElementById(id); }
+  function usd(n) { return 'US$' + Number(n || 0).toFixed(2).replace(/\.00$/, ''); }
+  function el(tag, text, cls) {
+    var e = document.createElement(tag);
+    if (text !== undefined && text !== null) e.textContent = text;
+    if (cls) e.className = cls;
+    return e;
+  }
+
+  function table(container, cols, rows, emptyText) {
+    container.innerHTML = '';
+    if (!rows.length) { container.appendChild(el('div', emptyText, 'empty')); return; }
+    var t = el('table'), hr = el('tr'), thead = el('thead'), tb = el('tbody');
+    cols.forEach(function (c) { hr.appendChild(el('th', c.label, (c.r ? 'r ' : '') + (c.sm ? 'hide-sm' : ''))); });
+    thead.appendChild(hr); t.appendChild(thead);
+    rows.forEach(function (row) {
+      var tr = el('tr');
+      cols.forEach(function (c) {
+        var td = el('td', null, (c.r ? 'r ' : '') + (c.sm ? 'hide-sm' : ''));
+        var v = c.get(row);
+        if (c.pill) td.appendChild(el('span', v, 'pill ' + v)); else td.textContent = v;
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    container.appendChild(t);
+  }
+
+  function copyText(btn, text, label) {
+    var done = function () { btn.textContent = 'Copied!'; setTimeout(function () { btn.textContent = label; }, 1500); };
+    var fallback = function () {
+      var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta); done();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+    else fallback();
+  }
+
+  function render(d) {
+    var first = d.name ? d.name.split(' ')[0] : 'there';
+    $('hello').innerHTML = '';
+    $('hello').appendChild(document.createTextNode('Hi ' + first + ', '));
+    $('hello').appendChild(el('em', 'here’s your Club impact'));
+    $('updated').textContent = 'Updated ' + d.updated;
+
+    $('balance').textContent = usd(d.totals.balance);
+    var pct = Math.max(0, Math.min(100, d.totals.balance / d.payoutMin * 100));
+    $('payoutBar').style.width = pct + '%';
+    var toGo = d.payoutMin - d.totals.balance;
+    $('payoutNote').textContent = toGo <= 0 ? 'You can request a payout now (see below)'
+      : usd(toGo) + ' to go until your US$' + d.payoutMin + ' payout';
+    $('earned').textContent = usd(d.totals.earned);
+    $('pendingNote').textContent = d.totals.pending > 0 ? usd(d.totals.pending) + ' pending (14-day hold)' : 'Nothing pending';
+    $('active').textContent = d.activeMembers;
+    $('totalMembers').textContent = d.totalMembers + ' brought in total';
+    $('paid').textContent = usd(d.totals.paid);
+    $('minFoot').textContent = d.payoutMin;
+
+    if (d.bonus) {
+      var b = d.bonus, dots = $('dots'); dots.innerHTML = '';
+      for (var i = 0; i < b.needed; i++) dots.appendChild(el('i', null, (b.awarded || i < b.active) ? 'on' : ''));
+      if (b.awarded) { $('bonusText').textContent = 'Bonus earned!'; $('bonusNote').textContent = usd(b.amount) + ' added to your commissions.'; }
+      else if (b.open) { $('bonusText').textContent = b.active + ' of ' + b.needed + ' active members';
+        $('bonusNote').textContent = 'Reach ' + b.needed + ' active members by ' + b.deadline + ' to earn ' + usd(b.amount) + '. Members who cancel no longer count.'; }
+      else { $('bonusText').textContent = 'Bonus window closed'; $('bonusNote').textContent = 'The bonus window ended on ' + b.deadline + '.'; }
+    } else { $('bonusCard').classList.add('hidden'); }
+    var a = d.access;
+    if (!a) { $('accessText').textContent = '\u2014'; $('accessNote').textContent = ''; }
+    else if (a.active) {
+      $('accessText').textContent = 'Free until ' + a.until;
+      $('accessNote').textContent = a.newThisPeriod > 0
+        ? 'You brought ' + a.newThisPeriod + ' new member' + (a.newThisPeriod > 1 ? 's' : '') + ' this period, so your access is renewed until ' + a.until + '.'
+        : 'Bring at least one new member by ' + a.periodEnd + ' to keep your access for another 3 months.';
+    } else {
+      $('accessText').textContent = 'Ended on ' + a.endedOn;
+      $('accessNote').textContent = 'No new member joined in that 3-month period. Your code and commissions still work as usual.';
+    }
+    var mail = d.contactEmail;
+    $('mailText').textContent = mail; $('mailLink').href = 'mailto:' + mail; $('mailFoot').textContent = mail;
+    Array.prototype.forEach.call(document.querySelectorAll('.minPay'), function (e) { e.textContent = d.payoutMin; });
+    $('copyMail').onclick = function () { copyText($('copyMail'), mail, 'Copy email'); };
+
+    $('codeChip').textContent = d.code;
+    $('link').textContent = d.link;
+    $('copyCode').onclick = function () { copyText($('copyCode'), d.code, 'Copy code'); };
+    $('copyLink').onclick = function () { copyText($('copyLink'), d.link, 'Copy link'); };
+
+    table($('membersTable'), [
+      { label: 'Member', get: function (r) { return r.member; } },
+      { label: 'Joined', get: function (r) { return r.date; } },
+      { label: 'Paid months', get: function (r) { return r.months; }, sm: true },
+      { label: 'Status', get: function (r) { return r.status; }, pill: true },
+    ], d.members, 'No members yet. Share your code to get started!');
+
+    table($('commTable'), [
+      { label: 'Date', get: function (r) { return r.date; } },
+      { label: 'For', get: function (r) { return r.type === 'Bonus' ? '5-member bonus' : r.member + ', month ' + r.month; } },
+      { label: 'Amount', get: function (r) { return usd(r.amount); }, r: true },
+      { label: 'Status', get: function (r) { return r.status; }, pill: true },
+    ], d.commissions, 'No commissions yet.');
+
+    table($('payoutTable'), [
+      { label: 'Date', get: function (r) { return r.date; } },
+      { label: 'Method', get: function (r) { return r.method; } },
+      { label: 'Amount', get: function (r) { return usd(r.amount); }, r: true },
+    ], d.payouts, 'No payouts yet.');
+  }
+
+  // Tell the website page how tall the widget is, so its embed frame can fit without scrollbars.
+  function postHeight() {
+    try { window.parent.postMessage({ type: 'mz-partner-height', height: document.documentElement.scrollHeight }, '*'); } catch (e) {}
+  }
+  window.addEventListener('resize', postHeight);
+  if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+  setTimeout(postHeight, 300);
+  // ?embed=1 hides the duplicate logo when the page sits inside mandarinzest.com.
+  if (params.get('embed')) document.body.classList.add('embedded');
+
+  function showDash() { $('loginView').classList.add('hidden'); $('dashView').classList.remove('hidden'); }
+  function showLogin() { $('dashView').classList.add('hidden'); $('loginView').classList.remove('hidden'); }
+
+  function fail(msg, btn) {
+    if (btn) btn.disabled = false;
+    showLogin();
+    $('loginError').textContent = msg || 'Something went wrong. Please try again.';
+  }
+
+  function load(btn) {
+    if (btn) btn.disabled = true;
+    if (params.get('demo')) { setTimeout(function () { if (btn) btn.disabled = false; showDash(); render(SAMPLE); }, 150); return; }
+    // text/plain keeps this a "simple" request, which Apps Script accepts from another site.
+    fetch(API_URL, { method: 'POST', body: JSON.stringify(creds) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) return fail(res.error, btn);
+        if (btn) btn.disabled = false;
+        showDash(); render(res.data);
+      })
+      .catch(function () { fail('Could not reach the dashboard. Check your connection and try again.', btn); });
+  }
+
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('loginError').textContent = '';
+    creds = { email: $('email').value.trim(), code: $('code').value.trim().toUpperCase() };
+    load($('loginBtn'));
+  });
+  $('refreshBtn').onclick = function () { load($('refreshBtn')); };
+  $('logoutBtn').onclick = function () { creds = null; $('code').value = ''; showLogin(); };
+  if (params.get('demo')) { creds = { email: 'demo', code: 'LINA' }; load(); }
+</script>
+</body>
+</html>
