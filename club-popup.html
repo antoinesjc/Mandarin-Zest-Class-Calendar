@@ -55,7 +55,7 @@
 <section class="card" aria-labelledby="ttl">
   <div class="photo">
     <span class="live"><i></i>LIVE ON GOOGLE MEET</span>
-    <img src="sessions/s02.jpg" alt="A Mandarin Zest Club speaking session on Google Meet">
+    <img id="shot" src="sessions/s02.jpg" alt="A Mandarin Zest Club speaking session on Google Meet">
   </div>
   <div class="body">
     <div class="eyebrow">THE MANDARIN ZEST CLUB</div>
@@ -83,6 +83,8 @@
     trial: "https://www.mandarinzest.com/mandarin-zest-club-trial-session",
     club: "https://www.mandarinzest.com/mandarin-zest-club"
   };
+  // a different real session screenshot on each visit
+  document.getElementById("shot").src = ["sessions/s02.jpg", "sessions/s05.jpg", "sessions/s01.jpg"][Math.floor(Math.random() * 3)];
   document.getElementById("price").textContent = CONFIG.price;
   document.getElementById("perSession").textContent = CONFIG.perSession;
   // seasonal Club offer (club-offer.js): discounted price + code, then back to normal by itself
