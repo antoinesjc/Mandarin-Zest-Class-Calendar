@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the Club works · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* Club page: "How the Club works", between the headline and the session calendar.
+     5 clickable steps (text + a phone screen of what the member sees), an at-a-glance strip and quick answers.
+     Text: STEPS and FAQS below. Prices follow club-offer.js during seasonal offers. Resizes itself ({mz:"height"}). */
+  :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --orange:#f37a48; --green:#1b6f1b; --brick:#a8431a; --mint:#e6f1e1; --peach:#f8dacd; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:8px; }
+  .zh { font-family:'Noto Sans SC',sans-serif; }
+  .wrap { max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:24px; }
+  .head { display:flex; flex-direction:column; gap:10px; align-items:center; text-align:center; }
+  .eb { font-size:13px; font-weight:800; letter-spacing:.09em; color:var(--green); }
+  h2 { margin:0; font-size:40px; line-height:1.1; font-weight:800; max-width:760px; }
+  .head p { margin:0; font-size:18px; line-height:1.55; color:var(--muted); max-width:640px; }
+
+  .steps { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:10px; }
+  .st { font:inherit; color:inherit; text-align:left; cursor:pointer; border:0; border-radius:18px; padding:14px; min-height:74px; display:flex; gap:11px; align-items:center; background:#f6efe9; transition:background .2s, box-shadow .2s; }
+  .st:hover { background:#fff3ec; }
+  .st[aria-selected="true"] { background:#fff; box-shadow:inset 0 0 0 2px var(--orange), 0 8px 20px rgba(42,36,32,.08); }
+  .st:focus-visible, .nav button:focus-visible, .q:focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+  .st .n { flex:none; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; background:#e3d3c9; }
+  .st.done .n, .st[aria-selected="true"] .n { background:var(--orange); }
+  .st b { display:block; font-size:16px; line-height:1.2; }
+  .st small { display:block; font-size:13px; color:var(--muted); }
+
+  .panel { background:#fff; border-radius:26px; padding:30px; display:flex; gap:32px; align-items:center; box-shadow:0 1px 0 var(--line), 0 10px 28px rgba(42,36,32,.07); }
+  .txt { flex:1; min-width:0; display:flex; flex-direction:column; gap:14px; }
+  .txt .k { font-size:13px; font-weight:800; letter-spacing:.08em; color:var(--brick); }
+  .txt h3 { margin:0; font-size:30px; line-height:1.15; font-weight:800; }
+  .txt ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  .txt li { display:flex; gap:12px; font-size:17px; line-height:1.5; color:#3d322b; }
+  .txt li svg { flex:none; margin-top:2px; }
+  .nav { display:flex; gap:10px; margin-top:6px; }
+  .nav .pv { width:46px; height:46px; border-radius:50%; border:1.5px solid #ecdcd2; background:#fff; font:inherit; font-size:20px; font-weight:800; cursor:pointer; color:var(--ink); }
+  .nav .nx { height:46px; padding:0 20px; border-radius:999px; border:0; background:var(--ink); color:#fff; font:inherit; font-weight:800; font-size:15px; cursor:pointer; }
+  .fade { animation:fade .35s ease; }
+  @keyframes fade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+  .phone { flex:0 0 270px; height:470px; border-radius:36px; background:#1f1b18; padding:10px; box-shadow:0 18px 40px rgba(42,36,32,.22); }
+  .scr { width:100%; height:100%; border-radius:28px; background:#fffaf6; overflow:hidden; display:flex; flex-direction:column; }
+  .bar { background:var(--ink); color:#fff; padding:14px 16px 12px; font-size:12px; font-weight:800; letter-spacing:.08em; }
+  .body { padding:14px; display:flex; flex-direction:column; gap:9px; flex:1; font-size:12px; }
+  .c { background:#fff; border-radius:14px; padding:11px 12px; box-shadow:0 1px 0 var(--line); display:flex; flex-direction:column; gap:4px; }
+  .c b { font-size:13px; }
+  .tint { border-radius:14px; padding:12px; font-weight:700; }
+  .pill { align-self:flex-start; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:800; }
+  .tile { border-radius:10px; display:flex; align-items:flex-end; padding:6px; font-size:10px; color:#fff; }
+
+  .glance { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:10px; }
+  .glance li { background:var(--mint); border-radius:16px; padding:14px 16px; display:flex; flex-direction:column; }
+  .glance b { font-size:22px; } .glance span { font-size:13.5px; color:#2c4a2c; }
+  .glance li.p { background:var(--peach); } .glance li.p span { color:#5a2f1c; }
+
+  .faq h3 { margin:6px 0 10px; font-size:24px; font-weight:800; }
+  .qa { background:#fff; border-radius:16px; box-shadow:0 1px 0 var(--line); margin-bottom:10px; }
+  .q { width:100%; min-height:56px; display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 18px; border:0; background:none; font:inherit; font-size:17px; font-weight:700; color:var(--ink); text-align:left; cursor:pointer; border-radius:16px; }
+  .q i { font-style:normal; color:var(--orange); font-size:22px; font-weight:800; }
+  .a { margin:0; padding:0 18px 16px; font-size:15.5px; line-height:1.55; color:var(--muted); }
+  .a[hidden] { display:none; }
+
+  @media (max-width:900px) {
+    h2 { font-size:32px; } .head p { font-size:16px; }
+    .steps { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:2px 2px 6px; }
+    .steps::-webkit-scrollbar { display:none; }
+    .st { flex:0 0 170px; scroll-snap-align:start; }
+    .panel { flex-direction:column; align-items:stretch; padding:22px; gap:24px; }
+    .phone { align-self:center; }
+    .glance { grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .glance li.p { grid-column:1 / -1; }
+  }
+  @media (max-width:480px) {
+    body { padding:4px; }
+    .txt h3 { font-size:24px; } .txt li { font-size:15.5px; }
+    .phone { flex-basis:auto; width:250px; height:440px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .fade { animation:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="eb">HOW THE CLUB WORKS</div>
+    <h2>Not a class. A weekly speaking club, in small groups.</h2>
+    <p>From joining to your first conversation in five steps. Tap a step to see what happens.</p>
+  </div>
+  <div class="steps" id="steps" role="tablist" aria-label="Steps"></div>
+  <div class="panel" role="tabpanel" id="panel" aria-live="polite">
+    <div class="txt" id="txt"></div>
+    <div class="phone" aria-hidden="true"><div class="scr"><div class="bar" id="bar"></div><div class="body" id="scr"></div></div></div>
+  </div>
+  <ul class="glance" id="glance"></ul>
+  <div class="faq"><h3>Quick answers</h3><div id="faq"></div></div>
+</div>
+<script src="club-offer.js?v=1"></script>
+<script>
+  var PRICE = { month: "US$25", year: "US$250", trial: "US$2.50" };
+  var OFF = window.CLUB_OFFER; // seasonal Club offer, if any
+  var monthTxt = OFF ? OFF.price + " a month for your first " + OFF.months + " months (" + OFF.name + ", code " + OFF.code + "), then " + PRICE.month
+                     : PRICE.month + " a month (cancel anytime)";
+
+  // ═══ STEPS ═══
+  var STEPS = [
+    { label:"Join", sub:"2 minutes", bar:"MANDARIN ZEST CLUB", title:"Pick monthly or yearly",
+      points:[monthTxt + " or " + PRICE.year + " a year (one payment, no auto-renewal).", "Pay by card in about two minutes.", "Not sure yet? Join one session as a trial for " + PRICE.trial + " first."],
+      screen: function () { return '<div class="c"><b>Monthly</b><div style="font-size:22px;font-weight:800">' + (OFF ? '<s style="font-size:14px;color:#a89a90">' + PRICE.month + '</s> ' + OFF.price : PRICE.month) + '<span style="font-size:12px;color:#5c4f47"> / month</span></div><span style="color:#5c4f47">Cancel anytime</span></div>' +
+        '<div class="c" style="box-shadow:inset 0 0 0 2px #f37a48"><b>Yearly</b><div style="font-size:22px;font-weight:800">' + PRICE.year + '<span style="font-size:12px;color:#5c4f47"> / year</span></div><span style="color:#5c4f47">2 months free</span></div>' +
+        '<div style="margin-top:auto;background:#f37a48;border-radius:999px;padding:11px;text-align:center;font-weight:800;font-size:13px">Pay by card</div>' +
+        '<div style="text-align:center;color:#5c4f47">Or try one session for ' + PRICE.trial + '</div>'; } },
+    { label:"Get set up", sub:"Welcome email", bar:"WELCOME", title:"We get you set up",
+      points:["We email you your access to the Club app and your invite to our members-only Discord.", "A short onboarding call to hear your level and goals.", "We add new sessions based on what members need."],
+      screen: function () { return '<div class="c"><b>Welcome to the Club!</b><span style="line-height:1.45;color:#5c4f47">Here\'s your access to the Club app and your invite to our Discord.</span></div>' +
+        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">Club app · log in with your email</div>' +
+        '<div class="tint" style="background:#eef0fb;color:#3f4fa3">Discord · members\' channel</div>' +
+        '<div class="tint" style="background:#f8dacd;color:#a8431a">Onboarding call · tell us your goals</div>'; } },
+    { label:"Pick sessions", sub:"In the Club app", bar:"COMING UP", title:"Choose your sessions in the app",
+      points:["See every session with its level, topic and host, in your own time zone.", "Tap “I'm in” and get a reminder 1 hour before.", "Join as many sessions as you like, every week."],
+      screen: function () { return '<div style="display:flex;gap:5px"><span class="pill" style="background:#2a2420;color:#fff">Beginner</span><span class="pill" style="background:#efe8e2">Intermediate</span><span class="pill" style="background:#efe8e2">Advanced</span></div>' +
+        '<div class="c"><span style="font-size:10.5px;font-weight:800;color:#b4512a">CONVERSATION · BEGINNER</span><b>Conversation Practice</b><span style="font-size:11px;color:#5c4f47">with Xiaojing</span><span class="pill" style="background:#1b6f1b;color:#fff;margin-top:3px">I\'m in ✓</span></div>' +
+        '<div class="c"><span style="font-size:10.5px;font-weight:800;color:#3f63a3">LISTENING · BEGINNER</span><b>HSK Review + Listening</b><span style="font-size:11px;color:#5c4f47">with Gabrielle</span><span class="pill" style="background:#efe8e2;margin-top:3px">I\'m in</span></div>' +
+        '<div style="text-align:center;font-size:11px;color:#5c4f47">Times shown in your time zone · reminder 1 h before</div>'; } },
+    { label:"Speak", sub:"45 min on Meet", bar:"LIVE SESSION", title:"Show up and speak",
+      points:["45 minutes on Google Meet, in a small group, at your level.", "A host guides the topic, but it's not a class: members do most of the talking.", "Mistakes welcome. Nobody is graded."],
+      screen: function () { return '<div class="c" style="background:#fffdf4"><b class="zh" style="font-size:14px">你是素食者吗？</b><span style="color:#a8431a">Nǐ shì sùshízhě ma?</span><span style="color:#5c4f47">Are you vegetarian?</span></div>' +
+        '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;flex:1"><div class="tile" style="background:#3a312b">Host</div><div class="tile" style="background:#4a4038">You</div><div class="tile" style="background:#4a4038">Member</div><div class="tile" style="background:#3a312b">Member</div></div>' +
+        '<div style="background:#e0492b;color:#fff;border-radius:999px;padding:8px;text-align:center;font-weight:800">Live on Google Meet · 45 min</div>'; } },
+    { label:"Keep going", sub:"Notes and XP", bar:"MY SESSIONS", title:"Keep what you learned",
+      points:["The session's notes and vocabulary appear in the app, also as a PDF.", "Missed a session you signed up for? You still get its notes.", "Earn XP, unlock avatars, and keep chatting on Discord between sessions."],
+      screen: function () { return '<div class="c"><b>Notes · Food talk</b><span class="zh" style="font-size:13px">素食者 <span style="font-family:Outfit,sans-serif;color:#a8431a">sùshízhě</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">vegetarian</span></span>' +
+        '<span class="zh" style="font-size:13px">过敏 <span style="font-family:Outfit,sans-serif;color:#a8431a">guòmǐn</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">allergic</span></span><span class="pill" style="background:#efe8e2">Download PDF</span></div>' +
+        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">+20 XP · session attended</div>' +
+        '<div class="tint" style="background:#eef0fb;color:#3f4fa3">Keep chatting on Discord</div>'; } }
+  ];
+  // ═══ FAQS ═══
+  var FAQS = [
+    ["What level do I need?", "None. Sessions are tagged Beginner, Intermediate, Advanced or All levels, so you always know which ones fit you."],
+    ["Is it a class?", "No. You won't be lectured for 45 minutes. A host leads the topic and you speak Chinese with other members. It works well next to your classes or self-study."],
+    ["What if no session fits my schedule?", "Sessions are timed for Europe and the Americas, and new ones are added during the month. Tell us when you're free: we add sessions based on members' needs."],
+    ["Can I cancel?", "Yes. Monthly membership can be cancelled anytime. Yearly is a single payment that doesn't renew by itself."],
+    ["Can I try before joining?", "Yes. You can join one session as a trial for " + PRICE.trial + " (one per person)."]
+  ];
+
+  var cur = 0, stepsEl = document.getElementById("steps");
+  var check = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+  STEPS.forEach(function (s, i) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "st"; b.setAttribute("role", "tab");
+    b.innerHTML = '<span class="n">' + (i + 1) + '</span><span><b>' + s.label + '</b><small>' + s.sub + '</small></span>';
+    b.addEventListener("click", function () { show(i); }); stepsEl.appendChild(b);
+  });
+  function show(i) {
+    cur = i; var s = STEPS[i];
+    [].forEach.call(stepsEl.children, function (b, k) { b.setAttribute("aria-selected", String(k === i)); b.classList.toggle("done", k < i); });
+    var nx = i === STEPS.length - 1 ? "Back to step 1" : "Next: " + STEPS[i + 1].label;
+    document.getElementById("txt").innerHTML = '<div class="fade" style="display:flex;flex-direction:column;gap:14px"><span class="k">STEP ' + (i + 1) + ' OF ' + STEPS.length + '</span><h3>' + s.title + '</h3><ul>' +
+      s.points.map(function (p) { return '<li>' + check + '<span>' + p + '</span></li>'; }).join("") + '</ul>' +
+      '<div class="nav"><button type="button" class="pv" aria-label="Previous step">‹</button><button type="button" class="nx">' + nx + '</button></div></div>';
+    document.getElementById("bar").textContent = s.bar;
+    var sc = document.getElementById("scr"); sc.innerHTML = s.screen(); sc.classList.remove("fade"); void sc.offsetWidth; sc.classList.add("fade");
+    document.querySelector(".pv").addEventListener("click", function () { show((cur + STEPS.length - 1) % STEPS.length); });
+    document.querySelector(".nx").addEventListener("click", function () { show((cur + 1) % STEPS.length); });
+    var tab = stepsEl.children[i]; if (stepsEl.scrollWidth > stepsEl.clientWidth) stepsEl.scrollTo({ left: tab.offsetLeft - 8, behavior: "smooth" });
+  }
+  document.getElementById("glance").innerHTML =
+    '<li><b>20+</b><span>live sessions a month</span></li><li><b>45 min</b><span>per session, on Google Meet</span></li>' +
+    '<li><b>All levels</b><span>beginner to advanced</span></li><li><b>Unlimited</b><span>join as many as you like</span></li>' +
+    '<li class="p"><b>' + (OFF ? OFF.price : PRICE.month) + '</b><span>' + (OFF ? "a month for " + OFF.months + " months, then " + PRICE.month : "a month, cancel anytime") + '</span></li>';
+  var faq = document.getElementById("faq");
+  FAQS.forEach(function (f, i) {
+    var d = document.createElement("div"); d.className = "qa";
+    d.innerHTML = '<button type="button" class="q" aria-expanded="' + (i === 0) + '"><span>' + f[0] + '</span><i aria-hidden="true">' + (i === 0 ? "−" : "+") + '</i></button><p class="a"' + (i === 0 ? "" : " hidden") + '>' + f[1] + '</p>';
+    var q = d.querySelector(".q"), a = d.querySelector(".a");
+    q.addEventListener("click", function () { var o = a.hidden; a.hidden = !o; q.setAttribute("aria-expanded", String(o)); q.querySelector("i").textContent = o ? "−" : "+"; });
+    faq.appendChild(d);
+  });
+  show(0);
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 10) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+</script>
+</body>
+</html>

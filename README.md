@@ -374,6 +374,10 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - `banners/taiwan-reviews.html`: past students' reviews for the Taiwanese Mini Bootcamp page, same message-card look as
   `club-reviews.html` (3 side by side, swipe on phones, ==highlight==). Edit REVIEWS (name/place shown as "Student · Taiwanese
   Mini Bootcamp" until names are given). Resizes itself; fallback embed height `max(450px, min(600px, calc((1100px - 100vw) * 10000)))`, `scrolling="no"`.
+- `club-how.html`: Club page, between the headline and the session calendar. "How the Club works": 5 clickable steps (Join,
+  Get set up, Pick sessions, Speak, Keep going), each with a phone screen of what the member sees; at-a-glance strip; quick
+  answers. Text in STEPS / FAQS; prices follow `club-offer.js` during offers. Resizes itself; fallback embed height
+  `max(1450px, min(2100px, calc((901px - 100vw) * 10000)))`, `scrolling="no"`.
 - `club-offer.js`: seasonal Club membership offers (CLUB_OFFERS: dates, % off, months, price, Stripe promotion code), used by
   `club-popup.html`, `club-home.html`, `pricing.html`, `trial-booked.html` and `banners/club.html`. Outside the dates every widget
   shows the regular price. Preview with `?date=2026-11-26`. Black Friday 2026: 25–30 Nov, 20% off the first 3 months (US$20),
