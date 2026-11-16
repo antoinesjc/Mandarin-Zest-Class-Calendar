@@ -54,6 +54,21 @@
   .tint { border-radius:14px; padding:12px; font-weight:700; }
   .pill { align-self:flex-start; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:800; }
   .tile { border-radius:10px; display:flex; align-items:flex-end; padding:6px; font-size:10px; color:#fff; }
+  /* talking fruits (step 4) */
+  .say { min-height:76px; }
+  .say small { font-size:10px; font-weight:800; letter-spacing:.06em; color:#1b6f1b; }
+  .say .zh { font-size:14px; font-weight:700; }
+  .fr { position:relative; border-radius:10px; background:#3a312b; overflow:hidden; transition:box-shadow .25s; }
+  .fr:nth-child(2), .fr:nth-child(3) { background:#4a4038; }
+  .fr svg { position:absolute; left:50%; top:44%; width:80%; transform:translate(-50%,-50%); }
+  .fr span { position:absolute; left:6px; bottom:5px; font-size:10px; color:#fff; }
+  .fr.on { box-shadow:inset 0 0 0 3px #7bd389; }
+  .fr.on svg { animation:bob .5s ease-in-out infinite alternate; }
+  .fr .mo { display:none; transform-box:fill-box; transform-origin:center; }
+  .fr.on .mo { display:block; animation:talk .22s ease-in-out infinite alternate; }
+  .fr.on .sm { display:none; }
+  @keyframes bob { from { transform:translate(-50%,-50%); } to { transform:translate(-50%,-56%); } }
+  @keyframes talk { from { transform:scaleY(.25); } to { transform:scaleY(1); } }
 
   .perks { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; }
   .perks li { background:var(--mint); border-radius:20px; padding:20px; display:flex; flex-direction:column; gap:8px; }
@@ -82,7 +97,7 @@
     .txt h3 { font-size:24px; } .txt li { font-size:15.5px; }
     .phone { flex-basis:auto; width:250px; height:440px; }
   }
-  @media (prefers-reduced-motion:reduce) { .fade { animation:none; } }
+  @media (prefers-reduced-motion:reduce) { .fade, .fr.on svg { animation:none; } }
 </style>
 </head>
 <body>
@@ -133,9 +148,20 @@
         '<div style="text-align:center;font-size:11px;color:#5c4f47">Times shown in your time zone · reminder 1 h before</div>'; } },
     { label:"Speak", sub:"45 min on Meet", bar:"LIVE SESSION", title:"Show up and speak",
       points:["45 minutes on Google Meet, in a small group, at your level.", "A host guides the topic, but it's not a class: members do most of the talking.", "Mistakes welcome. Nobody is graded."],
-      screen: function () { return '<div class="c" style="background:#fffdf4"><b class="zh" style="font-size:14px">你是素食者吗？</b><span style="color:#a8431a">Nǐ shì sùshízhě ma?</span><span style="color:#5c4f47">Are you vegetarian?</span></div>' +
-        '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;flex:1"><div class="tile" style="background:#3a312b">Host</div><div class="tile" style="background:#4a4038">You</div><div class="tile" style="background:#4a4038">Member</div><div class="tile" style="background:#3a312b">Member</div></div>' +
-        '<div style="background:#e0492b;color:#fff;border-radius:999px;padding:8px;text-align:center;font-weight:800">Live on Google Meet · 45 min</div>'; } },
+      screen: function () { return '<div class="c say" style="background:#fffdf4" id="say"></div>' +
+        '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;flex:1">' +
+        FRUITS.map(function (f) { return '<div class="fr">' + fruit(f.key) + '<span>' + f.who + '</span></div>'; }).join("") + '</div>' +
+        '<div style="background:#e0492b;color:#fff;border-radius:999px;padding:8px;text-align:center;font-weight:800">Live on Google Meet · 45 min</div>'; },
+      start: function () {
+        var k = 0, tiles = document.querySelectorAll(".fr"), say = document.getElementById("say");
+        function line() {
+          var l = TALK[k % TALK.length];
+          [].forEach.call(tiles, function (t, i) { t.classList.toggle("on", i === l[0]); });
+          say.innerHTML = '<small>' + FRUITS[l[0]].who.toUpperCase() + '</small><b class="zh">' + l[1] + '</b><span style="color:#a8431a">' + l[2] + '</span><span style="color:#5c4f47">' + l[3] + '</span>';
+          say.classList.remove("fade"); void say.offsetWidth; say.classList.add("fade"); k++;
+        }
+        line(); talkTimer = setInterval(line, 2800);
+      } },
     { label:"Keep going", sub:"Notes and XP", bar:"MY SESSIONS", title:"Keep what you learned",
       points:["The session's notes and vocabulary appear in the app, also as a PDF.", "Missed a session you signed up for? You still get its notes.", "Keep chatting on Discord between sessions, earn XP and unlock avatars.", "Use your member prices: 50% off our materials and lower prices on bootcamps and trips."],
       screen: function () { return '<div class="c"><b>Notes · Food talk</b><span class="zh" style="font-size:13px">素食者 <span style="font-family:Outfit,sans-serif;color:#a8431a">sùshízhě</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">vegetarian</span></span>' +
@@ -154,6 +180,32 @@
   document.getElementById("perks").innerHTML = PERKS.map(function (k) {
     return '<li' + (k.peach ? ' class="p"' : '') + '><span class="ic">' + k.icon + '</span><b>' + k.title + '</b><span>' + k.text + '</span></li>'; }).join("");
 
+  // ═══ TALKING FRUITS (step 4) ═══ same fruit avatars as the Club app
+  var FRUITS = [{ key:"orange", who:"Host" }, { key:"apple", who:"You" }, { key:"peach", who:"Member" }, { key:"lemon", who:"Member" }];
+  // [speaker index, Chinese, pinyin, English]
+  var TALK = [
+    [0, "你是素食者吗？", "Nǐ shì sùshízhě ma?", "Are you vegetarian?"],
+    [1, "不是，我很喜欢吃肉。", "Bú shì, wǒ hěn xǐhuan chī ròu.", "No, I really like meat."],
+    [2, "我是！我不吃肉。", "Wǒ shì! Wǒ bù chī ròu.", "I am! I don't eat meat."],
+    [3, "我对花生过敏。", "Wǒ duì huāshēng guòmǐn.", "I'm allergic to peanuts."],
+    [0, "很好！大家说得很好。", "Hěn hǎo! Dàjiā shuō de hěn hǎo.", "Great! Everyone's doing really well."]
+  ];
+  function fruit(key) {
+    var y = { orange:39, apple:39, peach:40, lemon:38 }[key], c = "#2a2420";
+    var face = '<circle cx="27" cy="' + y + '" r="1.8" fill="' + c + '"/><circle cx="37" cy="' + y + '" r="1.8" fill="' + c + '"/>' +
+      '<path class="sm" d="M28.5 ' + (y + 4.5) + ' q3.5 3 7 0" stroke="' + c + '" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+      '<ellipse class="mo" cx="32" cy="' + (y + 5.5) + '" rx="3" ry="2.6" fill="' + c + '"/>';
+    var leaf = '<path d="M32 22 v-4" stroke="#6b4a2b" stroke-width="2.2" stroke-linecap="round"/><path d="M33 19 q8 -7 14 -1 q-7 6 -14 1z" fill="#1b6f1b"/>';
+    var art = {
+      orange: '<circle cx="32" cy="38" r="17" fill="#f7941d"/><circle cx="25" cy="31" r="3.5" fill="#ffc27a"/>' + leaf,
+      apple: '<path d="M32 25 c-6 -5 -18 -3 -18 11 c0 10 8 18 13 18 c2 0 3 -1 5 -1 s3 1 5 1 c5 0 13 -8 13 -18 c0 -14 -12 -16 -18 -11z" fill="#e5484d"/><path d="M32 25 v-6" stroke="#6b4a2b" stroke-width="2.2" stroke-linecap="round"/><path d="M33 20 q7 -6 12 -1 q-6 5 -12 1z" fill="#1b6f1b"/><circle cx="24" cy="31" r="3" fill="#f58a8d"/>',
+      peach: '<circle cx="32" cy="38" r="17" fill="#f9a8a0"/><path d="M32 22 q-6 8 -1 16" stroke="#e97f78" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M32 22 q-9 -7 -14 -1 q7 5 14 1z" fill="#1b6f1b"/><circle cx="42" cy="32" r="3" fill="#fcc9c3"/>',
+      lemon: '<ellipse cx="32" cy="38" rx="19" ry="15" fill="#f5d442"/><ellipse cx="12.5" cy="38" rx="3" ry="2.5" fill="#e8c32a"/><ellipse cx="51.5" cy="38" rx="3" ry="2.5" fill="#e8c32a"/><path d="M34 23 q6 -7 12 -2 q-6 5 -12 2z" fill="#1b6f1b"/><circle cx="24" cy="32" r="3" fill="#fbe89a"/>'
+    };
+    return '<svg viewBox="0 0 64 64" aria-hidden="true">' + art[key] + face + '</svg>';
+  }
+  var talkTimer;
+
   var cur = 0, stepsEl = document.getElementById("steps");
   var check = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
   STEPS.forEach(function (s, i) {
@@ -169,7 +221,8 @@
       s.points.map(function (p) { return '<li>' + check + '<span>' + p + '</span></li>'; }).join("") + '</ul>' +
       '<div class="nav"><button type="button" class="pv" aria-label="Previous step">‹</button><button type="button" class="nx">' + nx + '</button></div></div>';
     document.getElementById("bar").textContent = s.bar;
-    var sc = document.getElementById("scr"); sc.innerHTML = s.screen(); sc.classList.remove("fade"); void sc.offsetWidth; sc.classList.add("fade");
+    clearInterval(talkTimer);
+    var sc = document.getElementById("scr"); sc.innerHTML = s.screen(); if (s.start) s.start(); sc.classList.remove("fade"); void sc.offsetWidth; sc.classList.add("fade");
     document.querySelector(".pv").addEventListener("click", function () { show((cur + STEPS.length - 1) % STEPS.length); });
     document.querySelector(".nx").addEventListener("click", function () { show((cur + 1) % STEPS.length); });
     var tab = stepsEl.children[i]; if (stepsEl.scrollWidth > stepsEl.clientWidth) stepsEl.scrollTo({ left: tab.offsetLeft - 8, behavior: "smooth" });
