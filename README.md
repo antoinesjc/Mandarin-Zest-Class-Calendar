@@ -273,12 +273,16 @@ Odoo embed (taller on phones, where the ball sits above the boxes):
 
 ## Club App highlight
 
-- `club-app.html`: presents the Mandarin Zest Club App (six features + an animated phone showing the app's home screen:
-  floating phone, XP bar filling, "I'm in" buttons ticking, +20 XP / 红包 / "Notes are up!" chips popping in). Starts when scrolled into view.
+- `club-app.html`: presents the Mandarin Zest Club App (updated 18 Nov 2026 for Zest Town). Left: "Live sessions, at the
+  centre" (sessions + notes), "New · Zest Town" (streak tree, Flashcard Center, HSK Temple, Magical Forest; Library and
+  Calligraphy School coming soon), "And also" pills (XP + leaderboard, word of the day, fruit avatars, sticker book,
+  profiles + hongbao, phone or computer). Right: phone with a Sessions / Zest Town switch (auto every 7 s until the visitor
+  taps one); the Zest Town screen uses the app's pixel art (`app/zt/`, copied from the club-app repo icons/zt) with the
+  river flowing, bushes and tree swaying and the orange hopping around saying 加油！ Resizes itself.
 - Homepage: default, with a "Discover the Club ↗" button to the Club page.
-  Embed: `height:max(720px, min(1260px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.
+  Embed: `height:max(1060px, min(1850px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.
 - Club page: `club-app.html?cta=none` (no button).
-  Embed: `height:max(700px, min(1180px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.
+  Embed: `height:max(990px, min(1780px, calc((1000px - 100vw) * 10000)))`, `scrolling="no"`.
 
 ## Our team (floating portraits)
 

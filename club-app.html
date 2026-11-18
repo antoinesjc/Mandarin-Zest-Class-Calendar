@@ -6,10 +6,12 @@
 <title>The Mandarin Zest Club App</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-  /* Highlights the Club App. Homepage: default (button "Discover the Club" → Club page).
-     Club page: ?cta=none (no button). Embed height: see README. */
+  /* Highlights the Club App (updated 18 Nov 2026: Zest Town). Live sessions stay first, then Zest Town, then the extras.
+     The phone switches between the Sessions screen and Zest Town (art in app/zt/, copied from the Club app).
+     Homepage: default (button "Discover the Club" → Club page). Club page: ?cta=none (no button).
+     Resizes itself ({mz:"height"}); fallback embed height: see README. */
   :root { --orange:#f37a48; --peach:#fdf1ea; --green:#1b6f1b; --green-d:#173f17; --mint:#e0f4e0; --ink:#2a2420; --muted:#5c4f47; --line:#ecdcd2; --cream:#fffaf6; }
   * { box-sizing:border-box; }
   html, body { margin:0; background:transparent; }
@@ -22,7 +24,16 @@
   .eyebrow { font-size:13px; font-weight:800; letter-spacing:.08em; color:var(--green); }
   h2 { margin:0; font-size:38px; font-weight:800; line-height:1.08; }
   .lead { margin:10px 0 0; font-size:17px; line-height:1.5; color:var(--muted); max-width:560px; }
-  .feats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 22px; }
+  .grp { display:flex; flex-direction:column; gap:12px; }
+  .gh { display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:800; letter-spacing:.08em; color:var(--muted); }
+  .gh::after { content:""; flex:1; height:1px; background:var(--line); }
+  .gh .nw { color:#fff; background:var(--orange); border-radius:999px; padding:3px 8px; font-size:11px; letter-spacing:.05em; }
+  .feats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 22px; }
+  .core { background:#fff; border-radius:20px; padding:16px; box-shadow:0 1px 0 var(--line); }
+  .town .ic { background:#8fcf5a; border-radius:12px; } .town .ic img { width:30px; height:auto; image-rendering:pixelated; }
+  .soonl { font-size:13.5px; color:var(--muted); margin:-2px 0 0; }
+  .extras { display:flex; flex-wrap:wrap; gap:8px; }
+  .extras > span { background:#fff; border:1px solid var(--line); border-radius:999px; padding:7px 12px; font-size:13.5px; font-weight:600; }
   .feat { display:flex; gap:12px; align-items:flex-start; opacity:0; transform:translateY(10px); transition:opacity .5s, transform .5s; }
   .in .feat { opacity:1; transform:none; }
   .ic { width:40px; height:40px; flex:none; border-radius:12px; display:flex; align-items:center; justify-content:center; }
@@ -35,7 +46,42 @@
   .nocta .cta { display:none; }
 
   /* phone */
-  .right { position:relative; display:flex; align-items:center; justify-content:center; min-height:560px; }
+  .right { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:620px; }
+  .tabs { position:relative; z-index:3; display:flex; gap:4px; background:#fff; border-radius:999px; padding:4px; box-shadow:0 6px 16px rgba(42,36,32,.10); }
+  .tabs button { font:inherit; font-size:14px; font-weight:800; border:0; border-radius:999px; padding:8px 16px; background:none; color:var(--muted); cursor:pointer; }
+  .tabs button[aria-pressed="true"] { background:var(--ink); color:#fff; }
+  .tabs button:focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+  .stage { position:relative; display:flex; align-items:center; justify-content:center; }
+  .screen .nav { margin-top:auto; }
+  .scr { position:absolute; inset:0 0 46px 0; display:flex; flex-direction:column; transition:opacity .45s; }
+  .scr.off { opacity:0; pointer-events:none; }
+  /* Zest Town screen */
+  .t-body { flex:1; min-height:0; padding:16px 10px 8px; display:flex; flex-direction:column; gap:8px; background:#fffaf6; }
+  .t-head { display:flex; align-items:center; justify-content:space-between; padding:0 4px; }
+  .t-head small { display:block; font-size:9px; font-weight:800; letter-spacing:.08em; color:var(--green); } .t-head b { font-size:18px; }
+  .leaf { display:inline-flex; align-items:center; gap:3px; background:#e6f4df; color:#2d6b22; border-radius:999px; padding:4px 9px 4px 6px; font-size:12px; font-weight:800; }
+  .map { position:relative; width:100%; aspect-ratio:98/178; border-radius:14px; overflow:hidden; border:3px solid #2b2a3a; background:#8fcf5a; container-type:inline-size; }
+  .map .px { position:absolute; image-rendering:pixelated; image-rendering:crisp-edges; display:block; user-select:none; }
+  .map .bg { inset:0; width:100%; height:100%; }
+  .river { position:absolute; left:0; right:0; overflow:hidden; } .river img { position:static !important; width:100%; height:400%; animation:river 1.2s steps(4) infinite; }
+  @keyframes river { to { transform:translateY(-100%); } }
+  .bush { transform-origin:50% 100%; animation:sway 3s ease-in-out infinite alternate; }
+  @keyframes sway { from { transform:skewX(-4deg); } to { transform:skewX(4deg); } }
+  .tree { transform-origin:50% 92%; animation:sway2 3.4s ease-in-out infinite alternate; }
+  @keyframes sway2 { from { transform:skewX(-2deg); } to { transform:skewX(2deg); } }
+  .fr { position:absolute; transition:left 1.4s linear, top 1.4s linear; z-index:2; }
+  .fr img { position:static !important; width:100%; transform-origin:50% 100%; }
+  .fr.flip img { transform:scaleX(-1); }
+  .fr.hop img { animation:hop .35s ease-in-out infinite alternate; }
+  @keyframes hop { to { translate:0 -22%; } }
+  .bub { position:absolute; bottom:110%; left:50%; transform:translateX(-50%); background:#fff; border:2px solid #2b2a3a; padding:2px 6px; font:800 11px 'Noto Sans SC',sans-serif; white-space:nowrap; opacity:0; transition:opacity .3s; }
+  .bub.on { opacity:1; }
+  .lbl { position:absolute; transform:translateX(-50%); background:#2b2a3a; color:#fff; border:1.5px solid #fff; outline:1.5px solid #2b2a3a; padding:2px 4px 1px; white-space:nowrap; font:400 6.5px/1.3 'Press Start 2P',monospace; z-index:3; }
+  .lbl em { position:absolute; top:-9px; right:-9px; min-width:13px; height:13px; display:grid; place-items:center; background:#f37a48; color:#fff; font:400 6px 'Press Start 2P',monospace; padding:0 2px; border:1.5px solid #2b2a3a; border-radius:99px; font-style:normal; }
+  .lbl.soon { background:#4a4655; color:#e9e2d0; }
+  .lbl.day { background:#2f6b22; }
+  .sgn { position:absolute; z-index:3; } .sgn img { position:static !important; width:100%; }
+  .sgn span { position:absolute; left:0; top:0; width:66.7%; height:61%; display:grid; place-items:center; text-align:center; color:#2b1708; font:400 5px/1.4 'Press Start 2P',monospace; }
   .blob { position:absolute; width:330px; height:330px; border-radius:50%; background:var(--peach); animation:breathe 6s ease-in-out infinite; }
   .device { position:relative; width:290px; height:580px; padding:10px; border-radius:40px; background:var(--ink); box-shadow:0 24px 50px rgba(42,36,32,.22); animation:float 6s ease-in-out infinite; }
   .screen { width:270px; height:560px; border-radius:30px; overflow:hidden; background:var(--cream); display:flex; flex-direction:column; }
@@ -48,8 +94,15 @@
   .chip.hb { right:-14px; top:300px; --r:4deg; background:#c8272d; color:#fff; border-radius:16px; padding:9px 14px; font-weight:700; font-size:13.5px; }
   .chip.hb .zh { font-size:18px; color:#ffd76a; font-weight:700; }
   .chip.nt { left:10px; bottom:70px; --r:-2deg; border-radius:16px; padding:9px 14px 9px 10px; font-size:13.5px; }
+  .chip.tr { left:-34px; top:70px; --r:-4deg; border-radius:16px; padding:8px 14px 8px 8px; }
+  .chip.tr .dot { background:#e6f4df; }
+  .chip.fc { right:-34px; top:400px; --r:4deg; border-radius:16px; padding:9px 14px; font-size:13.5px; }
+  .chip.wd { left:-24px; bottom:-6px; --r:-2deg; border-radius:16px; padding:9px 14px; font-size:13.5px; }
+  .chip.wd .zh { font-size:17px; color:var(--green); }
+  .chips { position:absolute; inset:0; pointer-events:none; transition:opacity .4s; }
+  .chips.off { opacity:0; }
   .in .chip { animation:pop .5s cubic-bezier(.2,1.4,.4,1) forwards, bob 4s ease-in-out infinite; }
-  .in .chip.xp { animation-delay:1.6s, 2.1s; } .in .chip.hb { animation-delay:2.6s, 3.1s; } .in .chip.nt { animation-delay:3.6s, 4.1s; }
+  .in .chip.xp, .in .chip.tr { animation-delay:1.6s, 2.1s; } .in .chip.hb, .in .chip.fc { animation-delay:2.6s, 3.1s; } .in .chip.nt, .in .chip.wd { animation-delay:3.6s, 4.1s; }
   @keyframes pop { from { opacity:0; transform:rotate(var(--r)) scale(.4); } to { opacity:1; transform:rotate(var(--r)) scale(1); } }
   @keyframes bob { 0%,100% { opacity:1; transform:rotate(var(--r)) translateY(0); } 50% { opacity:1; transform:rotate(var(--r)) translateY(-6px); } }
 
@@ -85,13 +138,15 @@
   @media (max-width:999px) {
     .card { grid-template-columns:minmax(0,1fr); padding:28px 20px; gap:18px; border-radius:22px; }
     h2 { font-size:29px; } .lead { font-size:16px; } .eyebrow { font-size:12px; }
-    .right { order:2; min-height:440px; }
+    .right { order:2; min-height:500px; }
     .left { display:contents; }
-    .tags { order:0; } .hd { order:1; } .feats { order:3; grid-template-columns:minmax(0,1fr); gap:14px; } .cta { order:4; }
+    .tags { order:0; } .hd { order:1; } .g1 { order:3; } .g2 { order:4; } .g3 { order:5; } .cta { order:6; }
+    .feats { grid-template-columns:minmax(0,1fr); gap:14px; }
     .device { transform-origin:center; animation-name:floatS; margin:-75px 0; }
     @keyframes floatS { 0%,100% { transform:scale(.74) rotate(3deg) translateY(0); } 50% { transform:scale(.74) rotate(2deg) translateY(-12px); } }
     .blob { width:280px; height:280px; }
-    .chip.xp { left:0; top:60px; } .chip.hb { right:0; top:250px; } .chip.nt { left:6px; bottom:40px; }
+    .chip.xp { left:0; top:90px; } .chip.hb { right:0; top:280px; } .chip.nt { left:6px; bottom:40px; }
+    .chip.tr { left:-6px; top:40px; } .chip.fc { right:-6px; top:330px; } .chip.wd { left:-6px; bottom:30px; }
     .btn { display:flex; justify-content:center; }
   }
   @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } .feat, .chip { opacity:1; transform:none; } .bar i { width:64%; } }
@@ -100,26 +155,41 @@
 <body>
 <section class="card" id="card" aria-labelledby="ttl">
   <div class="left">
-    <div class="tags"><span class="new">NEW</span><span class="eyebrow">INCLUDED IN YOUR CLUB MEMBERSHIP</span></div>
+    <div class="tags"><span class="new">NEW: ZEST TOWN</span><span class="eyebrow">INCLUDED IN YOUR CLUB MEMBERSHIP</span></div>
     <div class="hd">
       <h2 id="ttl">The Mandarin Zest Club App</h2>
-      <p class="lead">Your sessions, notes and progress in one place, on your phone or computer.</p>
+      <p class="lead">Live sessions are the heart of the Club. The app keeps everything around them in one place, and gives you a little town to keep learning between sessions.</p>
     </div>
-    <div class="feats">
-      <div class="feat"><span class="ic" style="background:#e0f4e0"><svg viewBox="0 0 24 24" fill="none" stroke="#173f17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v16H3z M3 10h18 M8 3v4 M16 3v4 M9 15l2 2 4-4"/></svg></span><div><b>Never miss a session</b><span>Every session in your time zone. Tap "I'm in" and get a reminder.</span></div></div>
-      <div class="feat"><span class="ic" style="background:#fdf1ea"><svg viewBox="0 0 24 24" fill="none" stroke="#a8431a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z M14 3v6h6 M8 13h8 M8 17h5"/></svg></span><div><b>Notes after every session</b><span>Vocabulary and corrections from your host, ready as a PDF.</span></div></div>
-      <div class="feat"><span class="ic" style="background:#fff1c9"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5a0a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8 M12 17v4 M7 4h10v5a5 5 0 0 1-10 0z M7 6H4a3 3 0 0 0 3 4 M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b>Earn XP, climb the leaderboard</b><span>Every session counts. The month's #1 wins a medal.</span></div></div>
-      <div class="feat"><span class="ic" style="background:#f3e6f5"><svg viewBox="0 0 24 24" fill="none" stroke="#6b3f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7c-4 0-7 3-7 7a7 7 0 0 0 14 0c0-4-3-7-7-7z M12 7c0-2 1-4 3-4"/></svg></span><div><b>Unlock fruits and stickers</b><span>18 fruit avatars to unlock, plus stickers from bootcamps.</span></div></div>
-      <div class="feat"><span class="ic" style="background:#e3eef7"><svg viewBox="0 0 24 24" fill="none" stroke="#3a5d73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z M2.5 20a6.5 6.5 0 0 1 13 0 M17 11a2.5 2.5 0 1 0 0-5 M16 14a5 5 0 0 1 6 5"/></svg></span><div><b>Meet the members</b><span>Profiles, levels and countries. Send a <span class="zh">红包</span> hongbao once a month.</span></div></div>
-      <div class="feat"><span class="ic" style="background:#e0f4e0"><svg viewBox="0 0 24 24" fill="none" stroke="#173f17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z M11 18h2"/></svg></span><div><b>On your phone or computer</b><span>Add it to your home screen in one tap. No App Store needed.</span></div></div>
+    <div class="grp g1">
+      <div class="gh">LIVE SESSIONS, AT THE CENTRE</div>
+      <div class="feats core">
+        <div class="feat"><span class="ic" style="background:#e0f4e0"><svg viewBox="0 0 24 24" fill="none" stroke="#173f17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v16H3z M3 10h18 M8 3v4 M16 3v4 M9 15l2 2 4-4"/></svg></span><div><b>Never miss a session</b><span>Every session in your time zone, by level and topic. Tap "I'm in" and get a reminder.</span></div></div>
+        <div class="feat"><span class="ic" style="background:#fdf1ea"><svg viewBox="0 0 24 24" fill="none" stroke="#a8431a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z M14 3v6h6 M8 13h8 M8 17h5"/></svg></span><div><b>Notes after every session</b><span>Vocabulary from your host, as a PDF too. Add the words to your flashcards in one tap.</span></div></div>
+      </div>
+    </div>
+    <div class="grp g2">
+      <div class="gh"><span class="nw">NEW</span>ZEST TOWN · YOUR LEARNING TOWN</div>
+      <div class="feats">
+        <div class="feat town"><span class="ic"><img src="app/zt/tree-5.png" alt=""></span><div><b>Grow your streak tree</b><span>Join a session or review flashcards each day, and watch a seed become an orange tree.</span></div></div>
+        <div class="feat town"><span class="ic"><img src="app/zt/house.png" alt=""></span><div><b>Flashcard Center</b><span>Review words from your sessions and the HSK lists, a few new ones every day.</span></div></div>
+        <div class="feat town"><span class="ic"><img src="app/zt/temple.png" alt=""></span><div><b>HSK Temple</b><span>Every New HSK 1–9 word, and how well you know each one.</span></div></div>
+        <div class="feat town"><span class="ic"><img src="app/zt/sign-forest.png" alt=""></span><div><b>Magical Forest</b><span>See who studied in the last 24 hours, with their streaks.</span></div></div>
+      </div>
+      <p class="soonl">Coming soon to Zest Town: the Library and the Calligraphy School.</p>
+    </div>
+    <div class="grp g3">
+      <div class="gh">AND ALSO</div>
+      <div class="extras"><span>XP and a monthly leaderboard</span><span>Word of the day</span><span>18+ fruit avatars</span><span>Sticker book</span><span>Member profiles and <span class="zh">红包</span> hongbao</span><span>Phone or computer, no App Store</span></div>
     </div>
     <div class="cta"><a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Discover the Club ↗</a></div>
   </div>
 
-  <div class="right" aria-hidden="true">
+  <div class="right">
+    <div class="tabs" role="group" aria-label="App screen"><button type="button" data-t="0" aria-pressed="true">Sessions</button><button type="button" data-t="1" aria-pressed="false">Zest Town</button></div>
+    <div class="stage" aria-hidden="true">
     <div class="blob"></div>
-    <div class="device"><div class="screen">
-      <div class="s-body">
+    <div class="device"><div class="screen" style="position:relative">
+      <div class="scr" id="scr0"><div class="s-body">
         <div class="s-head"><div class="t"><small>MANDARIN ZEST CLUB</small><b>早上好, Emma!</b></div><span class="av" style="width:36px;height:36px" data-f="mandarin" data-bg="#e0f4e0"></span></div>
         <div class="xpc">
           <div class="row"><div><small>Level 5 · <span id="xpn">420</span> XP</small><b>80 XP to unlock the pineapple</b></div><span class="av" style="width:34px;height:34px" data-f="pineapple" data-bg="#e0f4e0" data-lock="1"></span></div>
@@ -136,6 +206,11 @@
         <div class="row2"><div class="date" style="background:#f8e3df;color:#a63d2f"><small>SAT</small><b>31</b></div><div class="tx"><b>Native Conversation</b><span>10:00 AM · <span class="cnt" data-n="7">7</span> going</span></div><span class="in-btn">I'm in</span></div>
         <div class="row2"><div class="date" style="background:#e1ece8;color:#3f6d5e"><small>MON</small><b>2</b></div><div class="tx"><b>Advanced Session</b><span>1:00 PM · <span class="cnt" data-n="4">4</span> going</span></div><span class="in-btn">I'm in</span></div>
       </div>
+      </div>
+      <div class="scr off" id="scr1"><div class="t-body">
+        <div class="t-head"><div><small>LEARNING UNIVERSE · 学习宇宙</small><b>Zest Town</b></div><span class="leaf"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M20 3C11 3 4.5 7.5 4.5 14.5c0 2 .6 3.7 1.6 5C8 12.8 12 9.5 16 8c-4 2.8-7 6.6-8.4 12.2 1.2.6 2.6.8 4 .8C18.6 21 21 13 20 3z" fill="#3f8f2f"/></svg>12</span></div>
+        <div class="map" id="map"></div>
+      </div></div>
       <div class="nav">
         <svg viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
         <svg viewBox="0 0 24 24" fill="none" stroke="#8a7d74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
@@ -144,9 +219,17 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="#8a7d74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
       </div>
     </div></div>
+    <div class="chips" id="ch0">
     <div class="chip xp"><span class="dot">XP</span>+20 XP · session joined</div>
     <div class="chip hb"><span class="zh">红包</span>from Marta</div>
     <div class="chip nt"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#a8431a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z M14 3v6h6 M8 13h8 M8 17h5"/></svg>Notes are up!</div>
+    </div>
+    <div class="chips off" id="ch1">
+      <div class="chip tr"><span class="dot"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 3C11 3 4.5 7.5 4.5 14.5c0 2 .6 3.7 1.6 5C8 12.8 12 9.5 16 8c-4 2.8-7 6.6-8.4 12.2 1.2.6 2.6.8 4 .8C18.6 21 21 13 20 3z" fill="#3f8f2f"/></svg></span>Day 12 · your tree grew!</div>
+      <div class="chip fc">10 cards reviewed · +1 XP</div>
+      <div class="chip wd">Word of the day <span class="zh">加油</span></div>
+    </div>
+    </div>
   </div>
 </section>
 
@@ -167,14 +250,58 @@
     el.innerHTML = `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="${el.dataset.bg}"/><g${el.dataset.lock ? ' opacity=".45" filter="grayscale(1)" style="filter:grayscale(1)"' : ''}>${F[el.dataset.f]}</g></svg>`;
   });
 
+  // Zest Town map (positions from the Club app, phone layout 98 × 178 pixels)
+  const W = 98, H = 178, P = (x, w) => (x / w * 100) + '%';
+  const at = (x, y) => `left:${P(x, W)};top:${P(y, H)}`;
+  const img = (n, cls, st) => `<img class="px ${cls}" src="app/zt/${n}.png" alt="" draggable="false" style="${st}">`;
+  const bushes = [[4, 4], [85, 63], [1, 71], [43, 2], [85, 111], [1, 113], [42, 164]];
+  const hops = [[8, 58], [12, 76], [64, 80], [74, 60], [58, 86], [26, 86]];
+  document.getElementById('map').innerHTML =
+    img('town-phone', 'bg', '') +
+    `<div class="river" style="top:${P(89, H)};height:${P(29, H)}"><img class="px" src="app/zt/river-phone.png" alt=""></div>` +
+    img('bridge-phone', '', `${at(44, 96)};width:${P(11, W)}`) +
+    `<div class="sgn" style="${at(74, 82)};width:${P(24, W)}"><img class="px" src="app/zt/sign-forest.png" alt=""><span>MAGICAL<br>FOREST</span></div>` +
+    bushes.map(([x, y], i) => img('bush', 'bush', `${at(x, y)};width:${P(15, W)};animation-delay:-${(i * 0.7) % 3}s`)).join('') +
+    img('tree-6', 'tree', `${at(28, 39)};width:${P(42, W)}`) +
+    `<div class="fr" id="fr" style="${at(...hops[0])};width:${P(18, W)}"><span class="bub" id="bub"></span><img class="px" src="app/zt/fruit-orange.png" alt=""></div>` +
+    `<span class="lbl" style="${at(26, 45)}">FLASHCARDS<em>10</em></span>` +
+    `<span class="lbl" style="${at(70, 43)}">HSK TEMPLE</span>` +
+    `<span class="lbl soon" style="${at(25, 161)}">LIBRARY</span>` +
+    `<span class="lbl soon" style="${at(73, 161)}">CALLIGRAPHY</span>` +
+    `<span class="lbl day" style="${at(49, 84)}">DAY 12</span>`;
+
+  // screens: Sessions / Zest Town (auto-switch until the visitor picks one)
+  let cur = 0, auto = true;
+  const tabs = [...document.querySelectorAll('.tabs button')];
+  function show(i) {
+    cur = i;
+    tabs.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+    [0, 1].forEach(k => { document.getElementById('scr' + k).classList.toggle('off', k !== i); document.getElementById('ch' + k).classList.toggle('off', k !== i); });
+    track(i ? 'zest town' : 'sessions');
+  }
+  function track(name) { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:"club app " + name }, ga:{ event:"select_content", params:{ content_type:"club_app_screen", item_id:name } } }, "*"); } catch (e) {} }
+  tabs.forEach((b, k) => b.addEventListener('click', () => { auto = false; show(k); }));
+
   const card = document.getElementById('card');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let started = false;
   function start() {
     if (started) return; started = true;
     card.classList.add('in');
-    document.querySelectorAll('.feat').forEach((f, i) => f.style.transitionDelay = (0.15 + i * 0.12) + 's');
+    document.querySelectorAll('.feat').forEach((f, i) => f.style.transitionDelay = (0.15 + i * 0.1) + 's');
     if (reduce) return;
+    setInterval(() => { if (auto) show(1 - cur); }, 7000);
+    // the fruit hops around town and cheers
+    const fr = document.getElementById('fr'), bub = document.getElementById('bub');
+    const cheers = ['加油！', '你好！', '太棒了！', '学中文吧！'];
+    let h = 0, c = 0;
+    setInterval(() => {
+      if (cur !== 1) return;
+      const prev = hops[h]; h = (h + 1 + Math.floor(Math.random() * 2)) % hops.length; const [x, y] = hops[h];
+      fr.classList.toggle('flip', x < prev[0]); fr.classList.add('hop');
+      fr.style.left = P(x, W); fr.style.top = P(y, H);
+      setTimeout(() => { fr.classList.remove('hop'); if (++c % 2 === 0) { bub.textContent = cheers[(c / 2) % cheers.length]; bub.classList.add('on'); setTimeout(() => bub.classList.remove('on'), 1500); } }, 1450);
+    }, 2600);
     // XP counter
     const xp = document.getElementById('xpn'); let v = 400;
     const t = setInterval(() => { v += 2; xp.textContent = v; if (v >= 420) clearInterval(t); }, 70);
@@ -193,6 +320,9 @@
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { start(); io.disconnect(); } }), { threshold: .25 });
     io.observe(card);
   } else start();
+  // tell the website how tall this is (the <head> listener resizes the frame)
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
 })();
 </script>
 </body>

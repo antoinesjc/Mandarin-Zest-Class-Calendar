@@ -162,18 +162,18 @@
         }
         line(); talkTimer = setInterval(line, 2800);
       } },
-    { label:"Keep going", sub:"Notes and XP", bar:"MY SESSIONS", title:"Keep what you learned",
-      points:["The session's notes and vocabulary appear in the app, also as a PDF.", "Missed a session you signed up for? You still get its notes.", "Keep chatting on Discord between sessions, earn XP and unlock avatars.", "Use your member prices: 70% off our materials and lower prices on bootcamps and trips."],
+    { label:"Keep going", sub:"Notes and Zest Town", bar:"MY SESSIONS", title:"Keep learning between sessions",
+      points:["The session's notes and vocabulary appear in the app, also as a PDF.", "Add its words to your flashcards in one tap and review them in Zest Town, the app's learning town.", "Grow your streak tree, explore every HSK word in the HSK Temple, earn XP and keep chatting on Discord.", "Use your member prices: 70% off our materials and lower prices on bootcamps and trips."],
       screen: function () { return '<div class="c"><b>Notes · Food talk</b><span class="zh" style="font-size:13px">素食者 <span style="font-family:Outfit,sans-serif;color:#a8431a">sùshízhě</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">vegetarian</span></span>' +
-        '<span class="zh" style="font-size:13px">过敏 <span style="font-family:Outfit,sans-serif;color:#a8431a">guòmǐn</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">allergic</span></span><span class="pill" style="background:#efe8e2">Download PDF</span></div>' +
-        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">+20 XP · session attended</div>' +
-        '<div class="tint" style="background:#eef0fb;color:#3f4fa3">Keep chatting on Discord</div>' +
+        '<span class="zh" style="font-size:13px">过敏 <span style="font-family:Outfit,sans-serif;color:#a8431a">guòmǐn</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">allergic</span></span><span style="display:flex;gap:5px"><span class="pill" style="background:#efe8e2">PDF</span><span class="pill" style="background:#1b6f1b;color:#fff">+ Add to flashcards</span></span></div>' +
+        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">Zest Town · Day 12, your tree grew</div>' +
+        '<div class="tint" style="background:#eef0fb;color:#3f4fa3">Flashcard Center · 10 cards to review</div>' +
         '<div class="tint" style="background:#f8dacd;color:#a8431a">Member price · 70% off materials</div>'; } }
   ];
   // ═══ PERKS ═══ (what members get)
   var PERKS = [
     { icon:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e2632f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/></svg>', title:"Live speaking sessions", text:"Several 45-minute sessions every week, timed for Europe and the Americas. Join as many as you like." },
-    { icon:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e2632f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>', title:"The Mandarin Zest Club App", text:"See all our sessions, get notifications, and connect with other members." },
+    { icon:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e2632f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>', title:"The Mandarin Zest Club App", text:"See all our sessions, get reminders and connect with other members. Plus Zest Town: flashcards, every HSK word and a streak tree to keep learning between sessions." },
     { icon:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e2632f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.6c3 .1 5 2.1 5 4.9"/></svg>', title:"A private community", text:"A members-only Discord channel and notes after every session, so you can keep practising between calls." },
     { icon:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e2632f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.3"/><circle cx="17" cy="17" r="2.3"/></svg>', title:"Member-only prices", text:"70% off all our materials, plus member prices on our bootcamps and upcoming trips to Taiwan and China.", peach:true }
   ];
