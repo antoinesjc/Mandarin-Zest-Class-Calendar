@@ -427,6 +427,13 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
   = top of page 4). Embed for a peek widget:
   `height:max(340px, min(450px, calc((701px - 100vw) * 10000)), min(670px, calc((601px - 100vw) * 10000)))`, `scrolling="no"`.
 
+## HSK lists page: HSK Temple + flashcards banner (19 Nov 2026)
+`banners/hsk-temple-app.html`: dark green section for /the-new-hsk-vocabulary-lists-2026. "Don't just download the list.
+Learn it." + 3 points (HSK Temple, Flashcard Center, live sessions) + "Discover the Club ↗" (Club page, new tab).
+Right: two animated app screens (HSK Temple tiles turning green, level bar, "Add all HSK 1 words"; a flashcard flipping
+with Again / Hard / Good / Easy). Words in TILES and CARDS. Pixel art from `app/zt/`. Resizes itself.
+Embed: `height:max(560px, min(1010px, calc((901px - 100vw) * 10000)))`, `scrolling="no"`.
+
 ## Dorota's free guide (email for PDF)
 
 - `dorota-guide.html`: "Chinese learning advice I wish someone gave me 10 years ago" (15-page PDF by Dorota). Cream card with

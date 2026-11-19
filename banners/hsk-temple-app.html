@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSK Temple and flashcards in the Club app · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* HSK lists page (/the-new-hsk-vocabulary-lists-2026): the Club app's HSK Temple + Flashcard Center, animated,
+     leading to the Club page. Words: TILES and CARDS below. Link: CLUB_URL. Resizes itself; embed height: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --green:#1b6f1b; --dk:#173f17; --mint:#e6f1e1; --orange:#f37a48; --orange-d:#e2632f; --line:#efe2d9; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:6px; }
+  .zh { font-family:'Noto Sans SC',sans-serif; }
+  .wrap { max-width:1100px; margin:0 auto; background:var(--dk); color:#fff; border-radius:26px; padding:36px; display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:34px; align-items:center; overflow:hidden; }
+  .txt { display:flex; flex-direction:column; gap:14px; }
+  .eb { display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:12.5px; font-weight:800; letter-spacing:.09em; color:#bfe3b4; }
+  .eb .nw { background:var(--orange); color:var(--ink); border-radius:999px; padding:4px 9px; letter-spacing:.05em; }
+  h2 { margin:0; font-size:34px; line-height:1.12; font-weight:800; }
+  p { margin:0; font-size:16.5px; line-height:1.55; color:#dbe8d6; }
+  ul { list-style:none; margin:2px 0 0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  li { display:flex; gap:10px; font-size:15.5px; line-height:1.45; color:#eef5ea; }
+  li svg { flex:none; margin-top:2px; }
+  .cta { display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; margin-top:6px; }
+  .btn { display:inline-flex; align-items:center; min-height:52px; padding:0 24px; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:16px; text-decoration:none; transition:background .2s, transform .2s; }
+  .btn:hover { background:var(--orange-d); transform:translateY(-1px); }
+  .btn:focus-visible { outline:3px solid #fff; outline-offset:3px; }
+  .small { font-size:13.5px; color:#bcd3b5; }
+
+  /* the two app screens */
+  .vis { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:start; }
+  .scr { background:#fffaf6; color:var(--ink); border-radius:22px; padding:14px; box-shadow:0 18px 40px rgba(0,0,0,.28); display:flex; flex-direction:column; gap:10px; min-width:0; }
+  .scr.b { margin-top:34px; }
+  .hd { display:flex; align-items:center; gap:9px; }
+  .hd img { width:40px; image-rendering:pixelated; flex:none; }
+  .hd b { font-size:15px; line-height:1.1; display:block; } .hd small { font-size:11px; color:var(--muted); }
+  .pills { display:flex; gap:4px; }
+  .pills span { border-radius:999px; padding:4px 8px; font-size:10.5px; font-weight:800; background:#efe8e2; transition:background .3s, color .3s; }
+  .pills span.on { background:var(--ink); color:#fff; }
+  .lv { background:#fff; border-radius:14px; padding:10px; box-shadow:0 1px 0 var(--line); display:flex; flex-direction:column; gap:6px; }
+  .lv .row { display:flex; justify-content:space-between; font-size:12px; font-weight:800; }
+  .lv .row .pc { color:var(--green); }
+  .bar { height:8px; border-radius:99px; background:#e6dfd8; display:flex; overflow:hidden; }
+  .bar i { display:block; height:100%; transition:width .6s ease; } .bar .l { background:#1b6f1b; } .bar .s { background:#9dd18b; }
+  .tiles { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px; }
+  .tile { aspect-ratio:1; border-radius:8px; display:grid; place-items:center; font:700 13px 'Noto Sans SC',sans-serif; background:#ece6e0; color:#8b7d73; transition:background .4s, color .4s, transform .3s; }
+  .tile.long { font-size:10px; }
+  .tile.s { background:#cfeac4; color:#1d4d1d; } .tile.l { background:#1b6f1b; color:#fff; }
+  .tile.pop { transform:scale(1.15); }
+  .add { border:1.5px dashed #9dc690; border-radius:12px; padding:8px; font-size:11.5px; font-weight:800; color:var(--green); text-align:center; transition:background .3s, color .3s, transform .3s; }
+  .add.go { background:var(--green); color:#fff; border-style:solid; transform:scale(1.03); }
+  .prog { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:800; color:var(--muted); }
+  .prog .bar { flex:1; height:6px; } .prog .bar i { background:var(--orange); }
+  .card3d { perspective:900px; height:170px; }
+  .flip { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .6s cubic-bezier(.3,.7,.3,1); }
+  .flip.on { transform:rotateY(180deg); }
+  .face { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; background:#fff; border-radius:16px; box-shadow:0 1px 0 var(--line), 0 8px 18px rgba(42,36,32,.08); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:10px; text-align:center; }
+  .face .w { font:700 34px 'Noto Sans SC',sans-serif; }
+  .face small { font-size:10.5px; color:var(--muted); }
+  .face.back { transform:rotateY(180deg); }
+  .face.back .w { font-size:26px; } .face .py { font-size:15px; font-weight:700; color:#a8431a; } .face .mn { font-size:13px; color:var(--muted); }
+  .newtag { position:absolute; top:8px; left:8px; background:#fdf1ea; color:#a8431a; border-radius:999px; padding:2px 7px; font-size:10px; font-weight:800; }
+  .grades { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; }
+  .grades span { border-radius:10px; padding:6px 0; text-align:center; font-size:10.5px; font-weight:800; background:#f3ece6; transition:transform .2s, box-shadow .2s; }
+  .grades span:nth-child(1) { color:#b3361f; } .grades span:nth-child(2) { color:#a8641a; } .grades span:nth-child(3) { color:#1b6f1b; } .grades span:nth-child(4) { color:#2f5fa3; }
+  .grades span.hit { transform:scale(1.08); box-shadow:inset 0 0 0 2px currentColor; }
+  .show { border-radius:999px; background:var(--ink); color:#fff; text-align:center; padding:9px; font-size:12px; font-weight:800; }
+  .toast { font-size:11.5px; font-weight:800; color:var(--green); text-align:center; min-height:16px; transition:opacity .3s; }
+
+  @media (max-width:900px) {
+    .wrap { grid-template-columns:minmax(0,1fr); padding:28px 22px; gap:26px; }
+    h2 { font-size:28px; }
+  }
+  @media (max-width:520px) {
+    .wrap { padding:24px 16px; border-radius:22px; }
+    h2 { font-size:25px; } p { font-size:15.5px; }
+    .vis { gap:8px; } .scr { padding:10px; border-radius:16px; gap:8px; } .scr.b { margin-top:24px; }
+    .hd img { width:30px; } .hd b { font-size:13px; } .pills span { padding:3px 5px; font-size:9px; }
+    .tile { font-size:11px; border-radius:6px; } .tile.long { font-size:8px; }
+    .face .w { font-size:28px; } .card3d { height:150px; }
+    .grades span { font-size:9px; } .btn { width:100%; justify-content:center; }
+    .hd small, .pills span:last-child { display:none; } .lv .row { font-size:10.5px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .flip, .tile, .bar i, .add { transition:none; } }
+</style>
+</head>
+<body>
+<section class="wrap" aria-labelledby="ttl">
+  <div class="txt">
+    <div class="eb"><span class="nw">CLUB APP</span>ZEST TOWN</div>
+    <h2 id="ttl">Don't just download the list. Learn it.</h2>
+    <p>Club members have every New HSK word in their app, from HSK 1 to 9, and can see how well they know each one.</p>
+    <ul>
+      <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9dd18b" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>HSK Temple:</b> every word turns green as you learn it.</span></li>
+      <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9dd18b" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>Flashcard Center:</b> add a whole level in one tap and review a few minutes a day.</span></li>
+      <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9dd18b" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>Live sessions:</b> then use the words out loud with real people, every week.</span></li>
+    </ul>
+    <div class="cta">
+      <a class="btn" id="cta" target="_blank" rel="noopener">Discover the Club ↗</a>
+      <span class="small">Included in the Club membership</span>
+    </div>
+  </div>
+
+  <div class="vis" aria-hidden="true">
+    <div class="scr">
+      <div class="hd"><img src="../app/zt/temple.png" alt=""><span><b>HSK Temple <span class="zh">汉语庙</span></b><small>Every HSK word</small></span></div>
+      <div class="pills" id="pills"><span>HSK 1</span><span>HSK 2</span><span>HSK 3</span><span>…</span></div>
+      <div class="lv"><div class="row"><span id="lvname">HSK 1 · 300 words</span><span class="pc" id="pc">0% learned</span></div>
+        <div class="bar"><i class="l" id="bl" style="width:0"></i><i class="s" id="bs" style="width:0"></i></div></div>
+      <div class="tiles" id="tiles"></div>
+      <div class="add" id="add">＋ Add all HSK 1 words to my flashcards</div>
+    </div>
+    <div class="scr b">
+      <div class="hd"><img src="../app/zt/house.png" alt=""><span><b>Flashcard Center</b><small>Today's review</small></span></div>
+      <div class="prog"><span id="cnt">1 / 10</span><span class="bar"><i id="pb" style="width:0"></i></span></div>
+      <div class="card3d"><div class="flip" id="flip">
+        <div class="face"><span class="newtag" id="nt">New</span><span class="w" id="fw"></span><small>Say it out loud, then tap to check</small></div>
+        <div class="face back"><span class="w" id="bw"></span><span class="py" id="py"></span><span class="mn" id="mn"></span></div>
+      </div></div>
+      <div id="act"><div class="show">Show answer</div></div>
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+</section>
+<script>
+(function () {
+  var CLUB_URL = "https://www.mandarinzest.com/mandarin-zest-club";
+  // HSK 1 words for the temple tiles
+  var TILES = ["爱","八","爸爸","杯子","北京","本","不","菜","茶","吃","出租车","大","的","点","电脑","电视","东西","都","读","多"];
+  // flashcards: [word, pinyin, meaning]
+  var CARDS = [["学习","xuéxí","to study"],["朋友","péngyou","friend"],["喜欢","xǐhuan","to like"],["吃饭","chī fàn","to eat"],["中国","Zhōngguó","China"]];
+  var cta = document.getElementById("cta"); cta.href = CLUB_URL;
+  cta.addEventListener("click", function () { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:"HSK Temple banner" }, ga:{ event:"select_content", params:{ content_type:"club_banner", item_id:"hsk temple" } } }, "*"); } catch (e) {} });
+
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var tl = document.getElementById("tiles");
+  tl.innerHTML = TILES.map(function (w) { return '<span class="tile' + (w.length > 2 ? ' long' : '') + '">' + w + '</span>'; }).join("");
+  var tiles = tl.children, st = TILES.map(function () { return 0; });
+  var pills = document.getElementById("pills").children; pills[0].classList.add("on");
+  function bars() {
+    var l = 0, s = 0; st.forEach(function (v) { if (v === 2) l++; else if (v === 1) s++; });
+    // scale the 20 tiles up to the 300-word level
+    var lp = Math.round(l / TILES.length * 46), sp = Math.round(s / TILES.length * 46);
+    document.getElementById("bl").style.width = lp + "%"; document.getElementById("bs").style.width = sp + "%";
+    document.getElementById("pc").textContent = lp + "% learned";
+  }
+  function setTile(i, v) { st[i] = v; tiles[i].className = "tile" + (TILES[i].length > 2 ? " long" : "") + (v === 2 ? " l" : v === 1 ? " s" : ""); }
+  var order = [6, 0, 9, 12, 1, 3, 17, 7, 14, 2, 19, 10, 5, 13, 8, 16, 11, 4, 18, 15];
+  // start state: a few words already learned or seen
+  [6, 0, 9, 12].forEach(function (i) { setTile(i, 2); }); [1, 3, 17].forEach(function (i) { setTile(i, 1); }); bars();
+
+  var ci = 0, n = 1;
+  function showCard() {
+    var c = CARDS[ci % CARDS.length];
+    document.getElementById("fw").textContent = c[0]; document.getElementById("bw").textContent = c[0];
+    document.getElementById("py").textContent = c[1]; document.getElementById("mn").textContent = c[2];
+    document.getElementById("nt").style.visibility = ci % 2 ? "hidden" : "visible";
+    document.getElementById("cnt").textContent = n + " / 10"; document.getElementById("pb").style.width = ((n - 1) * 10) + "%";
+  }
+  showCard();
+  if (reduce) { document.getElementById("flip").classList.add("on"); return; }
+
+  var act = document.getElementById("act"), flip = document.getElementById("flip"), toast = document.getElementById("toast");
+  var GR = '<div class="grades"><span>Again</span><span>Hard</span><span>Good</span><span>Easy</span></div>';
+  function cardStep() {
+    flip.classList.add("on"); act.innerHTML = GR;
+    setTimeout(function () { var g = act.querySelectorAll("span"); var k = Math.random() < .7 ? 2 : 3; g[k].classList.add("hit"); }, 1300);
+    setTimeout(function () {
+      flip.classList.remove("on"); act.innerHTML = '<div class="show">Show answer</div>';
+      setTimeout(function () { ci++; n = n >= 10 ? 1 : n + 1; showCard(); }, 300);
+    }, 2200);
+  }
+  setInterval(cardStep, 3600); setTimeout(cardStep, 900);
+
+  // temple: words turn green one by one; then the whole level goes into the flashcards; then reset
+  var step = 0, add = document.getElementById("add");
+  setInterval(function () {
+    var i = order[step % order.length];
+    if (step < order.length) { setTile(i, st[i] === 1 ? 2 : Math.min(2, st[i] + 1)); tiles[i].classList.add("pop"); setTimeout(function () { tiles[i].classList.remove("pop"); }, 300); bars(); }
+    if (step === 8) { add.classList.add("go"); add.textContent = "✓ 300 HSK 1 words added to your flashcards"; toast.textContent = "+300 cards · a few new ones each day"; }
+    if (step === 12) { add.classList.remove("go"); add.textContent = "＋ Add all HSK 1 words to my flashcards"; toast.textContent = ""; }
+    step++;
+    if (step > order.length + 3) { step = 0; st = st.map(function () { return 0; }); TILES.forEach(function (w, k) { setTile(k, 0); }); [6, 0, 9, 12].forEach(function (k) { setTile(k, 2); }); [1, 3, 17].forEach(function (k) { setTile(k, 1); }); bars(); }
+  }, 900);
+
+})();
+</script>
+</body>
+</html>
