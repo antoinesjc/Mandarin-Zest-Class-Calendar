@@ -106,7 +106,16 @@ var FREE_PDFS = {
     after: "Print it, grab a pen, and build it one block at a time.",
     file: "downloads/guides/How-to-Write-Huang-Mandarin-Zest.pdf",
     cover: "downloads/guides/cover-huang.jpg"
+  },
+  "100-characters": {
+    tag: "100 characters", color: "#4f9a4f",
+    title: "Get the 100 most common Chinese characters",
+    text: "The 100 characters you'll see most in real Chinese, with Traditional forms, pinyin, radical and meaning, plus a box to tick when you know one. 9 pages, ready to print.",
+    done: "Your 100 characters are ready",
+    after: "Save it, print it, and tick off each character as you learn it.",
+    file: "downloads/guides/100-Most-Common-Chinese-Characters-HSK1-Mandarin-Zest.pdf",
+    peek: "downloads/guides/peek-100-characters.jpg"
   }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
-  //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" },
+  //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" }
 };

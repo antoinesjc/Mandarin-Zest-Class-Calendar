@@ -422,6 +422,10 @@ Widgets post `{mz:"track", ga:{event, params}}` to the Odoo page; the listener i
 - The PDFs are listed in `downloads/free-pdfs.js` (title, text, file, cover). PDFs and covers live in `downloads/hsk/`
   (cover = page 1 rendered as JPG). Now: `hsk-1` to `hsk-6`, `phrases` (Essential Mandarin Phrases) , `adult` (Adult Vocabulary in Chinese) and `slang` (20 Chinese slang words), all in downloads/guides/. Optional `after:` = text shown after sign-up. `hsk-pdfs.html` (all lists) links to the same files.
 - Embed: `height:max(265px, min(410px, calc((640px - 100vw) * 10000)))`, `scrolling="no"`.
+- `peek:` instead of `cover:` shows a crop of an inside page (bigger, "INSIDE THE PDF" badge) instead of the cover.
+  `100-characters` (100 Most Common Chinese Characters, HSK 1, 9 pages) uses it (`downloads/guides/peek-100-characters.jpg`
+  = top of page 4). Embed for a peek widget:
+  `height:max(340px, min(450px, calc((701px - 100vw) * 10000)), min(670px, calc((601px - 100vw) * 10000)))`, `scrolling="no"`.
 
 ## Dorota's free guide (email for PDF)
 

@@ -9,7 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   /* Free PDF for an email: free-pdf.html?pdf=hsk-1. Email + consent → Start Here sheet (source "free-pdf | <id>")
-     → "Download the PDF" button. The PDFs are listed in downloads/free-pdfs.js. Embed height: see README. */
+     → "Download the PDF" button. The PDFs are listed in downloads/free-pdfs.js. Embed height: see README.
+     An entry with `peek:` (a crop of an inside page) shows that page instead of the cover, bigger. */
   :root { --ink:#2a2420; --orange:#f37a48; --orange-d:#e2632f; }
   * { box-sizing:border-box; }
   html, body { margin:0; background:transparent; }
@@ -43,11 +44,22 @@
   .club { font-size:14.5px; font-weight:700; color:#a8431a; }
   .club:hover { color:#7a2f12; }
 
+  /* peek: an inside page instead of the cover */
+  .peek .cover { width:270px; }
+  .peek .cover img { width:260px; border-radius:10px; transform:rotate(-2deg); background:#fff; padding:6px; }
+  .peek.card:hover .cover img { transform:rotate(0) translateY(-3px) scale(1.03); }
+  .peek .cover::before { width:260px; left:12px; top:10px; transform:rotate(4deg); }
+  .peek .cover::after { content:"INSIDE THE PDF"; position:absolute; left:-8px; bottom:-12px; background:#1b6f1b; color:#fff; border-radius:999px; padding:5px 11px; font-size:11px; font-weight:800; letter-spacing:.06em; transform:rotate(-2deg); box-shadow:0 6px 14px rgba(27,111,27,.25); }
+  .peek .tick { right:-4px; }
+
   @media (max-width:600px) {
     body { padding:2px; }
     .card { flex-direction:column; align-items:stretch; gap:14px; padding:20px 18px; border-radius:20px; }
     .top { display:flex; gap:16px; align-items:center; }
     .cover { width:80px; } .cover img { width:76px; border-radius:6px; } .cover::before { display:none; }
+    .peek .top { flex-direction:column; align-items:stretch; gap:16px; }
+    .peek .cover { width:auto; padding:0 6px 16px; } .peek .cover img { width:100%; max-width:340px; margin:0 auto; border-radius:8px; padding:4px; }
+    .peek .cover::before { display:none; }
     .tick { width:30px; height:30px; right:-6px; top:-6px; } .tick svg { width:16px; height:16px; }
     h2 { font-size:20px; }
     .row { flex-direction:column; } .row input[type=email] { flex:none; }
@@ -103,7 +115,9 @@ function start() {
     document.querySelectorAll("[data-h]").forEach(function (e) { e.textContent = isDone ? P.done : P.title; });
     document.getElementById("text").textContent = isDone ? (P.after || "Save it, print it, and tick off the words you know.") : P.text;
   }
-  var cover = document.getElementById("cover"); cover.src = P.cover; cover.alt = "Cover of the " + P.tag + " PDF";
+  var cover = document.getElementById("cover");
+  if (P.peek) { card.classList.add("peek"); cover.src = P.peek; cover.alt = "A page from inside the PDF: " + P.title.replace(/^Get the /, ""); }
+  else { cover.src = P.cover; cover.alt = "Cover of the " + P.tag + " PDF"; }
   document.getElementById("dl").href = P.file;
   var KEY = "mz-free-pdf-" + id;
   try { if (localStorage.getItem(KEY) === "1") card.classList.add("done"); } catch (e) {}
