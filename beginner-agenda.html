@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complete Beginner Bootcamp agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500&display=swap" rel="stylesheet">
+<style>
+  /* Complete Beginner Bootcamp agenda (copy of taiwan-agenda.html, 2 weekends). No dates on purpose, so it works for every cohort.
+     Teachers: add a name after the day in .who (e.g. "SATURDAY · VANESSA"). Desktop: side by side. Phones: stacked. Resizes itself. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 6px 4px 10px; }
+
+  .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 1000px; margin: 0 auto; }
+  .weekend { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .head {
+    background: #173f17; color: #fff; border-radius: 16px; padding: 14px 18px;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  }
+  .head .n { font-size: 13px; font-weight: 700; letter-spacing: .1em; color: #9fd89f; }
+  .head .theme { font-size: 15px; font-weight: 700; }
+  .session {
+    flex: 1 1 auto; background: #fff; border-radius: 16px; padding: 16px 18px;
+    box-shadow: 0 1px 0 #efe2d9, 0 6px 18px rgba(42,36,32,0.06);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .who { font-size: 12px; font-weight: 700; letter-spacing: .06em; }
+  .sat .who { color: #a8431a; }
+  .sun .who { color: #1b5e1b; }
+  h3 { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.25; }
+  p { margin: 0; font-size: 14px; line-height: 1.5; color: #5c4f47; }
+  .zh { font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+
+  @media (max-width: 700px) {
+    .row { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .weekend { gap: 10px; }
+    .session { padding: 14px 16px; gap: 5px; }
+    .head { padding: 12px 16px; }
+    h3 { font-size: 17px; }
+    p { font-size: 13.5px; line-height: 1.45; }
+  }
+</style>
+</head>
+<body>
+<div class="row" id="row">
+
+  <div class="weekend">
+    <div class="head"><span class="n">WEEKEND 1</span><span class="theme">Sounds &amp; tones</span></div>
+    <div class="session sat">
+      <div class="who">SATURDAY</div>
+      <h3>Pinyin from zero</h3>
+      <p>How Mandarin sounds work: initials, finals, how pinyin is spelled, and the sounds English speakers mix up.</p>
+    </div>
+    <div class="session sun">
+      <div class="who">SUNDAY</div>
+      <h3>The four tones</h3>
+      <p>Hearing and saying the tones, the neutral tone, tone changes in <span class="zh">你好</span> and <span class="zh">不</span>, and your first phrases.</p>
+    </div>
+  </div>
+
+  <div class="weekend">
+    <div class="head"><span class="n">WEEKEND 2</span><span class="theme">Sentences &amp; characters</span></div>
+    <div class="session sat">
+      <div class="who">SATURDAY</div>
+      <h3>How Chinese sentences work</h3>
+      <p>Word order, <span class="zh">是</span>, questions with <span class="zh">吗</span>, saying no with <span class="zh">不</span> and <span class="zh">没</span>, and building your own sentences.</p>
+    </div>
+    <div class="session sun">
+      <div class="who">SUNDAY</div>
+      <h3>Your first Chinese characters</h3>
+      <p>How characters are built from strokes and radicals, stroke order, and reading and writing your first ones.</p>
+    </div>
+  </div>
+
+</div>
+<script>
+  // tell the website how tall this is (the <head> listener resizes the frame)
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+</script>
+</body>
+</html>

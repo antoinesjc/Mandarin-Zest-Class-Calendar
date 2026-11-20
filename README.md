@@ -434,6 +434,12 @@ Right: two animated app screens (HSK Temple tiles turning green, level bar, "Add
 with Again / Hard / Good / Easy). Words in TILES and CARDS. Pixel art from `app/zt/`. Resizes itself.
 Embed: `height:max(560px, min(1010px, calc((901px - 100vw) * 10000)))`, `scrolling="no"`.
 
+## Complete Beginner Bootcamp agenda (20 Nov 2026)
+`beginner-agenda.html`: same look as `taiwan-agenda.html`, 2 weekends. W1 "Sounds & tones" (Sat: Pinyin from zero; Sun: The four
+tones), W2 "Sentences & characters" (Sat: How Chinese sentences work; Sun: Your first Chinese characters). No dates, no teacher
+names yet (add them in `.who`, e.g. "SATURDAY · VANESSA"). Side by side on computers, stacked below 700px. Resizes itself.
+Embed: `height:max(390px, min(650px, calc((701px - 100vw) * 10000)))`, `scrolling="no"`.
+
 ## Dorota's free guide (email for PDF)
 
 - `dorota-guide.html`: "Chinese learning advice I wish someone gave me 10 years ago" (15-page PDF by Dorota). Cream card with
