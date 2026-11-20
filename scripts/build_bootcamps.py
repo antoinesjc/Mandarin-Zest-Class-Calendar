@@ -35,6 +35,8 @@ import html
 import json
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 from datetime import date, timedelta
 from pathlib import Path
@@ -255,7 +257,16 @@ def main():
             path = urlparse(u).path.lower().rstrip("/")
             if "bootcamp" not in path or path in ("/bootcamps", "/bootcamp") or any(w in path for w in SKIP_WORDS):
                 continue
-            pages[u] = fetch(u)
+            # cache-busting query: the site's cache can keep serving a page for a while after it is unpublished
+            try:
+                page = fetch(u + ("&" if "?" in u else "?") + "sync=" + str(int(time.time())))
+            except urllib.error.HTTPError as e:
+                print(f"  skipped {u} ({e.code}, probably unpublished)")
+                continue
+            if re.search(r"<title>\s*Page Not Found", page, re.I):
+                print(f"  skipped {u} (page not found, probably unpublished)")
+                continue
+            pages[u] = page
 
     items = []
     for url, page in pages.items():
