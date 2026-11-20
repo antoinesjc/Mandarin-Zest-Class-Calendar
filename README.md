@@ -440,6 +440,12 @@ tones), W2 "Sentences & characters" (Sat: How Chinese sentences work; Sun: Your 
 names yet (add them in `.who`, e.g. "SATURDAY · VANESSA"). Side by side on computers, stacked below 700px. Resizes itself.
 Embed: `height:max(390px, min(650px, calc((701px - 100vw) * 10000)))`, `scrolling="no"`.
 
+## Complete Beginner Bootcamp tickets (20 Nov 2026)
+`beginner-pricing.html`: copy of `taiwan-pricing.html`. Early bird US$39 (buy.stripe.com/00wbJ1eoVaLre644lT6oo0s), Standard US$59
+(buy.stripe.com/14A4gz1C92eV4vu4lT6oo0t), Club members US$9 → Club page. CONFIG at the bottom: `earlyEnds` (Taiwan time) +
+`earlyEndsLabel`, `registrationClosesLabel`, `seatsNote`; while they are empty the early bird stays on and no dates are shown.
+After `earlyEnds` the early bird card is removed. Embed: same as the Taiwan tickets (320px; phones swipe).
+
 ## Dorota's free guide (email for PDF)
 
 - `dorota-guide.html`: "Chinese learning advice I wish someone gave me 10 years ago" (15-page PDF by Dorota). Cream card with

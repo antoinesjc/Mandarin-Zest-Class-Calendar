@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complete Beginner Bootcamp tickets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Desktop: 3 tickets side by side. Phones: swipe between tickets. Use a 320px frame.
+     Prices, dates and links are set in the CONFIG block in the script at the bottom. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: 'Outfit', system-ui, sans-serif; color: #2a2420; padding: 18px 4px 10px; }
+
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; align-items: stretch; }
+  .ticket {
+    position: relative; background: #fff; border: 1px solid #ecdcd2; border-radius: 20px;
+    padding: 30px 24px 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  }
+  .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+  .ticket.best { border: 3px solid #f37a48; box-shadow: 0 14px 34px rgba(243,122,72,.16); }
+  .ticket.club { background: #e0f4e0; border-color: #e0f4e0; }
+  .badge {
+    position: absolute; top: -14px; left: 22px; font-size: 12px; font-weight: 800;
+    padding: 5px 12px; border-radius: 999px; background: #f37a48; color: #2a2420; white-space: nowrap;
+  }
+  .badge.muted { background: #e6ddd6; color: #5c4f47; }
+  h3 { margin: 0; font-size: 20px; font-weight: 800; }
+  .club h3, .club .price { color: #173f17; }
+  .price { font-size: 42px; font-weight: 800; line-height: 1; }
+  .note { font-size: 14px; line-height: 1.45; color: #5c4f47; }
+  .club .note { color: #2c4a2c; }
+  .btn {
+    margin-top: auto; display: block; text-align: center; text-decoration: none;
+    font-weight: 800; font-size: 16px; padding: 14px; border-radius: 999px; white-space: nowrap;
+  }
+  .btn:focus-visible { outline: 3px solid #4f7a94; outline-offset: 3px; }
+  .btn.primary { background: #f37a48; color: #2a2420; }
+  .btn.primary:hover { background: #e2632f; }
+  .btn.outline { border: 2px solid #2a2420; color: #2a2420; padding: 12px; }
+  .btn.outline:hover { background: #2a2420; color: #fff; }
+  .btn.green { background: #1b6f1b; color: #fff; }
+  .btn.green:hover { background: #145514; }
+
+  /* early bird after the deadline */
+  .ticket.ended { background: #faf6f3; border-color: #ecdcd2; box-shadow: none; }
+  .ticket.ended .price { color: #a99d95; text-decoration: line-through; font-size: 34px; }
+  .ticket.ended h3, .ticket.ended .note { color: #8a7d74; }
+  .ticket.ended .btn { display: none; }
+
+
+  .hint { display: none; }
+  @media (max-width: 860px) {
+    body { padding: 18px 0 10px; }
+    .row {
+      display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding: 0 16px 8px; scroll-padding-left: 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .row::-webkit-scrollbar { display: none; }
+    .ticket { flex: 0 0 78%; max-width: 320px; scroll-snap-align: start; margin-top: 14px; }
+    .row { margin-top: -14px; }
+    .row::after { content: ""; flex: 0 0 2px; }
+    .hint { display: flex; justify-content: center; gap: 6px; margin-top: 2px; }
+    .hint i { width: 6px; height: 6px; border-radius: 50%; background: #e3d3c9; }
+    .hint i.on { background: #f37a48; width: 16px; border-radius: 3px; }
+  }
+</style>
+</head>
+<body>
+<div class="row" id="row">
+
+  <div class="ticket best" id="early">
+    <span class="badge" id="earlyBadge"></span>
+    <h3>Early bird</h3>
+    <div class="price" id="earlyPrice"></div>
+    <div class="note" id="earlyNote"></div>
+    <a class="btn primary" id="earlyBtn" target="_blank" rel="noopener">Book at early bird price</a>
+  </div>
+
+  <div class="ticket" id="standard">
+    <span class="badge" id="stdBadge" hidden></span>
+    <h3>Standard</h3>
+    <div class="price" id="stdPrice"></div>
+    <div class="note" id="stdNote"></div>
+    <a class="btn outline" id="stdBtn" target="_blank" rel="noopener">Book now</a>
+  </div>
+
+  <div class="ticket club" id="club">
+    <h3>Club members</h3>
+    <div class="price" id="clubPrice"></div>
+    <div class="note">Members get the lowest price. Ask for your link in the Club Discord.</div>
+    <a class="btn green" id="clubBtn" target="_blank" rel="noopener">Not a member? See the Club</a>
+  </div>
+
+</div>
+<div class="hint" id="hint" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+
+
+<script>
+  // ══════════════════════ CONFIG: edit these lines for each cohort ══════════════════════
+  var CONFIG = {
+    earlyPrice: "US$39",
+    standardPrice: "US$59",
+    clubPrice: "US$9",
+    saving: "US$20",                                   // standard minus early bird
+    earlyEnds: "",                                     // e.g. "2026-12-15T23:59:59+08:00" (Taiwan time); empty = early bird stays on
+    earlyEndsLabel: "",                                // e.g. "15 December"; empty = no date shown
+    registrationClosesLabel: "",                       // e.g. "9 January"; empty = no date shown
+    seatsNote: "",                                     // e.g. "Only 6 seats."
+    earlyLink: "https://buy.stripe.com/00wbJ1eoVaLre644lT6oo0s",
+    standardLink: "https://buy.stripe.com/14A4gz1C92eV4vu4lT6oo0t",
+    clubLink: "https://www.mandarinzest.com/mandarin-zest-club"
+  };
+  // ═══════════════════════════════════════════════════════════════════════════════════════
+
+  var $ = function (id) { return document.getElementById(id); };
+  var earlyOpen = !CONFIG.earlyEnds || new Date() <= new Date(CONFIG.earlyEnds);
+
+  $("earlyPrice").textContent = CONFIG.earlyPrice;
+  $("stdPrice").textContent = CONFIG.standardPrice;
+  $("clubPrice").textContent = CONFIG.clubPrice;
+  $("earlyBtn").href = CONFIG.earlyLink;
+  $("stdBtn").href = CONFIG.standardLink;
+  $("clubBtn").href = CONFIG.clubLink;
+
+  if (earlyOpen) {
+    $("earlyBadge").textContent = CONFIG.earlyEndsLabel ? "Ends " + CONFIG.earlyEndsLabel : "Best price";
+    $("earlyNote").textContent = "Save " + CONFIG.saving + (CONFIG.earlyEndsLabel ? " when you book by " + CONFIG.earlyEndsLabel + "." : " compared with the standard price.");
+    $("stdNote").textContent = CONFIG.earlyEndsLabel
+      ? "After " + CONFIG.earlyEndsLabel + (CONFIG.registrationClosesLabel ? ", until registration closes on " + CONFIG.registrationClosesLabel + "." : ".")
+      : "The regular price once the early bird ends." + (CONFIG.seatsNote ? " " + CONFIG.seatsNote : "");
+  } else {
+    // Early bird is over: remove it, promote the standard ticket, two tickets side by side.
+    $("early").remove();
+    $("row").classList.add("two");
+    var dot = document.querySelector("#hint i:last-child"); if (dot) dot.remove();
+    $("standard").className = "ticket best";
+    $("stdBadge").hidden = false;
+    if (CONFIG.registrationClosesLabel) $("stdBadge").textContent = "Registration closes " + CONFIG.registrationClosesLabel; else $("stdBadge").hidden = true;
+    $("stdNote").textContent = (CONFIG.registrationClosesLabel ? "Book by " + CONFIG.registrationClosesLabel + "." : "Book your seat now.") + (CONFIG.seatsNote ? " " + CONFIG.seatsNote : "");
+    $("stdBtn").className = "btn primary";
+  }
+
+  // Dots under the tickets on phones.
+  (function () {
+    var row = $("row"), dots = document.querySelectorAll("#hint i");
+    row.addEventListener("scroll", function () {
+      var cards = [].slice.call(row.querySelectorAll(".ticket")).sort(function (a, b) { return a.offsetLeft - b.offsetLeft; });
+      var w = cards[0].getBoundingClientRect().width + 14;
+      var i = Math.min(cards.length - 1, Math.round(row.scrollLeft / w));
+      if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 4) i = cards.length - 1;
+      dots.forEach(function (d, k) { d.className = k === i ? "on" : ""; });
+    }, { passive: true });
+  })();
+</script>
+</body>
+</html>
