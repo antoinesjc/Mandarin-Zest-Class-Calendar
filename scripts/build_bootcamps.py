@@ -4,7 +4,8 @@ Build bootcamps.json for the Bootcamps page from the bootcamp pages on
 mandarinzest.com.
 
 How it finds bootcamps: every page in the website's sitemap whose address
-contains "bootcamp" (except the Bootcamps page itself and terms pages).
+contains "bootcamp" (except the Bootcamps page itself and terms pages),
+plus every bootcamp link on the Bootcamps page (new pages can be missing from the sitemap for a while).
 
 What it reads on each page: the section that holds the "AT A GLANCE" box.
   - Labelled lines in that box, e.g.
@@ -240,7 +241,15 @@ def main():
         pages = {f"{SITE}/{p.stem}": p.read_text(encoding="utf-8") for p in Path(args.html_dir).glob("*.html")}
     else:
         sitemap = fetch(SITE + "/sitemap.xml")
-        urls = sorted(set(re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", sitemap)))
+        urls = set(re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", sitemap))
+        # Odoo can take a while to add a new page to the sitemap, so also take the bootcamp links from the
+        # Bootcamps page (its menu lists every published bootcamp).
+        try:
+            for h in re.findall(r'href="(/[^"#?]*bootcamp[^"#?]*)"', fetch(SITE + "/bootcamps")):
+                urls.add(SITE + h)
+        except Exception as e:
+            print("  (could not read the Bootcamps page:", e, ")")
+        urls = sorted(urls)
         pages = {}
         for u in urls:
             path = urlparse(u).path.lower().rstrip("/")
