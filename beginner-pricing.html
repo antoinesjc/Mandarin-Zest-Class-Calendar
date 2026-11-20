@@ -130,7 +130,7 @@
     $("earlyNote").textContent = "Save " + CONFIG.saving + (CONFIG.earlyEndsLabel ? " when you book by " + CONFIG.earlyEndsLabel + "." : " compared with the standard price.");
     $("stdNote").textContent = CONFIG.earlyEndsLabel
       ? "After " + CONFIG.earlyEndsLabel + (CONFIG.registrationClosesLabel ? ", until registration closes on " + CONFIG.registrationClosesLabel + "." : ".")
-      : "The regular price once the early bird ends." + (CONFIG.seatsNote ? " " + CONFIG.seatsNote : "");
+      : (CONFIG.registrationClosesLabel ? "Registration closes on " + CONFIG.registrationClosesLabel + "." : "The regular price once the early bird ends.") + (CONFIG.seatsNote ? " " + CONFIG.seatsNote : "");
   } else {
     // Early bird is over: remove it, promote the standard ticket, two tickets side by side.
     $("early").remove();
