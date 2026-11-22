@@ -60,7 +60,23 @@
   .t-head { display:flex; align-items:center; justify-content:space-between; padding:0 4px; }
   .t-head small { display:block; font-size:9px; font-weight:800; letter-spacing:.08em; color:var(--green); } .t-head b { font-size:18px; }
   .leaf { display:inline-flex; align-items:center; gap:3px; background:#e6f4df; color:#2d6b22; border-radius:999px; padding:4px 9px 4px 6px; font-size:12px; font-weight:800; }
-  .map { position:relative; width:100%; aspect-ratio:98/178; border-radius:14px; overflow:hidden; border:3px solid #2b2a3a; background:#8fcf5a; container-type:inline-size; }
+  .mapw { flex:1; min-height:0; display:flex; justify-content:center; }
+  .nb { display:inline-block; vertical-align:2px; background:var(--orange); color:#fff; border-radius:999px; padding:2px 6px; font-size:10px; letter-spacing:.04em; }
+  .seg { display:flex; background:#efe8e2; border-radius:999px; padding:3px; gap:3px; }
+  .seg span { flex:1; text-align:center; border-radius:999px; padding:5px; font-size:11.5px; font-weight:800; color:var(--muted); }
+  .seg span.on { background:#fff; color:var(--ink); box-shadow:0 1px 3px rgba(42,36,32,.12); }
+  .shelf { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:2px; }
+  .bk { position:relative; border-radius:6px; overflow:hidden; box-shadow:0 4px 10px rgba(42,36,32,.18); aspect-ratio:420/595; background:#f37a48; animation:bkin .5s both; }
+  .bk:nth-child(2) { animation-delay:.08s } .bk:nth-child(3) { animation-delay:.16s } .bk:nth-child(4) { animation-delay:.24s } .bk:nth-child(5) { animation-delay:.32s } .bk:nth-child(6) { animation-delay:.4s }
+  @keyframes bkin { from { opacity:0; transform:translateY(8px); } }
+  .bk img { display:block; width:100%; height:100%; object-fit:cover; }
+  .bk i { position:absolute; left:0; right:0; bottom:0; background:rgba(27,111,27,.92); color:#fff; font-style:normal; font-size:9.5px; font-weight:800; text-align:center; padding:3px 0; }
+  .read { margin-top:auto; background:#fff; border-radius:14px; padding:10px 12px; box-shadow:0 1px 0 var(--line); display:flex; flex-direction:column; gap:2px; font-size:12px; }
+  .read small { font-size:9.5px; font-weight:800; letter-spacing:.06em; color:#2f6fa3; } .read b { font-size:15px; }
+  .rd { align-self:flex-start; margin-top:5px; border-radius:999px; padding:5px 10px; font-size:11px; font-weight:800; background:#2f6fa3; color:#fff; transition:background .3s; }
+  .rd.ok { background:#1b6f1b; }
+  .lbl.gal { background:#c2410c; } .lbl.lib { background:#2f6fa3; }
+  .map { position:relative; height:100%; aspect-ratio:118/266; border-radius:14px; overflow:hidden; border:3px solid #2b2a3a; background:#8fcf5a; }
   .map .px { position:absolute; image-rendering:pixelated; image-rendering:crisp-edges; display:block; user-select:none; }
   .map .bg { inset:0; width:100%; height:100%; }
   .river { position:absolute; left:0; right:0; overflow:hidden; } .river img { position:static !important; width:100%; height:400%; animation:river 1.2s steps(4) infinite; }
@@ -81,7 +97,7 @@
   .lbl.soon { background:#4a4655; color:#e9e2d0; }
   .lbl.day { background:#2f6b22; }
   .sgn { position:absolute; z-index:3; } .sgn img { position:static !important; width:100%; }
-  .sgn span { position:absolute; left:0; top:0; width:66.7%; height:61%; display:grid; place-items:center; text-align:center; color:#2b1708; font:400 5px/1.4 'Press Start 2P',monospace; }
+  .sgn span { position:absolute; left:0; top:0; width:66.7%; height:61%; display:grid; place-items:center; text-align:center; color:#2b1708; font:400 3.4px/1.4 'Press Start 2P',monospace; }
   .blob { position:absolute; width:330px; height:330px; border-radius:50%; background:var(--peach); animation:breathe 6s ease-in-out infinite; }
   .device { position:relative; width:290px; height:580px; padding:10px; border-radius:40px; background:var(--ink); box-shadow:0 24px 50px rgba(42,36,32,.22); animation:float 6s ease-in-out infinite; }
   .screen { width:270px; height:560px; border-radius:30px; overflow:hidden; background:var(--cream); display:flex; flex-direction:column; }
@@ -155,10 +171,10 @@
 <body>
 <section class="card" id="card" aria-labelledby="ttl">
   <div class="left">
-    <div class="tags"><span class="new">NEW: ZEST TOWN</span><span class="eyebrow">INCLUDED IN YOUR CLUB MEMBERSHIP</span></div>
+    <div class="tags"><span class="new">NEW: THE LIBRARY IS OPEN</span><span class="eyebrow">INCLUDED IN YOUR CLUB MEMBERSHIP</span></div>
     <div class="hd">
       <h2 id="ttl">The Mandarin Zest Club App</h2>
-      <p class="lead">Live sessions are the heart of the Club. The app keeps everything around them in one place, and gives you a little town to keep learning between sessions.</p>
+      <p class="lead">Live sessions are the heart of the Club. The app keeps everything around them in one place, and gives you Zest Town, a little town to keep learning between sessions: flashcards, every HSK word, graded readers and more.</p>
     </div>
     <div class="grp g1">
       <div class="gh">LIVE SESSIONS, AT THE CENTRE</div>
@@ -173,19 +189,21 @@
         <div class="feat town"><span class="ic"><img src="app/zt/tree-5.png" alt=""></span><div><b>Grow your streak tree</b><span>Join a session or review flashcards each day, and watch a seed become an orange tree.</span></div></div>
         <div class="feat town"><span class="ic"><img src="app/zt/house.png" alt=""></span><div><b>Flashcard Center</b><span>Review words from your sessions and the HSK lists, a few new ones every day.</span></div></div>
         <div class="feat town"><span class="ic"><img src="app/zt/temple.png" alt=""></span><div><b>HSK Temple</b><span>Every New HSK 1–9 word, and how well you know each one.</span></div></div>
+        <div class="feat town"><span class="ic"><img src="app/zt/library.png" alt=""></span><div><b>Library <span class="nb">NEW</span></b><span>Graded readers and workbooks from HSK 1 to 6, read in the app. Tap a word to add it to your flashcards.</span></div></div>
+        <div class="feat town"><span class="ic"><img src="app/zt/gallery.png" alt=""></span><div><b>Sticker Gallery</b><span>Every sticker you can collect, from bootcamps, reading and Club life.</span></div></div>
         <div class="feat town"><span class="ic"><img src="app/zt/sign-forest.png" alt=""></span><div><b>Magical Forest</b><span>See who studied in the last 24 hours, with their streaks.</span></div></div>
       </div>
-      <p class="soonl">Coming soon to Zest Town: the Library and the Calligraphy School.</p>
+      <p class="soonl">Coming soon to Zest Town: the Calligraphy School.</p>
     </div>
     <div class="grp g3">
       <div class="gh">AND ALSO</div>
-      <div class="extras"><span>XP and a monthly leaderboard</span><span>Word of the day</span><span>18+ fruit avatars</span><span>Sticker book</span><span>Member profiles and <span class="zh">红包</span> hongbao</span><span>Phone or computer, no App Store</span></div>
+      <div class="extras"><span>XP and a monthly leaderboard</span><span>Word of the day</span><span>18+ fruit avatars</span><span>Member profiles and <span class="zh">红包</span> hongbao</span><span>Phone or computer, no App Store</span></div>
     </div>
     <div class="cta"><a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Discover the Club ↗</a></div>
   </div>
 
   <div class="right">
-    <div class="tabs" role="group" aria-label="App screen"><button type="button" data-t="0" aria-pressed="true">Sessions</button><button type="button" data-t="1" aria-pressed="false">Zest Town</button></div>
+    <div class="tabs" role="group" aria-label="App screen"><button type="button" data-t="0" aria-pressed="true">Sessions</button><button type="button" data-t="1" aria-pressed="false">Zest Town</button><button type="button" data-t="2" aria-pressed="false">Library</button></div>
     <div class="stage" aria-hidden="true">
     <div class="blob"></div>
     <div class="device"><div class="screen" style="position:relative">
@@ -209,7 +227,20 @@
       </div>
       <div class="scr off" id="scr1"><div class="t-body">
         <div class="t-head"><div><small>LEARNING UNIVERSE · 学习宇宙</small><b>Zest Town</b></div><span class="leaf"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M20 3C11 3 4.5 7.5 4.5 14.5c0 2 .6 3.7 1.6 5C8 12.8 12 9.5 16 8c-4 2.8-7 6.6-8.4 12.2 1.2.6 2.6.8 4 .8C18.6 21 21 13 20 3z" fill="#3f8f2f"/></svg>12</span></div>
-        <div class="map" id="map"></div>
+        <div class="mapw"><div class="map" id="map"></div></div>
+      </div></div>
+      <div class="scr off" id="scr2"><div class="t-body">
+        <div class="t-head"><div><small>ZEST TOWN</small><b>Library <span class="zh" style="font-size:13px;color:#5c4f47">图书馆</span></b></div><span class="leaf" style="background:#e3eef7;color:#2f6fa3">1 free book</span></div>
+        <div class="seg"><span class="on">My shelf</span><span>Bookshop</span></div>
+        <div class="shelf">
+          <span class="bk"><img src="app/books/mz-school.jpg" alt=""><i>3/6 read</i></span>
+          <span class="bk"><img src="app/books/mz-cat.jpg" alt=""><i>Done ✓</i></span>
+          <span class="bk"><img src="app/books/shanghai-1.jpg" alt=""></span>
+          <span class="bk"><img src="app/books/zodiac.jpg" alt=""></span>
+          <span class="bk"><img src="app/books/lm-phone.jpg" alt=""></span>
+          <span class="bk"><img src="app/books/mz-nuwa.jpg" alt=""></span>
+        </div>
+        <div class="read"><small>CONTINUE READING · HSK 1–2</small><b class="zh">小MZ上学</b><span>Chapter 4 · <span class="zh">新朋友</span></span><span class="rd" id="rd">I've read this chapter</span></div>
       </div></div>
       <div class="nav">
         <svg viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
@@ -228,6 +259,11 @@
       <div class="chip tr"><span class="dot"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 3C11 3 4.5 7.5 4.5 14.5c0 2 .6 3.7 1.6 5C8 12.8 12 9.5 16 8c-4 2.8-7 6.6-8.4 12.2 1.2.6 2.6.8 4 .8C18.6 21 21 13 20 3z" fill="#3f8f2f"/></svg></span>Day 12 · your tree grew!</div>
       <div class="chip fc">10 cards reviewed · +1 XP</div>
       <div class="chip wd">Word of the day <span class="zh">加油</span></div>
+    </div>
+    <div class="chips off" id="ch2">
+      <div class="chip tr"><span class="dot" style="background:#e3eef7;color:#2f6fa3">XP</span>Chapter read · +1 XP</div>
+      <div class="chip fc"><span class="zh">朋友</span> added to flashcards</div>
+      <div class="chip wd">15 books · HSK 1 to 6</div>
     </div>
     </div>
   </div>
@@ -250,34 +286,35 @@
     el.innerHTML = `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="${el.dataset.bg}"/><g${el.dataset.lock ? ' opacity=".45" filter="grayscale(1)" style="filter:grayscale(1)"' : ''}>${F[el.dataset.f]}</g></svg>`;
   });
 
-  // Zest Town map (positions from the Club app, phone layout 98 × 178 pixels)
-  const W = 98, H = 178, P = (x, w) => (x / w * 100) + '%';
+  // Zest Town map (positions from the Club app, phone layout 118 × 266 pixels, town4 art)
+  const W = 118, H = 266, P = (x, w) => (x / w * 100) + '%';
   const at = (x, y) => `left:${P(x, W)};top:${P(y, H)}`;
   const img = (n, cls, st) => `<img class="px ${cls}" src="app/zt/${n}.png" alt="" draggable="false" style="${st}">`;
-  const bushes = [[4, 4], [85, 63], [1, 71], [43, 2], [85, 111], [1, 113], [42, 164]];
-  const hops = [[8, 58], [12, 76], [64, 80], [74, 60], [58, 86], [26, 86]];
+  const trees = [[42, -10, 0], [-6, -8, 1], [100, -8, 1], [106, 116, 0], [-4, 120, 0], [102, 194, 1], [-6, 196, 1], [-4, 248, 1], [100, 250, 1]];
+  const hops = [[11, 71], [16, 93], [79, 98], [91, 74], [71, 105], [33, 105]];
   document.getElementById('map').innerHTML =
-    img('town-phone', 'bg', '') +
-    `<div class="river" style="top:${P(89, H)};height:${P(29, H)}"><img class="px" src="app/zt/river-phone.png" alt=""></div>` +
-    img('bridge-phone', '', `${at(44, 96)};width:${P(11, W)}`) +
-    `<div class="sgn" style="${at(74, 82)};width:${P(24, W)}"><img class="px" src="app/zt/sign-forest.png" alt=""><span>MAGICAL<br>FOREST</span></div>` +
-    bushes.map(([x, y], i) => img('bush', 'bush', `${at(x, y)};width:${P(15, W)};animation-delay:-${(i * 0.7) % 3}s`)).join('') +
-    img('tree-6', 'tree', `${at(28, 39)};width:${P(42, W)}`) +
+    img('town4-phone', 'bg', '') +
+    `<div class="river" style="top:${P(110, H)};height:${P(29, H)}"><img class="px" src="app/zt/river3-phone.png" alt=""></div>` +
+    img('bridge-phone', '', `${at(54, 117)};width:${P(11, W)}`) +
+    `<div class="sgn" style="${at(91, 98)};width:${P(24, W)}"><img class="px" src="app/zt/sign-forest.png" alt=""><span>MAGICAL<br>FOREST</span></div>` +
+    trees.map(([x, y, big], i) => img('tree4-' + (big ? 'big' : 'small'), 'bush', `${at(x, y)};width:${P(big ? 24 : 17, W)};animation-delay:-${(i * 0.7) % 3}s`)).join('') +
+    img('tree-6', 'tree', `${at(38, 49)};width:${P(42, W)}`) +
     `<div class="fr" id="fr" style="${at(...hops[0])};width:${P(18, W)}"><span class="bub" id="bub"></span><img class="px" src="app/zt/fruit-orange.png" alt=""></div>` +
-    `<span class="lbl" style="${at(26, 45)}">FLASHCARDS<em>10</em></span>` +
-    `<span class="lbl" style="${at(70, 43)}">HSK TEMPLE</span>` +
-    `<span class="lbl soon" style="${at(25, 161)}">LIBRARY</span>` +
-    `<span class="lbl soon" style="${at(73, 161)}">CALLIGRAPHY</span>` +
-    `<span class="lbl day" style="${at(49, 84)}">DAY 12</span>`;
+    `<span class="lbl" style="${at(31, 51)}">FLASHCARDS<em>10</em></span>` +
+    `<span class="lbl" style="${at(86, 48)}">HSK TEMPLE</span>` +
+    `<span class="lbl day" style="${at(59, 97)}">DAY 12</span>` +
+    `<span class="lbl lib" style="${at(30, 187)}">LIBRARY</span>` +
+    `<span class="lbl soon" style="${at(88, 187)}">CALLIGRAPHY</span>` +
+    `<span class="lbl gal" style="${at(59, 251)}">STICKER GALLERY</span>`;
 
-  // screens: Sessions / Zest Town (auto-switch until the visitor picks one)
+  // screens: Sessions / Zest Town / Library (auto-switch until the visitor picks one)
   let cur = 0, auto = true;
   const tabs = [...document.querySelectorAll('.tabs button')];
   function show(i) {
     cur = i;
     tabs.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
-    [0, 1].forEach(k => { document.getElementById('scr' + k).classList.toggle('off', k !== i); document.getElementById('ch' + k).classList.toggle('off', k !== i); });
-    track(i ? 'zest town' : 'sessions');
+    [0, 1, 2].forEach(k => { document.getElementById('scr' + k).classList.toggle('off', k !== i); document.getElementById('ch' + k).classList.toggle('off', k !== i); });
+    track(['sessions', 'zest town', 'library'][i]);
   }
   function track(name) { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:"club app " + name }, ga:{ event:"select_content", params:{ content_type:"club_app_screen", item_id:name } } }, "*"); } catch (e) {} }
   tabs.forEach((b, k) => b.addEventListener('click', () => { auto = false; show(k); }));
@@ -290,7 +327,10 @@
     card.classList.add('in');
     document.querySelectorAll('.feat').forEach((f, i) => f.style.transitionDelay = (0.15 + i * 0.1) + 's');
     if (reduce) return;
-    setInterval(() => { if (auto) show(1 - cur); }, 7000);
+    setInterval(() => { if (auto) show((cur + 1) % 3); }, 7000);
+    // Library: "I've read this chapter" gets ticked
+    const rd = document.getElementById('rd');
+    setInterval(() => { if (cur !== 2) return; rd.classList.add('ok'); rd.textContent = '✓ Read · +1 XP'; setTimeout(() => { rd.classList.remove('ok'); rd.textContent = "I've read this chapter"; }, 2600); }, 4200);
     // the fruit hops around town and cheers
     const fr = document.getElementById('fr'), bub = document.getElementById('bub');
     const cheers = ['加油！', '你好！', '太棒了！', '学中文吧！'];
