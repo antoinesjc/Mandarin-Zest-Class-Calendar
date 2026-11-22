@@ -97,7 +97,7 @@
     .txt h3 { font-size:24px; } .txt li { font-size:15.5px; }
     .phone { flex-basis:auto; width:250px; height:440px; }
   }
-  .map { position:relative; height:290px; aspect-ratio:98/178; margin:0 auto; border-radius:12px; overflow:hidden; border:3px solid #2b2a3a; background:#8fcf5a; }
+  .map { position:relative; height:320px; aspect-ratio:118/266; margin:0 auto; border-radius:12px; overflow:hidden; border:3px solid #2b2a3a; background:#8fcf5a; }
   .map .px { position:absolute; image-rendering:pixelated; image-rendering:crisp-edges; display:block; }
   .river { position:absolute; left:0; right:0; overflow:hidden; } .river img { position:static; width:100%; height:400%; animation:river 1.2s steps(4) infinite; }
   @keyframes river { to { transform:translateY(-100%); } }
@@ -110,8 +110,8 @@
   .tfr.hop img { animation:thop .33s ease-in-out infinite alternate; }
   @keyframes thop { to { translate:0 -22%; } }
   .lbl { position:absolute; transform:translateX(-50%); background:#2b2a3a; color:#fff; padding:2px 4px 1px; white-space:nowrap; font:800 7.5px/1.3 'Outfit',sans-serif; letter-spacing:.05em; z-index:3; border-radius:3px; }
-  .lbl.soon { background:#4a4655; color:#e9e2d0; }
-  @media (max-width:520px) { .map { height:250px; } }
+  .lbl.soon { background:#4a4655; color:#e9e2d0; } .lbl.lib { background:#2f6fa3; } .lbl.gal { background:#c2410c; }
+  @media (max-width:520px) { .map { height:280px; } }
   @media (prefers-reduced-motion:reduce) { .fade, .fr.on svg, .river img, .bush, .tree, .tfr.hop img { animation:none; } }
 </style>
 </head>
@@ -170,13 +170,13 @@
         '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">✓ 3 words added to your flashcards</div>' +
         '<div class="tint" style="background:#f6efe9;color:#5c4f47">+20 XP · session attended</div>'; } },
     { label:"Practise", sub:"In Zest Town", bar:"ZEST TOWN", title:"Practise between sessions in Zest Town",
-      points:["Zest Town is the app's little learning town, open any time between sessions.", "Review your words in the Flashcard Center, with a few new ones each day.", "Explore every New HSK 1–9 word in the HSK Temple and see how well you know each one.", "Join a session or review each day and your streak tree grows, from a seed to an orange tree."],
+      points:["Review your words in the Flashcard Center, with a few new ones each day.", "Explore every New HSK 1–9 word in the HSK Temple and see how well you know each one.", "Read graded stories and workbooks in the Library, and add their words to your flashcards.", "Join a session, review or read a chapter each day and your streak tree grows."],
       screen: function () { return townMap() + '<div class="tint" style="background:#e6f1e1;color:#1b6f1b;text-align:center">Day 12 · your tree grew!</div>'; },
       start: function () {
         var fr = document.getElementById("tfr"), h = 0;
         talkTimer = setInterval(function () { h = (h + 1) % HOPS.length; var x = HOPS[h][0], y = HOPS[h][1];
           fr.classList.toggle("flip", x < parseFloat(fr.dataset.x || 0)); fr.dataset.x = x; fr.classList.add("hop");
-          fr.style.left = (x / 98 * 100) + "%"; fr.style.top = (y / 178 * 100) + "%";
+          fr.style.left = (x / 118 * 100) + "%"; fr.style.top = (y / 266 * 100) + "%";
           setTimeout(function () { fr.classList.remove("hop"); }, 1400); }, 2400);
       } },
     { label:"Stay in touch", sub:"Discord and more", bar:"THIS MONTH", title:"Be part of the community",
@@ -225,18 +225,19 @@
   }
   var talkTimer;
   // ═══ ZEST TOWN (step 4) ═══ pixel art from the Club app (app/zt/)
-  var HOPS = [[8, 58], [12, 76], [64, 80], [74, 60], [58, 86], [26, 86]];
-  function townMap() {
-    var P = function (v, w) { return (v / w * 100) + "%"; }, at = function (x, y) { return "left:" + P(x, 98) + ";top:" + P(y, 178); };
+  var HOPS = [[11, 71], [16, 93], [79, 98], [91, 74], [71, 105], [33, 105]];
+  function townMap() { // town4 art, phone layout 118 × 266 (ZT_MAP in the Club app)
+    var W = 118, H = 266, P = function (v, w) { return (v / w * 100) + "%"; }, at = function (x, y) { return "left:" + P(x, W) + ";top:" + P(y, H); };
     var img = function (n, st, c) { return '<img class="px ' + (c || "") + '" src="app/zt/' + n + '.png" alt="" style="' + st + '">'; };
-    return '<div class="map">' + img("town-phone", "left:0;top:0;width:100%;height:100%") +
-      '<div class="river" style="top:' + P(89, 178) + ';height:' + P(29, 178) + '"><img class="px" src="app/zt/river-phone.png" alt=""></div>' +
-      img("bridge-phone", at(44, 96) + ";width:" + P(11, 98)) +
-      [[4, 4], [85, 63], [1, 71], [43, 2], [85, 111], [1, 113], [42, 164]].map(function (b, i) { return img("bush", at(b[0], b[1]) + ";width:" + P(15, 98) + ";animation-delay:-" + (i * 0.7 % 3) + "s", "bush"); }).join("") +
-      img("tree-6", at(28, 39) + ";width:" + P(42, 98), "tree") +
-      '<div class="tfr" id="tfr" style="' + at(8, 58) + ';width:' + P(18, 98) + '"><img class="px" src="app/zt/fruit-orange.png" alt=""></div>' +
-      '<span class="lbl" style="' + at(26, 45) + '">FLASHCARDS</span><span class="lbl" style="' + at(70, 43) + '">HSK TEMPLE</span>' +
-      '<span class="lbl soon" style="' + at(25, 161) + '">LIBRARY</span><span class="lbl soon" style="' + at(73, 161) + '">CALLIGRAPHY</span></div>';
+    return '<div class="map">' + img("town4-phone", "left:0;top:0;width:100%;height:100%") +
+      '<div class="river" style="top:' + P(110, H) + ';height:' + P(29, H) + '"><img class="px" src="app/zt/river3-phone.png" alt=""></div>' +
+      img("bridge-phone", at(54, 117) + ";width:" + P(11, W)) +
+      [[42, -10, 0], [-6, -8, 1], [100, -8, 1], [106, 116, 0], [-4, 120, 0], [102, 194, 1], [-6, 196, 1], [-4, 248, 1], [100, 250, 1]].map(function (t, i) { return img("tree4-" + (t[2] ? "big" : "small"), at(t[0], t[1]) + ";width:" + P(t[2] ? 24 : 17, W) + ";animation-delay:-" + (i * 0.7 % 3) + "s", "bush"); }).join("") +
+      img("tree-6", at(38, 49) + ";width:" + P(42, W), "tree") +
+      '<div class="tfr" id="tfr" style="' + at(11, 71) + ';width:' + P(18, W) + '"><img class="px" src="app/zt/fruit-orange.png" alt=""></div>' +
+      '<span class="lbl" style="' + at(31, 51) + '">FLASHCARDS</span><span class="lbl" style="' + at(86, 48) + '">HSK TEMPLE</span>' +
+      '<span class="lbl lib" style="' + at(30, 187) + '">LIBRARY</span><span class="lbl soon" style="' + at(88, 187) + '">CALLIGRAPHY</span>' +
+      '<span class="lbl gal" style="' + at(59, 251) + '">STICKER GALLERY</span></div>';
   }
 
   var cur = 0, stepsEl = document.getElementById("steps");
