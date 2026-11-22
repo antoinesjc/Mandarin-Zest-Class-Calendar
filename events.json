@@ -887,6 +887,30 @@
    "trial": true
   },
   {
+   "date": "2026-12-05",
+   "title": "Taiwanese Mandarin Conversation",
+   "level": "Intermediate",
+   "cats": [
+    "conversation"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ],
+   "start": "2026-12-05T14:00:00Z",
+   "end": "2026-12-05T15:00:00Z",
+   "cat": "conversation",
+   "topic": "Practice real life conversation with a native teacher from Taiwan",
+   "host": "Vanessa",
+   "trial": true
+  },
+  {
    "date": "2026-12-06",
    "title": "Conversation Practice",
    "level": "Beginner",
@@ -982,6 +1006,30 @@
    "trial": true
   },
   {
+   "date": "2026-12-12",
+   "title": "Taiwanese Mandarin Conversation",
+   "level": "Intermediate",
+   "cats": [
+    "conversation"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ],
+   "start": "2026-12-12T14:00:00Z",
+   "end": "2026-12-12T15:00:00Z",
+   "cat": "conversation",
+   "topic": "Practice real life conversation with a native teacher from Taiwan",
+   "host": "Vanessa",
+   "trial": true
+  },
+  {
    "date": "2026-12-13",
    "title": "Conversation Practice",
    "level": "Beginner",
@@ -1074,6 +1122,30 @@
    "cat": "vocabulary",
    "topic": "Level: Beginner, Intermediate",
    "host": "Gabrielle",
+   "trial": true
+  },
+  {
+   "date": "2026-12-19",
+   "title": "Taiwanese Mandarin Conversation",
+   "level": "Intermediate",
+   "cats": [
+    "conversation"
+   ],
+   "times": [
+    {
+     "flag": "eu",
+     "time": "3pm CET"
+    },
+    {
+     "flag": "us",
+     "time": "9am ET"
+    }
+   ],
+   "start": "2026-12-19T14:00:00Z",
+   "end": "2026-12-19T15:00:00Z",
+   "cat": "conversation",
+   "topic": "Practice real life conversation with a native teacher from Taiwan",
+   "host": "Vanessa",
    "trial": true
   },
   {
