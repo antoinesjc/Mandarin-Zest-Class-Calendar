@@ -10,7 +10,7 @@
 <style>
   /* Club page: "How the Club works", between the headline and the session calendar.
      4 member benefits (PERKS) + "Start speaking this week": 5 clickable steps (text + a phone screen of what the member sees).
-     Text: PERKS and STEPS below. Prices follow club-offer.js during seasonal offers. Resizes itself ({mz:"height"}). */
+     Text: PERKS and STEPS below. How the Club works week to week (no payment step, at Antoine's request 22 Nov 2026). Resizes itself ({mz:"height"}). */
   :root { --ink:#2a2420; --muted:#5c4f47; --line:#efe2d9; --orange:#f37a48; --green:#1b6f1b; --brick:#a8431a; --mint:#e6f1e1; --peach:#f8dacd; }
   * { box-sizing:border-box; }
   html, body { margin:0; background:transparent; }
@@ -97,7 +97,22 @@
     .txt h3 { font-size:24px; } .txt li { font-size:15.5px; }
     .phone { flex-basis:auto; width:250px; height:440px; }
   }
-  @media (prefers-reduced-motion:reduce) { .fade, .fr.on svg { animation:none; } }
+  .map { position:relative; height:290px; aspect-ratio:98/178; margin:0 auto; border-radius:12px; overflow:hidden; border:3px solid #2b2a3a; background:#8fcf5a; }
+  .map .px { position:absolute; image-rendering:pixelated; image-rendering:crisp-edges; display:block; }
+  .river { position:absolute; left:0; right:0; overflow:hidden; } .river img { position:static; width:100%; height:400%; animation:river 1.2s steps(4) infinite; }
+  @keyframes river { to { transform:translateY(-100%); } }
+  .bush { transform-origin:50% 100%; animation:sway 3s ease-in-out infinite alternate; }
+  .tree { transform-origin:50% 92%; animation:sway 3.4s ease-in-out infinite alternate; }
+  @keyframes sway { from { transform:skewX(-3deg); } to { transform:skewX(3deg); } }
+  .tfr { position:absolute; transition:left 1.3s linear, top 1.3s linear; z-index:2; }
+  .tfr img { position:static; width:100%; }
+  .tfr.flip img { transform:scaleX(-1); }
+  .tfr.hop img { animation:thop .33s ease-in-out infinite alternate; }
+  @keyframes thop { to { translate:0 -22%; } }
+  .lbl { position:absolute; transform:translateX(-50%); background:#2b2a3a; color:#fff; padding:2px 4px 1px; white-space:nowrap; font:800 7.5px/1.3 'Outfit',sans-serif; letter-spacing:.05em; z-index:3; border-radius:3px; }
+  .lbl.soon { background:#4a4655; color:#e9e2d0; }
+  @media (max-width:520px) { .map { height:250px; } }
+  @media (prefers-reduced-motion:reduce) { .fade, .fr.on svg, .river img, .bush, .tree, .tfr.hop img { animation:none; } }
 </style>
 </head>
 <body>
@@ -109,8 +124,8 @@
   </div>
   <ul class="perks" id="perks"></ul>
   <div class="sub">
-    <div class="eb">FROM SIGN-UP TO YOUR FIRST CONVERSATION</div>
-    <h3>Start speaking this week</h3>
+    <div class="eb">YOUR WEEK IN THE CLUB</div>
+    <h3>Speak live, practise in between</h3>
     <p>Tap a step to see what happens.</p>
   </div>
   <div class="steps" id="steps" role="tablist" aria-label="Steps"></div>
@@ -119,34 +134,17 @@
     <div class="phone" aria-hidden="true"><div class="scr"><div class="bar" id="bar"></div><div class="body" id="scr"></div></div></div>
   </div>
 </div>
-<script src="club-offer.js?v=1"></script>
 <script>
-  var PRICE = { month: "US$25", year: "US$250", trial: "US$2.50" };
-  var OFF = window.CLUB_OFFER; // seasonal Club offer, if any
-  var monthTxt = OFF ? OFF.price + " a month for your first " + OFF.months + " months (" + OFF.name + ", code " + OFF.code + "), then " + PRICE.month
-                     : PRICE.month + " a month (cancel anytime)";
 
   // ═══ STEPS ═══
   var STEPS = [
-    { label:"Join", sub:"In two minutes", bar:"MANDARIN ZEST CLUB", title:"Pick monthly or yearly",
-      points:[monthTxt + " or " + PRICE.year + " a year (one payment, no auto-renewal).", "Pay by card in about two minutes.", "Not sure yet? Join one session as a trial for " + PRICE.trial + " first."],
-      screen: function () { return '<div class="c"><b>Monthly</b><div style="font-size:22px;font-weight:800">' + (OFF ? '<s style="font-size:14px;color:#a89a90">' + PRICE.month + '</s> ' + OFF.price : PRICE.month) + '<span style="font-size:12px;color:#5c4f47"> / month</span></div><span style="color:#5c4f47">Cancel anytime</span></div>' +
-        '<div class="c" style="box-shadow:inset 0 0 0 2px #f37a48"><b>Yearly</b><div style="font-size:22px;font-weight:800">' + PRICE.year + '<span style="font-size:12px;color:#5c4f47"> / year</span></div><span style="color:#5c4f47">2 months free</span></div>' +
-        '<div style="margin-top:auto;background:#f37a48;border-radius:999px;padding:11px;text-align:center;font-weight:800;font-size:13px">Pay by card</div>' +
-        '<div style="text-align:center;color:#5c4f47">Or try one session for ' + PRICE.trial + '</div>'; } },
-    { label:"Get set up", sub:"Right after paying", bar:"WELCOME", title:"Get your access right away",
-      points:["As soon as you pay, you get your access to the Club app and your invite to our members-only Discord.", "A short onboarding call to hear your level and goals.", "We add new sessions based on what members need."],
-      screen: function () { return '<div class="c"><b>Welcome to the Club!</b><span style="line-height:1.45;color:#5c4f47">Here\'s your access to the Club app and your invite to our Discord.</span></div>' +
-        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">Club app · log in with your email</div>' +
-        '<div class="tint" style="background:#eef0fb;color:#3f4fa3">Discord · members\' channel</div>' +
-        '<div class="tint" style="background:#f8dacd;color:#a8431a">Onboarding call · tell us your goals</div>'; } },
     { label:"Pick sessions", sub:"In the Club app", bar:"COMING UP", title:"Choose your sessions in the app",
       points:["See every session with its level, topic and host, in your own time zone.", "Tap “I'm in” and get a reminder 1 hour before.", "Join as many sessions as you like, every week."],
       screen: function () { return '<div style="display:flex;gap:5px"><span class="pill" style="background:#2a2420;color:#fff">Beginner</span><span class="pill" style="background:#efe8e2">Intermediate</span><span class="pill" style="background:#efe8e2">Advanced</span></div>' +
         '<div class="c"><span style="font-size:10.5px;font-weight:800;color:#b4512a">CONVERSATION · BEGINNER</span><b>Conversation Practice</b><span style="font-size:11px;color:#5c4f47">with Xiaojing</span><span class="pill" style="background:#1b6f1b;color:#fff;margin-top:3px">I\'m in ✓</span></div>' +
         '<div class="c"><span style="font-size:10.5px;font-weight:800;color:#3f63a3">LISTENING · BEGINNER</span><b>HSK Review + Listening</b><span style="font-size:11px;color:#5c4f47">with Gabrielle</span><span class="pill" style="background:#efe8e2;margin-top:3px">I\'m in</span></div>' +
         '<div style="text-align:center;font-size:11px;color:#5c4f47">Times shown in your time zone · reminder 1 h before</div>'; } },
-    { label:"Speak", sub:"45 min on Meet", bar:"LIVE SESSION", title:"Show up and speak",
+    { label:"Speak", sub:"45 min live", bar:"LIVE SESSION", title:"Show up and speak",
       points:["45 minutes on Google Meet, in a small group, at your level.", "A host guides the topic, but it's not a class: members do most of the talking.", "Mistakes welcome. Nobody is graded."],
       screen: function () { return '<div class="c say" style="background:#fffdf4" id="say"></div>' +
         '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;flex:1">' +
@@ -162,13 +160,34 @@
         }
         line(); talkTimer = setInterval(line, 2800);
       } },
-    { label:"Keep going", sub:"Notes and Zest Town", bar:"MY SESSIONS", title:"Keep learning between sessions",
-      points:["The session's notes and vocabulary appear in the app, also as a PDF.", "Add its words to your flashcards in one tap and review them in Zest Town, the app's learning town.", "Grow your streak tree, explore every HSK word in the HSK Temple, earn XP and keep chatting on Discord.", "Use your member prices: 70% off our materials and lower prices on bootcamps and trips."],
-      screen: function () { return '<div class="c"><b>Notes · Food talk</b><span class="zh" style="font-size:13px">素食者 <span style="font-family:Outfit,sans-serif;color:#a8431a">sùshízhě</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">vegetarian</span></span>' +
-        '<span class="zh" style="font-size:13px">过敏 <span style="font-family:Outfit,sans-serif;color:#a8431a">guòmǐn</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">allergic</span></span><span style="display:flex;gap:5px"><span class="pill" style="background:#efe8e2">PDF</span><span class="pill" style="background:#1b6f1b;color:#fff">+ Add to flashcards</span></span></div>' +
-        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">Zest Town · Day 12, your tree grew</div>' +
-        '<div class="tint" style="background:#eef0fb;color:#3f4fa3">Flashcard Center · 10 cards to review</div>' +
-        '<div class="tint" style="background:#f8dacd;color:#a8431a">Member price · 70% off materials</div>'; } }
+    { label:"Get the notes", sub:"After every session", bar:"MY SESSIONS", title:"Keep what you learned",
+      points:["After each session, the host's notes and vocabulary appear in the app, also as a PDF.", "Missed a session you signed up for? You still get its notes.", "Add the session's words to your flashcards in one tap."],
+      screen: function () { return '<div class="c"><span style="font-size:10.5px;font-weight:800;color:#1b6f1b">NOTES ARE UP</span><b>Food talk · with Xiaojing</b>' +
+        '<span class="zh" style="font-size:13px">素食者 <span style="font-family:Outfit,sans-serif;color:#a8431a">sùshízhě</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">vegetarian</span></span>' +
+        '<span class="zh" style="font-size:13px">过敏 <span style="font-family:Outfit,sans-serif;color:#a8431a">guòmǐn</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">allergic</span></span>' +
+        '<span class="zh" style="font-size:13px">辣 <span style="font-family:Outfit,sans-serif;color:#a8431a">là</span> <span style="font-family:Outfit,sans-serif;color:#5c4f47">spicy</span></span>' +
+        '<span style="display:flex;gap:5px;margin-top:3px"><span class="pill" style="background:#efe8e2">PDF</span><span class="pill" style="background:#1b6f1b;color:#fff">+ Add to flashcards</span></span></div>' +
+        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">✓ 3 words added to your flashcards</div>' +
+        '<div class="tint" style="background:#f6efe9;color:#5c4f47">+20 XP · session attended</div>'; } },
+    { label:"Practise", sub:"In Zest Town", bar:"ZEST TOWN", title:"Practise between sessions in Zest Town",
+      points:["Zest Town is the app's little learning town, open any time between sessions.", "Review your words in the Flashcard Center, with a few new ones each day.", "Explore every New HSK 1–9 word in the HSK Temple and see how well you know each one.", "Join a session or review each day and your streak tree grows, from a seed to an orange tree."],
+      screen: function () { return townMap() + '<div class="tint" style="background:#e6f1e1;color:#1b6f1b;text-align:center">Day 12 · your tree grew!</div>'; },
+      start: function () {
+        var fr = document.getElementById("tfr"), h = 0;
+        talkTimer = setInterval(function () { h = (h + 1) % HOPS.length; var x = HOPS[h][0], y = HOPS[h][1];
+          fr.classList.toggle("flip", x < parseFloat(fr.dataset.x || 0)); fr.dataset.x = x; fr.classList.add("hop");
+          fr.style.left = (x / 98 * 100) + "%"; fr.style.top = (y / 178 * 100) + "%";
+          setTimeout(function () { fr.classList.remove("hop"); }, 1400); }, 2400);
+      } },
+    { label:"Stay in touch", sub:"Discord and more", bar:"THIS MONTH", title:"Be part of the community",
+      points:["Keep chatting in Chinese with members and hosts on our private Discord.", "See who studied today in Zest Town's Magical Forest.", "Earn XP, climb the monthly leaderboard and collect stickers.", "Tell us what you need: we add sessions based on members' ideas."],
+      screen: function () { return '<div class="c"><span style="font-size:10.5px;font-weight:800;color:#a8431a">LEADERBOARD · NOVEMBER</span>' +
+        '<span style="display:flex;justify-content:space-between"><span>1 · Peach</span><b>640 XP</b></span>' +
+        '<span style="display:flex;justify-content:space-between"><span>2 · Kiwi</span><b>585 XP</b></span>' +
+        '<span style="display:flex;justify-content:space-between;color:#1b6f1b;font-weight:800"><span>3 · You</span><b>540 XP</b></span></div>' +
+        '<div class="tint" style="background:#eef0fb;color:#3f4fa3">Discord · 你们周末做什么？</div>' +
+        '<div class="tint" style="background:#e6f1e1;color:#1b6f1b">Magical Forest · 9 members studied today</div>' +
+        '<div class="tint" style="background:#fdf1ea;color:#a8431a">New sticker unlocked</div>'; } }
   ];
   // ═══ PERKS ═══ (what members get)
   var PERKS = [
@@ -205,6 +224,20 @@
     return '<svg viewBox="0 0 64 64" aria-hidden="true">' + art[key] + face + '</svg>';
   }
   var talkTimer;
+  // ═══ ZEST TOWN (step 4) ═══ pixel art from the Club app (app/zt/)
+  var HOPS = [[8, 58], [12, 76], [64, 80], [74, 60], [58, 86], [26, 86]];
+  function townMap() {
+    var P = function (v, w) { return (v / w * 100) + "%"; }, at = function (x, y) { return "left:" + P(x, 98) + ";top:" + P(y, 178); };
+    var img = function (n, st, c) { return '<img class="px ' + (c || "") + '" src="app/zt/' + n + '.png" alt="" style="' + st + '">'; };
+    return '<div class="map">' + img("town-phone", "left:0;top:0;width:100%;height:100%") +
+      '<div class="river" style="top:' + P(89, 178) + ';height:' + P(29, 178) + '"><img class="px" src="app/zt/river-phone.png" alt=""></div>' +
+      img("bridge-phone", at(44, 96) + ";width:" + P(11, 98)) +
+      [[4, 4], [85, 63], [1, 71], [43, 2], [85, 111], [1, 113], [42, 164]].map(function (b, i) { return img("bush", at(b[0], b[1]) + ";width:" + P(15, 98) + ";animation-delay:-" + (i * 0.7 % 3) + "s", "bush"); }).join("") +
+      img("tree-6", at(28, 39) + ";width:" + P(42, 98), "tree") +
+      '<div class="tfr" id="tfr" style="' + at(8, 58) + ';width:' + P(18, 98) + '"><img class="px" src="app/zt/fruit-orange.png" alt=""></div>' +
+      '<span class="lbl" style="' + at(26, 45) + '">FLASHCARDS</span><span class="lbl" style="' + at(70, 43) + '">HSK TEMPLE</span>' +
+      '<span class="lbl soon" style="' + at(25, 161) + '">LIBRARY</span><span class="lbl soon" style="' + at(73, 161) + '">CALLIGRAPHY</span></div>';
+  }
 
   var cur = 0, stepsEl = document.getElementById("steps");
   var check = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
