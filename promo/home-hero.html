@@ -58,6 +58,22 @@
   .hint.gone { opacity: 0; }
 
 
+  /* seasonal deal (from ../shop/offers.js + ../club-offer.js): ribbon with the code, tap to copy */
+  .deal { position: absolute; left: 0; right: 0; bottom: 6px; margin: 0 auto; width: max-content; max-width: 340px; z-index: 24;
+    display: flex; align-items: center; gap: 10px; background: #2a2420; color: #fff; border: 0; border-radius: 16px; padding: 9px 14px 9px 12px;
+    font: inherit; text-align: left; cursor: pointer; box-shadow: 0 10px 22px rgba(42,36,32,.22); animation: dealin .6s cubic-bezier(.3,1.6,.5,1) both; }
+  .deal[hidden] { display: none; }
+  .deal b { display: block; font-size: 13px; font-weight: 800; letter-spacing: .06em; color: #f8b28f; }
+  .deal span.t { display: block; font-size: 12.5px; line-height: 1.3; color: #f3ebe5; }
+  .deal .code { flex: none; border: 1.5px dashed #f37a48; border-radius: 10px; padding: 6px 9px; font-size: 14px; font-weight: 800; color: #fff; }
+  .deal:focus-visible { outline: 3px solid #f37a48; outline-offset: 3px; }
+  @keyframes dealin { from { opacity: 0; transform: translateY(10px) scale(.95); } }
+  .season .mascot { width: 196px; left: 74px; bottom: 76px; }
+  .season .bubble { bottom: 286px; left: 128px; }
+  .zh { white-space: nowrap; }
+  .season .blob { top: 70px; }
+  .season .hint { display: none; }
+
   /* hearts that pop out on tap */
   .pop { position: absolute; z-index: 23; font-size: 20px; pointer-events: none; animation: pop .9s ease-out forwards; }
   @keyframes pop { 0% { opacity: 0; transform: translate(0,0) scale(.4); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), -70px) scale(1.1); } }
@@ -69,6 +85,7 @@
 </head>
 <body>
 <div class="stage" id="stage">
+  <button class="deal" id="deal" type="button" hidden><span><b id="dealT"></b><span class="t" id="dealS"></span></span><span class="code" id="dealC"></span></button>
   <div class="tilt" id="tilt">
     <div class="blob" aria-hidden="true"></div>
 
@@ -82,6 +99,8 @@
   </div>
 </div>
 
+<script src="../shop/offers.js?v=2"></script>
+<script src="../club-offer.js?v=2"></script>
 <script>
   // Phrases written the same way in simplified and traditional characters.
   var PHRASES = [
@@ -93,6 +112,30 @@
     ["没问题！", "méi wèntí", "No problem!"]
   ];
   // 没 is simplified; swap to 沒 for traditional if you prefer.
+
+  // During a seasonal shop offer (shop/offers.js): seasonal mascot, deal ribbon with the code (tap to copy), offer phrases.
+  var SEASON = window.OFFER && window.REGULAR && OFFER !== REGULAR ? OFFER : null;
+  if (SEASON) {
+    document.querySelector("#mascot img").src = "../" + SEASON.img;
+    var club = window.CLUB_OFFER && CLUB_OFFER.code === SEASON.code ? CLUB_OFFER : null;
+    var deal = document.getElementById("deal"); deal.hidden = false; document.getElementById("stage").classList.add("season");
+    document.getElementById("dealT").textContent = SEASON.short.toUpperCase();
+    document.getElementById("dealS").textContent = SEASON.off + " the shop" + (club ? " + " + club.pct + "% off " + club.first.replace("your ", "your ") + " in the Club" : "");
+    document.getElementById("dealC").textContent = SEASON.code;
+    deal.setAttribute("aria-label", "Copy the code " + SEASON.code);
+    deal.addEventListener("click", function () {
+      var c = document.getElementById("dealC");
+      mzCopy({ set textContent(v) { c.textContent = v === "Copy code" ? SEASON.code : v; }, classList: { add: function () {}, remove: function () {} } }, SEASON.code);
+    });
+    if (/black friday/i.test(SEASON.label)) PHRASES = [
+      ["黑色星期五！", "hēisè xīngqīwǔ", "Black Friday!"],
+      ["打五折！", "dǎ wǔ zhé", "50% off!"],
+      ["别错过！", "bié cuòguò", "Don't miss it!"],
+      ["太好了！", "tài hǎo le", "Awesome!"],
+      ["加油！", "jiāyóu", "You've got this!"]
+    ];
+    document.getElementById("zh").textContent = PHRASES[0][0]; document.getElementById("py").textContent = PHRASES[0][1]; document.getElementById("en").textContent = PHRASES[0][2];
+  }
 
   var stage = document.getElementById("stage"), tilt = document.getElementById("tilt");
   var bubble = document.getElementById("bubble"), mascot = document.getElementById("mascot"), hint = document.getElementById("hint");
