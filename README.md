@@ -446,6 +446,14 @@ Embed: `height:max(390px, min(650px, calc((701px - 100vw) * 10000)))`, `scrollin
 `earlyEndsLabel`, `registrationClosesLabel`, `seatsNote`; while they are empty the early bird stays on and no dates are shown.
 After `earlyEnds` the early bird card is removed. Embed: same as the Taiwan tickets (320px; phones swipe).
 
+## HSK 1 Intensive Bootcamp (23 Nov 2026)
+- `hsk1-learn.html`: "What will you learn?" learning path, 6 modules (01 Vocabulary … 06 HSK 1 preparation) on a line with
+  dots; one module at a time with a small HSK 1 example on the right (words, sentences, characters, tones, dialogue, quiz),
+  auto-advances every 6 s until clicked. Then "Your learning experience" (5 points, dark green). Text in MODULES and
+  EXPERIENCE. Resizes itself. Embed: `height:max(1090px, min(2000px, calc((900px - 100vw) * 10000)))`, `scrolling="no"`.
+- Waitlist: `waitlist.html?bootcamp=hsk-1-intensive-bootcamp&name=HSK%201%20Intensive%20Bootcamp` (440px). `&name=` was
+  added because the page isn't published yet (not in bootcamps.json). Rows go to the Bootcamp waitlist sheet.
+
 ## Dorota's free guide (email for PDF)
 
 - `dorota-guide.html`: "Chinese learning advice I wish someone gave me 10 years ago" (15-page PDF by Dorota). Cream card with

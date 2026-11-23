@@ -11,6 +11,7 @@
   /* Waitlist form for a bootcamp's own page. Saves to the waitlist Google Sheet.
      Which bootcamp: add ?bootcamp=<page address ending>, e.g.
        waitlist.html?bootcamp=chinese-pronunciation-bootcamp
+     Page not published yet: add &name=HSK%201%20Intensive%20Bootcamp for the real name.
      Optional: &bg=fdf1ea (card colour), &title=Join%20the%20waitlist
      &plain=1 removes the card border (for an Odoo pop-up block)
      (&popup=1 is added by waitlist-button.html when it opens this as a small window)
@@ -83,6 +84,8 @@
   var q = new URLSearchParams(location.search);
   var slug = (q.get("bootcamp") || "").replace(/^.*\//, "").trim();
   var bootcamp = { title: slug ? slug.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); }) : "Bootcamp", url: "" };
+  // &name= gives the bootcamp's real name while its page isn't in bootcamps.json yet (e.g. not published)
+  if (q.get("name")) { bootcamp.title = q.get("name").slice(0, 80); if (!q.get("title")) document.getElementById("title").textContent = "Join the " + bootcamp.title + " waitlist"; }
   if (q.get("bg")) document.querySelector("form").style.setProperty("--bg", "#" + q.get("bg").replace(/[^0-9a-f]/gi, "").slice(0, 6));
   if (q.get("title")) document.getElementById("title").textContent = q.get("title");
   if (q.get("plain")) document.body.classList.add("plain");

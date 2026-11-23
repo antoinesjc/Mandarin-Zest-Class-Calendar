@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSK 1 Intensive Bootcamp: what you will learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* HSK 1 Intensive Bootcamp: "What will you learn?" (6 modules on a learning path, each with a small HSK 1 example)
+     + "Your learning experience" (5 points). Text in MODULES and EXPERIENCE below. Resizes itself; embed height: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --green:#1b6f1b; --dk:#173f17; --mint:#e6f1e1; --orange:#f37a48; --brick:#a8431a; --line:#efe2d9; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:8px 6px 12px; }
+  .zh { font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif; }
+  .wrap { max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:30px; }
+  .hd { text-align:center; display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .eb { font-size:13px; font-weight:800; letter-spacing:.1em; color:var(--brick); }
+  h2 { margin:0; font-size:38px; line-height:1.12; font-weight:800; }
+  .hd p { margin:0; font-size:17.5px; line-height:1.5; color:var(--muted); max-width:620px; }
+
+  /* path */
+  .path { position:relative; display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:0; padding:0 6%; }
+  .track, .fill { position:absolute; top:21px; height:4px; border-radius:4px; background:#eadfd6; }
+  .fill { background:var(--orange); width:0; transition:width .6s ease; }
+  .dot { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:0; font:inherit; color:inherit; cursor:pointer; padding:0; }
+  .dot b { width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font-size:15px; font-weight:800; background:#fff; color:var(--muted); box-shadow:inset 0 0 0 3px #eadfd6; transition:background .3s, color .3s, box-shadow .3s, transform .3s; }
+  .dot.done b { background:#fdf1ea; color:var(--brick); box-shadow:inset 0 0 0 3px var(--orange); }
+  .dot.on b { background:var(--orange); color:var(--ink); box-shadow:0 8px 18px rgba(243,122,72,.35); transform:scale(1.1); }
+  .dot span { font-size:12.5px; font-weight:700; color:var(--muted); text-align:center; line-height:1.2; max-width:120px; }
+  .dot.on span { color:var(--ink); }
+  .dot:focus-visible b { outline:3px solid var(--green); outline-offset:3px; }
+  .goal { position:absolute; right:0; top:8px; font-size:11px; font-weight:800; letter-spacing:.06em; color:#fff; background:var(--green); border-radius:999px; padding:5px 9px; }
+  .start { position:absolute; left:0; top:8px; font-size:11px; font-weight:800; letter-spacing:.06em; color:var(--muted); background:#f3ece6; border-radius:999px; padding:5px 9px; }
+
+  /* module panel */
+  .panel { background:#fff; border-radius:26px; box-shadow:0 1px 0 var(--line), 0 12px 30px rgba(42,36,32,.07); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr); overflow:hidden; min-height:330px; }
+  .mtxt { padding:30px 32px; display:flex; flex-direction:column; gap:12px; justify-content:center; }
+  .mn { font-size:56px; font-weight:800; line-height:1; color:#f6d7c7; }
+  .mtxt h3 { margin:0; font-size:28px; line-height:1.15; font-weight:800; }
+  .mtxt p { margin:0; font-size:17px; line-height:1.55; color:var(--muted); }
+  .nav { display:flex; gap:8px; margin-top:6px; }
+  .nav button { height:44px; min-width:44px; border-radius:999px; border:1.5px solid #ecdcd2; background:#fff; font:inherit; font-weight:800; font-size:15px; cursor:pointer; color:var(--ink); padding:0 16px; }
+  .nav button.next { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .nav button:focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+  .ex { background:var(--mint); padding:26px; display:flex; flex-direction:column; justify-content:center; gap:10px; }
+  .ex small { font-size:11.5px; font-weight:800; letter-spacing:.08em; color:var(--green); }
+  .fade { animation:fade .45s ease both; }
+  @keyframes fade { from { opacity:0; transform:translateY(8px); } }
+
+  /* example bits */
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .w { background:#fff; border-radius:14px; padding:8px 12px; display:flex; flex-direction:column; align-items:center; box-shadow:0 1px 0 #d7e8cf; animation:fade .4s both; }
+  .w b { font:700 24px 'Noto Sans SC',sans-serif; } .w i { font-style:normal; font-size:12.5px; font-weight:700; color:var(--brick); } .w em { font-style:normal; font-size:12px; color:var(--muted); }
+  .sent { background:#fff; border-radius:14px; padding:10px 14px; display:flex; flex-direction:column; gap:2px; animation:fade .4s both; }
+  .sent b { font:700 20px 'Noto Sans SC',sans-serif; } .sent b u { text-decoration:none; color:var(--green); background:#d9efd2; border-radius:5px; padding:0 3px; }
+  .sent i { font-style:normal; font-size:13.5px; font-weight:700; color:var(--brick); } .sent em { font-style:normal; font-size:13px; color:var(--muted); }
+  .chars { display:flex; gap:10px; }
+  .ch { width:68px; height:68px; background:#fff; border-radius:14px; display:grid; place-items:center; font:700 36px 'Noto Sans SC',sans-serif; position:relative; animation:fade .4s both;
+    background-image:linear-gradient(#f0d9cc 1px, transparent 1px), linear-gradient(90deg, #f0d9cc 1px, transparent 1px); background-size:50% 50%; background-position:center; }
+  .wave { display:flex; align-items:center; gap:3px; height:40px; }
+  .wave i { width:5px; border-radius:3px; background:var(--green); animation:wv 1s ease-in-out infinite alternate; }
+  @keyframes wv { from { height:6px; } to { height:38px; } }
+  .bub { max-width:85%; border-radius:16px; padding:8px 12px; font-size:14px; animation:fade .4s both; }
+  .bub b { display:block; font:700 18px 'Noto Sans SC',sans-serif; }
+  .bub.l { background:#fff; align-self:flex-start; border-bottom-left-radius:4px; } .bub.r { background:var(--green); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; }
+  .bub.r em { color:#d6f0cd; } .bub em { font-style:normal; font-size:12.5px; color:var(--muted); }
+  .quiz { background:#fff; border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+  .quiz .opts { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+  .quiz .opts span { border-radius:10px; padding:8px 0; text-align:center; font:700 17px 'Noto Sans SC',sans-serif; background:#f3ece6; transition:background .3s, color .3s; }
+  .quiz .opts span.ok { background:var(--green); color:#fff; }
+  .score { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; color:var(--muted); }
+  .score .bar { flex:1; height:10px; border-radius:99px; background:#d7e8cf; overflow:hidden; } .score .bar i { display:block; height:100%; width:0; background:var(--green); transition:width 1.2s ease; }
+
+  /* experience */
+  .xp { background:var(--dk); color:#fff; border-radius:26px; padding:30px; display:flex; flex-direction:column; gap:20px; }
+  .xp h3 { margin:0; font-size:26px; font-weight:800; }
+  .xp ul { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:14px; }
+  .xp li { background:rgba(255,255,255,.07); border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:8px; opacity:0; transform:translateY(10px); transition:opacity .5s, transform .5s; }
+  .xp.in li { opacity:1; transform:none; }
+  .xp .ic { width:42px; height:42px; border-radius:12px; background:#2a5a2a; display:grid; place-items:center; }
+  .xp b { font-size:16.5px; line-height:1.2; } .xp span { font-size:14px; line-height:1.5; color:#d6e6d0; }
+
+  @media (max-width:900px) {
+    h2 { font-size:30px; }
+    .panel { grid-template-columns:minmax(0,1fr); }
+    .mtxt { padding:24px 22px; } .ex { padding:20px 22px; min-height:250px; }
+    .xp ul { grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .xp li:last-child { grid-column:1 / -1; }
+  }
+  @media (max-width:600px) {
+    h2 { font-size:26px; } .hd p { font-size:15.5px; }
+    .path { padding:0; }
+    .dot b { width:38px; height:38px; font-size:13px; } .track, .fill { top:17px; }
+    .dot span, .goal, .start { display:none; }
+    .mn { font-size:42px; } .mtxt h3 { font-size:23px; } .mtxt p { font-size:15.5px; }
+    .xp { padding:22px 18px; } .xp ul { grid-template-columns:minmax(0,1fr); }
+  }
+  @media (prefers-reduced-motion:reduce) { .fade, .w, .sent, .ch, .bub, .wave i { animation:none; } .xp li { transition:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <div class="eb">WHAT WILL YOU LEARN?</div>
+    <h2>From basic Mandarin to HSK&nbsp;1</h2>
+    <p>A structured learning path designed to take you from basic Mandarin knowledge to HSK 1 proficiency.</p>
+  </div>
+
+  <div class="path" id="path" role="tablist" aria-label="Learning path"><span class="track" id="track"></span><span class="fill" id="fill"></span></div>
+
+  <div class="panel" id="panel" role="tabpanel" aria-live="polite">
+    <div class="mtxt" id="mtxt"></div>
+    <div class="ex" id="ex" aria-hidden="true"></div>
+  </div>
+
+  <div class="xp" id="xp">
+    <h3>Your learning experience</h3>
+    <ul id="xplist"></ul>
+  </div>
+</div>
+<script>
+(function () {
+  // ═══ MODULES ═══ [title, short label for the path, text, example]
+  var MODULES = [
+    ["Expanding your vocabulary", "Vocabulary", "Build on your existing vocabulary and learn the essential words and expressions needed for everyday communication.", "vocab"],
+    ["Chinese grammar & sentence structures", "Grammar", "Learn how to construct sentences, ask questions, express negation, talk about time and describe everyday situations.", "grammar"],
+    ["Chinese characters & reading", "Characters", "Develop your character recognition skills and learn to read simple Chinese sentences and short texts.", "chars"],
+    ["Listening & pronunciation", "Listening", "Improve your ability to understand spoken Mandarin, recognise familiar vocabulary and follow simple conversations.", "listen"],
+    ["Speaking & communication", "Speaking", "Put your knowledge into practice through guided speaking exercises, dialogues and practical communication activities.", "speak"],
+    ["HSK 1 preparation", "HSK 1 prep", "Consolidate your knowledge through exercises covering the essential vocabulary, grammar and skills expected at HSK 1 level.", "hsk"]
+  ];
+  // ═══ EXPERIENCE ═══ [title, text, icon path]
+  var EXPERIENCE = [
+    ["Live interactive lessons", "Learn directly from your teacher through structured explanations, exercises and opportunities to practise speaking.", "M3 5h18v12H3z M8 21h8 M12 17v4 M10 9l5 2-5 2z"],
+    ["Guided homework", "Reinforce what you've learned between sessions with exercises designed to help you retain vocabulary and grammar.", "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5 M9 8l2 2 4-4"],
+    ["Structured learning materials", "Get access to resources that support your learning throughout the programme and help you review independently.", "M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z M14 3v6h6 M8 13h8 M8 17h5"],
+    ["Practical speaking activities", "Don't just memorise words. Learn how to use them in actual conversations and everyday situations.", "M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"],
+    ["A clear progression", "Every lesson builds on the previous one, helping you gradually develop the knowledge and confidence to reach HSK 1 level.", "M3 20h4v-6H3z M10 20h4V10h-4z M17 20h4V4h-4z"]
+  ];
+  // examples shown next to each module (all HSK 1 words)
+  var EX = {
+    vocab: function () { return '<small>EVERYDAY WORDS</small><div class="chips">' + [["喝茶","hē chá","drink tea"],["朋友","péngyou","friend"],["明天","míngtiān","tomorrow"],["多少钱","duōshao qián","how much?"],["喜欢","xǐhuan","to like"],["回家","huí jiā","go home"]]
+      .map(function (w, i) { return '<span class="w" style="animation-delay:' + i * .08 + 's"><b>' + w[0] + '</b><i>' + w[1] + '</i><em>' + w[2] + '</em></span>'; }).join("") + '</div>'; },
+    grammar: function () { return '<small>QUESTIONS, NEGATION, TIME</small>' + [["你是学生<u>吗</u>？","Nǐ shì xuéshēng ma?","Are you a student?"],["我<u>不</u>喝咖啡。","Wǒ bù hē kāfēi.","I don't drink coffee."],["我们<u>明天</u>去北京。","Wǒmen míngtiān qù Běijīng.","We're going to Beijing tomorrow."]]
+      .map(function (s, i) { return '<span class="sent" style="animation-delay:' + i * .15 + 's"><b>' + s[0] + '</b><i>' + s[1] + '</i><em>' + s[2] + '</em></span>'; }).join(""); },
+    chars: function () { return '<small>FROM CHARACTERS TO SENTENCES</small><div class="chars">' + ["人","口","日","月"].map(function (c, i) { return '<span class="ch" style="animation-delay:' + i * .12 + 's">' + c + '</span>'; }).join("") + '</div>' +
+      '<span class="sent" style="animation-delay:.5s"><b>今天天气很好。</b><i>Jīntiān tiānqì hěn hǎo.</i><em>The weather is nice today.</em></span>'; },
+    listen: function () { return '<small>LISTEN AND RECOGNISE</small><div class="wave">' + Array.apply(null, Array(26)).map(function (x, i) { return '<i style="animation-delay:-' + ((i * 37) % 100) / 100 + 's"></i>'; }).join("") + '</div>' +
+      '<span class="sent"><b>你<u>几点</u>回家？</b><i>Nǐ jǐ diǎn huí jiā?</i><em>What time are you going home?</em></span><div class="chips"><span class="w"><b>mā</b><em>1st tone</em></span><span class="w"><b>má</b><em>2nd tone</em></span><span class="w"><b>mǎ</b><em>3rd tone</em></span><span class="w"><b>mà</b><em>4th tone</em></span></div>'; },
+    speak: function () { return '<small>A REAL CONVERSATION</small>' +
+      '<span class="bub l"><b>你叫什么名字？</b><em>What\'s your name?</em></span>' +
+      '<span class="bub r" style="animation-delay:.5s"><b>我叫安娜。你呢？</b><em>I\'m Anna. And you?</em></span>' +
+      '<span class="bub l" style="animation-delay:1s"><b>我叫大卫。认识你很高兴！</b><em>I\'m David. Nice to meet you!</em></span>'; },
+    hsk: function () { return '<small>HSK 1 PRACTICE</small><div class="quiz"><b class="zh" style="font-size:16px">Which word means "dog"?</b><div class="opts" id="opts"><span>猫</span><span>狗</span><span>鱼</span></div></div>' +
+      '<div class="score">Mock test<span class="bar"><i id="sbar"></i></span><span id="spc">0%</span></div>'; }
+  };
+
+  var path = document.getElementById("path"), cur = 0, auto = true, timer;
+  path.insertAdjacentHTML("beforeend", MODULES.map(function (m, i) {
+    return '<button type="button" class="dot" role="tab" aria-selected="false" data-i="' + i + '"><b>0' + (i + 1) + '</b><span>' + m[1] + '</span></button>'; }).join(""));
+  var dots = path.querySelectorAll(".dot");
+  [].forEach.call(dots, function (d) { d.addEventListener("click", function () { auto = false; show(+d.dataset.i); }); });
+
+  function show(i) {
+    cur = i; var m = MODULES[i];
+    [].forEach.call(dots, function (d, k) { d.classList.toggle("on", k === i); d.classList.toggle("done", k < i); d.setAttribute("aria-selected", String(k === i)); });
+    line();
+    var t = document.getElementById("mtxt"), ex = document.getElementById("ex");
+    t.innerHTML = '<span class="mn">0' + (i + 1) + '</span><h3>' + m[0] + '</h3><p>' + m[2] + '</p><div class="nav"><button type="button" class="prev" aria-label="Previous">‹</button><button type="button" class="next">' + (i === MODULES.length - 1 ? 'Back to 01' : 'Next: ' + MODULES[i + 1][1]) + ' ›</button></div>';
+    t.querySelector(".prev").onclick = function () { auto = false; show((cur + MODULES.length - 1) % MODULES.length); };
+    t.querySelector(".next").onclick = function () { auto = false; show((cur + 1) % MODULES.length); };
+    ex.innerHTML = EX[m[3]](); t.classList.remove("fade"); ex.classList.remove("fade"); void t.offsetWidth; t.classList.add("fade"); ex.classList.add("fade");
+    if (m[3] === "hsk") setTimeout(function () {
+      var o = document.getElementById("opts"); if (o) o.children[1].classList.add("ok");
+      var b = document.getElementById("sbar"), pc = document.getElementById("spc"); if (b) { b.style.width = "86%"; var n = 0, iv = setInterval(function () { n += 4; if (n >= 86) { n = 86; clearInterval(iv); } pc.textContent = n + "%"; }, 40); }
+    }, 900);
+  }
+
+  document.getElementById("xplist").innerHTML = EXPERIENCE.map(function (x, i) {
+    return '<li style="transition-delay:' + i * .1 + 's"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9fd89f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + x[2] + '"/></svg></span><b>' + x[0] + '</b><span>' + x[1] + '</span></li>'; }).join("");
+
+  // the line between the first and last dot; the orange part reaches the current one
+  function line() {
+    var pr = path.getBoundingClientRect(), c = function (d) { var r = d.querySelector("b").getBoundingClientRect(); return r.left + r.width / 2 - pr.left; };
+    var x0 = c(dots[0]), x1 = c(dots[dots.length - 1]), xi = c(dots[cur]);
+    var tr = document.getElementById("track"), fl = document.getElementById("fill");
+    tr.style.left = fl.style.left = x0 + "px"; tr.style.width = (x1 - x0) + "px"; fl.style.width = (xi - x0) + "px";
+  }
+  window.addEventListener("resize", line);
+  show(0);
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function start() {
+    document.getElementById("xp").classList.add("in");
+    if (!reduce) timer = setInterval(function () { if (auto) show((cur + 1) % MODULES.length); }, 6000);
+  }
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); start(); } }, { threshold: .2 });
+    io.observe(document.body);
+  } else start();
+
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+})();
+</script>
+</body>
+</html>
