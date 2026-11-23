@@ -59,6 +59,26 @@
    "price": "US$139",
    "club": "US$92",
    "signupBy": "2027-01-09"
+  },
+  {
+   "url": "https://www.mandarinzest.com/hsk-1-intensive-bootcamp",
+   "title": "HSK 1 Intensive Bootcamp",
+   "summary": "Take your Chinese to the next level. Go from beginner foundations to HSK 1.",
+   "image": "https://www.mandarinzest.com/unsplash/0FdNwQN8xSM/7020/beijing.jpg?unique=048b33b4",
+   "dates": "February - April",
+   "time": "",
+   "format": "16 live online sessions",
+   "level": "Beginner",
+   "group": "Max 6 students",
+   "status": "",
+   "month": "February",
+   "start": "",
+   "datesTbd": true,
+   "early": "",
+   "earlyEnds": "",
+   "price": "",
+   "club": "",
+   "signupBy": ""
   }
  ]
 }
