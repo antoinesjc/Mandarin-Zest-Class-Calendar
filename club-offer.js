@@ -3,8 +3,9 @@
 // CLUB_OFFER is null and every widget shows the regular price. ?date=2026-11-26 previews another day.
 // The discount itself is a Stripe promotion code on the regular monthly link (so the Club app's Stripe sync keeps working).
 var CLUB_OFFERS = [
-  { name: "Black Friday", from: "2026-11-25", until: "2026-11-30",
-    pct: 20, months: 3, price: "US$20", value: 20, regular: "US$25", code: "BLACKFRIDAY26",
+  // first: how long the discount lasts, used in sentences ("for your first month", "50% off your first month")
+  { name: "Black Friday", from: "2026-11-23", until: "2026-11-30",
+    pct: 50, first: "your first month", price: "US$12.50", value: 12.5, regular: "US$25", code: "BF2026",
     ends: "30 November" }
 ];
 var CLUB_TODAY = (function () {

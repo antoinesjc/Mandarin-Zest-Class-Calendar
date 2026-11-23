@@ -105,7 +105,7 @@
     var co = CLUB_OFFER;
     document.getElementById("deal").hidden = false;
     document.getElementById("dealT").textContent = co.name.toUpperCase() + " · " + co.pct + "% OFF · ENDS " + co.ends.toUpperCase();
-    document.getElementById("dealS").textContent = co.price + "/month for your first " + co.months + " months instead of " + co.regular + ". Use the code at checkout.";
+    document.getElementById("dealS").textContent = co.price + " for " + co.first + " instead of " + co.regular + ". Use the code at checkout.";
     var cb = document.getElementById("dealC"); cb.textContent = co.code + " · tap to copy";
     cb.addEventListener("click", function () { clubCopy(cb, co.code); });
   }

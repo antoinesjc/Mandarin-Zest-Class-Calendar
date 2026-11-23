@@ -136,7 +136,7 @@
   if (window.CLUB_OFFER) {
     var co = CLUB_OFFER;
     var dl = document.getElementById("deal"); dl.hidden = false; dl.textContent = co.name + " · " + co.pct + "% off";
-    document.getElementById("mprice").innerHTML = '<span class="amount"><s>' + co.regular + '</s>' + co.price + '</span><span class="per">/ month for ' + co.months + ' months</span>';
+    document.getElementById("mprice").innerHTML = '<span class="amount"><s>' + co.regular + '</s>' + co.price + '</span><span class="per">for ' + co.first + ', then ' + co.regular + ' / month</span>';
     var ms = document.getElementById("msmall");
     ms.innerHTML = 'Then ' + co.regular + '/month. Code <button type="button" class="codebtn" id="code">' + co.code + '</button> at checkout, until ' + co.ends + '. Cancel anytime.';
     document.getElementById("code").addEventListener("click", function () { clubCopy(this, co.code); });

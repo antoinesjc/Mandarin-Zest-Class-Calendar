@@ -90,9 +90,9 @@
   // seasonal Club offer (club-offer.js): discounted price + code, then back to normal by itself
   if (window.CLUB_OFFER) {
     var co = CLUB_OFFER;
-    document.getElementById("price").innerHTML = "<s>" + co.regular + "</s> " + co.price + "/month";
+    document.getElementById("price").innerHTML = "<s>" + co.regular + "</s> " + co.price + '<small style="font-size:.5em;font-weight:700;white-space:nowrap"> 1st month</small>';
     document.getElementById("perSession").textContent = "code " + co.code;
-    var eb = document.querySelector(".eyebrow"); eb.textContent = (co.name + " · " + co.pct + "% off your first " + co.months + " months").toUpperCase(); eb.style.color = "#f8b28f";
+    var eb = document.querySelector(".eyebrow"); eb.textContent = (co.name + " · " + co.pct + "% off " + co.first).toUpperCase(); eb.style.color = "#f8b28f";
   }
   document.getElementById("trialSmall").textContent = CONFIG.trialPrice;
   document.getElementById("trial").href = CONFIG.trial;
