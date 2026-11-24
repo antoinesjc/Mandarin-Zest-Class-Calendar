@@ -911,6 +911,26 @@
    "trial": true
   },
   {
+   "date": "2026-12-05",
+   "title": "Character Practice",
+   "level": "All levels",
+   "cats": [
+    "characters"
+   ],
+   "times": [
+    {
+     "flag": "us",
+     "time": "8pm ET"
+    }
+   ],
+   "start": "2026-12-06T01:00:00Z",
+   "end": "2026-12-06T01:45:00Z",
+   "cat": "characters",
+   "topic": "Let's discuss Chinese characters; tips and tricks on how to memorize them better.",
+   "host": "Antoine",
+   "trial": true
+  },
+  {
    "date": "2026-12-06",
    "title": "Conversation Practice",
    "level": "Beginner",
