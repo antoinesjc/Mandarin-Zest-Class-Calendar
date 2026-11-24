@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Mandarin Zest hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* "Your Mandarin Zest hub" for the website's My account page (customer accounts, not the Club).
+     Sections: Home (starter checklist), Stay updated (email → Start Here sheet), Community (Discord + socials),
+     The Club (preview + trial), Bootcamps (bootcamps.json, waitlist → Bootcamp waitlist sheet), Free tools.
+     Checklist progress is saved in this browser. Links open in a new tab. Resizes itself. Embed: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --green:#1b6f1b; --dk:#173f17; --mint:#e6f1e1; --peach:#fdf1ea; --orange:#f37a48; --orange-d:#e2632f; --brick:#a8431a; --line:#ece2da; --blue:#e3eef7; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; padding:4px; }
+  .zh { font-family:'Noto Sans SC',sans-serif; }
+  a { color:inherit; }
+  .hub { border:1px solid #e4e0dc; border-radius:14px; background:#fff; overflow:hidden; display:grid; grid-template-columns:230px minmax(0,1fr); min-height:560px; }
+  /* side menu, like an account menu */
+  .side { background:#fbf8f5; border-right:1px solid #eee7e1; padding:18px 12px; display:flex; flex-direction:column; gap:4px; }
+  .me { display:flex; align-items:center; gap:10px; padding:4px 8px 14px; }
+  .me img { width:44px; height:44px; }
+  .me b { display:block; font-size:15.5px; line-height:1.2; } .me small { font-size:12.5px; color:var(--muted); }
+  .tab { display:flex; align-items:center; gap:10px; width:100%; border:0; background:none; font:inherit; font-size:15px; font-weight:600; color:var(--muted); text-align:left; padding:10px 10px; border-radius:10px; cursor:pointer; }
+  .tab svg { flex:none; }
+  .tab:hover { background:#f3ece6; color:var(--ink); }
+  .tab[aria-selected="true"] { background:#fff; color:var(--ink); font-weight:800; box-shadow:0 1px 0 #eadfd6, 0 4px 12px rgba(42,36,32,.06); }
+  .tab .ck { margin-left:auto; width:18px; height:18px; border-radius:50%; display:grid; place-items:center; font-size:11px; color:#fff; background:#ddd3cb; }
+  .tab .ck.y { background:var(--green); }
+  .tab:focus-visible { outline:3px solid var(--orange); outline-offset:1px; }
+  .prog { margin-top:auto; padding:14px 10px 4px; font-size:12.5px; color:var(--muted); }
+  .prog .bar { height:8px; border-radius:99px; background:#eadfd6; margin-top:6px; overflow:hidden; } .prog .bar i { display:block; height:100%; background:var(--green); transition:width .5s; }
+  /* content */
+  .main { padding:26px 28px; min-width:0; }
+  .pane { display:none; flex-direction:column; gap:16px; animation:fade .35s ease both; }
+  .pane.on { display:flex; }
+  @keyframes fade { from { opacity:0; transform:translateY(6px); } }
+  .eb { font-size:12px; font-weight:800; letter-spacing:.1em; color:var(--brick); }
+  h2 { margin:0; font-size:26px; line-height:1.15; font-weight:800; }
+  p { margin:0; font-size:15.5px; line-height:1.55; color:var(--muted); }
+  .grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .box { border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:8px; }
+  .box b { font-size:16px; }
+  .box p { font-size:14.5px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:44px; padding:0 18px; border-radius:999px; border:0; background:var(--orange); color:var(--ink); font:inherit; font-weight:800; font-size:15px; text-decoration:none; cursor:pointer; transition:background .2s, transform .2s; align-self:flex-start; }
+  .btn:hover { background:var(--orange-d); transform:translateY(-1px); }
+  .btn.dark { background:var(--ink); color:#fff; } .btn.dark:hover { background:#000; }
+  .btn.ghost { background:#fff; box-shadow:inset 0 0 0 2px var(--line); } .btn.ghost:hover { background:#fff7f2; }
+  .btn.green { background:var(--green); color:#fff; } .btn.green:hover { background:#145214; }
+  .btn:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+  /* home checklist */
+  .todo { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .todo li { display:flex; align-items:center; gap:12px; border:1.5px solid var(--line); border-radius:14px; padding:12px 14px; cursor:pointer; transition:border-color .2s, background .2s; }
+  .todo li:hover { border-color:#f3b393; background:#fffaf6; }
+  .todo li .c { flex:none; width:26px; height:26px; border-radius:50%; border:2px solid #d8cdc4; display:grid; place-items:center; color:#fff; font-size:14px; font-weight:800; transition:background .3s, border-color .3s; }
+  .todo li.y .c { background:var(--green); border-color:var(--green); }
+  .todo li.y .t b { text-decoration:line-through; text-decoration-color:#9dc690; color:var(--muted); }
+  .todo .t { flex:1; min-width:0; } .todo .t b { display:block; font-size:15.5px; } .todo .t span { font-size:13.5px; color:var(--muted); }
+  .todo .go { font-size:18px; color:var(--orange); font-weight:800; }
+  .hello { display:flex; align-items:center; gap:16px; background:var(--peach); border-radius:18px; padding:16px 18px; }
+  .hello img { width:74px; flex:none; }
+  .hello .zh { font-size:22px; font-weight:700; }
+  /* forms */
+  form { display:flex; flex-direction:column; gap:10px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; }
+  input[type=email], input[type=text] { flex:1; min-width:180px; height:46px; border:1.5px solid #e0d6ce; border-radius:12px; padding:0 14px; font:inherit; font-size:15px; background:#fff; color:var(--ink); }
+  input:focus { outline:none; border-color:var(--orange); box-shadow:0 0 0 3px rgba(243,122,72,.18); }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chips label { cursor:pointer; } .chips input { position:absolute; opacity:0; pointer-events:none; }
+  .chips span { display:inline-block; border:1.5px solid var(--line); border-radius:999px; padding:6px 12px; font-size:13.5px; font-weight:700; color:var(--muted); background:#fff; transition:all .2s; }
+  .chips input:checked + span { background:var(--green); border-color:var(--green); color:#fff; }
+  .chips input:focus-visible + span { outline:3px solid var(--orange); outline-offset:2px; }
+  .consent { display:flex; gap:8px; align-items:flex-start; font-size:13px; color:var(--muted); line-height:1.4; }
+  .consent input { margin-top:2px; accent-color:var(--green); width:16px; height:16px; }
+  .err { color:#b3361f; font-size:13.5px; font-weight:700; min-height:18px; }
+  .done { background:var(--mint); border-radius:16px; padding:16px; display:none; flex-direction:column; gap:4px; }
+  .done b { font-size:17px; color:var(--dk); } .sent .done { display:flex; } .sent .form-body { display:none; }
+  .hp { position:absolute; left:-5000px; }
+  /* community */
+  .discord { background:#5865f2; color:#fff; border-radius:18px; padding:18px; display:flex; gap:16px; align-items:center; }
+  .discord p { color:#e3e6ff; } .discord b { font-size:18px; }
+  .discord .btn { background:#fff; color:#3c45c9; flex:none; } .discord .btn:hover { background:#eef0ff; }
+  .soc { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .soc a { border:1.5px solid var(--line); border-radius:16px; padding:14px; text-decoration:none; display:flex; flex-direction:column; gap:6px; transition:border-color .2s, transform .2s; }
+  .soc a:hover { border-color:#f3b393; transform:translateY(-2px); }
+  .soc a b { font-size:15px; } .soc a span { font-size:13px; color:var(--muted); line-height:1.4; }
+  .soc .ic { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; }
+  /* club */
+  .shot { position:relative; border-radius:16px; overflow:hidden; background:#1f1b18; aspect-ratio:2/1; }
+  .shot img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .8s; }
+  .shot img.on { opacity:1; }
+  .shot .live { position:absolute; left:10px; bottom:10px; background:#fff; border-radius:999px; padding:6px 11px; font-size:12px; font-weight:800; display:flex; align-items:center; gap:6px; }
+  .shot .live i { width:8px; height:8px; border-radius:50%; background:#e0492b; }
+  .pts { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 14px; }
+  .pts li { display:flex; gap:8px; font-size:14.5px; line-height:1.45; }
+  .pts li svg { flex:none; margin-top:2px; }
+  .deal { background:var(--ink); color:#fff; border-radius:14px; padding:12px 14px; font-size:14px; display:none; }
+  .deal b { color:#f8b28f; }
+  /* bootcamps */
+  .bc { border:1.5px solid var(--line); border-radius:16px; overflow:hidden; display:flex; }
+  .bc .pic { flex:0 0 110px; background:#eee center/cover; }
+  .bc .in { padding:12px 14px; display:flex; flex-direction:column; gap:5px; flex:1; min-width:0; }
+  .bc .st { align-self:flex-start; border-radius:999px; padding:3px 9px; font-size:11px; font-weight:800; letter-spacing:.04em; }
+  .st.open { background:#e0f4e0; color:var(--green); } .st.wait { background:#efe8e2; color:var(--muted); }
+  .bc b { font-size:16px; } .bc .meta { font-size:13px; color:var(--muted); }
+  .bc .acts { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+  .bc .btn { min-height:38px; font-size:13.5px; padding:0 14px; }
+  .wl { display:none; } .wl.show { display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; align-items:center; }
+  .wl input[type=text], .wl input[type=email] { min-width:140px; height:40px; }
+  .bc .pic.noimg { background:#fdf1ea url(promo/mascot-laptop.png) center/62% no-repeat; }
+  /* tools */
+  .tools { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .tools a { border:1.5px solid var(--line); border-radius:16px; padding:14px; text-decoration:none; display:flex; gap:12px; align-items:center; transition:border-color .2s, transform .2s; }
+  .tools a:hover { border-color:#9dc690; transform:translateY(-2px); }
+  .tools .ic { flex:none; width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font:700 20px 'Noto Sans SC',sans-serif; }
+  .tools b { display:block; font-size:15px; } .tools span { font-size:13px; color:var(--muted); line-height:1.35; }
+
+  @media (max-width:760px) {
+    .hub { grid-template-columns:minmax(0,1fr); }
+    .side { flex-direction:row; overflow-x:auto; padding:10px; gap:6px; border-right:0; border-bottom:1px solid #eee7e1; scrollbar-width:none; }
+    .side::-webkit-scrollbar { display:none; }
+    .me, .prog { display:none; }
+    .tab { flex:none; width:auto; padding:9px 12px; font-size:14px; }
+    .tab svg { display:none; }
+    .main { padding:20px 16px; }
+    .grid2, .soc, .pts, .tools { grid-template-columns:minmax(0,1fr); }
+    .discord { flex-direction:column; align-items:flex-start; }
+    .bc .pic { flex-basis:80px; }
+    h2 { font-size:22px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .pane { animation:none; } }
+</style>
+</head>
+<body>
+<div class="hub">
+  <nav class="side" role="tablist" aria-label="Your Mandarin Zest hub">
+    <div class="me"><img src="promo/mascot-laptop.png" alt=""><div><b>Your Mandarin Zest hub</b><small>Everything beyond your downloads</small></div></div>
+    <button class="tab" role="tab" data-p="home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+    <button class="tab" role="tab" data-p="updates"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z M4 7l8 6 8-6"/></svg>Stay updated<span class="ck" data-k="updates">✓</span></button>
+    <button class="tab" role="tab" data-p="community"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M23 21v-2a4 4 0 0 0-3-3.9 M16 3.1a4 4 0 0 1 0 7.8"/></svg>Community<span class="ck" data-k="community">✓</span></button>
+    <button class="tab" role="tab" data-p="club"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/></svg>The Club<span class="ck" data-k="club">✓</span></button>
+    <button class="tab" role="tab" data-p="bootcamps"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v16H3z M3 10h18 M8 3v4 M16 3v4"/></svg>Bootcamps<span class="ck" data-k="bootcamps">✓</span></button>
+    <button class="tab" role="tab" data-p="tools"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>Free tools<span class="ck" data-k="tools">✓</span></button>
+    <div class="prog"><span id="progT">0 of 5 done</span><div class="bar"><i id="progB" style="width:0"></i></div></div>
+  </nav>
+
+  <main class="main">
+    <!-- HOME -->
+    <section class="pane" id="p-home" role="tabpanel">
+      <div class="hello"><img src="promo/mascot-laptop.png" alt=""><div><span class="zh">欢迎！</span><p style="margin-top:2px"><b style="color:var(--ink)">Welcome to Mandarin Zest.</b> Your downloads are in Your Orders. Here's how to get even more out of your Chinese.</p></div></div>
+      <div><div class="eb">YOUR STARTER CHECKLIST</div><h2 style="margin-top:4px">Five small steps</h2></div>
+      <ul class="todo" id="todo"></ul>
+    </section>
+
+    <!-- UPDATES -->
+    <section class="pane" id="p-updates" role="tabpanel">
+      <div><div class="eb">STAY UPDATED</div><h2 style="margin-top:4px">Be the first to know</h2></div>
+      <p>New materials, bootcamp dates, Club news and the occasional Chinese tip. No spam, unsubscribe anytime.</p>
+      <form id="fUp" novalidate>
+        <div class="form-body" style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:13.5px;font-weight:800">What would you like to hear about? <span style="font-weight:500;color:var(--muted)">(optional)</span></div>
+          <div class="chips">
+            <label><input type="checkbox" value="new materials"><span>New materials</span></label>
+            <label><input type="checkbox" value="bootcamps"><span>Bootcamp dates</span></label>
+            <label><input type="checkbox" value="club"><span>The Club</span></label>
+            <label><input type="checkbox" value="hsk"><span>HSK exam</span></label>
+            <label><input type="checkbox" value="taiwan"><span>Taiwanese Mandarin</span></label>
+          </div>
+          <div class="row"><input type="email" id="upEmail" placeholder="Your email" autocomplete="email" aria-label="Your email"><button class="btn" type="submit">Keep me posted</button></div>
+          <label class="consent"><input type="checkbox" id="upOk"> I agree to receive emails from Mandarin Zest. I can unsubscribe at any time.</label>
+          <div class="err" id="upErr" role="alert"></div>
+        </div>
+        <div class="done"><b>You're on the list! 🎉</b><p>We'll keep you posted. While you're here, come and say hi on Discord.</p><button class="btn dark" type="button" data-goto="community">Join the community</button></div>
+      </form>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section class="pane" id="p-community" role="tabpanel">
+      <div><div class="eb">COMMUNITY</div><h2 style="margin-top:4px">Learn Chinese with other learners</h2></div>
+      <div class="discord">
+        <div style="flex:1"><b>Join our Discord community</b><p style="margin-top:4px">Free to join: ask questions, share what you're learning, meet other learners. Members get 15% off their next order.</p></div>
+        <a class="btn" href="https://discord.gg/wp8WugbBaK" target="_blank" rel="noopener" data-mark="community">Join Discord ↗</a>
+      </div>
+      <div class="soc">
+        <a href="https://www.instagram.com/chinese_mandarin_zest/" target="_blank" rel="noopener" data-mark="community"><span class="ic" style="background:#fde3ec"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c13584" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c13584"/></svg></span><b>Instagram ↗</b><span>Daily Chinese words, memes and culture</span></a>
+        <a href="https://www.youtube.com/@ChineseMandarinZest" target="_blank" rel="noopener" data-mark="community"><span class="ic" style="background:#fde4e4"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M22 8.2a3 3 0 0 0-2.1-2.1C18 5.6 12 5.6 12 5.6s-6 0-7.9.5A3 3 0 0 0 2 8.2 31 31 0 0 0 1.6 12 31 31 0 0 0 2 15.8a3 3 0 0 0 2.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .4-3.8 31 31 0 0 0-.4-3.8z" fill="#e02b2b"/><path d="M10 15l5-3-5-3z" fill="#fff"/></svg></span><b>YouTube ↗</b><span>Shorts and lessons</span></a>
+        <a href="https://www.linkedin.com/company/mandarin-zest/" target="_blank" rel="noopener" data-mark="community"><span class="ic" style="background:#e3eef7"><svg width="20" height="20" viewBox="0 0 24 24" fill="#0a66c2"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></span><b>LinkedIn ↗</b><span>News from the team</span></a>
+      </div>
+    </section>
+
+    <!-- CLUB -->
+    <section class="pane" id="p-club" role="tabpanel">
+      <div><div class="eb">THE MANDARIN ZEST CLUB</div><h2 style="margin-top:4px">Ready to speak, not just read?</h2></div>
+      <div class="shot" id="shot"><span class="live"><i></i>Live every week</span></div>
+      <p>The Club is our speaking community: small-group conversation sessions online, at your level, with friendly hosts. It's a separate membership from your account here.</p>
+      <ul class="pts" id="pts"></ul>
+      <div class="deal" id="deal"></div>
+      <div class="row">
+        <a class="btn" id="trial" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" data-mark="club">Try a session · US$2.50 ↗</a>
+        <a class="btn ghost" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" data-mark="club">Discover the Club ↗</a>
+      </div>
+      <span style="font-size:13px;color:var(--muted)" id="clubPrice">Membership from US$25 a month, cancel anytime. One trial session per person.</span>
+    </section>
+
+    <!-- BOOTCAMPS -->
+    <section class="pane" id="p-bootcamps" role="tabpanel">
+      <div><div class="eb">BOOTCAMPS</div><h2 style="margin-top:4px">Short, intensive, live</h2></div>
+      <p>A few weeks with a teacher and a small group, on one goal. Open ones take sign-ups now; for the others, join the waitlist and we'll email you the dates.</p>
+      <div id="bcList" style="display:flex;flex-direction:column;gap:10px"><p>Loading the bootcamps…</p></div>
+      <a class="btn ghost" href="https://www.mandarinzest.com/bootcamps" target="_blank" rel="noopener" data-mark="bootcamps">See all bootcamps ↗</a>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="pane" id="p-tools" role="tabpanel">
+      <div><div class="eb">FREE TOOLS</div><h2 style="margin-top:4px">Practise for free on our website</h2></div>
+      <div class="tools" id="tools"></div>
+    </section>
+  </main>
+</div>
+<script src="club-offer.js?v=2"></script>
+<script>
+(function () {
+  var SITE = "https://www.mandarinzest.com";
+  var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
+  var WAITLIST_URL = "https://script.google.com/macros/s/AKfycbzI5QAO9wEhywb_Wm7GqwTQ9uPjAZEvU689N4eT25Ruja5iaj7S4Tp7FB4PClciMGs/exec"; // Bootcamp waitlist sheet
+  var STEPS = [
+    ["updates", "Get our updates", "New materials, bootcamp dates and Club news"],
+    ["community", "Join the community", "Our free Discord and our socials"],
+    ["club", "Discover the Club", "Speak Chinese live with other learners"],
+    ["bootcamps", "Check the bootcamps", "Short intensive courses with a teacher"],
+    ["tools", "Try our free tools", "Level test, stroke order, pinyin and more"]
+  ];
+  var TOOLS = [
+    ["HSK level test", "25 questions, find your level", "/quick-hsk-level-test", "测", "#fdf1ea", "#a8431a"],
+    ["HSK vocabulary lists", "Every New HSK word, level by level", "/the-new-hsk-vocabulary-lists-2026", "词", "#e6f1e1", "#1b6f1b"],
+    ["Stroke order", "Watch and practise any character", "/stroke-order-information", "写", "#e3eef7", "#2f6fa3"],
+    ["Pinyin practice", "Every sound, with recordings", "/learn-pinyin", "拼", "#fdf1ea", "#a8431a"],
+    ["Zhuyin (bopomofo)", "Learn the symbols used in Taiwan", "/learn-bopomofo-zhuyin", "ㄅ", "#e6f1e1", "#1b6f1b"],
+    ["Learning calculator", "How long until your goal?", "/chinese-learning-calculator", "算", "#e3eef7", "#2f6fa3"]
+  ];
+  var CLUB_PTS = ["Several 45-minute sessions every week", "Beginner to advanced, in small groups", "The Club app with Zest Town to practise in between", "70% off our materials for members"];
+
+  // saved progress (this browser only)
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem("mz-hub") || "{}") || {}; } catch (e) {}
+  function save() { try { localStorage.setItem("mz-hub", JSON.stringify(done)); } catch (e) {} }
+  function mark(k) { if (!done[k]) { done[k] = 1; save(); paint(); } }
+  function track(name) { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:"account hub " + name }, ga:{ event:"select_content", params:{ content_type:"account_hub", item_id:name } } }, "*"); } catch (e) {} }
+
+  function paint() {
+    var n = STEPS.filter(function (s) { return done[s[0]]; }).length;
+    document.getElementById("progT").textContent = n === STEPS.length ? "All done, 太棒了！" : n + " of " + STEPS.length + " done";
+    document.getElementById("progB").style.width = (n / STEPS.length * 100) + "%";
+    [].forEach.call(document.querySelectorAll(".ck"), function (c) { c.classList.toggle("y", !!done[c.dataset.k]); });
+    document.getElementById("todo").innerHTML = STEPS.map(function (s) {
+      return '<li class="' + (done[s[0]] ? "y" : "") + '" data-goto="' + s[0] + '" tabindex="0" role="button"><span class="c">' + (done[s[0]] ? "✓" : "") + '</span><span class="t"><b>' + s[1] + '</b><span>' + s[2] + '</span></span><span class="go">›</span></li>'; }).join("");
+  }
+
+  // tabs
+  var tabs = [].slice.call(document.querySelectorAll(".tab"));
+  function show(p) {
+    tabs.forEach(function (t) { t.setAttribute("aria-selected", String(t.dataset.p === p)); });
+    [].forEach.call(document.querySelectorAll(".pane"), function (s) { s.classList.toggle("on", s.id === "p-" + p); });
+    if (p === "bootcamps" || p === "tools") mark(p);
+    if (p !== "home") track(p);
+  }
+  tabs.forEach(function (t) { t.addEventListener("click", function () { show(t.dataset.p); }); });
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-goto]"); if (g) show(g.dataset.goto);
+    var m = e.target.closest("[data-mark]"); if (m) { mark(m.dataset.mark); track(m.dataset.mark + " link"); }
+  });
+  document.addEventListener("keydown", function (e) { var g = e.target.closest && e.target.closest("li[data-goto]"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); show(g.dataset.goto); } });
+
+  // updates form → Start Here sheet
+  document.getElementById("fUp").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("upEmail").value.trim(), err = document.getElementById("upErr");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please check your email address."; return; }
+    if (!document.getElementById("upOk").checked) { err.textContent = "Please tick the box so we can email you."; return; }
+    err.textContent = "";
+    var topics = [].map.call(document.querySelectorAll(".chips input:checked"), function (c) { return c.value; }).join(", ");
+    fetch(SHEET_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ email: email, source: "account-hub" + (topics ? " | " + topics : ""), timestamp: new Date().toISOString() }) }).catch(function () {});
+    try { window.top.postMessage({ mz:"track", event:"Lead", ga:{ event:"generate_lead", params:{ lead_source:"account-hub" } } }, "*"); } catch (e2) {}
+    this.classList.add("sent"); mark("updates");
+  });
+
+  // club
+  var SH = ["sessions/s02.jpg", "sessions/s05.jpg", "sessions/s01.jpg", "sessions/s03.jpg"], shot = document.getElementById("shot");
+  shot.insertAdjacentHTML("afterbegin", SH.map(function (s, i) { return '<img src="' + s + '" alt="A Club session on video call" class="' + (i ? "" : "on") + '" loading="lazy">'; }).join(""));
+  var si = 0; setInterval(function () { var im = shot.querySelectorAll("img"); im[si].classList.remove("on"); si = (si + 1) % im.length; im[si].classList.add("on"); }, 3500);
+  var tick = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1b6f1b" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+  document.getElementById("pts").innerHTML = CLUB_PTS.map(function (p) { return "<li>" + tick + "<span>" + p + "</span></li>"; }).join("");
+  if (window.CLUB_OFFER) { var co = CLUB_OFFER, d = document.getElementById("deal"); d.style.display = "block";
+    d.innerHTML = "<b>" + co.name + ":</b> " + co.pct + "% off " + co.first + " with the code <b>" + co.code + "</b> (until " + co.ends + ")."; }
+
+  // bootcamps from bootcamps.json
+  function esc(s) { return String(s || "").replace(/[&<>"]/g, function (c) { return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
+  fetch("bootcamps.json", { cache:"no-cache" }).then(function (r) { return r.json(); }).then(function (data) {
+    var today = new Date().toISOString().slice(0, 10);
+    var L = (data.bootcamps || []).map(function (b) {
+      var open = !!(b.signupBy && b.signupBy >= today && !/wait|soon/i.test(b.status || ""));
+      return { b: b, open: open };
+    }).sort(function (x, y) { return (y.open - x.open) || String(x.b.start || "9").localeCompare(String(y.b.start || "9")); });
+    document.getElementById("bcList").innerHTML = L.map(function (o, i) {
+      var b = o.b;
+      return '<div class="bc"><span class="pic' + (b.image ? '' : ' noimg') + '"' + (b.image ? ' style="background-image:url(\'' + esc(b.image) + '\')"' : '') + '></span><div class="in">' +
+        '<span class="st ' + (o.open ? "open" : "wait") + '">' + (o.open ? "OPEN NOW" : "WAITLIST") + '</span><b>' + esc(b.title) + '</b>' +
+        '<span class="meta">' + esc([b.dates, b.level].filter(Boolean).join(" · ")) + '</span>' +
+        '<div class="acts">' + (o.open ? '<a class="btn" href="' + esc(b.url) + '" target="_blank" rel="noopener" data-mark="bootcamps">Save my spot ↗</a>' : '<button class="btn dark" type="button" data-wl="' + i + '">Join the waitlist</button>') +
+        '<a class="btn ghost" href="' + esc(b.url) + '" target="_blank" rel="noopener" data-mark="bootcamps">Details ↗</a></div>' +
+        '<form class="wl row" data-i="' + i + '" novalidate><input type="text" placeholder="First name" aria-label="First name" autocomplete="given-name"><input type="email" placeholder="Email" aria-label="Email" autocomplete="email"><input class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="btn green" type="submit">Add me</button>' +
+        '<label class="consent" style="flex-basis:100%"><input type="checkbox"> Email me about this bootcamp.</label><span class="err" style="flex-basis:100%"></span></form></div></div>';
+    }).join("");
+    [].forEach.call(document.querySelectorAll("[data-wl]"), function (btn) {
+      btn.addEventListener("click", function () { var f = document.querySelector('.wl[data-i="' + btn.dataset.wl + '"]'); f.classList.add("show"); btn.style.display = "none"; f.querySelector("input").focus(); });
+    });
+    [].forEach.call(document.querySelectorAll(".wl"), function (f) {
+      f.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var b = L[+f.dataset.i].b, ins = f.querySelectorAll("input"), name = ins[0].value.trim(), email = ins[1].value.trim(), err = f.querySelector(".err");
+        if (!name) { err.textContent = "Please add your first name."; return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please check your email address."; return; }
+        if (!ins[3].checked) { err.textContent = "Please tick the box so we can email you."; return; }
+        fetch(WAITLIST_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" },
+          body: JSON.stringify({ name: name, email: email, bootcamp: b.title, consent: true, page: "account hub", website: ins[2].value }) }).catch(function () {});
+        try { window.top.postMessage({ mz:"track", event:"Lead", ga:{ event:"generate_lead", params:{ lead_source:"bootcamp-waitlist", bootcamp:b.title } } }, "*"); } catch (e2) {}
+        f.outerHTML = '<div class="done" style="display:flex"><b>You\'re on the list, ' + esc(name) + '!</b><p>We\'ll email ' + esc(email) + ' as soon as the dates are set.</p></div>';
+        mark("bootcamps");
+      });
+    });
+  }).catch(function () { document.getElementById("bcList").innerHTML = '<p>See all our bootcamps on the Bootcamps page.</p>'; });
+
+  // tools
+  document.getElementById("tools").innerHTML = TOOLS.map(function (t) {
+    return '<a href="' + SITE + t[2] + '" target="_blank" rel="noopener" data-mark="tools"><span class="ic" style="background:' + t[4] + ';color:' + t[5] + '">' + t[3] + '</span><span><b>' + t[0] + ' ↗</b><span>' + t[1] + '</span></span></a>'; }).join("");
+
+  paint(); show("home");
+  function report() { try { parent.postMessage({ mz:"height", h:Math.ceil(document.body.getBoundingClientRect().height + 8) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+})();
+</script>
+</body>
+</html>

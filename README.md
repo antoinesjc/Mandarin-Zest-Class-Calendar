@@ -454,6 +454,15 @@ After `earlyEnds` the early bird card is removed. Embed: same as the Taiwan tick
 - Waitlist: `waitlist.html?bootcamp=hsk-1-intensive-bootcamp&name=HSK%201%20Intensive%20Bootcamp` (440px). `&name=` was
   added because the page isn't published yet (not in bootcamps.json). Rows go to the Bootcamp waitlist sheet.
 
+## My account hub (24 Nov 2026)
+`account-hub.html`: for the website's My account page (customer accounts, not the Club). Account-style menu on the left
+(tabs on phones): Home (5-step starter checklist, saved in the browser), Stay updated (email + optional topics → Start Here
+sheet, source `account-hub | topics`), Community (public Discord discord.gg/wp8WugbBaK with the 15% off note, Instagram,
+YouTube, LinkedIn), The Club (session screenshots, 4 points, trial + Discover, Club offer from club-offer.js), Bootcamps
+(from bootcamps.json; open → Save my spot, others → inline waitlist → Bootcamp waitlist sheet, page "account hub"),
+Free tools (level test, HSK lists, stroke order, pinyin, zhuyin, calculator). Resizes itself.
+Embed: `height:max(1050px, min(1400px, calc((761px - 100vw) * 10000)))`, `scrolling="no"`.
+
 ## Dorota's free guide (email for PDF)
 
 - `dorota-guide.html`: "Chinese learning advice I wish someone gave me 10 years ago" (15-page PDF by Dorota). Cream card with
