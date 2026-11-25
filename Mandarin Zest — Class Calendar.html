@@ -234,6 +234,7 @@
 <div class="pop" id="pop" role="dialog" aria-live="polite"></div>
 
 <script src="categories.js"></script>
+<script src="seats.js?v=1"></script>
 <script>
 /* ============================================================
    LEVELS AND CATEGORIES: edit categories.js (labels and colours).
@@ -264,7 +265,9 @@ const MAX_SEATS = 6;
 let TAKEN = {};
 if (SEATS_URL) fetch(SEATS_URL).then(r => r.json()).then(d => { TAKEN = d.taken || {}; if (Object.keys(TAKEN).length && typeof render === "function") render(); }).catch(() => {});
 function trialRef(ev) { return "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : ""); }
-function trialFull(ev) { return (TAKEN[trialRef(ev)] || 0) >= MAX_SEATS; }
+function trialFull(ev) { return MZ_SEATS.left(trialRef(ev), TAKEN[trialRef(ev)]) === 0; }
+// members' "I'm in" from the Club app also take seats (seats.js): redraw once they're in
+MZ_SEATS.ready.then(() => { if (typeof render === "function") render(); });
 function trialPayLink(ev) {
   const ref = "trial-" + (ev.start || ev.date).replace(/:\d\dZ$/, "").replace(/[^0-9A-Za-z]+/g, "-").replace(/-$/, "") + (ev.start ? "-utc" : "");
   return TRIAL_PAY_URL + "?client_reference_id=" + encodeURIComponent(ref);
@@ -509,7 +512,7 @@ function showPop(card) {
   const dayName = ev.startD ? new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric", month: "short" }).format(ev.startD) : ev.date;
   pop.style.setProperty("--cat", c.color);
   const longDay = ev.startD ? new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).format(ev.startD) : ev.date;
-  const seatsLeft = Math.max(0, MAX_SEATS - (TAKEN[trialRef(ev)] || 0));
+  const seatsLeft = MZ_SEATS.left(trialRef(ev), TAKEN[trialRef(ev)]);
   pop.innerHTML = `<div class="ptop">${hostHtml(ev)}${ev.trial ? `<span class="seats${seatsLeft ? "" : " full"}">${seatsLeft ? (seatsLeft === 1 ? "Last seat!" : seatsLeft + " seats left") : "Sold out"}</span>` : ""}</div>
     <h3>${esc(ev.title)}</h3>
     <div class="tags">${ev.level ? `<span class="tag">${esc(ev.level)}</span>` : ""}${catsOf(ev).map(k => `<span class="tag cat" style="background:${CATEGORIES[k].color}">${esc(CATEGORIES[k].label)}</span>`).join("")}</div>

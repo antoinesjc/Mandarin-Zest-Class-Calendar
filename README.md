@@ -476,6 +476,13 @@ sheet (source `hsk-map | …`, only the first save). Data: HSK 3.0 words, pinyin
 Words dropped from HSK 3.0 only appear on the 2.0 map. Inspired by app.kandedong.com/hskmap's bento view (own code).
 Embed: `hskmap.html?v=2`, `height:max(1240px, min(2250px, calc((861px - 100vw) * 10000)))`, `scrolling="no"` (phones: resizes itself). Boxes are filled exactly: each level picks its own square size and number of columns (25 Nov 2026).
 
+## Seats: members + trial guests (25 Nov 2026)
+`seats.js` (loaded by the calendar, `trial.html` and `trial-board.html`): a session holds 8 people max (members who tapped
+"I'm in" in the Club app + trial guests), and at most 6 of them can be trial guests. Trial seats left =
+min(6 − trial bookings, 8 − members going − trial bookings). Trial bookings: trial-bookings Apps Script (as before).
+Members going: Supabase RPC `session_going_counts` (club-app project, counts only, keyed `trial-YYYY-MM-DDTHH-MM-utc`).
+Change MAX_TOTAL / MAX_TRIAL in seats.js. The Apps Script still only checks the 6 trial seats when a payment comes in.
+
 ## Dorota's free guide (email for PDF)
 
 - `dorota-guide.html`: "Chinese learning advice I wish someone gave me 10 years ago" (15-page PDF by Dorota). Cream card with

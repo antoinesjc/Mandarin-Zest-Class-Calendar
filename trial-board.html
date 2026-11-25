@@ -195,6 +195,7 @@
 <div id="root" aria-live="polite"></div>
 
 <script src="categories.js"></script>
+<script src="seats.js?v=1"></script>
 <script>
 // Price and booking link for every trial session. Change them here.
 const PRICE = "US$2.50";
@@ -244,7 +245,7 @@ function card(ev) {
 
   const top = el("div", "top");
   top.appendChild(whoEl(ev));
-  const left = Math.max(0, MAX_SEATS - (TAKEN[refOf(ev)] || 0));
+  const left = MZ_SEATS.left(refOf(ev), TAKEN[refOf(ev)]);
   const seats = el("span", "seats" + (left === 0 ? " full" : left <= 2 ? " few" : ""),
     left === 0 ? "Sold out" : left === 1 ? "Last seat!" : `${left} seats left`);
   top.appendChild(seats);
@@ -486,7 +487,7 @@ try { parent.postMessage({ mz: "hello" }, "*"); } catch (e) {}
 
 const hostsReady = fetch("hosts.json", { cache: "no-cache" }).then(r => r.json()).then(d => { HOSTS = d || {}; }).catch(() => {});
 const seatsReady = SEATS_URL
-  ? fetch(SEATS_URL).then(r => r.json()).then(d => { TAKEN = d.taken || {}; }).catch(() => {})
+  ? Promise.all([fetch(SEATS_URL).then(r => r.json()).then(d => { TAKEN = d.taken || {}; }).catch(() => {}), MZ_SEATS.ready])
   : Promise.resolve();
 Promise.all([fetch("events.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }), seatsReady, hostsReady])
   .then(([data]) => { ALL = upcoming(Array.isArray(data.events) ? data.events : []); render(); if (PIN) try { parent.postMessage({ mz: "scrolltop" }, "*"); } catch (x) {} })
