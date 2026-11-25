@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>HSK Map · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* HSK Map: every HSK 2.0 and HSK 3.0 word as a square on a world map (one continent per level, one region per word class).
+     Visitors mark the words they know in either version and see where they stand in the other.
+     Words: hskmap/words.json ([hanzi, pinyin, meaning, class, HSK 3.0 level (7 = 7-9, 0 = not in 3.0), HSK 2.0 level (0 = not in 2.0), traditional]).
+     Progress: saved in the browser; "Save my progress" also saves it in Supabase (hskmap_save / hskmap_load, email + 4-digit PIN)
+     and sends the email to the Start Here sheet (source "hsk-map"). Embed: see README. */
+  :root { --ink:#2a2420; --muted:#5c4f47; --green:#1b6f1b; --dk:#173f17; --mint:#e6f1e1; --peach:#fdf1ea; --orange:#f37a48; --orange-d:#e2632f; --brick:#a8431a; --line:#ece2da; --sea:#d9ebee; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; background:#fffaf6; }
+  body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; overflow:hidden; }
+  .zh { font-family:'Noto Sans SC','PingFang SC',sans-serif; }
+  button { font:inherit; color:inherit; }
+  /* top bar */
+  .top { display:flex; align-items:center; gap:12px; padding:10px 14px; border-bottom:1px solid var(--line); background:#fff; flex-wrap:wrap; }
+  .brand { display:flex; align-items:center; gap:8px; font-weight:800; font-size:18px; margin-right:4px; }
+  .brand img { width:30px; }
+  .seg { display:flex; background:#f1ebe5; border-radius:999px; padding:3px; }
+  .seg button { border:0; background:none; border-radius:999px; padding:7px 14px; font-size:14px; font-weight:800; color:var(--muted); cursor:pointer; }
+  .seg button[aria-pressed="true"] { background:var(--ink); color:#fff; }
+  .seg button:focus-visible, .btn:focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+  .total { font-size:14px; font-weight:700; color:var(--muted); }
+  .total b { color:var(--ink); font-size:16px; }
+  .sp { flex:1; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:38px; padding:0 16px; border-radius:999px; border:0; background:var(--orange); font-weight:800; font-size:14px; cursor:pointer; text-decoration:none; color:var(--ink); white-space:nowrap; }
+  .btn:hover { background:var(--orange-d); }
+  .btn.ghost { background:#fff; box-shadow:inset 0 0 0 1.5px #e2d6cc; } .btn.ghost:hover { background:#fff6f0; }
+  .btn.dark { background:var(--ink); color:#fff; }
+  .btn.green { background:var(--green); color:#fff; }
+  .saved { font-size:12.5px; color:var(--green); font-weight:700; }
+  /* level chips */
+  .levels { display:flex; gap:6px; padding:8px 14px; background:#fff; border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none; }
+  .levels::-webkit-scrollbar { display:none; }
+  .lv { flex:none; border:1.5px solid var(--line); border-radius:12px; padding:5px 10px 6px; background:#fff; cursor:pointer; min-width:92px; text-align:left; }
+  .lv b { display:block; font-size:12.5px; font-weight:800; }
+  .lv span { font-size:12px; color:var(--muted); }
+  .lv i { display:block; height:4px; border-radius:4px; background:#efe8e2; margin-top:4px; overflow:hidden; } .lv i em { display:block; height:100%; }
+  .lv:hover { border-color:#d9c8bb; }
+  /* body */
+  .body { flex:1; min-height:0; display:grid; grid-template-columns:270px minmax(0,1fr) 300px; }
+  .panel { overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:14px; background:#fffaf6; }
+  .panel.l { border-right:1px solid var(--line); } .panel.r { border-left:1px solid var(--line); }
+  .h { font-size:11.5px; font-weight:800; letter-spacing:.09em; color:var(--brick); }
+  .card { background:#fff; border-radius:16px; padding:12px; box-shadow:0 1px 0 var(--line); display:flex; flex-direction:column; gap:8px; }
+  .search { position:relative; }
+  .search input { width:100%; height:42px; border:1.5px solid #e2d6cc; border-radius:12px; padding:0 12px; font:inherit; font-size:15px; background:#fff; }
+  .search input:focus, .fld:focus { outline:none; border-color:var(--orange); box-shadow:0 0 0 3px rgba(243,122,72,.18); }
+  .res { display:flex; flex-direction:column; gap:2px; max-height:220px; overflow-y:auto; }
+  .res button { border:0; background:none; text-align:left; padding:6px 8px; border-radius:8px; cursor:pointer; display:flex; gap:8px; align-items:baseline; }
+  .res button:hover { background:#f6efe9; }
+  .res .zh { font-size:17px; font-weight:700; } .res small { color:var(--muted); font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mode { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .mode button { border:1.5px solid var(--line); background:#fff; border-radius:12px; padding:9px 6px; font-size:13.5px; font-weight:800; cursor:pointer; color:var(--muted); }
+  .mode button[aria-pressed="true"] { border-color:var(--green); background:var(--mint); color:var(--dk); }
+  .tg { display:flex; justify-content:space-between; align-items:center; font-size:14px; }
+  .tg input { width:38px; height:22px; appearance:none; background:#ddd3cb; border-radius:99px; position:relative; cursor:pointer; transition:background .2s; }
+  .tg input::after { content:""; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:#fff; transition:left .2s; }
+  .tg input:checked { background:var(--green); } .tg input:checked::after { left:19px; }
+  select.fld, input.fld { width:100%; height:40px; border:1.5px solid #e2d6cc; border-radius:10px; padding:0 10px; font:inherit; font-size:14px; background:#fff; }
+  .legend { display:flex; flex-direction:column; gap:4px; font-size:13px; }
+  .legend span { display:flex; align-items:center; gap:8px; }
+  .legend i { width:12px; height:12px; border-radius:3px; display:inline-block; }
+  .note { font-size:12.5px; color:var(--muted); line-height:1.45; }
+  /* map */
+  .mapw { position:relative; min-width:0; min-height:0; background:var(--sea); }
+  canvas { position:absolute; inset:0; width:100%; height:100%; touch-action:none; cursor:grab; display:block; }
+  canvas.drag { cursor:grabbing; }
+  .zoom { position:absolute; right:12px; bottom:12px; display:flex; flex-direction:column; gap:6px; }
+  .zoom button { width:40px; height:40px; border-radius:12px; border:0; background:#fff; box-shadow:0 4px 12px rgba(42,36,32,.15); font-size:20px; font-weight:800; cursor:pointer; }
+  .hint { position:absolute; left:12px; bottom:12px; background:rgba(255,255,255,.92); border-radius:12px; padding:8px 12px; font-size:12.5px; color:var(--muted); max-width:300px; pointer-events:none; }
+  .toast { position:absolute; left:50%; top:12px; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:8px 16px; font-size:13.5px; font-weight:700; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
+  .toast.on { opacity:1; }
+  /* details */
+  .det-empty { color:var(--muted); font-size:14px; text-align:center; padding:20px 6px; }
+  .big { font-size:60px; font-weight:700; line-height:1.1; }
+  .py { font-size:20px; font-weight:700; color:var(--brick); }
+  .mean { font-size:16px; }
+  .vs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .vs div { border:1.5px solid var(--line); border-radius:12px; padding:8px 10px; }
+  .vs small { display:block; font-size:11.5px; color:var(--muted); font-weight:700; }
+  .vs b { font-size:15px; display:flex; align-items:center; gap:6px; } .vs b i { width:9px; height:9px; border-radius:3px; display:inline-block; }
+  .know { width:100%; min-height:46px; font-size:15px; }
+  .know.on { background:var(--green); color:#fff; }
+  .stand { display:flex; flex-direction:column; gap:7px; }
+  .stand .row { display:grid; grid-template-columns:52px minmax(0,1fr) 44px; align-items:center; gap:8px; font-size:12.5px; font-weight:700; }
+  .stand .bar { height:9px; border-radius:99px; background:#efe8e2; overflow:hidden; } .stand .bar i { display:block; height:100%; transition:width .4s; }
+  .stand .row span:last-child { text-align:right; color:var(--muted); }
+  .club { background:var(--dk); color:#fff; border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:8px; }
+  .club p { margin:0; font-size:13.5px; color:#d6e6d0; line-height:1.45; } .club b { font-size:15px; }
+  /* modal */
+  .modal { position:fixed; inset:0; background:rgba(42,36,32,.45); display:none; align-items:center; justify-content:center; padding:16px; z-index:20; }
+  .modal.on { display:flex; }
+  .dlg { background:#fff; border-radius:20px; padding:22px; width:100%; max-width:400px; display:flex; flex-direction:column; gap:10px; box-shadow:0 24px 60px rgba(0,0,0,.25); }
+  .dlg h3 { margin:0; font-size:21px; }
+  .dlg p { margin:0; font-size:14px; color:var(--muted); line-height:1.5; }
+  .consent { display:flex; gap:8px; font-size:12.5px; color:var(--muted); line-height:1.4; align-items:flex-start; }
+  .consent input { margin-top:2px; accent-color:var(--green); }
+  .err { color:#b3361f; font-size:13px; font-weight:700; min-height:16px; }
+  .tabs2 { display:flex; gap:6px; }
+  .tabs2 button { flex:1; border:1.5px solid var(--line); background:#fff; border-radius:10px; padding:8px; font-weight:800; font-size:13.5px; cursor:pointer; color:var(--muted); }
+  .tabs2 button[aria-pressed="true"] { border-color:var(--ink); color:var(--ink); }
+  .x { align-self:flex-end; border:0; background:none; font-size:22px; cursor:pointer; margin:-10px -6px -6px 0; color:var(--muted); }
+  @media (max-width:1100px) { .body { grid-template-columns:240px minmax(0,1fr) 270px; } }
+  @media (max-width:860px) {
+    body { overflow:auto; height:auto; }
+    .body { display:flex; flex-direction:column; }
+    .mapw { height:460px; order:1; }
+    .panel.r { order:2; border-left:0; border-top:1px solid var(--line); }
+    .panel.l { order:3; border-right:0; border-top:1px solid var(--line); }
+    .brand span { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand"><img src="promo/mascot-laptop.png" alt=""><span>HSK Map</span></div>
+  <div class="seg" role="group" aria-label="HSK version"><button type="button" data-v="2" aria-pressed="false">HSK 2.0</button><button type="button" data-v="3" aria-pressed="true">HSK 3.0</button></div>
+  <div class="total" id="total"></div>
+  <div class="sp"></div>
+  <span class="saved" id="savedT"></span>
+  <button class="btn" type="button" id="saveBtn">Save my progress</button>
+</div>
+<div class="levels" id="levels"></div>
+<div class="body">
+  <aside class="panel l">
+    <div class="search"><input id="q" type="search" placeholder="Find a word: 学, xue, study" aria-label="Find a word" autocomplete="off"><div class="res" id="res"></div></div>
+    <div class="card">
+      <div class="h">TAP A SQUARE TO…</div>
+      <div class="mode" role="group" aria-label="Tap mode"><button type="button" data-m="look" aria-pressed="false">See the word</button><button type="button" data-m="mark" aria-pressed="true">Mark it known</button></div>
+      <span class="note">Tip: zoom in, switch to "Mark it known" and tap away. Tap again to unmark.</span>
+    </div>
+    <div class="card">
+      <div class="h">QUICK START</div>
+      <span class="note">Passed a level already? Mark all its words at once.</span>
+      <select class="fld" id="bulkLv" aria-label="Level to mark"></select>
+      <div style="display:flex;gap:6px"><button class="btn green" type="button" id="bulkOn" style="flex:1">Mark as known</button><button class="btn ghost" type="button" id="bulkOff">Clear</button></div>
+    </div>
+    <div class="card">
+      <div class="tg">Pinyin on squares <input type="checkbox" id="optPy" checked></div>
+      <div class="tg">Traditional characters <input type="checkbox" id="optTrad"></div>
+    </div>
+    <div class="card"><div class="h">REGIONS</div><div class="legend" id="legend"></div></div>
+  </aside>
+
+  <div class="mapw" id="mapw">
+    <canvas id="cv" aria-label="Map of HSK words: one continent per level, one square per word"></canvas>
+    <div class="toast" id="toast"></div>
+    <div class="hint" id="hint">Drag to move, scroll or pinch to zoom.</div>
+    <div class="zoom"><button type="button" id="zIn" aria-label="Zoom in">+</button><button type="button" id="zOut" aria-label="Zoom out">−</button><button type="button" id="zFit" aria-label="See the whole map" style="font-size:15px">⤢</button></div>
+  </div>
+
+  <aside class="panel r">
+    <div class="card" id="det"><div class="det-empty">Tap a square on the map to see the word, and its level in both HSK versions.</div></div>
+    <div class="card">
+      <div class="h" id="standH">WHERE YOU STAND IN HSK 3.0</div>
+      <div class="stand" id="stand"></div>
+      <span class="note" id="standN"></span>
+    </div>
+    <div class="club"><b>Know the words? Now say them.</b><p>Use them out loud in small-group sessions in the Mandarin Zest Club, from beginner to advanced.</p><a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Try a Club session ↗</a></div>
+  </aside>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mT">
+  <form class="dlg" id="mForm" novalidate>
+    <button class="x" type="button" id="mX" aria-label="Close">×</button>
+    <h3 id="mT">Save your progress</h3>
+    <div class="tabs2"><button type="button" data-t="save" aria-pressed="true">Save</button><button type="button" data-t="load" aria-pressed="false">I already saved</button></div>
+    <p id="mP">Keep your words on any device: use your email and pick a 4-digit PIN.</p>
+    <input class="fld" type="email" id="mEmail" placeholder="Your email" autocomplete="email" aria-label="Email">
+    <input class="fld" type="password" id="mPin" inputmode="numeric" maxlength="4" placeholder="4-digit PIN" autocomplete="off" aria-label="4-digit PIN">
+    <label class="consent" id="mCons"><input type="checkbox" id="mOk"> I agree to receive emails from Mandarin Zest (new materials, HSK tips, Club news). Unsubscribe anytime.</label>
+    <div class="err" id="mErr" role="alert"></div>
+    <button class="btn" type="submit" id="mGo">Save my progress</button>
+  </form>
+</div>
+
+<script>
+(function () {
+  var SB_URL = "https://eypehvhcqzhwssydvrhn.supabase.co", SB_KEY = "sb_publishable_sFnX5WLyN96IvLDDRY96mw_6dJaG6BG";
+  var SHEET_URL = "https://script.google.com/macros/s/AKfycbwPWbx4dg8r7HWMa_uMV-2ZH6Xis7VnzEWvUgVc8G3AUzY4lnrtaooCZGgsDrwHZ9VMYg/exec"; // Start Here sheet
+  var COLORS = { 1:"#4f9a4f", 2:"#2a8f86", 3:"#3f73b8", 4:"#7a5ab8", 5:"#c4457a", 6:"#e2632f", 7:"#b8901f", 0:"#8b7d73" };
+  var CLS = { noun:["Nouns","名词"], verb:["Verbs","动词"], adj:["Adjectives","形容词"], adv:["Adverbs","副词"], func:["Function words","虚词"],
+    num:["Numbers & measure words","数量词"], pron:["Pronouns","代词"], idiom:["Idioms & phrases","成语"], other:["Other","其他"] };
+  var CLS_ORDER = ["noun", "verb", "adj", "adv", "pron", "num", "func", "idiom", "other"];
+  // island names (per version)
+  var NAMES = {
+    3: { 1:["Sprout Isle","新芽岛"], 2:["Bamboo Key","竹子岛"], 3:["Tea Hills","茶山"], 4:["Lantern Bay","灯笼湾"], 5:["Jade Coast","玉海岸"], 6:["Dragon Ridge","龙岭"], 7:["Great Mainland","大陆"] },
+    2: { 1:["Sprout Isle","新芽岛"], 2:["Bamboo Key","竹子岛"], 3:["Tea Hills","茶山"], 4:["Lantern Bay","灯笼湾"], 5:["Jade Coast","玉海岸"], 6:["Dragon Ridge","龙岭"] }
+  };
+  function lvName(v, l) { return v === 3 ? (l === 7 ? "HSK 7–9" : l === 0 ? "Not in HSK 3.0" : "HSK " + l) : (l === 0 ? "Not in HSK 2.0" : "HSK " + l); }
+
+  var W = [], known = new Set(), ver = 3, mode = "mark", sel = -1, opt = { py:true, trad:false };
+  var S = {}; try { S = JSON.parse(localStorage.getItem("mz-hskmap") || "{}") || {}; } catch (e) {}
+  if (S.known) known = new Set(S.known.split("|").filter(Boolean));
+  if (S.ver) ver = S.ver;
+  function persist(sync) {
+    S.known = Array.from(known).join("|"); S.ver = ver;
+    try { localStorage.setItem("mz-hskmap", JSON.stringify(S)); } catch (e) {}
+    if (sync !== false && S.email && S.pin) { clearTimeout(persist.t); persist.t = setTimeout(cloudSave, 2500); }
+  }
+
+  // ---------- layout: one continent per level, regions by word class ----------
+  function hash(x, y, s) { var h = (x * 374761393 + y * 668265263 + s * 982451653) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967295; }
+  function noise(x, y, s) { // smooth value noise
+    var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, f = function (t) { return t * t * (3 - 2 * t); };
+    var a = hash(xi, yi, s), b = hash(xi + 1, yi, s), c = hash(xi, yi + 1, s), d = hash(xi + 1, yi + 1, s);
+    return a + (b - a) * f(xf) + (c - a) * f(yf) + (a - b - c + d) * f(xf) * f(yf);
+  }
+  var LAYOUTS = {};
+  function layout(v) {
+    if (LAYOUTS[v]) return LAYOUTS[v];
+    var key = v === 3 ? 4 : 5, levels = v === 3 ? [7, 6, 5, 4, 3, 2, 1] : [6, 5, 4, 3, 2, 1];
+    var byL = {}; W.forEach(function (w, i) { var l = w[key]; if (!l) return; (byL[l] = byL[l] || []).push(i); });
+    var occ = new Map(), conts = [], cells = new Map(), pos = new Int32Array(W.length * 2).fill(-99999);
+    // where each continent goes: biggest in the middle, the others around it
+    var ang = v === 3 ? { 6:200, 5:150, 4:95, 3:45, 2:-5, 1:-45, 0:-100 } : { 5:180, 4:120, 3:60, 2:10, 1:-35, 0:-110 };
+    var first = levels.find(function (l) { return byL[l]; }), R0 = Math.sqrt(byL[first].length / Math.PI);
+    levels.forEach(function (l, li) {
+      var ids = byL[l]; if (!ids) return;
+      var n = ids.length, R = Math.sqrt(n / Math.PI) * 1.08, cx = 0, cy = 0;
+      if (l !== first) {
+        var a = (ang[l] != null ? ang[l] : li * 50) * Math.PI / 180, d = R0 * 1.12 + R * 1.3 + 4;
+        cx = Math.round(Math.cos(a) * d); cy = Math.round(Math.sin(a) * d * 0.8);
+      }
+      // grow an organic blob: cells closest to the centre (with noise) that are free
+      var cand = [], rr = Math.ceil(R * 1.9) + 3, seed = l * 17 + v;
+      for (var y = -rr; y <= rr; y++) for (var x = -rr; x <= rr; x++) {
+        var X = cx + x, Y = cy + y, k = X + "," + Y;
+        var near = false; for (var dy = -2; dy <= 2 && !near; dy++) for (var dx = -2; dx <= 2; dx++) { if (occ.has((X + dx) + "," + (Y + dy))) { near = true; break; } }
+        if (near) continue;
+        var dist = Math.sqrt(x * x + y * y * 1.15) / R, nz = noise(X / 7, Y / 7, seed) * 0.55 + noise(X / 3, Y / 3, seed + 5) * 0.2;
+        cand.push([dist + nz, X, Y]);
+      }
+      cand.sort(function (a, b) { return a[0] - b[0]; });
+      var mine = cand.slice(0, n);
+      // regions: sweep cells by angle around the centre, classes in a fixed order
+      mine.forEach(function (c) { c[3] = Math.atan2(c[2] - cy, c[1] - cx); });
+      mine.sort(function (a, b) { return a[3] - b[3]; });
+      var groups = {}; ids.forEach(function (i) { var c = W[i][3]; (groups[c] = groups[c] || []).push(i); });
+      var order = CLS_ORDER.filter(function (c) { return groups[c]; }), k2 = 0, regions = [];
+      order.forEach(function (c) {
+        var g = groups[c], slice = mine.slice(k2, k2 + g.length); k2 += g.length;
+        slice.sort(function (a, b) { return a[2] - b[2] || a[1] - b[1]; }); // reading order inside a region
+        var sx = 0, sy = 0;
+        g.forEach(function (wi, j) { var cc = slice[j]; occ.set(cc[1] + "," + cc[2], wi); pos[wi * 2] = cc[1]; pos[wi * 2 + 1] = cc[2]; sx += cc[1]; sy += cc[2]; });
+        regions.push({ cls:c, x:sx / g.length, y:sy / g.length, n:g.length });
+      });
+      var minx = 1e9, miny = 1e9, maxx = -1e9, maxy = -1e9; mine.forEach(function (c) { minx = Math.min(minx, c[1]); maxx = Math.max(maxx, c[1]); miny = Math.min(miny, c[2]); maxy = Math.max(maxy, c[2]); });
+      conts.push({ l:l, n:n, ids:ids, cx:cx, cy:cy, box:[minx, miny, maxx, maxy], regions:regions });
+    });
+    var reg = new Map(); conts.forEach(function (c) { c.ids.forEach(function (i) { reg.set(i, c.l * 100 + CLS_ORDER.indexOf(W[i][3])); }); });
+    var bb = [1e9, 1e9, -1e9, -1e9]; conts.forEach(function (c) { bb[0] = Math.min(bb[0], c.box[0]); bb[1] = Math.min(bb[1], c.box[1]); bb[2] = Math.max(bb[2], c.box[2]); bb[3] = Math.max(bb[3], c.box[3]); });
+    return (LAYOUTS[v] = { occ:occ, pos:pos, conts:conts, reg:reg, bb:bb });
+  }
+
+  // ---------- canvas ----------
+  var cv = document.getElementById("cv"), ctx = cv.getContext("2d"), wrap = document.getElementById("mapw");
+  var cam = { x:0, y:0, s:6 }, dpr = 1, L = null;
+  function resize() { dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = wrap.clientWidth * dpr; cv.height = wrap.clientHeight * dpr; draw(); }
+  function fit() { var b = L.bb, w = wrap.clientWidth, h = wrap.clientHeight; cam.s = Math.min(w / (b[2] - b[0] + 8), h / (b[3] - b[1] + 8)); cam.x = (b[0] + b[2] + 1) / 2; cam.y = (b[1] + b[3] + 1) / 2; draw(); }
+  function toScreen(x, y) { return [(x - cam.x) * cam.s + wrap.clientWidth / 2, (y - cam.y) * cam.s + wrap.clientHeight / 2]; }
+  function toWorld(px, py) { return [(px - wrap.clientWidth / 2) / cam.s + cam.x, (py - wrap.clientHeight / 2) / cam.s + cam.y]; }
+  function hex(c, a) { var n = parseInt(c.slice(1), 16); return "rgba(" + (n >> 16) + "," + (n >> 8 & 255) + "," + (n & 255) + "," + a + ")"; }
+  var raf = 0; function draw() { if (!raf) raf = requestAnimationFrame(paint); }
+  function paint() {
+    raf = 0; if (!L) return;
+    var w = wrap.clientWidth, h = wrap.clientHeight, s = cam.s, key = ver === 3 ? 4 : 5;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = "#d9ebee"; ctx.fillRect(0, 0, w, h);
+    var tl = toWorld(0, 0), br = toWorld(w, h), x0 = Math.floor(tl[0]) - 1, y0 = Math.floor(tl[1]) - 1, x1 = Math.ceil(br[0]) + 1, y1 = Math.ceil(br[1]) + 1;
+    var gap = s > 8 ? Math.max(1, s * .06) : 0, showTxt = s >= 24, showPy = opt.py && s >= 38;
+    // land shadow
+    L.conts.forEach(function (c) {
+      var p = toScreen(c.box[0], c.box[1]); if (p[0] > w || p[1] > h) return;
+    });
+    var cells = (x1 - x0) * (y1 - y0) < 60000;
+    var iter = cells ? null : L.occ;
+    function tile(i, X, Y) {
+      var p = toScreen(X, Y), l = W[i][key], col = COLORS[l], k = known.has(W[i][0]);
+      ctx.fillStyle = k ? col : (s < 8 ? hex(col, .22) : "#fbf7f2");
+      ctx.fillRect(p[0] + gap / 2, p[1] + gap / 2, s - gap, s - gap);
+      if (!k && s >= 8) { ctx.fillStyle = hex(col, .12); ctx.fillRect(p[0] + gap / 2, p[1] + gap / 2, s - gap, s - gap); }
+      if (i === sel) { ctx.strokeStyle = "#2a2420"; ctx.lineWidth = Math.max(2, s * .08); ctx.strokeRect(p[0] + 1, p[1] + 1, s - 2, s - 2); }
+      if (showTxt) {
+        var hz = opt.trad && W[i][6] ? W[i][6] : W[i][0], fs = Math.min(s * .42, s * .86 / Math.max(1, hz.length));
+        ctx.fillStyle = k ? "#fff" : "#2a2420"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.font = "700 " + fs + "px 'Noto Sans " + (opt.trad ? "TC" : "SC") + "', sans-serif";
+        ctx.fillText(hz, p[0] + s / 2, p[1] + s * (showPy ? .6 : .52));
+        if (showPy) { ctx.font = "600 " + Math.min(s * .17, s * 1.55 / Math.max(1, W[i][1].length)) + "px Outfit, sans-serif"; ctx.fillStyle = k ? "rgba(255,255,255,.9)" : "#a8431a"; ctx.fillText(W[i][1], p[0] + s / 2, p[1] + s * .22); }
+      } else if (s >= 9 && !k) { ctx.fillStyle = hex(col, .35); ctx.fillRect(p[0] + s * .3, p[1] + s * .45, s * .4, Math.max(1, s * .1)); }
+    }
+    if (cells) { for (var Y = y0; Y <= y1; Y++) for (var X = x0; X <= x1; X++) { var i = L.occ.get(X + "," + Y); if (i != null) tile(i, X, Y); } }
+    else L.occ.forEach(function (i, k) { var c = k.split(","); tile(i, +c[0], +c[1]); });
+    // region borders
+    if (s >= 5) {
+      ctx.strokeStyle = s > 14 ? "rgba(42,36,32,.55)" : "rgba(42,36,32,.35)"; ctx.lineWidth = s > 14 ? 1.6 : 1; ctx.beginPath();
+      var X0 = Math.max(x0, L.bb[0] - 1), X1 = Math.min(x1, L.bb[2] + 1), Y0 = Math.max(y0, L.bb[1] - 1), Y1 = Math.min(y1, L.bb[3] + 1);
+      for (var yy = Y0; yy <= Y1; yy++) for (var xx = X0; xx <= X1; xx++) {
+        var a = L.occ.get(xx + "," + yy); if (a == null) continue;
+        var ra = L.reg.get(a), b1 = L.occ.get((xx + 1) + "," + yy), b2 = L.occ.get(xx + "," + (yy + 1)), p = toScreen(xx, yy);
+        if (b1 != null && L.reg.get(b1) !== ra) { ctx.moveTo(p[0] + s, p[1]); ctx.lineTo(p[0] + s, p[1] + s); }
+        if (b2 != null && L.reg.get(b2) !== ra) { ctx.moveTo(p[0], p[1] + s); ctx.lineTo(p[0] + s, p[1] + s); }
+      }
+      ctx.stroke();
+    }
+    // labels
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    L.conts.forEach(function (c) {
+      var p = toScreen(c.cx + .5, c.cy + .5), col = COLORS[c.l], nm = NAMES[ver][c.l] || ["", ""];
+      if (s < 18) {
+        var big = Math.max(15, Math.min(46, Math.sqrt(c.n) * s * .28));
+        label(lvName(ver, c.l), p[0], p[1] - big * .35, "800 " + big + "px Outfit, sans-serif", col);
+        label(nm[0] + " · " + nm[1], p[0], p[1] + big * .5, "700 " + Math.max(11, big * .38) + "px Outfit, 'Noto Sans SC', sans-serif", "#2a2420");
+        var pc = pct(c.ids); label(pc + "% known", p[0], p[1] + big * .95, "700 " + Math.max(10, big * .32) + "px Outfit, sans-serif", "#5c4f47");
+      }
+      if (s >= 9 && s < 24) c.regions.forEach(function (r) {
+        if (Math.sqrt(r.n) * s < 70) return;
+        var q = toScreen(r.x + .5, r.y + .5); label(CLS[r.cls][0], q[0], q[1], "800 " + Math.max(10, Math.min(15, s * .9)) + "px Outfit, sans-serif", "#2a2420", true);
+      });
+    });
+  }
+  function label(t, x, y, font, color, small) {
+    ctx.font = font; ctx.lineJoin = "round"; ctx.lineWidth = small ? 3.5 : 5; ctx.strokeStyle = "rgba(255,250,246,.92)"; ctx.strokeText(t, x, y); ctx.fillStyle = color; ctx.fillText(t, x, y);
+  }
+  function pct(ids) { if (!ids.length) return 0; var n = 0; ids.forEach(function (i) { if (known.has(W[i][0])) n++; }); return Math.round(n / ids.length * 100); }
+
+  // pan / zoom / tap
+  var pts = new Map(), moved = false, last = null, pinch = null;
+  cv.addEventListener("pointerdown", function (e) { cv.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.offsetX, e.offsetY]); moved = false; last = [e.offsetX, e.offsetY]; if (pts.size === 2) { var a = Array.from(pts.values()); pinch = { d:Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]), s:cam.s }; } });
+  cv.addEventListener("pointermove", function (e) {
+    if (!pts.has(e.pointerId)) return; pts.set(e.pointerId, [e.offsetX, e.offsetY]);
+    if (pts.size === 2 && pinch) { var a = Array.from(pts.values()), d = Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]); zoomAt((a[0][0] + a[1][0]) / 2, (a[0][1] + a[1][1]) / 2, pinch.s * d / pinch.d / cam.s); moved = true; return; }
+    var dx = e.offsetX - last[0], dy = e.offsetY - last[1]; if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+    if (moved) { cv.classList.add("drag"); cam.x -= dx / cam.s; cam.y -= dy / cam.s; last = [e.offsetX, e.offsetY]; draw(); hideHint(); }
+  });
+  function up(e) {
+    var tap = pts.size === 1 && !moved; pts.delete(e.pointerId); if (pts.size < 2) pinch = null; cv.classList.remove("drag");
+    if (tap) { var wpt = toWorld(e.offsetX, e.offsetY), i = L.occ.get(Math.floor(wpt[0]) + "," + Math.floor(wpt[1]));
+      if (i != null) { if (mode === "mark" && cam.s >= 14) toggle(i); select(i); }
+      else if (cam.s < 14) { var c = L.conts.find(function (c) { return wpt[0] >= c.box[0] && wpt[0] <= c.box[2] && wpt[1] >= c.box[1] && wpt[1] <= c.box[3]; }); if (c) flyTo(wpt[0], wpt[1], 30); }
+    }
+  }
+  cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", function (e) { pts.delete(e.pointerId); pinch = null; });
+  cv.addEventListener("wheel", function (e) { e.preventDefault(); zoomAt(e.offsetX, e.offsetY, Math.exp(-e.deltaY * .0016)); hideHint(); }, { passive:false });
+  function zoomAt(px, py, f) { var a = toWorld(px, py); cam.s = Math.max(1.2, Math.min(90, cam.s * f)); var b = toWorld(px, py); cam.x += a[0] - b[0]; cam.y += a[1] - b[1]; draw(); }
+  function flyTo(x, y, s) { var s0 = cam.s, x0 = cam.x, y0 = cam.y, t0 = performance.now();
+    (function step(t) { var k = Math.min(1, (t - t0) / 500), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; cam.x = x0 + (x + .5 - x0) * e; cam.y = y0 + (y + .5 - y0) * e; cam.s = s0 + (s - s0) * e; draw(); if (k < 1) requestAnimationFrame(step); })(t0); }
+  document.getElementById("zIn").onclick = function () { zoomAt(wrap.clientWidth / 2, wrap.clientHeight / 2, 1.6); };
+  document.getElementById("zOut").onclick = function () { zoomAt(wrap.clientWidth / 2, wrap.clientHeight / 2, 1 / 1.6); };
+  document.getElementById("zFit").onclick = fit;
+  function hideHint() { document.getElementById("hint").style.display = "none"; }
+
+  // ---------- words ----------
+  function toast(t) { var el = document.getElementById("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(function () { el.classList.remove("on"); }, 1800); }
+  function toggle(i) { var h = W[i][0]; if (known.has(h)) known.delete(h); else known.add(h); persist(); stats(); draw(); if (sel === i) details(i); }
+  function select(i) { sel = i; details(i); draw(); }
+  function lvTxt(v, l) { return l === 0 ? (v === 3 ? "Not in HSK 3.0" : "Not in HSK 2.0") : (v === 3 && l === 7 ? "Level 7–9" : "Level " + l); }
+  function details(i) {
+    var w = W[i], k = known.has(w[0]), hz = opt.trad && w[6] ? w[6] : w[0];
+    var same = w[5] && w[4] ? (w[4] === w[5] ? "The same level in HSK 2.0 and HSK 3.0." : w[4] < w[5] ? "Easier in HSK 3.0: it moved down " + (w[5] - w[4]) + (w[5] - w[4] > 1 ? " levels." : " level.") : "Harder in HSK 3.0: it moved up to " + (w[4] === 7 ? "7–9." : "level " + w[4] + ".")) : !w[5] ? "New in HSK 3.0." : "Dropped from HSK 3.0.";
+    document.getElementById("det").innerHTML = '<div class="big ' + (opt.trad ? '' : 'zh') + '" style="' + (opt.trad ? "font-family:'Noto Sans TC',sans-serif" : '') + '">' + hz + '</div>' +
+      (w[6] && !opt.trad ? '<span class="note">Traditional: <span style="font-family:\'Noto Sans TC\',sans-serif;font-size:15px;color:var(--ink)">' + w[6] + '</span></span>' : '') +
+      '<div class="py">' + w[1] + '</div><div class="mean">' + (w[2] || '') + '</div><span class="note">' + CLS[w[3]][0] + ' · ' + CLS[w[3]][1] + '</span>' +
+      '<div class="vs"><div><small>HSK 2.0</small><b><i style="background:' + COLORS[w[5]] + '"></i>' + lvTxt(2, w[5]) + '</b></div><div><small>HSK 3.0</small><b><i style="background:' + COLORS[w[4]] + '"></i>' + lvTxt(3, w[4]) + '</b></div></div>' +
+      '<span class="note">' + same + '</span>' +
+      '<button class="btn know ' + (k ? 'on' : '') + '" type="button" id="kBtn">' + (k ? '✓ I know this' : 'I know this') + '</button>';
+    document.getElementById("kBtn").onclick = function () { toggle(i); };
+  }
+
+  function stats() {
+    var key = ver === 3 ? 4 : 5, lv = ver === 3 ? [1, 2, 3, 4, 5, 6, 7] : [1, 2, 3, 4, 5, 6], tot = 0, kn = 0;
+    var html = lv.map(function (l) { var ids = []; W.forEach(function (w, i) { if (w[key] === l) ids.push(i); }); var p = pct(ids), n = Math.round(p * ids.length / 100); tot += ids.length; ids.forEach(function (i) { if (known.has(W[i][0])) kn++; });
+      return '<button class="lv" type="button" data-l="' + l + '"><b style="color:' + COLORS[l] + '">' + lvName(ver, l) + '</b><span>' + p + '% · ' + ids.length.toLocaleString() + ' words</span><i><em style="width:' + p + '%;background:' + COLORS[l] + '"></em></i></button>'; }).join("");
+    var el = document.getElementById("levels"); el.innerHTML = html;
+    [].forEach.call(el.querySelectorAll(".lv"), function (b) { b.onclick = function () { var c = L.conts.find(function (c) { return c.l === +b.dataset.l; }); if (c) flyTo(c.cx, c.cy, Math.max(4, Math.min(12, 300 / Math.sqrt(c.n)))); }; });
+    document.getElementById("total").innerHTML = "<b>" + kn.toLocaleString() + "</b> of " + tot.toLocaleString() + " HSK " + ver + ".0 words known";
+    // where you stand in the OTHER version
+    var other = ver === 3 ? 2 : 3, okey = other === 3 ? 4 : 5, olv = other === 3 ? [1, 2, 3, 4, 5, 6, 7] : [1, 2, 3, 4, 5, 6];
+    document.getElementById("standH").textContent = "WHERE YOU STAND IN HSK " + other + ".0";
+    document.getElementById("stand").innerHTML = olv.map(function (l) { var ids = []; W.forEach(function (w, i) { if (w[okey] === l) ids.push(i); }); var p = pct(ids);
+      return '<div class="row"><span style="color:' + COLORS[l] + '">' + (other === 3 && l === 7 ? "7–9" : "HSK " + l) + '</span><span class="bar"><i style="width:' + p + '%;background:' + COLORS[l] + '"></i></span><span>' + p + '%</span></div>'; }).join("");
+    // simple "your level" line: highest level with at least 80% known, counting levels below too
+    var best = 0; for (var j = 0; j < olv.length; j++) { var ids2 = []; W.forEach(function (w, i) { if (w[okey] && w[okey] <= olv[j]) ids2.push(i); }); if (pct(ids2) >= 80) best = olv[j]; else break; }
+    document.getElementById("standN").textContent = known.size === 0 ? "Mark the words you know on the map, then compare here." :
+      best ? "You know at least 80% of HSK " + other + ".0 " + (best === 7 ? "levels 1 to 9" : best === 1 ? "level 1" : "levels 1 to " + best) + "." : "Keep going: HSK " + other + ".0 level 1 is next.";
+    // bulk select options
+    var bl = document.getElementById("bulkLv"), cur = bl.value;
+    bl.innerHTML = lv.map(function (l) { return '<option value="' + l + '">' + "HSK " + ver + ".0 · " + lvName(ver, l) + (l > 1 ? " (and below)" : "") + "</option>"; }).join("");
+    if (cur) bl.value = cur;
+  }
+  document.getElementById("bulkOn").onclick = function () { bulk(true); };
+  document.getElementById("bulkOff").onclick = function () { bulk(false); };
+  function bulk(on) {
+    var l = +document.getElementById("bulkLv").value, key = ver === 3 ? 4 : 5, n = 0;
+    W.forEach(function (w) { if (w[key] && w[key] <= l) { if (on && !known.has(w[0])) { known.add(w[0]); n++; } if (!on && known.has(w[0])) { known.delete(w[0]); n++; } } });
+    persist(); stats(); draw(); toast(on ? n.toLocaleString() + " words marked as known" : n.toLocaleString() + " words cleared");
+  }
+
+  // search
+  function plain(s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ü/g, "u").replace(/\s+/g, "").toLowerCase(); }
+  var q = document.getElementById("q"), res = document.getElementById("res");
+  q.addEventListener("input", function () {
+    var t = q.value.trim(); if (!t) { res.innerHTML = ""; return; }
+    var p = plain(t), out = [];
+    for (var i = 0; i < W.length && out.length < 30; i++) { var w = W[i], key = ver === 3 ? 4 : 5; if (!w[key] && ver === 3) continue;
+      if (w[0].indexOf(t) >= 0 || (w[6] && w[6].indexOf(t) >= 0) || plain(w[1]).indexOf(p) === 0 || (p.length > 2 && (w[2] || "").toLowerCase().indexOf(t.toLowerCase()) >= 0)) out.push(i); }
+    res.innerHTML = out.length ? out.map(function (i) { return '<button type="button" data-i="' + i + '"><span class="zh">' + W[i][0] + '</span><small>' + W[i][1] + ' · ' + (W[i][2] || '') + '</small></button>'; }).join("") : '<span class="note" style="padding:6px">No word found in HSK ' + ver + '.0.</span>';
+    [].forEach.call(res.querySelectorAll("button"), function (b) { b.onclick = function () { var i = +b.dataset.i; select(i); flyTo(L.pos[i * 2], L.pos[i * 2 + 1], 56); }; });
+  });
+
+  // controls
+  [].forEach.call(document.querySelectorAll(".seg button"), function (b) { b.onclick = function () { setVer(+b.dataset.v); }; });
+  function setVer(v) {
+    ver = v; [].forEach.call(document.querySelectorAll(".seg button"), function (b) { b.setAttribute("aria-pressed", String(+b.dataset.v === v)); });
+    L = layout(v); persist(false); stats(); fit(); if (q.value) q.dispatchEvent(new Event("input"));
+    if (sel >= 0 && L.pos[sel * 2] > -99999) details(sel);
+  }
+  [].forEach.call(document.querySelectorAll(".mode button"), function (b) { b.onclick = function () { mode = b.dataset.m; [].forEach.call(document.querySelectorAll(".mode button"), function (x) { x.setAttribute("aria-pressed", String(x === b)); }); }; });
+  document.getElementById("optPy").onchange = function () { opt.py = this.checked; draw(); };
+  document.getElementById("optTrad").onchange = function () { opt.trad = this.checked; draw(); if (sel >= 0) details(sel); };
+  document.getElementById("legend").innerHTML = CLS_ORDER.map(function (c) { return '<span>' + CLS[c][0] + ' <span class="zh" style="color:var(--muted)">' + CLS[c][1] + '</span></span>'; }).join("");
+
+  // ---------- save with email + PIN ----------
+  var modal = document.getElementById("modal"), mt = "save";
+  function rpc(fn, body) { return fetch(SB_URL + "/rest/v1/rpc/" + fn, { method:"POST", headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify(body) }).then(function (r) { return r.json(); }); }
+  function setTab(t) { mt = t; [].forEach.call(document.querySelectorAll(".tabs2 button"), function (b) { b.setAttribute("aria-pressed", String(b.dataset.t === t)); });
+    document.getElementById("mP").textContent = t === "save" ? "Keep your words on any device: use your email and pick a 4-digit PIN." : "Enter the email and PIN you saved with. Your words come back on this device.";
+    document.getElementById("mCons").style.display = t === "save" ? "" : "none"; document.getElementById("mGo").textContent = t === "save" ? "Save my progress" : "Load my progress"; document.getElementById("mErr").textContent = ""; }
+  [].forEach.call(document.querySelectorAll(".tabs2 button"), function (b) { b.onclick = function () { setTab(b.dataset.t); }; });
+  document.getElementById("saveBtn").onclick = function () { if (S.email && S.pin) { cloudSave(true); return; } setTab("save"); modal.classList.add("on"); document.getElementById("mEmail").focus(); };
+  document.getElementById("mX").onclick = function () { modal.classList.remove("on"); };
+  modal.addEventListener("click", function (e) { if (e.target === modal) modal.classList.remove("on"); });
+  document.getElementById("mForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("mEmail").value.trim().toLowerCase(), pin = document.getElementById("mPin").value.trim(), err = document.getElementById("mErr");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "Please check your email address."; return; }
+    if (!/^\d{4}$/.test(pin)) { err.textContent = "Your PIN is 4 digits."; return; }
+    if (mt === "save" && !document.getElementById("mOk").checked) { err.textContent = "Please tick the box to continue."; return; }
+    err.textContent = ""; var go = document.getElementById("mGo"); go.disabled = true;
+    if (mt === "save") {
+      rpc("hskmap_save", { p_email:email, p_pin:pin, p_known:Array.from(known).join("|") }).then(function (r) {
+        go.disabled = false;
+        if (r === "created" || r === "ok") {
+          S.email = email; S.pin = pin; persist(false); modal.classList.remove("on"); savedLabel(); toast("Progress saved ✓");
+          if (r === "created") {
+            var lv2 = summary();
+            fetch(SHEET_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" }, body:JSON.stringify({ email:email, source:"hsk-map | " + lv2, timestamp:new Date().toISOString() }) }).catch(function () {});
+            try { window.top.postMessage({ mz:"track", event:"Lead", ga:{ event:"generate_lead", params:{ lead_source:"hsk-map" } } }, "*"); } catch (e2) {}
+          }
+        } else err.textContent = r === "wrong_pin" ? "This email is already saved with another PIN. Use \"I already saved\" to load it." : r === "locked" ? "Too many tries. Please wait 15 minutes." : "Something went wrong. Please try again.";
+      }).catch(function () { go.disabled = false; err.textContent = "Couldn't reach the server. Please try again."; });
+    } else {
+      rpc("hskmap_load", { p_email:email, p_pin:pin }).then(function (r) {
+        go.disabled = false;
+        if (r.status === "ok") { (r.known || "").split("|").filter(Boolean).forEach(function (h) { known.add(h); }); S.email = email; S.pin = pin; persist(); stats(); draw(); modal.classList.remove("on"); savedLabel(); toast("Welcome back! " + known.size.toLocaleString() + " words loaded"); }
+        else err.textContent = r.status === "none" ? "No progress saved with this email yet." : r.status === "wrong_pin" ? "Wrong PIN for this email." : r.status === "locked" ? "Too many tries. Please wait 15 minutes." : "Something went wrong.";
+      }).catch(function () { go.disabled = false; err.textContent = "Couldn't reach the server. Please try again."; });
+    }
+  });
+  function summary() { var a = [2, 3].map(function (v) { var key = v === 3 ? 4 : 5, ids = []; W.forEach(function (w, i) { if (w[key]) ids.push(i); }); return "HSK " + v + ".0 " + pct(ids) + "%"; }); return known.size + " words, " + a.join(", "); }
+  function cloudSave(manual) {
+    if (!S.email || !S.pin) return;
+    rpc("hskmap_save", { p_email:S.email, p_pin:S.pin, p_known:Array.from(known).join("|") }).then(function (r) { if (r === "ok" || r === "created") { savedLabel(); if (manual) toast("Progress saved ✓"); } }).catch(function () {});
+  }
+  function savedLabel() { var el = document.getElementById("savedT"), b = document.getElementById("saveBtn"); if (S.email) { el.textContent = "Saved to " + S.email; b.textContent = "Save now"; b.classList.add("ghost"); } }
+
+  // ---------- start ----------
+  fetch("hskmap/words.json").then(function (r) { return r.json(); }).then(function (d) {
+    W = d.w; L = layout(ver); [].forEach.call(document.querySelectorAll(".seg button"), function (b) { b.setAttribute("aria-pressed", String(+b.dataset.v === ver)); });
+    stats(); resize(); fit(); savedLabel();
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(draw);
+  });
+  new ResizeObserver(function () { resize(); }).observe(wrap);
+  // on phones the page scrolls: tell the website how tall it is (the <head> listener resizes the frame)
+  function report() { if (window.innerWidth > 860) return; try { parent.postMessage({ mz:"height", h:Math.ceil(document.documentElement.scrollHeight + 4) }, "*"); } catch (e) {} }
+  new ResizeObserver(report).observe(document.body); window.addEventListener("load", report);
+})();
+</script>
+</body>
+</html>
