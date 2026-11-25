@@ -8,12 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  /* HSK Map: every HSK 2.0 and HSK 3.0 word as a square on a world map (one continent per level, one region per word class).
+  /* HSK Map: every HSK 2.0 and HSK 3.0 word as a square on a squares map (one box per level, sized by its number of words; words grouped by class inside).
      Visitors mark the words they know in either version and see where they stand in the other.
      Words: hskmap/words.json ([hanzi, pinyin, meaning, class, HSK 3.0 level (7 = 7-9, 0 = not in 3.0), HSK 2.0 level (0 = not in 2.0), traditional]).
      Progress: saved in the browser; "Save my progress" also saves it in Supabase (hskmap_save / hskmap_load, email + 4-digit PIN)
      and sends the email to the Start Here sheet (source "hsk-map"). Embed: see README. */
-  :root { --ink:#2a2420; --muted:#5c4f47; --green:#1b6f1b; --dk:#173f17; --mint:#e6f1e1; --peach:#fdf1ea; --orange:#f37a48; --orange-d:#e2632f; --brick:#a8431a; --line:#ece2da; --sea:#d9ebee; }
+  :root { --ink:#2a2420; --muted:#5c4f47; --green:#1b6f1b; --dk:#173f17; --mint:#e6f1e1; --peach:#fdf1ea; --orange:#f37a48; --orange-d:#e2632f; --brick:#a8431a; --line:#ece2da; --sea:#f4efea; }
   * { box-sizing:border-box; }
   html, body { margin:0; height:100%; background:#fffaf6; }
   body { font-family:'Outfit',system-ui,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; overflow:hidden; }
@@ -151,7 +151,7 @@
   </aside>
 
   <div class="mapw" id="mapw">
-    <canvas id="cv" aria-label="Map of HSK words: one continent per level, one square per word"></canvas>
+    <canvas id="cv" aria-label="Map of HSK words: one box per level, one square per word"></canvas>
     <div class="toast" id="toast"></div>
     <div class="hint" id="hint">Drag to move, scroll or pinch to zoom.</div>
     <div class="zoom"><button type="button" id="zIn" aria-label="Zoom in">+</button><button type="button" id="zOut" aria-label="Zoom out">−</button><button type="button" id="zFit" aria-label="See the whole map" style="font-size:15px">⤢</button></div>
@@ -190,11 +190,6 @@
   var CLS = { noun:["Nouns","名词"], verb:["Verbs","动词"], adj:["Adjectives","形容词"], adv:["Adverbs","副词"], func:["Function words","虚词"],
     num:["Numbers & measure words","数量词"], pron:["Pronouns","代词"], idiom:["Idioms & phrases","成语"], other:["Other","其他"] };
   var CLS_ORDER = ["noun", "verb", "adj", "adv", "pron", "num", "func", "idiom", "other"];
-  // island names (per version)
-  var NAMES = {
-    3: { 1:["Sprout Isle","新芽岛"], 2:["Bamboo Key","竹子岛"], 3:["Tea Hills","茶山"], 4:["Lantern Bay","灯笼湾"], 5:["Jade Coast","玉海岸"], 6:["Dragon Ridge","龙岭"], 7:["Great Mainland","大陆"] },
-    2: { 1:["Sprout Isle","新芽岛"], 2:["Bamboo Key","竹子岛"], 3:["Tea Hills","茶山"], 4:["Lantern Bay","灯笼湾"], 5:["Jade Coast","玉海岸"], 6:["Dragon Ridge","龙岭"] }
-  };
   function lvName(v, l) { return v === 3 ? (l === 7 ? "HSK 7–9" : l === 0 ? "Not in HSK 3.0" : "HSK " + l) : (l === 0 ? "Not in HSK 2.0" : "HSK " + l); }
 
   var W = [], known = new Set(), ver = 3, mode = "mark", sel = -1, opt = { py:true, trad:false };
@@ -207,57 +202,54 @@
     if (sync !== false && S.email && S.pin) { clearTimeout(persist.t); persist.t = setTimeout(cloudSave, 2500); }
   }
 
-  // ---------- layout: one continent per level, regions by word class ----------
-  function hash(x, y, s) { var h = (x * 374761393 + y * 668265263 + s * 982451653) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967295; }
-  function noise(x, y, s) { // smooth value noise
-    var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, f = function (t) { return t * t * (3 - 2 * t); };
-    var a = hash(xi, yi, s), b = hash(xi + 1, yi, s), c = hash(xi, yi + 1, s), d = hash(xi + 1, yi + 1, s);
-    return a + (b - a) * f(xf) + (c - a) * f(yf) + (a - b - c + d) * f(xf) * f(yf);
-  }
+  // ---------- layout: a squares map, one box per level (area = number of words), words grouped by class inside ----------
   var LAYOUTS = {};
+  function squarify(items, x, y, w, h, out) { // items: [{v, ...}] sorted big → small; fills the rectangle
+    if (!items.length) return;
+    if (items.length === 1) { out.push([items[0], x, y, w, h]); return; }
+    var total = items.reduce(function (a, b) { return a + b.v; }, 0), side = Math.min(w, h), row = [], rest = items.slice(), best = Infinity;
+    function worst(r) { var sum = r.reduce(function (a, b) { return a + b.v; }, 0), len = sum / total * (w * h) / side, m = 0;
+      r.forEach(function (it) { var a = it.v / total * (w * h), q = a / len, rr = Math.max(len / q, q / len); if (rr > m) m = rr; }); return m; }
+    while (rest.length) { var t = row.concat([rest[0]]), wv = worst(t); if (row.length && wv > best) break; row = t; best = wv; rest.shift(); }
+    var rsum = row.reduce(function (a, b) { return a + b.v; }, 0), frac = rsum / total;
+    if (w >= h) { var rw = w * frac, yy = y; row.forEach(function (it) { var hh = h * it.v / rsum; out.push([it, x, yy, rw, hh]); yy += hh; }); squarify(rest, x + rw, y, w - rw, h, out); }
+    else { var rh = h * frac, xx = x; row.forEach(function (it) { var ww = w * it.v / rsum; out.push([it, xx, y, ww, rh]); xx += ww; }); squarify(rest, x, y + rh, w, h - rh, out); }
+  }
   function layout(v) {
     if (LAYOUTS[v]) return LAYOUTS[v];
-    var key = v === 3 ? 4 : 5, levels = v === 3 ? [7, 6, 5, 4, 3, 2, 1] : [6, 5, 4, 3, 2, 1];
-    var byL = {}; W.forEach(function (w, i) { var l = w[key]; if (!l) return; (byL[l] = byL[l] || []).push(i); });
-    var occ = new Map(), conts = [], cells = new Map(), pos = new Int32Array(W.length * 2).fill(-99999);
-    // where each continent goes: biggest in the middle, the others around it
-    var ang = v === 3 ? { 6:200, 5:150, 4:95, 3:45, 2:-5, 1:-45, 0:-100 } : { 5:180, 4:120, 3:60, 2:10, 1:-35, 0:-110 };
-    var first = levels.find(function (l) { return byL[l]; }), R0 = Math.sqrt(byL[first].length / Math.PI);
-    levels.forEach(function (l, li) {
-      var ids = byL[l]; if (!ids) return;
-      var n = ids.length, R = Math.sqrt(n / Math.PI) * 1.08, cx = 0, cy = 0;
-      if (l !== first) {
-        var a = (ang[l] != null ? ang[l] : li * 50) * Math.PI / 180, d = R0 * 1.12 + R * 1.3 + 4;
-        cx = Math.round(Math.cos(a) * d); cy = Math.round(Math.sin(a) * d * 0.8);
-      }
-      // grow an organic blob: cells closest to the centre (with noise) that are free
-      var cand = [], rr = Math.ceil(R * 1.9) + 3, seed = l * 17 + v;
-      for (var y = -rr; y <= rr; y++) for (var x = -rr; x <= rr; x++) {
-        var X = cx + x, Y = cy + y, k = X + "," + Y;
-        var near = false; for (var dy = -2; dy <= 2 && !near; dy++) for (var dx = -2; dx <= 2; dx++) { if (occ.has((X + dx) + "," + (Y + dy))) { near = true; break; } }
-        if (near) continue;
-        var dist = Math.sqrt(x * x + y * y * 1.15) / R, nz = noise(X / 7, Y / 7, seed) * 0.55 + noise(X / 3, Y / 3, seed + 5) * 0.2;
-        cand.push([dist + nz, X, Y]);
-      }
-      cand.sort(function (a, b) { return a[0] - b[0]; });
-      var mine = cand.slice(0, n);
-      // regions: sweep cells by angle around the centre, classes in a fixed order
-      mine.forEach(function (c) { c[3] = Math.atan2(c[2] - cy, c[1] - cx); });
-      mine.sort(function (a, b) { return a[3] - b[3]; });
-      var groups = {}; ids.forEach(function (i) { var c = W[i][3]; (groups[c] = groups[c] || []).push(i); });
-      var order = CLS_ORDER.filter(function (c) { return groups[c]; }), k2 = 0, regions = [];
-      order.forEach(function (c) {
-        var g = groups[c], slice = mine.slice(k2, k2 + g.length); k2 += g.length;
-        slice.sort(function (a, b) { return a[2] - b[2] || a[1] - b[1]; }); // reading order inside a region
-        var sx = 0, sy = 0;
-        g.forEach(function (wi, j) { var cc = slice[j]; occ.set(cc[1] + "," + cc[2], wi); pos[wi * 2] = cc[1]; pos[wi * 2 + 1] = cc[2]; sx += cc[1]; sy += cc[2]; });
-        regions.push({ cls:c, x:sx / g.length, y:sy / g.length, n:g.length });
+    var key = v === 3 ? 4 : 5, byL = {};
+    W.forEach(function (w, i) { var l = w[key]; if (l) (byL[l] = byL[l] || []).push(i); });
+    var lv = Object.keys(byL).map(Number), sum = 0; lv.forEach(function (l) { sum += byL[l].length; });
+    for (var slack = 1.06; ; slack += .03) {
+      var GW = Math.ceil(Math.sqrt(sum * slack * 1.3)), GH = Math.ceil(sum * slack / GW), rects = [];
+      var items = lv.map(function (l) { return { l:l, v:byL[l].length }; }).sort(function (a, b) { return b.v - a.v; });
+      squarify(items, 0, 0, GW, GH, rects);
+      var ok = true, boxes = rects.map(function (r) {
+        // integer box, mirrored so the biggest level sits on the right and HSK 1 top left; 1-square gutter between boxes
+        var x0 = Math.round(r[1]), y0 = Math.round(r[2]), x1 = Math.round(r[1] + r[3]), y1 = Math.round(r[2] + r[4]);
+        var X0 = GW - x1, X1 = GW - x0, Y0 = GH - y1, Y1 = GH - y0, bx = X0 + (X0 > 0 ? 1 : 0), by = Y0 + (Y0 > 0 ? 1 : 0);
+        var bw = X1 - bx, bh = Y1 - by; if (bw * bh < r[0].v) ok = false;
+        return { l:r[0].l, x:bx, y:by, w:bw, h:bh };
       });
-      var minx = 1e9, miny = 1e9, maxx = -1e9, maxy = -1e9; mine.forEach(function (c) { minx = Math.min(minx, c[1]); maxx = Math.max(maxx, c[1]); miny = Math.min(miny, c[2]); maxy = Math.max(maxy, c[2]); });
-      conts.push({ l:l, n:n, ids:ids, cx:cx, cy:cy, box:[minx, miny, maxx, maxy], regions:regions });
+      if (ok) break;
+    }
+    // keep reading order: if HSK 1 ended up to the right of HSK 2 on the same row, swap them
+    var b1 = boxes.find(function (b) { return b.l === 1; }), b2 = boxes.find(function (b) { return b.l === 2; });
+    if (b1 && b2 && b1.y === b2.y && b1.h === b2.h && b1.x > b2.x) { var left = b2.x; b2.x = left + b1.w + (b1.x - (b2.x + b2.w)); b1.x = left; }
+    var occ = new Map(), pos = new Int32Array(W.length * 2).fill(-99999), conts = [], reg = new Map();
+    boxes.forEach(function (b) {
+      var ids = byL[b.l].slice().sort(function (a, c) { return CLS_ORDER.indexOf(W[a][3]) - CLS_ORDER.indexOf(W[c][3]) || a - c; });
+      // fill column by column inside the box when it is tall, row by row when it is wide, so word classes form bands
+      var regions = {}, k = 0;
+      ids.forEach(function (wi, j) {
+        var X = b.x + (j % b.w), Y = b.y + Math.floor(j / b.w);
+        occ.set(X + "," + Y, wi); pos[wi * 2] = X; pos[wi * 2 + 1] = Y; reg.set(wi, b.l * 100 + CLS_ORDER.indexOf(W[wi][3]));
+        var c = W[wi][3], R = regions[c] = regions[c] || { cls:c, x:0, y:0, n:0 }; R.x += X; R.y += Y; R.n++;
+      });
+      var rs = Object.keys(regions).map(function (c) { var R = regions[c]; R.x /= R.n; R.y /= R.n; return R; });
+      conts.push({ l:b.l, n:ids.length, ids:ids, cx:b.x + b.w / 2 - .5, cy:b.y + b.h / 2 - .5, box:[b.x, b.y, b.x + b.w - 1, b.y + b.h - 1], regions:rs });
     });
-    var reg = new Map(); conts.forEach(function (c) { c.ids.forEach(function (i) { reg.set(i, c.l * 100 + CLS_ORDER.indexOf(W[i][3])); }); });
-    var bb = [1e9, 1e9, -1e9, -1e9]; conts.forEach(function (c) { bb[0] = Math.min(bb[0], c.box[0]); bb[1] = Math.min(bb[1], c.box[1]); bb[2] = Math.max(bb[2], c.box[2]); bb[3] = Math.max(bb[3], c.box[3]); });
+    var bb = [0, 0, GW - 1, GH - 1];
     return (LAYOUTS[v] = { occ:occ, pos:pos, conts:conts, reg:reg, bb:bb });
   }
 
@@ -274,7 +266,11 @@
     raf = 0; if (!L) return;
     var w = wrap.clientWidth, h = wrap.clientHeight, s = cam.s, key = ver === 3 ? 4 : 5;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#d9ebee"; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#f4efea"; ctx.fillRect(0, 0, w, h);
+    // level boxes
+    L.conts.forEach(function (c) { var a = toScreen(c.box[0], c.box[1]), z = toScreen(c.box[2] + 1, c.box[3] + 1), col = COLORS[c.l];
+      ctx.fillStyle = hex(col, .06); ctx.fillRect(a[0], a[1], z[0] - a[0], z[1] - a[1]);
+      ctx.strokeStyle = hex(col, .7); ctx.lineWidth = 2; ctx.strokeRect(a[0] - 1, a[1] - 1, z[0] - a[0] + 2, z[1] - a[1] + 2); });
     var tl = toWorld(0, 0), br = toWorld(w, h), x0 = Math.floor(tl[0]) - 1, y0 = Math.floor(tl[1]) - 1, x1 = Math.ceil(br[0]) + 1, y1 = Math.ceil(br[1]) + 1;
     var gap = s > 8 ? Math.max(1, s * .06) : 0, showTxt = s >= 24, showPy = opt.py && s >= 38;
     // land shadow
@@ -314,12 +310,11 @@
     // labels
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     L.conts.forEach(function (c) {
-      var p = toScreen(c.cx + .5, c.cy + .5), col = COLORS[c.l], nm = NAMES[ver][c.l] || ["", ""];
+      var p = toScreen(c.cx + .5, c.cy + .5), col = COLORS[c.l];
       if (s < 18) {
-        var big = Math.max(15, Math.min(46, Math.sqrt(c.n) * s * .28));
-        label(lvName(ver, c.l), p[0], p[1] - big * .35, "800 " + big + "px Outfit, sans-serif", col);
-        label(nm[0] + " · " + nm[1], p[0], p[1] + big * .5, "700 " + Math.max(11, big * .38) + "px Outfit, 'Noto Sans SC', sans-serif", "#2a2420");
-        var pc = pct(c.ids); label(pc + "% known", p[0], p[1] + big * .95, "700 " + Math.max(10, big * .32) + "px Outfit, sans-serif", "#5c4f47");
+        var bw = (c.box[2] - c.box[0] + 1) * s, bh = (c.box[3] - c.box[1] + 1) * s, big = Math.max(13, Math.min(60, bw * .2, bh * .32));
+        label(lvName(ver, c.l), p[0], p[1] - big * .2, "800 " + big + "px Outfit, sans-serif", col);
+        var pc = pct(c.ids); label(pc + "% known", p[0], p[1] + big * .55, "700 " + Math.max(10, big * .34) + "px Outfit, sans-serif", "#5c4f47");
       }
       if (s >= 9 && s < 24) c.regions.forEach(function (r) {
         if (Math.sqrt(r.n) * s < 70) return;

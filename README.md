@@ -464,15 +464,16 @@ Free tools (level test, HSK lists, stroke order, pinyin, zhuyin, calculator). Re
 Embed: `height:max(1050px, min(1400px, calc((761px - 100vw) * 10000)))`, `scrolling="no"`.
 
 ## HSK Map (25 Nov 2026)
-`hskmap.html` + `hskmap/words.json`: every HSK 2.0 and HSK 3.0 word as a square on a world map, one continent per level
-(HSK 7–9 = the big mainland), one region per word class (nouns, verbs, adjectives…). Switch HSK 2.0 / 3.0; mark words
+`hskmap.html` + `hskmap/words.json`: every HSK 2.0 and HSK 3.0 word as a square on a squares map (since 25 Nov 2026,
+at Antoine's request, instead of the world map): one box per level sized by its number of words (squarified, HSK 1 top left,
+the biggest level on the right), words grouped by class inside each box (nouns, verbs, adjectives…). Switch HSK 2.0 / 3.0; mark words
 known (tap mode "Mark it known", the details panel, or "Quick start" = a whole level and below); the right panel shows
 where you stand in the other version. Search by hanzi, pinyin without tones or English. Pinyin / traditional toggles.
 Progress: saved in the browser; "Save my progress" = email + 4-digit PIN in Supabase (club-app project, table
 `hskmap_progress`, RPCs `hskmap_save` / `hskmap_load`), then it syncs by itself; the email also goes to the Start Here
 sheet (source `hsk-map | …`, only the first save). Data: HSK 3.0 words, pinyin, meanings and classes from the club-app
 `data/hsk_words.json` (same list as the HSK Temple); HSK 2.0 levels matched from drkameleon/complete-hsk-vocabulary (MIT).
-Words dropped from HSK 3.0 only appear on the 2.0 map. Inspired by app.kandedong.com/hskmap (own code and art).
+Words dropped from HSK 3.0 only appear on the 2.0 map. Inspired by app.kandedong.com/hskmap's bento view (own code).
 Embed: `height:max(820px, min(1950px, calc((861px - 100vw) * 10000)))`, `scrolling="no"` (phones: resizes itself).
 
 ## Dorota's free guide (email for PDF)
