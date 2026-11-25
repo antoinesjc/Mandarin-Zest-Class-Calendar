@@ -93,8 +93,23 @@
   .stand .row { display:grid; grid-template-columns:52px minmax(0,1fr) 44px; align-items:center; gap:8px; font-size:12.5px; font-weight:700; }
   .stand .bar { height:9px; border-radius:99px; background:#efe8e2; overflow:hidden; } .stand .bar i { display:block; height:100%; transition:width .4s; }
   .stand .row span:last-child { text-align:right; color:var(--muted); }
-  .club { background:var(--dk); color:#fff; border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:8px; }
-  .club p { margin:0; font-size:13.5px; color:#d6e6d0; line-height:1.45; } .club b { font-size:15px; }
+  .club { background:var(--dk); color:#fff; border-radius:18px; padding:12px 12px 14px; display:flex; flex-direction:column; gap:10px; }
+  .club p { margin:0; font-size:13.5px; color:#d6e6d0; line-height:1.45; } .club b { font-size:17px; line-height:1.2; }
+  .call { position:relative; background:#1f1b18; border-radius:12px; padding:5px; transform:rotate(-1.2deg); box-shadow:0 10px 24px rgba(0,0,0,.3); transition:transform .3s; }
+  .club:hover .call { transform:rotate(0); }
+  .call .bar { display:flex; align-items:center; gap:4px; padding:1px 3px 5px; font-size:9.5px; font-weight:700; color:#cdbfb5; white-space:nowrap; overflow:hidden; }
+  .call .bar i { width:6px; height:6px; border-radius:50%; background:#5a4f47; flex:none; } .call .bar i:first-child { background:var(--orange); }
+  .call .bar span { margin-left:4px; overflow:hidden; text-overflow:ellipsis; }
+  .shots { position:relative; aspect-ratio:2/1; border-radius:8px; overflow:hidden; background:#2a2420; }
+  .shots img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.06); transition:opacity .9s ease, transform 4s ease; }
+  .shots img.on { opacity:1; transform:scale(1); }
+  .live { position:absolute; left:-6px; bottom:-10px; background:#fff; color:var(--ink); border-radius:999px; padding:5px 10px; font-size:11.5px; font-weight:800; display:flex; align-items:center; gap:6px; box-shadow:0 6px 14px rgba(0,0,0,.25); }
+  .live i { width:8px; height:8px; border-radius:50%; background:#e0492b; animation:pulse 1.8s infinite; }
+  @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(224,73,43,.5); } 70% { box-shadow:0 0 0 7px rgba(224,73,43,0); } 100% { box-shadow:0 0 0 0 rgba(224,73,43,0); } }
+  .dots { display:flex; gap:4px; justify-content:center; margin-top:4px; } .dots span { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.25); transition:background .3s; } .dots span.on { background:var(--orange); }
+  .club .small { font-size:12px; color:#bcd3b5; text-align:center; }
+  .club .btn { width:100%; min-height:44px; font-size:15px; }
+  @media (prefers-reduced-motion:reduce) { .shots img { transition:none; } .live i { animation:none; } }
   /* modal */
   .modal { position:fixed; inset:0; background:rgba(42,36,32,.45); display:none; align-items:center; justify-content:center; padding:16px; z-index:20; }
   .modal.on { display:flex; }
@@ -164,7 +179,14 @@
       <div class="stand" id="stand"></div>
       <span class="note" id="standN"></span>
     </div>
-    <div class="club"><b>Know the words? Now say them.</b><p>Use them out loud in small-group sessions in the Mandarin Zest Club, from beginner to advanced.</p><a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Try a Club session ↗</a></div>
+    <div class="club">
+      <div class="call" aria-hidden="true"><div class="bar"><i></i><i></i><i></i><span id="callCap">Mandarin Zest Club</span></div><div class="shots" id="shots"></div><span class="live"><i></i>Live every week</span></div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <b>Know the words? Now say them.</b>
+      <p>Use them out loud with real people: small-group speaking sessions in the Mandarin Zest Club, at your level, from beginner to advanced.</p>
+      <a class="btn" id="clubBtn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener">Try a Club session · US$2.50 ↗</a>
+      <span class="small">One trial session per person · no membership needed</span>
+    </div>
   </aside>
 </div>
 
@@ -466,6 +488,18 @@
     rpc("hskmap_save", { p_email:S.email, p_pin:S.pin, p_known:Array.from(known).join("|") }).then(function (r) { if (r === "ok" || r === "created") { savedLabel(); if (manual) toast("Progress saved ✓"); } }).catch(function () {});
   }
   function savedLabel() { var el = document.getElementById("savedT"), b = document.getElementById("saveBtn"); if (S.email) { el.textContent = "Saved to " + S.email; b.textContent = "Save now"; b.classList.add("ghost"); } }
+
+  // ---------- Club box: real session screenshots ----------
+  var SHOTS = [["sessions/s05.jpg", "Food talk with Xiaojing"], ["sessions/s02.jpg", "Taiwan-style conversation"], ["sessions/s01.jpg", "HSK 2–3 speaking practice"], ["sessions/s03.jpg", "Advanced reading session"], ["sessions/s04.jpg", "Taiwanese sounds"]];
+  var sh = document.getElementById("shots"), dt = document.getElementById("dots"), si = 0;
+  sh.innerHTML = SHOTS.map(function (x, i) { return '<img src="' + x[0] + '" alt="" loading="lazy" class="' + (i ? '' : 'on') + '">'; }).join("");
+  dt.innerHTML = SHOTS.map(function (x, i) { return '<span class="' + (i ? '' : 'on') + '"></span>'; }).join("");
+  document.getElementById("callCap").textContent = "Mandarin Zest Club · " + SHOTS[0][1];
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(function () {
+    var im = sh.children, d = dt.children; im[si].classList.remove("on"); d[si].classList.remove("on"); si = (si + 1) % SHOTS.length; im[si].classList.add("on"); d[si].classList.add("on");
+    document.getElementById("callCap").textContent = "Mandarin Zest Club · " + SHOTS[si][1];
+  }, 3500);
+  document.getElementById("clubBtn").addEventListener("click", function () { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:"hsk map club" }, ga:{ event:"select_content", params:{ content_type:"club_cta", item_id:"hsk map" } } }, "*"); } catch (e) {} });
 
   // ---------- start ----------
   fetch("hskmap/words.json").then(function (r) { return r.json(); }).then(function (d) {
