@@ -474,7 +474,7 @@ Progress: saved in the browser; "Save my progress" = email + 4-digit PIN in Supa
 sheet (source `hsk-map | …`, only the first save). Data: HSK 3.0 words, pinyin, meanings and classes from the club-app
 `data/hsk_words.json` (same list as the HSK Temple); HSK 2.0 levels matched from drkameleon/complete-hsk-vocabulary (MIT).
 Words dropped from HSK 3.0 only appear on the 2.0 map. Inspired by app.kandedong.com/hskmap's bento view (own code).
-Embed: `height:max(820px, min(1950px, calc((861px - 100vw) * 10000)))`, `scrolling="no"` (phones: resizes itself).
+Embed: `hskmap.html?v=2`, `height:max(1240px, min(2250px, calc((861px - 100vw) * 10000)))`, `scrolling="no"` (phones: resizes itself). Boxes are filled exactly: each level picks its own square size and number of columns (25 Nov 2026).
 
 ## Dorota's free guide (email for PDF)
 

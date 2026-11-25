@@ -242,44 +242,45 @@
     var key = v === 3 ? 4 : 5, byL = {};
     W.forEach(function (w, i) { var l = w[key]; if (l) (byL[l] = byL[l] || []).push(i); });
     var lv = Object.keys(byL).map(Number), sum = 0; lv.forEach(function (l) { sum += byL[l].length; });
-    for (var slack = 1.06; ; slack += .03) {
-      var GW = Math.ceil(Math.sqrt(sum * slack * 1.3)), GH = Math.ceil(sum * slack / GW), rects = [];
-      var items = lv.map(function (l) { return { l:l, v:byL[l].length }; }).sort(function (a, b) { return b.v - a.v; });
-      squarify(items, 0, 0, GW, GH, rects);
-      var ok = true, boxes = rects.map(function (r) {
-        // integer box, mirrored so the biggest level sits on the right and HSK 1 top left; 1-square gutter between boxes
-        var x0 = Math.round(r[1]), y0 = Math.round(r[2]), x1 = Math.round(r[1] + r[3]), y1 = Math.round(r[2] + r[4]);
-        var X0 = GW - x1, X1 = GW - x0, Y0 = GH - y1, Y1 = GH - y0, bx = X0 + (X0 > 0 ? 1 : 0), by = Y0 + (Y0 > 0 ? 1 : 0);
-        var bw = X1 - bx, bh = Y1 - by; if (bw * bh < r[0].v) ok = false;
-        return { l:r[0].l, x:bx, y:by, w:bw, h:bh };
-      });
-      if (ok) break;
-    }
-    // keep reading order: if HSK 1 ended up to the right of HSK 2 on the same row, swap them
+    // exact areas (no slack): each level gets a rectangle as big as its list
+    var GW = Math.sqrt(sum * 1.3), GH = sum / GW, rects = [], G = .9;
+    squarify(lv.map(function (l) { return { l:l, v:byL[l].length }; }).sort(function (a, b) { return b.v - a.v; }), 0, 0, GW, GH, rects);
+    var boxes = rects.map(function (r) { // mirrored: biggest level on the right, HSK 1 top left
+      return { l:r[0].l, x:GW - r[1] - r[3] + G / 2, y:GH - r[2] - r[4] + G / 2, w:r[3] - G, h:r[4] - G };
+    });
     var b1 = boxes.find(function (b) { return b.l === 1; }), b2 = boxes.find(function (b) { return b.l === 2; });
-    if (b1 && b2 && b1.y === b2.y && b1.h === b2.h && b1.x > b2.x) { var left = b2.x; b2.x = left + b1.w + (b1.x - (b2.x + b2.w)); b1.x = left; }
-    var occ = new Map(), pos = new Int32Array(W.length * 2).fill(-99999), conts = [], reg = new Map();
+    if (b1 && b2 && Math.abs(b1.y - b2.y) < .01 && b1.x > b2.x) { var left = b2.x; b2.x = left + b1.w + G; b1.x = left; }
+    var pos = new Float32Array(W.length * 3), conts = [], reg = new Map(), bb = [1e9, 1e9, -1e9, -1e9];
     boxes.forEach(function (b) {
       var ids = byL[b.l].slice().sort(function (a, c) { return CLS_ORDER.indexOf(W[a][3]) - CLS_ORDER.indexOf(W[c][3]) || a - c; });
-      // fill column by column inside the box when it is tall, row by row when it is wide, so word classes form bands
-      var regions = {}, k = 0;
+      var n = ids.length, best = null;
+      // choose the number of columns that fills the box best (squares stay squares; only a few empty squares at most)
+      for (var c = 1; c <= n; c++) { var r = Math.ceil(n / c), t = Math.min(b.w / c, b.h / r), waste = b.w * b.h - n * t * t + (r * c - n) * t * t * 3;
+        if (!best || waste < best.waste) best = { c:c, r:r, t:t, waste:waste }; }
+      var C = best.c, R = best.r, T = best.t, gx = b.x + (b.w - C * T) / 2, gy = b.y + (b.h - R * T) / 2, regions = {};
       ids.forEach(function (wi, j) {
-        var X = b.x + (j % b.w), Y = b.y + Math.floor(j / b.w);
-        occ.set(X + "," + Y, wi); pos[wi * 2] = X; pos[wi * 2 + 1] = Y; reg.set(wi, b.l * 100 + CLS_ORDER.indexOf(W[wi][3]));
-        var c = W[wi][3], R = regions[c] = regions[c] || { cls:c, x:0, y:0, n:0 }; R.x += X; R.y += Y; R.n++;
+        var X = gx + (j % C) * T, Y = gy + Math.floor(j / C) * T;
+        pos[wi * 3] = X; pos[wi * 3 + 1] = Y; pos[wi * 3 + 2] = T; reg.set(wi, b.l * 100 + CLS_ORDER.indexOf(W[wi][3]));
+        var k = W[wi][3], Rg = regions[k] = regions[k] || { cls:k, x:0, y:0, n:0 }; Rg.x += X + T / 2; Rg.y += Y + T / 2; Rg.n++;
       });
-      var rs = Object.keys(regions).map(function (c) { var R = regions[c]; R.x /= R.n; R.y /= R.n; return R; });
-      conts.push({ l:b.l, n:ids.length, ids:ids, cx:b.x + b.w / 2 - .5, cy:b.y + b.h / 2 - .5, box:[b.x, b.y, b.x + b.w - 1, b.y + b.h - 1], regions:rs });
+      var rs = Object.keys(regions).map(function (k) { var Rg = regions[k]; Rg.x /= Rg.n; Rg.y /= Rg.n; return Rg; });
+      conts.push({ l:b.l, n:n, ids:ids, c:C, r:R, t:T, gx:gx, gy:gy, cx:gx + C * T / 2, cy:gy + R * T / 2, box:[gx, gy, gx + C * T, gy + R * T], regions:rs });
+      bb[0] = Math.min(bb[0], gx); bb[1] = Math.min(bb[1], gy); bb[2] = Math.max(bb[2], gx + C * T); bb[3] = Math.max(bb[3], gy + R * T);
     });
-    var bb = [0, 0, GW - 1, GH - 1];
-    return (LAYOUTS[v] = { occ:occ, pos:pos, conts:conts, reg:reg, bb:bb });
+    return (LAYOUTS[v] = { pos:pos, conts:conts, reg:reg, bb:bb });
+  }
+  function hit(x, y) { // word index at a world point, or -1
+    for (var k = 0; k < L.conts.length; k++) { var c = L.conts[k];
+      if (x < c.box[0] || y < c.box[1] || x >= c.box[2] || y >= c.box[3]) continue;
+      var j = Math.floor((y - c.gy) / c.t) * c.c + Math.floor((x - c.gx) / c.t); return j < c.n ? c.ids[j] : -1; }
+    return -1;
   }
 
   // ---------- canvas ----------
   var cv = document.getElementById("cv"), ctx = cv.getContext("2d"), wrap = document.getElementById("mapw");
   var cam = { x:0, y:0, s:6 }, dpr = 1, L = null;
   function resize() { dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = wrap.clientWidth * dpr; cv.height = wrap.clientHeight * dpr; draw(); }
-  function fit() { var b = L.bb, w = wrap.clientWidth, h = wrap.clientHeight; cam.s = Math.min(w / (b[2] - b[0] + 8), h / (b[3] - b[1] + 8)); cam.x = (b[0] + b[2] + 1) / 2; cam.y = (b[1] + b[3] + 1) / 2; draw(); }
+  function fit() { var b = L.bb, w = wrap.clientWidth, h = wrap.clientHeight; cam.s = Math.min(w / (b[2] - b[0] + 6), h / (b[3] - b[1] + 6)); cam.x = (b[0] + b[2]) / 2; cam.y = (b[1] + b[3]) / 2; draw(); }
   function toScreen(x, y) { return [(x - cam.x) * cam.s + wrap.clientWidth / 2, (y - cam.y) * cam.s + wrap.clientHeight / 2]; }
   function toWorld(px, py) { return [(px - wrap.clientWidth / 2) / cam.s + cam.x, (py - wrap.clientHeight / 2) / cam.s + cam.y]; }
   function hex(c, a) { var n = parseInt(c.slice(1), 16); return "rgba(" + (n >> 16) + "," + (n >> 8 & 255) + "," + (n & 255) + "," + a + ")"; }
@@ -289,58 +290,55 @@
     var w = wrap.clientWidth, h = wrap.clientHeight, s = cam.s, key = ver === 3 ? 4 : 5;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = "#f4efea"; ctx.fillRect(0, 0, w, h);
-    // level boxes
-    L.conts.forEach(function (c) { var a = toScreen(c.box[0], c.box[1]), z = toScreen(c.box[2] + 1, c.box[3] + 1), col = COLORS[c.l];
-      ctx.fillStyle = hex(col, .06); ctx.fillRect(a[0], a[1], z[0] - a[0], z[1] - a[1]);
-      ctx.strokeStyle = hex(col, .7); ctx.lineWidth = 2; ctx.strokeRect(a[0] - 1, a[1] - 1, z[0] - a[0] + 2, z[1] - a[1] + 2); });
-    var tl = toWorld(0, 0), br = toWorld(w, h), x0 = Math.floor(tl[0]) - 1, y0 = Math.floor(tl[1]) - 1, x1 = Math.ceil(br[0]) + 1, y1 = Math.ceil(br[1]) + 1;
-    var gap = s > 8 ? Math.max(1, s * .06) : 0, showTxt = s >= 24, showPy = opt.py && s >= 38;
-    // land shadow
+    // level boxes (outline follows the squares, so a short last row makes a small step)
+    function outline(c) { var t = c.t, full = Math.floor(c.n / c.c), rem = c.n % c.c, x0 = c.gx, y0 = c.gy, x1 = c.gx + c.c * t;
+      var P = rem ? [[x0, y0], [x1, y0], [x1, y0 + full * t], [x0 + rem * t, y0 + full * t], [x0 + rem * t, y0 + (full + 1) * t], [x0, y0 + (full + 1) * t]] : [[x0, y0], [x1, y0], [x1, y0 + full * t], [x0, y0 + full * t]];
+      ctx.beginPath(); P.forEach(function (q, i) { var p = toScreen(q[0], q[1]); if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }); ctx.closePath(); }
+    L.conts.forEach(function (c) { var col = COLORS[c.l]; outline(c); ctx.fillStyle = hex(col, .08); ctx.fill(); ctx.strokeStyle = hex(col, .75); ctx.lineWidth = 2; ctx.stroke(); });
+    var tl = toWorld(0, 0), br = toWorld(w, h);
     L.conts.forEach(function (c) {
-      var p = toScreen(c.box[0], c.box[1]); if (p[0] > w || p[1] > h) return;
-    });
-    var cells = (x1 - x0) * (y1 - y0) < 60000;
-    var iter = cells ? null : L.occ;
-    function tile(i, X, Y) {
-      var p = toScreen(X, Y), l = W[i][key], col = COLORS[l], k = known.has(W[i][0]);
-      ctx.fillStyle = k ? col : (s < 8 ? hex(col, .22) : "#fbf7f2");
-      ctx.fillRect(p[0] + gap / 2, p[1] + gap / 2, s - gap, s - gap);
-      if (!k && s >= 8) { ctx.fillStyle = hex(col, .12); ctx.fillRect(p[0] + gap / 2, p[1] + gap / 2, s - gap, s - gap); }
-      if (i === sel) { ctx.strokeStyle = "#2a2420"; ctx.lineWidth = Math.max(2, s * .08); ctx.strokeRect(p[0] + 1, p[1] + 1, s - 2, s - 2); }
-      if (showTxt) {
-        var hz = opt.trad && W[i][6] ? W[i][6] : W[i][0], fs = Math.min(s * .42, s * .86 / Math.max(1, hz.length));
-        ctx.fillStyle = k ? "#fff" : "#2a2420"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.font = "700 " + fs + "px 'Noto Sans " + (opt.trad ? "TC" : "SC") + "', sans-serif";
-        ctx.fillText(hz, p[0] + s / 2, p[1] + s * (showPy ? .6 : .52));
-        if (showPy) { ctx.font = "600 " + Math.min(s * .17, s * 1.55 / Math.max(1, W[i][1].length)) + "px Outfit, sans-serif"; ctx.fillStyle = k ? "rgba(255,255,255,.9)" : "#a8431a"; ctx.fillText(W[i][1], p[0] + s / 2, p[1] + s * .22); }
-      } else if (s >= 9 && !k) { ctx.fillStyle = hex(col, .35); ctx.fillRect(p[0] + s * .3, p[1] + s * .45, s * .4, Math.max(1, s * .1)); }
-    }
-    if (cells) { for (var Y = y0; Y <= y1; Y++) for (var X = x0; X <= x1; X++) { var i = L.occ.get(X + "," + Y); if (i != null) tile(i, X, Y); } }
-    else L.occ.forEach(function (i, k) { var c = k.split(","); tile(i, +c[0], +c[1]); });
-    // region borders
-    if (s >= 5) {
-      ctx.strokeStyle = s > 14 ? "rgba(42,36,32,.55)" : "rgba(42,36,32,.35)"; ctx.lineWidth = s > 14 ? 1.6 : 1; ctx.beginPath();
-      var X0 = Math.max(x0, L.bb[0] - 1), X1 = Math.min(x1, L.bb[2] + 1), Y0 = Math.max(y0, L.bb[1] - 1), Y1 = Math.min(y1, L.bb[3] + 1);
-      for (var yy = Y0; yy <= Y1; yy++) for (var xx = X0; xx <= X1; xx++) {
-        var a = L.occ.get(xx + "," + yy); if (a == null) continue;
-        var ra = L.reg.get(a), b1 = L.occ.get((xx + 1) + "," + yy), b2 = L.occ.get(xx + "," + (yy + 1)), p = toScreen(xx, yy);
-        if (b1 != null && L.reg.get(b1) !== ra) { ctx.moveTo(p[0] + s, p[1]); ctx.lineTo(p[0] + s, p[1] + s); }
-        if (b2 != null && L.reg.get(b2) !== ra) { ctx.moveTo(p[0], p[1] + s); ctx.lineTo(p[0] + s, p[1] + s); }
+      if (c.box[2] < tl[0] || c.box[0] > br[0] || c.box[3] < tl[1] || c.box[1] > br[1]) return;
+      var ts = c.t * s, gap = ts > 8 ? Math.max(1, ts * .06) : 0, showTxt = ts >= 24, showPy = opt.py && ts >= 38;
+      c.ids.forEach(function (i, j) {
+        var X = c.gx + (j % c.c) * c.t, Y = c.gy + Math.floor(j / c.c) * c.t;
+        if (X + c.t < tl[0] || X > br[0] || Y + c.t < tl[1] || Y > br[1]) return;
+        var p = toScreen(X, Y), col = COLORS[c.l], k = known.has(W[i][0]);
+        ctx.fillStyle = k ? col : (ts < 8 ? hex(col, .22) : "#fbf7f2");
+        ctx.fillRect(p[0] + gap / 2, p[1] + gap / 2, ts - gap, ts - gap);
+        if (!k && ts >= 8) { ctx.fillStyle = hex(col, .12); ctx.fillRect(p[0] + gap / 2, p[1] + gap / 2, ts - gap, ts - gap); }
+        if (i === sel) { ctx.strokeStyle = "#2a2420"; ctx.lineWidth = Math.max(2, ts * .08); ctx.strokeRect(p[0] + 1, p[1] + 1, ts - 2, ts - 2); }
+        if (showTxt) {
+          var hz = opt.trad && W[i][6] ? W[i][6] : W[i][0], fs = Math.min(ts * .42, ts * .86 / Math.max(1, hz.length));
+          ctx.fillStyle = k ? "#fff" : "#2a2420"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          ctx.font = "700 " + fs + "px 'Noto Sans " + (opt.trad ? "TC" : "SC") + "', sans-serif";
+          ctx.fillText(hz, p[0] + ts / 2, p[1] + ts * (showPy ? .6 : .52));
+          if (showPy) { ctx.font = "600 " + Math.min(ts * .17, ts * 1.55 / Math.max(1, W[i][1].length)) + "px Outfit, sans-serif"; ctx.fillStyle = k ? "rgba(255,255,255,.9)" : "#a8431a"; ctx.fillText(W[i][1], p[0] + ts / 2, p[1] + ts * .22); }
+        } else if (ts >= 9 && !k) { ctx.fillStyle = hex(col, .35); ctx.fillRect(p[0] + ts * .3, p[1] + ts * .45, ts * .4, Math.max(1, ts * .1)); }
+      });
+      // region borders between word classes
+      if (ts >= 5) {
+        ctx.strokeStyle = ts > 14 ? "rgba(42,36,32,.55)" : "rgba(42,36,32,.35)"; ctx.lineWidth = ts > 14 ? 1.6 : 1; ctx.beginPath();
+        c.ids.forEach(function (i, j) {
+          var X = c.gx + (j % c.c) * c.t, Y = c.gy + Math.floor(j / c.c) * c.t; if (X + c.t < tl[0] || X > br[0] || Y + c.t < tl[1] || Y > br[1]) return;
+          var ra = L.reg.get(i), p = toScreen(X, Y), rt = j + 1 < c.n && (j + 1) % c.c ? c.ids[j + 1] : -1, dn = j + c.c < c.n ? c.ids[j + c.c] : -1;
+          if (rt >= 0 && L.reg.get(rt) !== ra) { ctx.moveTo(p[0] + ts, p[1]); ctx.lineTo(p[0] + ts, p[1] + ts); }
+          if (dn >= 0 && L.reg.get(dn) !== ra) { ctx.moveTo(p[0], p[1] + ts); ctx.lineTo(p[0] + ts, p[1] + ts); }
+        });
+        ctx.stroke();
       }
-      ctx.stroke();
-    }
+    });
     // labels
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     L.conts.forEach(function (c) {
-      var p = toScreen(c.cx + .5, c.cy + .5), col = COLORS[c.l];
-      if (s < 18) {
-        var bw = (c.box[2] - c.box[0] + 1) * s, bh = (c.box[3] - c.box[1] + 1) * s, big = Math.max(13, Math.min(60, bw * .2, bh * .32));
+      var p = toScreen(c.cx, c.cy), col = COLORS[c.l], ts = c.t * s;
+      if (ts < 16) {
+        var bw = (c.box[2] - c.box[0]) * s, bh = (c.box[3] - c.box[1]) * s, big = Math.max(13, Math.min(60, bw * .2, bh * .32));
         label(lvName(ver, c.l), p[0], p[1] - big * .2, "800 " + big + "px Outfit, sans-serif", col);
         var pc = pct(c.ids); label(pc + "% known", p[0], p[1] + big * .55, "700 " + Math.max(10, big * .34) + "px Outfit, sans-serif", "#5c4f47");
       }
-      if (s >= 9 && s < 24) c.regions.forEach(function (r) {
-        if (Math.sqrt(r.n) * s < 70) return;
-        var q = toScreen(r.x + .5, r.y + .5); label(CLS[r.cls][0], q[0], q[1], "800 " + Math.max(10, Math.min(15, s * .9)) + "px Outfit, sans-serif", "#2a2420", true);
+      if (ts >= 16 && ts < 24) c.regions.forEach(function (r) {
+        if (Math.sqrt(r.n) * ts < 70) return;
+        var q = toScreen(r.x, r.y); label(CLS[r.cls][0], q[0], q[1], "800 " + Math.max(10, Math.min(15, ts * .9)) + "px Outfit, sans-serif", "#2a2420", true);
       });
     });
   }
@@ -360,16 +358,16 @@
   });
   function up(e) {
     var tap = pts.size === 1 && !moved; pts.delete(e.pointerId); if (pts.size < 2) pinch = null; cv.classList.remove("drag");
-    if (tap) { var wpt = toWorld(e.offsetX, e.offsetY), i = L.occ.get(Math.floor(wpt[0]) + "," + Math.floor(wpt[1]));
-      if (i != null) { if (mode === "mark" && cam.s >= 14) toggle(i); select(i); }
-      else if (cam.s < 14) { var c = L.conts.find(function (c) { return wpt[0] >= c.box[0] && wpt[0] <= c.box[2] && wpt[1] >= c.box[1] && wpt[1] <= c.box[3]; }); if (c) flyTo(wpt[0], wpt[1], 30); }
+    if (tap) { var wpt = toWorld(e.offsetX, e.offsetY), i = hit(wpt[0], wpt[1]);
+      if (i >= 0 && cam.s * L.pos[i * 3 + 2] >= 14) { if (mode === "mark") toggle(i); select(i); }
+      else if (i >= 0) flyTo(wpt[0], wpt[1], 30 / L.pos[i * 3 + 2]);
     }
   }
   cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", function (e) { pts.delete(e.pointerId); pinch = null; });
   cv.addEventListener("wheel", function (e) { e.preventDefault(); zoomAt(e.offsetX, e.offsetY, Math.exp(-e.deltaY * .0016)); hideHint(); }, { passive:false });
   function zoomAt(px, py, f) { var a = toWorld(px, py); cam.s = Math.max(1.2, Math.min(90, cam.s * f)); var b = toWorld(px, py); cam.x += a[0] - b[0]; cam.y += a[1] - b[1]; draw(); }
   function flyTo(x, y, s) { var s0 = cam.s, x0 = cam.x, y0 = cam.y, t0 = performance.now();
-    (function step(t) { var k = Math.min(1, (t - t0) / 500), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; cam.x = x0 + (x + .5 - x0) * e; cam.y = y0 + (y + .5 - y0) * e; cam.s = s0 + (s - s0) * e; draw(); if (k < 1) requestAnimationFrame(step); })(t0); }
+    (function step(t) { var k = Math.min(1, (t - t0) / 500), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; cam.x = x0 + (x - x0) * e; cam.y = y0 + (y - y0) * e; cam.s = s0 + (s - s0) * e; draw(); if (k < 1) requestAnimationFrame(step); })(t0); }
   document.getElementById("zIn").onclick = function () { zoomAt(wrap.clientWidth / 2, wrap.clientHeight / 2, 1.6); };
   document.getElementById("zOut").onclick = function () { zoomAt(wrap.clientWidth / 2, wrap.clientHeight / 2, 1 / 1.6); };
   document.getElementById("zFit").onclick = fit;
@@ -397,7 +395,7 @@
     var html = lv.map(function (l) { var ids = []; W.forEach(function (w, i) { if (w[key] === l) ids.push(i); }); var p = pct(ids), n = Math.round(p * ids.length / 100); tot += ids.length; ids.forEach(function (i) { if (known.has(W[i][0])) kn++; });
       return '<button class="lv" type="button" data-l="' + l + '"><b style="color:' + COLORS[l] + '">' + lvName(ver, l) + '</b><span>' + p + '% · ' + ids.length.toLocaleString() + ' words</span><i><em style="width:' + p + '%;background:' + COLORS[l] + '"></em></i></button>'; }).join("");
     var el = document.getElementById("levels"); el.innerHTML = html;
-    [].forEach.call(el.querySelectorAll(".lv"), function (b) { b.onclick = function () { var c = L.conts.find(function (c) { return c.l === +b.dataset.l; }); if (c) flyTo(c.cx, c.cy, Math.max(4, Math.min(12, 300 / Math.sqrt(c.n)))); }; });
+    [].forEach.call(el.querySelectorAll(".lv"), function (b) { b.onclick = function () { var c = L.conts.find(function (c) { return c.l === +b.dataset.l; }); if (c) flyTo(c.cx, c.cy, Math.max(4, Math.min(12, 300 / Math.sqrt(c.n))) / c.t); }; });
     document.getElementById("total").innerHTML = "<b>" + kn.toLocaleString() + "</b> of " + tot.toLocaleString() + " HSK " + ver + ".0 words known";
     // where you stand in the OTHER version
     var other = ver === 3 ? 2 : 3, okey = other === 3 ? 4 : 5, olv = other === 3 ? [1, 2, 3, 4, 5, 6, 7] : [1, 2, 3, 4, 5, 6];
@@ -430,7 +428,7 @@
     for (var i = 0; i < W.length && out.length < 30; i++) { var w = W[i], key = ver === 3 ? 4 : 5; if (!w[key] && ver === 3) continue;
       if (w[0].indexOf(t) >= 0 || (w[6] && w[6].indexOf(t) >= 0) || plain(w[1]).indexOf(p) === 0 || (p.length > 2 && (w[2] || "").toLowerCase().indexOf(t.toLowerCase()) >= 0)) out.push(i); }
     res.innerHTML = out.length ? out.map(function (i) { return '<button type="button" data-i="' + i + '"><span class="zh">' + W[i][0] + '</span><small>' + W[i][1] + ' · ' + (W[i][2] || '') + '</small></button>'; }).join("") : '<span class="note" style="padding:6px">No word found in HSK ' + ver + '.0.</span>';
-    [].forEach.call(res.querySelectorAll("button"), function (b) { b.onclick = function () { var i = +b.dataset.i; select(i); flyTo(L.pos[i * 2], L.pos[i * 2 + 1], 56); }; });
+    [].forEach.call(res.querySelectorAll("button"), function (b) { b.onclick = function () { var i = +b.dataset.i; select(i); var t = L.pos[i * 3 + 2]; flyTo(L.pos[i * 3] + t / 2, L.pos[i * 3 + 1] + t / 2, 56 / t); }; });
   });
 
   // controls
@@ -438,7 +436,7 @@
   function setVer(v) {
     ver = v; [].forEach.call(document.querySelectorAll(".seg button"), function (b) { b.setAttribute("aria-pressed", String(+b.dataset.v === v)); });
     L = layout(v); persist(false); stats(); fit(); if (q.value) q.dispatchEvent(new Event("input"));
-    if (sel >= 0 && L.pos[sel * 2] > -99999) details(sel);
+    if (sel >= 0 && L.pos[sel * 3 + 2] > 0) details(sel);
   }
   [].forEach.call(document.querySelectorAll(".mode button"), function (b) { b.onclick = function () { mode = b.dataset.m; [].forEach.call(document.querySelectorAll(".mode button"), function (x) { x.setAttribute("aria-pressed", String(x === b)); }); }; });
   document.getElementById("optPy").onchange = function () { opt.py = this.checked; draw(); };
