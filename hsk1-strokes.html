@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK 1 Stroke Order · Mandarin Zest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* HSK 1 stroke order: all 300 characters of the new HSK 1 (HSK 3.0), watch / practise / track progress.
+     Data: hsk1-strokes.json (built from the HSK 3.0 character list). Strokes: hanzi-writer-data.
+     Embed height: see website-widgets-reference.md. On phones the widget reports its height to the page. */
+  :root {
+    --orange:#f37a48; --orange-d:#e2632f; --peach:#fdf1ea; --peach2:#f8dacd;
+    --green:#1b6f1b; --green-d:#173f17; --mint:#e6f1e1;
+    --ink:#2a2420; --muted:#5c4f47; --cream:#fffaf6; --line:#ecdcd2; --brick:#a8431a;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { background:var(--cream); color:var(--ink); font-family:'Outfit','Noto Sans SC',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  .zh { font-family:'Noto Sans SC','Outfit',sans-serif; }
+  a { color:inherit; }
+  button { font-family:inherit; color:inherit; }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline:3px solid #4f7a94; outline-offset:2px; }
+  .app { max-width:1100px; margin:0 auto; padding:20px 18px 26px; display:flex; flex-direction:column; gap:16px; }
+
+  /* hero */
+  .hero { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:end; gap:10px; background:var(--peach); border-radius:28px; padding:24px 28px 0; overflow:hidden; }
+  .hero-txt { padding-bottom:22px; }
+  .eyebrow { font-size:12.5px; font-weight:800; letter-spacing:.12em; color:var(--brick); text-transform:uppercase; }
+  .hero h1 { margin:6px 0 6px; font-size:clamp(27px,4vw,40px); line-height:1.06; font-weight:800; letter-spacing:-.01em; }
+  .hero h1 em { font-style:normal; color:var(--orange-d); }
+  .hero p { margin:0 0 14px; color:var(--muted); font-size:16px; line-height:1.45; max-width:520px; }
+  .prog { display:flex; align-items:center; gap:12px; max-width:460px; }
+  .prog .bar { flex:1; height:12px; background:#fff; border-radius:99px; overflow:hidden; box-shadow:inset 0 0 0 1.5px var(--peach2); }
+  .prog .bar i { display:block; height:100%; width:0; background:var(--green); border-radius:99px; transition:width .5s; }
+  .prog b { font-size:15px; white-space:nowrap; }
+  .prog button { border:0; background:none; color:var(--muted); font-size:13px; text-decoration:underline; cursor:pointer; padding:0; }
+  .mascot { position:relative; width:220px; align-self:end; padding-left:80px; }
+  .mascot img { display:block; width:100%; height:auto; margin-bottom:-6px; }
+  .bubble { position:absolute; top:6px; left:0; background:#fff; border-radius:16px; padding:8px 12px; font-size:14px; font-weight:700; box-shadow:0 6px 16px rgba(42,36,32,.08); white-space:nowrap; animation:bob 3s ease-in-out infinite; }
+  .bubble::after { content:""; position:absolute; right:-6px; top:15px; border:7px solid transparent; border-left-color:#fff; border-right:0; }
+  @keyframes bob { 50% { transform:translateY(-4px); } }
+
+  /* buttons */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; border:0; border-radius:999px; background:var(--orange); color:var(--ink); font-weight:800; font-size:15px; padding:10px 18px; cursor:pointer; text-decoration:none; transition:background .15s, transform .1s; }
+  .btn:hover { background:var(--orange-d); }
+  .btn:active { transform:scale(.97); }
+  .btn.ghost { background:#fff; box-shadow:inset 0 0 0 1.5px var(--line); }
+  .btn.ghost:hover { background:var(--peach); }
+  .btn.ghost.on { background:var(--mint); box-shadow:inset 0 0 0 1.5px #b9dfb9; color:var(--green); }
+  .btn.green { background:var(--green); color:#fff; }
+  .btn.green:hover { background:var(--green-d); }
+  .btn.sm { font-size:13.5px; padding:8px 13px; }
+
+  /* main: studio + list */
+  .main { display:grid; grid-template-columns:minmax(0,430px) minmax(0,1fr); gap:16px; align-items:start; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:24px; }
+
+  .studio { padding:16px; display:flex; flex-direction:column; gap:12px; }
+  .s-top { display:flex; align-items:center; gap:10px; }
+  .nav { width:38px; height:38px; border-radius:50%; border:1.5px solid var(--line); background:#fff; cursor:pointer; font-size:17px; flex:none; }
+  .nav:hover { background:var(--peach); }
+  .s-id { flex:1; min-width:0; display:flex; align-items:center; gap:12px; }
+  .s-id .big { font-size:46px; line-height:1; font-weight:700; }
+  .s-id .py { font-size:22px; font-weight:800; color:var(--orange-d); display:flex; align-items:center; gap:6px; }
+  .s-id .mn { font-size:14.5px; color:var(--muted); line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .speak { border:0; background:var(--peach); border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:14px; }
+  .speak:hover { background:var(--peach2); }
+  .num { font-size:12px; font-weight:800; color:var(--brick); letter-spacing:.06em; }
+
+  .tabs { display:flex; background:var(--peach); border-radius:999px; padding:4px; gap:4px; }
+  .tab { flex:1; border:0; background:none; border-radius:999px; padding:9px; font-weight:800; font-size:15px; cursor:pointer; color:var(--muted); }
+  .tab.on { background:#fff; color:var(--ink); box-shadow:0 2px 8px rgba(42,36,32,.08); }
+
+  .stage { position:relative; width:100%; max-width:320px; margin:0 auto; aspect-ratio:1; border-radius:18px; background:#fffdfb; border:1.5px solid var(--peach2); }
+  .stage svg.grid { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  #hw { position:absolute; inset:0; }
+  .stage .count { position:absolute; right:10px; bottom:8px; font-size:12.5px; font-weight:800; color:var(--muted); background:rgba(255,255,255,.85); padding:2px 8px; border-radius:99px; }
+  .stage .done { position:absolute; inset:0; display:none; align-items:center; justify-content:center; flex-direction:column; gap:4px; background:rgba(230,241,225,.92); border-radius:16px; text-align:center; font-weight:800; color:var(--green); font-size:22px; }
+  .stage .done.on { display:flex; }
+  .stage .done small { font-size:14px; color:var(--green-d); font-weight:600; }
+  .ctrl { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .speed { display:flex; align-items:center; gap:8px; justify-content:center; font-size:13px; color:var(--muted); }
+  .speed input { accent-color:var(--orange); width:120px; }
+  .result { text-align:center; font-size:14.5px; color:var(--muted); min-height:20px; }
+  .result b { color:var(--green); }
+
+  .strokes { display:flex; gap:5px; overflow-x:auto; padding-bottom:4px; scrollbar-width:thin; }
+  .st { flex:none; width:40px; height:40px; border-radius:9px; border:1px solid var(--line); background:#fff; position:relative; cursor:pointer; padding:3px; }
+  .st svg { width:100%; height:100%; display:block; }
+  .st i { position:absolute; left:2px; top:0; font-size:9px; font-style:normal; font-weight:800; color:var(--muted); }
+
+  .ex h3 { margin:0 0 6px; font-size:12px; letter-spacing:.1em; color:var(--brick); font-weight:800; }
+  .ex ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px; }
+  .ex li { display:flex; align-items:baseline; gap:8px; font-size:14.5px; background:var(--cream); border-radius:10px; padding:6px 10px; }
+  .ex li .w { font-size:18px; font-weight:700; }
+  .ex li .p { color:var(--orange-d); font-weight:700; }
+  .ex li .m { color:var(--muted); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ex li .lv { font-size:11px; font-weight:800; color:var(--green); background:var(--mint); border-radius:99px; padding:1px 7px; white-space:nowrap; }
+
+  /* list */
+  .list { padding:14px 14px 10px; display:flex; flex-direction:column; gap:10px; min-width:0; }
+  .tools { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .search { flex:1; min-width:180px; display:flex; align-items:center; gap:6px; border:1.5px solid var(--line); border-radius:999px; padding:0 12px; background:#fff; }
+  .search:focus-within { border-color:var(--orange); }
+  .search input { flex:1; min-width:0; border:0; font-size:15px; padding:10px 0; font-family:inherit; background:none; color:var(--ink); }
+  .search input:focus { outline:none; }
+  .groups { display:flex; gap:6px; flex-wrap:wrap; }
+  .g { flex:none; border:1.5px solid var(--line); background:#fff; border-radius:999px; padding:6px 12px; font-size:13.5px; font-weight:700; cursor:pointer; white-space:nowrap; }
+  .g small { color:var(--muted); font-weight:600; margin-left:3px; }
+  .g.on { background:var(--ink); border-color:var(--ink); color:#fff; }
+  .g.on small { color:#e7ddd6; }
+  .tiles { position:relative; display:grid; grid-template-columns:repeat(auto-fill,minmax(66px,1fr)); gap:7px; max-height:620px; overflow-y:auto; padding:2px 4px 6px 2px; scrollbar-width:thin; align-content:start; }
+  .t { position:relative; border:1.5px solid var(--line); background:#fff; border-radius:14px; padding:7px 2px 6px; cursor:pointer; text-align:center; transition:transform .12s, border-color .12s; }
+  .t:hover { transform:translateY(-2px); border-color:var(--orange); }
+  .t .c { font-size:27px; line-height:1.15; font-weight:500; display:block; }
+  .t .p { font-size:12px; color:var(--orange-d); font-weight:700; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .t .n { position:absolute; left:6px; top:3px; font-size:9.5px; color:#b3a49a; font-weight:700; }
+  .t.ok { background:var(--mint); border-color:#b9dfb9; }
+  .t.ok::after { content:"✓"; position:absolute; right:6px; top:2px; font-size:11px; font-weight:800; color:var(--green); }
+  .t.sel { border-color:var(--orange); box-shadow:0 0 0 2px var(--orange); }
+  .empty { grid-column:1/-1; text-align:center; color:var(--muted); padding:30px 10px; font-size:15px; }
+  .foot { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; color:var(--muted); flex-wrap:wrap; }
+  .foot label { display:flex; align-items:center; gap:6px; cursor:pointer; }
+  .foot input { accent-color:var(--green); }
+
+  /* drill */
+  .drill { display:none; background:var(--ink); color:#fff; border-radius:16px; padding:10px 14px; align-items:center; gap:10px; font-size:14.5px; }
+  .drill.on { display:flex; }
+  .drill b { color:var(--orange); }
+  .drill .dots { display:flex; gap:4px; flex:1; }
+  .drill .dots i { width:9px; height:9px; border-radius:50%; background:#5c4f47; }
+  .drill .dots i.ok { background:#6cc36c; }
+  .drill .dots i.now { background:var(--orange); }
+  .drill button { border:0; background:none; color:#e7ddd6; text-decoration:underline; cursor:pointer; font-size:13px; }
+
+  /* CTAs */
+  .cta-h { text-align:center; margin:8px 0 0; }
+  .cta-h h2 { margin:0; font-size:clamp(22px,3vw,28px); font-weight:800; }
+  .cta-h p { margin:4px 0 0; color:var(--muted); font-size:15.5px; }
+  .ctas { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .offer { border-radius:24px; padding:20px; display:grid; grid-template-columns:130px minmax(0,1fr); gap:16px; align-items:start; position:relative; overflow:hidden; }
+  .offer.book { background:var(--peach); }
+  .offer.club { background:var(--green-d); color:#fff; }
+  .offer .pic { width:130px; aspect-ratio:1; border-radius:16px; overflow:hidden; background:#fff; display:block; box-shadow:0 8px 20px rgba(42,36,32,.15); }
+  .offer .pic img { width:100%; height:100%; object-fit:cover; display:block; }
+  .offer.club .pic { background:#24532a; display:flex; align-items:flex-end; justify-content:center; }
+  .offer.club .pic img { width:92%; height:auto; object-fit:contain; }
+  .tag { display:inline-block; font-size:11.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--brick); }
+  .club .tag { color:#9fd49f; }
+  .offer h3 { margin:4px 0 6px; font-size:20px; line-height:1.2; font-weight:800; }
+  .offer ul { margin:0 0 12px; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px; font-size:14.5px; line-height:1.35; }
+  .offer li { display:flex; gap:7px; }
+  .offer li::before { content:"✓"; font-weight:800; color:var(--green); }
+  .club li::before { color:#9fd49f; }
+  .price { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .price .old { text-decoration:line-through; color:var(--muted); font-size:15px; }
+  .club .price .old { color:#b7cdb2; }
+  .price .new { font-size:24px; font-weight:800; }
+  .price .note { font-size:13px; color:var(--muted); }
+  .club .price .note { color:#cfe5c7; }
+  .acts { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .code { border:1.5px dashed var(--orange-d); background:#fff; border-radius:12px; padding:6px 10px; font-weight:800; font-size:13.5px; cursor:pointer; }
+  .club .code { background:transparent; color:#fff; border-color:#9fd49f; }
+  .alt { font-size:13.5px; font-weight:700; }
+  .club .alt { color:#cfe5c7; }
+
+  .toast { position:fixed; left:50%; bottom:20px; transform:translate(-50%,30px); opacity:0; background:var(--ink); color:#fff; border-radius:999px; padding:10px 18px; font-weight:700; font-size:14.5px; transition:.25s; pointer-events:none; z-index:9; white-space:nowrap; }
+  .toast.on { opacity:1; transform:translate(-50%,0); }
+
+  @media (max-width:880px) {
+    .main { grid-template-columns:1fr; }
+    .studio { max-width:560px; width:100%; margin:0 auto; }
+    .ctas { grid-template-columns:1fr; }
+    .tiles { max-height:460px; }
+  }
+  @media (max-width:560px) {
+    .app { padding:12px 10px 18px; gap:12px; }
+    .hero { grid-template-columns:1fr; padding:20px 18px 0; border-radius:22px; }
+    .hero-txt { padding-bottom:14px; }
+    .mascot { display:none; }
+    .offer { grid-template-columns:1fr; padding:18px; }
+    .offer .pic { width:110px; }
+    .tiles { grid-template-columns:repeat(auto-fill,minmax(58px,1fr)); }
+    .t .c { font-size:24px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="hero">
+    <div class="hero-txt">
+      <div class="eyebrow">New HSK 1 · 300 characters</div>
+      <h1>Write every HSK 1 character in the <em>right order</em></h1>
+      <p>Watch each stroke, then write it yourself with your finger or mouse. Characters you write correctly get a green tick, so you can see how far you've come.</p>
+      <div class="prog"><div class="bar"><i id="progBar"></i></div><b id="progTxt">0 / 300 practised</b><button type="button" id="resetBtn" hidden>Reset</button></div>
+    </div>
+    <div class="mascot" aria-hidden="true"><div class="bubble zh" id="bubble">一笔一画！</div><img src="promo/mascot-writing.png" alt=""></div>
+  </header>
+
+  <div class="main">
+    <section class="card studio" id="studio" aria-label="Character studio">
+      <div class="drill" id="drill"><span>Quiz <b id="drillN">1</b>/10</span><span class="dots" id="drillDots"></span><button type="button" id="drillStop">Stop</button></div>
+      <div class="s-top">
+        <button class="nav" type="button" id="prevBtn" aria-label="Previous character">‹</button>
+        <div class="s-id">
+          <div class="big zh" id="sBig">爱</div>
+          <div style="min-width:0">
+            <div class="num" id="sNum">#1 OF 300</div>
+            <div class="py"><span id="sPy">ài</span><button class="speak" type="button" id="speakBtn" aria-label="Hear it" title="Hear it">🔊</button></div>
+            <div class="mn" id="sMn">to love</div>
+          </div>
+        </div>
+        <button class="nav" type="button" id="nextBtn" aria-label="Next character">›</button>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab on" type="button" id="tabWatch" role="tab">▶ Watch</button>
+        <button class="tab" type="button" id="tabWrite" role="tab">✍ Write it</button>
+      </div>
+
+      <div class="stage">
+        <svg class="grid" viewBox="0 0 100 100" aria-hidden="true"><path d="M0 0L100 100M100 0L0 100M50 0V100M0 50H100" stroke="#f6e3d9" stroke-width=".5" stroke-dasharray="2 2" fill="none"/></svg>
+        <div id="hw"></div>
+        <div class="count"><span id="sCount">-</span> strokes</div>
+        <div class="done" id="done"><span>✓ Well written!</span><small id="doneTxt"></small></div>
+      </div>
+
+      <div id="watchCtl">
+        <div class="ctrl">
+          <button class="btn" type="button" id="playBtn">▶ Play</button>
+          <button class="btn ghost" type="button" id="stepBtn">Next stroke</button>
+          <button class="btn ghost" type="button" id="loopBtn">⟳ Loop</button>
+        </div>
+        <div class="speed" style="margin-top:8px"><label for="speed">Speed</label><input type="range" id="speed" min="0.4" max="3" step="0.1" value="1"><b id="speedVal">1×</b></div>
+      </div>
+      <div id="writeCtl" hidden>
+        <div class="ctrl">
+          <button class="btn ghost on" type="button" id="outlineBtn">Outline: on</button>
+          <button class="btn ghost" type="button" id="hintBtn">Show a hint</button>
+          <button class="btn ghost" type="button" id="againBtn">↺ Again</button>
+        </div>
+        <div class="result" id="result" aria-live="polite" style="margin-top:8px">Write the strokes in order. A wrong stroke fades away.</div>
+      </div>
+
+      <div class="strokes" id="strokes" aria-label="Stroke by stroke"></div>
+
+      <div class="ex" id="ex"></div>
+    </section>
+
+    <section class="card list" aria-label="All HSK 1 characters">
+      <div class="tools">
+        <div class="search"><span aria-hidden="true">🔍</span><input id="q" type="search" placeholder="Find: 学, xue, study" aria-label="Find a character" autocomplete="off"></div>
+        <button class="btn green sm" type="button" id="drillBtn">🎲 Quiz me on 10</button>
+      </div>
+      <div class="groups" id="groups"></div>
+      <div class="tiles" id="tiles"></div>
+      <div class="foot"><span id="shown"></span><label><input type="checkbox" id="hideOk"> Hide the ones I've practised</label></div>
+    </section>
+  </div>
+
+  <div class="cta-h"><h2>Ready to use them in real Chinese?</h2><p>Characters stick best when you read them in context and say them out loud.</p></div>
+  <div class="ctas">
+    <div class="offer book">
+      <a class="pic" href="https://www.mandarinzest.com/shop/hsk-1-complete-learning-bundle-16" target="_blank" rel="noopener" data-cta="hsk1 bundle"><img src="https://www.mandarinzest.com/web/image/product.template/16/image_512" alt="HSK 1 Complete Learning Bundle" loading="lazy"></a>
+      <div>
+        <span class="tag">HSK 1 textbook &amp; workbook</span>
+        <h3>The HSK 1 Complete Learning Bundle</h3>
+        <ul>
+          <li>HSK 1 Textbook &amp; Study Guide</li>
+          <li>Character Writing Workbook</li>
+          <li>Poster of all 300 characters</li>
+          <li>Printable practice sheets and 96 household labels</li>
+        </ul>
+        <div class="price" id="bookPrice"><span class="new">US$25</span></div>
+        <div class="acts">
+          <a class="btn" href="https://www.mandarinzest.com/shop/hsk-1-complete-learning-bundle-16" target="_blank" rel="noopener" data-cta="hsk1 bundle">Get the bundle ↗</a>
+          <button class="code" type="button" id="bookCode" hidden></button>
+        </div>
+        <p class="alt" style="margin:10px 0 0">Just the book? <a href="https://www.mandarinzest.com/shop/new-hsk-1-a-comprehensive-introduction-to-the-chinese-language-10" target="_blank" rel="noopener" data-cta="hsk1 textbook">HSK 1 textbook, US$15 ↗</a></p>
+      </div>
+    </div>
+    <div class="offer club">
+      <a class="pic" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" data-cta="club"><img src="promo/mascot-laptop.png" alt="Mandarin Zest mascot on a laptop" loading="lazy"></a>
+      <div>
+        <span class="tag">Mandarin Zest Club</span>
+        <h3>Say them out loud, every week</h3>
+        <ul>
+          <li>Live speaking sessions, HSK 1 friendly</li>
+          <li>Notes after every session</li>
+          <li>The Club app: HSK flashcards, Zest Town and the Library</li>
+        </ul>
+        <div class="price" id="clubPrice"><span class="new">US$25</span><span class="note">per month, cancel anytime</span></div>
+        <div class="acts">
+          <a class="btn" href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" data-cta="club">Join the Club ↗</a>
+          <button class="code" type="button" id="clubCode" hidden></button>
+        </div>
+        <p class="alt" style="margin:10px 0 0">Not sure yet? <a href="https://www.mandarinzest.com/mandarin-zest-club" target="_blank" rel="noopener" data-cta="club trial">Try one session for US$2.50 ↗</a></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+<script src="shop/offers.js"></script>
+<script src="club-offer.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var GROUPS = [["all", "All"], ["num", "Numbers"], ["ppl", "People"], ["time", "Time"], ["place", "Places"], ["act", "Actions"], ["things", "Things"], ["desc", "Describing"], ["gram", "Grammar words"]];
+  var CHEERS = ["一笔一画！", "加油！", "写得好！", "慢慢来！", "很好！"];
+  var DATA_URL = "https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/";
+  var C = [], cur = 0, group = "all", query = "", writer = null, strokes = null, mode = "watch", runId = 0, looping = false, stepIdx = 0, speed = 1, outline = true;
+  var drill = null; // { list:[idx], i, ok:[bool] }
+
+  // ---------- saved progress (this browser only) ----------
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem("mz-hsk1-strokes") || "{}") || {}; } catch (e) {}
+  function save() { try { localStorage.setItem("mz-hsk1-strokes", JSON.stringify(done)); } catch (e) {} }
+  function nDone() { return Object.keys(done).length; }
+
+  function track(name, ga) { try { window.top.postMessage({ mz:"track", event:"ViewContent", params:{ content_name:name }, ga:ga || { event:"select_content", params:{ content_type:"hsk1_strokes", item_id:name } } }, "*"); } catch (e) {} }
+  function toast(t) { var el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(function () { el.classList.remove("on"); }, 1800); }
+  function say(t) { $("bubble").textContent = t; }
+
+  // ---------- offers (shop code + Club discount, both from the shared offer files) ----------
+  function copy(btn, code, label) {
+    function ok() { btn.textContent = "Copied ✓"; setTimeout(function () { btn.textContent = label; }, 2000); }
+    function fb() { var t = document.createElement("textarea"); t.value = code; t.style.position = "fixed"; t.style.opacity = "0"; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); ok(); } catch (e) {} t.remove(); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(code).then(ok, fb); else fb();
+  }
+  try {
+    if (window.OFFER && OFFER.code) {
+      var pct = parseInt(OFFER.off, 10);
+      if (pct) $("bookPrice").innerHTML = '<span class="old">US$25</span><span class="new">US$' + (25 * (100 - pct) / 100).toFixed(2).replace(/\.00$/, "") + '</span><span class="note">with code ' + OFFER.code + '</span>';
+      var bl = OFFER.off + " · " + OFFER.code; $("bookCode").textContent = bl; $("bookCode").hidden = false;
+      $("bookCode").onclick = function () { copy(this, OFFER.code, bl); };
+    }
+    if (window.CLUB_OFFER) {
+      $("clubPrice").innerHTML = '<span class="old">' + CLUB_OFFER.regular + '</span><span class="new">' + CLUB_OFFER.price + '</span><span class="note">' + CLUB_OFFER.name + ': ' + CLUB_OFFER.pct + '% off ' + CLUB_OFFER.first + '</span>';
+      var cl = CLUB_OFFER.code; $("clubCode").textContent = cl; $("clubCode").hidden = false;
+      $("clubCode").onclick = function () { copy(this, CLUB_OFFER.code, cl); };
+    }
+  } catch (e) {}
+  Array.prototype.forEach.call(document.querySelectorAll("[data-cta]"), function (a) { a.addEventListener("click", function () { track("hsk1 strokes " + a.getAttribute("data-cta")); }); });
+
+  // ---------- list ----------
+  function norm(s) { return (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ü/g, "u").toLowerCase(); }
+  function visible() {
+    var q = norm(query.trim()), hide = $("hideOk").checked;
+    return C.map(function (_, i) { return i; }).filter(function (i) {
+      var x = C[i];
+      if (group !== "all" && x.g !== group) return false;
+      if (hide && done[x.c] && i !== cur) return false;
+      if (!q) return true;
+      if (query.indexOf(x.c) >= 0) return true;
+      return norm(x.p).replace(/\s/g, "") === q.replace(/\s/g, "") || norm(x.p).indexOf(q) === 0 || norm(x.m).indexOf(q) >= 0;
+    });
+  }
+  function renderGroups() {
+    $("groups").innerHTML = GROUPS.map(function (g) {
+      var n = g[0] === "all" ? C.length : C.filter(function (x) { return x.g === g[0]; }).length;
+      return '<button type="button" class="g' + (g[0] === group ? " on" : "") + '" data-g="' + g[0] + '">' + g[1] + '<small>' + n + '</small></button>';
+    }).join("");
+  }
+  function renderTiles() {
+    var v = visible();
+    $("tiles").innerHTML = v.length ? v.map(function (i) {
+      var x = C[i];
+      return '<button type="button" class="t' + (done[x.c] ? " ok" : "") + (i === cur ? " sel" : "") + '" data-i="' + i + '" title="' + x.p + ' · ' + x.m.replace(/"/g, "&quot;") + '"><span class="n">' + (i + 1) + '</span><span class="c zh">' + x.c + '</span><span class="p">' + x.p + '</span></button>';
+    }).join("") : '<div class="empty">No HSK 1 character matches “' + query.replace(/</g, "&lt;") + '”.</div>';
+    $("shown").textContent = v.length === C.length ? "All 300 characters, in the order of the official list" : v.length + " of 300 characters";
+  }
+  function renderProgress() {
+    var n = nDone();
+    $("progBar").style.width = (n / C.length * 100) + "%";
+    $("progTxt").textContent = n + " / " + C.length + " practised";
+    $("resetBtn").hidden = !n;
+  }
+  $("groups").addEventListener("click", function (e) { var b = e.target.closest(".g"); if (!b) return; group = b.getAttribute("data-g"); renderGroups(); renderTiles(); });
+  $("tiles").addEventListener("click", function (e) { var b = e.target.closest(".t"); if (!b) return; if (drill) stopDrill(); open(+b.getAttribute("data-i"), true); });
+  $("q").addEventListener("input", function () { query = this.value; renderTiles(); });
+  $("hideOk").addEventListener("change", renderTiles);
+  $("resetBtn").addEventListener("click", function () { if (!confirmReset()) return; done = {}; save(); renderProgress(); renderTiles(); });
+  function confirmReset() { var b = $("resetBtn"); if (b.textContent === "Sure? Tap again") { b.textContent = "Reset"; return true; } b.textContent = "Sure? Tap again"; setTimeout(function () { b.textContent = "Reset"; }, 2500); return false; }
+
+  // ---------- studio ----------
+  function open(i, fromList) {
+    cur = (i + C.length) % C.length;
+    var x = C[cur];
+    $("sBig").textContent = x.c; $("sPy").textContent = x.p; $("sMn").textContent = x.m; $("sNum").textContent = "#" + (cur + 1) + " OF " + C.length;
+    $("ex").innerHTML = x.w.length ? '<h3>WORDS WITH ' + x.c + '</h3><ul>' + x.w.map(function (w) {
+      return '<li><span class="w zh">' + w[0] + '</span><span class="p">' + w[1] + '</span><span class="m">' + w[2] + '</span><span class="lv">HSK ' + w[3] + '</span></li>';
+    }).join("") + '</ul>' : "";
+    Array.prototype.forEach.call(document.querySelectorAll(".t.sel"), function (t) { t.classList.remove("sel"); });
+    var t = document.querySelector('.t[data-i="' + cur + '"]'); if (t) { t.classList.add("sel"); if (!fromList) { var box = $("tiles"), top = t.offsetTop - box.offsetTop; if (top < box.scrollTop || top + t.offsetHeight > box.scrollTop + box.clientHeight) box.scrollTop = top - box.clientHeight / 2 + t.offsetHeight / 2; } }
+    say(CHEERS[Math.floor(Math.random() * CHEERS.length)]);
+    if (fromList && window.innerWidth <= 880) $("studio").scrollIntoView({ behavior:"smooth", block:"start" });
+    load(x.c);
+  }
+  function load(ch) {
+    runId++; looping = false; $("loopBtn").classList.remove("on"); $("done").classList.remove("on");
+    $("hw").innerHTML = ""; $("sCount").textContent = "-"; $("strokes").innerHTML = "";
+    var id = runId;
+    fetch(DATA_URL + encodeURIComponent(ch) + ".json").then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (data) {
+      if (id !== runId) return;
+      strokes = data; stepIdx = 0;
+      var size = Math.round($("hw").getBoundingClientRect().width) || 300;
+      writer = HanziWriter.create("hw", ch, {
+        width:size, height:size, padding:Math.round(size * .08), showOutline:true,
+        strokeColor:"#2a2420", outlineColor:"#f3d9cc", highlightColor:"#f37a48", drawingColor:"#f37a48", drawingWidth:Math.max(18, size * .07),
+        radicalColor:"#1b6f1b", strokeAnimationSpeed:speed, delayBetweenStrokes:220, showHintAfterMisses:3,
+        charDataLoader:function (_c, onLoad) { onLoad(data); }
+      });
+      $("sCount").textContent = data.strokes.length;
+      buildStrokes(data);
+      if (mode === "write") startQuiz(); else play();
+    }).catch(function () { if (id === runId) $("result").textContent = "We couldn't load this character. Check your connection and try again."; });
+  }
+  function buildStrokes(data) {
+    var box = $("strokes"); box.innerHTML = "";
+    data.strokes.forEach(function (_, k) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "st"; b.setAttribute("aria-label", "Show stroke " + (k + 1));
+      var svg = '<svg viewBox="0 0 1024 1024">' + data.strokes.map(function (s, j) { return j > k ? "" : '<path d="' + s + '" fill="' + (j === k ? "#f37a48" : "#d8ccc4") + '" transform="scale(1,-1) translate(0,-900)"/>'; }).join("") + "</svg>";
+      b.innerHTML = svg + "<i>" + (k + 1) + "</i>";
+      b.onclick = function () { setMode("watch"); showUpTo(k); };
+      box.appendChild(b);
+    });
+  }
+  function showUpTo(k) {
+    if (!writer) return; runId++; looping = false; $("loopBtn").classList.remove("on");
+    var id = runId; writer.hideCharacter({ duration:0 });
+    var j = 0;
+    (function nx() { if (id !== runId) return; if (j < k) writer.animateStroke(j++, { strokeAnimationSpeed:12, onComplete:nx }); else { writer.animateStroke(k, { strokeAnimationSpeed:speed }); stepIdx = k + 1; } })();
+  }
+  function play() {
+    if (!writer) return; runId++; var id = runId; stepIdx = 0;
+    writer.hideCharacter({ duration:0 });
+    writer.animateCharacter({ onComplete:function () { if (id !== runId) return; stepIdx = strokes.strokes.length; if (looping) setTimeout(function () { if (id === runId && looping) play(); }, 900); } });
+  }
+  function step() {
+    if (!writer) return; runId++;
+    if (stepIdx >= strokes.strokes.length || stepIdx === 0) { writer.hideCharacter({ duration:0 }); stepIdx = 0; }
+    writer.animateStroke(stepIdx, { strokeAnimationSpeed:speed }); stepIdx++;
+  }
+  $("playBtn").onclick = function () { looping = false; $("loopBtn").classList.remove("on"); play(); };
+  $("stepBtn").onclick = step;
+  $("loopBtn").onclick = function () { looping = !looping; this.classList.toggle("on", looping); if (looping) play(); };
+  $("speed").oninput = function () { speed = +this.value; $("speedVal").textContent = speed + "×"; if (writer) writer._options && (writer._options.strokeAnimationSpeed = speed); };
+  $("prevBtn").onclick = function () { if (drill) stopDrill(); open(cur - 1); };
+  $("nextBtn").onclick = function () { if (drill) stopDrill(); open(cur + 1); };
+  $("speakBtn").onclick = function () {
+    if (!window.speechSynthesis) return;
+    var u = new SpeechSynthesisUtterance(C[cur].c); u.lang = "zh-CN"; u.rate = .8;
+    var v = speechSynthesis.getVoices().filter(function (v) { return /^zh(-|_)?(CN|Hans)?/i.test(v.lang); })[0]; if (v) u.voice = v;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  };
+  if (!window.speechSynthesis) $("speakBtn").style.display = "none";
+
+  function setMode(m) {
+    if (mode === m) return; mode = m;
+    $("tabWatch").classList.toggle("on", m === "watch"); $("tabWrite").classList.toggle("on", m === "write");
+    $("watchCtl").hidden = m !== "watch"; $("writeCtl").hidden = m !== "write";
+    $("done").classList.remove("on");
+    if (!writer) return;
+    if (m === "write") startQuiz(); else { if (writer.cancelQuiz) writer.cancelQuiz(); writer.showOutline(); outline = true; $("outlineBtn").classList.add("on"); $("outlineBtn").textContent = "Outline: on"; play(); }
+  }
+  $("tabWatch").onclick = function () { if (drill) stopDrill(); setMode("watch"); };
+  $("tabWrite").onclick = function () { setMode("write"); };
+
+  function startQuiz() {
+    if (!writer) return; runId++; looping = false; $("loopBtn").classList.remove("on"); $("done").classList.remove("on");
+    var misses = 0, ch = C[cur].c;
+    writer.hideCharacter({ duration:0 });
+    if (outline) writer.showOutline(); else writer.hideOutline();
+    $("result").textContent = drill ? "Write " + C[cur].p + " (" + C[cur].m.split(/[;,]/)[0] + ") from memory, stroke by stroke." : "Write the strokes in order. A wrong stroke fades away.";
+    writer.quiz({
+      onMistake:function () { misses++; },
+      onCorrectStroke:function (s) { $("result").innerHTML = "Stroke " + (s.strokeNum + 1) + " of " + s.totalStrokes + " ✓"; },
+      onComplete:function () {
+        var first = !done[ch];
+        done[ch] = 1; save(); renderProgress();
+        var t = document.querySelector('.t[data-i="' + cur + '"]'); if (t) t.classList.add("ok");
+        $("doneTxt").textContent = misses ? misses + " stroke" + (misses > 1 ? "s" : "") + " to retry" : "No mistakes";
+        $("done").classList.add("on");
+        $("result").innerHTML = "<b>" + ch + " practised.</b> " + (first ? nDone() + " of 300 done." : "Already in your list.");
+        say(misses ? "加油！" : "太棒了！");
+        if (first && [10, 50, 100, 150, 200, 250, 300].indexOf(nDone()) >= 0) toast("🎉 " + nDone() + " HSK 1 characters practised!");
+        if (drill) { drill.ok[drill.i] = !misses; setTimeout(nextDrill, 1300); }
+      }
+    });
+  }
+  $("outlineBtn").onclick = function () { outline = !outline; this.classList.toggle("on", outline); this.textContent = "Outline: " + (outline ? "on" : "off"); if (writer) (outline ? writer.showOutline() : writer.hideOutline()); };
+  $("hintBtn").onclick = function () { if (!writer || !strokes) return; var el = $("result"); writer.showOutline(); setTimeout(function () { if (!outline) writer.hideOutline(); }, 1500); el.textContent = "Here's the outline for a moment. Follow the order: top to bottom, left to right."; };
+  $("againBtn").onclick = function () { startQuiz(); };
+
+  // ---------- 10-character quiz ----------
+  function startDrill() {
+    var pool = visible().filter(function (i) { return !done[C[i].c]; });
+    if (pool.length < 10) pool = visible();
+    if (!pool.length) pool = C.map(function (_, i) { return i; });
+    pool = pool.slice().sort(function () { return Math.random() - .5; }).slice(0, 10);
+    drill = { list:pool, i:0, ok:[] };
+    outline = false; $("outlineBtn").classList.remove("on"); $("outlineBtn").textContent = "Outline: off";
+    $("drill").classList.add("on"); $("strokes").hidden = true;
+    track("hsk1 strokes quiz");
+    showDrill();
+  }
+  function showDrill() {
+    $("drillN").textContent = drill.i + 1;
+    $("drillDots").innerHTML = drill.list.map(function (_, k) { return '<i class="' + (k < drill.i ? (drill.ok[k] ? "ok" : "") : k === drill.i ? "now" : "") + '"></i>'; }).join("");
+    mode = "x"; setMode("write");
+    open(drill.list[drill.i]);
+    if (window.innerWidth <= 880) $("studio").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+  function nextDrill() {
+    if (!drill) return;
+    drill.i++;
+    if (drill.i < drill.list.length) return showDrill();
+    var good = drill.ok.filter(Boolean).length;
+    $("drillN").textContent = 10;
+    $("drillDots").innerHTML = drill.list.map(function (_, k) { return '<i class="' + (drill.ok[k] ? "ok" : "") + '"></i>'; }).join("");
+    $("result").innerHTML = "<b>Quiz done: " + good + " of 10 without a mistake.</b> " + (good >= 8 ? "Great memory!" : "Write the orange ones again tomorrow.");
+    toast("Quiz done · " + good + "/10 perfect");
+    drill = null; $("strokes").hidden = false;
+    setTimeout(function () { $("drill").classList.remove("on"); }, 4000);
+  }
+  function stopDrill() { drill = null; $("drill").classList.remove("on"); $("strokes").hidden = false; outline = true; $("outlineBtn").classList.add("on"); $("outlineBtn").textContent = "Outline: on"; }
+  $("drillBtn").onclick = startDrill;
+  $("drillStop").onclick = function () { stopDrill(); $("result").textContent = "Quiz stopped. Pick any character to keep practising."; };
+
+  // ---------- phones: tell the page how tall we are ----------
+  function report() { if (window.innerWidth > 880) return; try { parent.postMessage({ mz:"height", h:Math.ceil(document.documentElement.scrollHeight + 4) }, "*"); } catch (e) {} }
+  if (window.ResizeObserver) new ResizeObserver(report).observe(document.body);
+  window.addEventListener("load", report);
+
+  // ---------- start ----------
+  fetch("hsk1-strokes.json?v=1").then(function (r) { return r.json(); }).then(function (d) {
+    C = d;
+    var want = new URLSearchParams(location.search).get("char"), i = want ? C.findIndex(function (x) { return x.c === want; }) : -1;
+    renderGroups(); renderTiles(); renderProgress();
+    open(i >= 0 ? i : 0);
+  });
+})();
+</script>
+</body>
+</html>
