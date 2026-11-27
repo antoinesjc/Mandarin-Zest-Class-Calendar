@@ -51,13 +51,13 @@ var LINKS = {
   shop: 'https://www.mandarinzest.com/shop'
 };
 var MATERIALS = [
-  { name: 'NEW HSK 1: A Comprehensive Introduction to the Chinese Language', price: 'US$15',
+  { name: 'NEW HSK 1: A Comprehensive Introduction to the Chinese Language',
     url: 'https://www.mandarinzest.com/shop/new-hsk-1-a-comprehensive-introduction-to-the-chinese-language-10',
     img: 'https://www.mandarinzest.com/web/image/product.template/10/image_256' },
-  { name: 'TOCFL Novice 1: Beginner Mandarin, One Real Conversation at a Time', price: 'US$15',
+  { name: 'TOCFL Novice 1: Beginner Mandarin, One Real Conversation at a Time',
     url: 'https://www.mandarinzest.com/shop/textbooks-3/tocfl-novice-1-beginner-mandarin-one-real-conversation-at-a-time-60',
     img: 'https://www.mandarinzest.com/web/image/product.template/60/image_256' },
-  { name: 'Unlocking Chinese Characters: understanding the Chinese writing system', price: '',
+  { name: 'Unlocking Chinese Characters: understanding the Chinese writing system',
     url: 'https://www.mandarinzest.com/shop/textbooks-3/unlocking-chinese-characters-a-guide-on-understanding-the-chinese-writing-system-26',
     img: 'https://www.mandarinzest.com/web/image/product.template/26/image_256' }
 ];
@@ -152,7 +152,7 @@ function buildEmail(pdfLabel, boot, withPhoto) {
       return '<td width="33%" valign="top" style="padding:0 5px;text-align:center">' +
         '<a href="' + m.url + '" style="text-decoration:none;color:' + ink + '"><img src="' + m.img + '" alt="" width="150" style="display:block;width:100%;max-width:150px;height:auto;margin:0 auto 8px;border-radius:10px;background:#fdf1ea">' +
         '<span style="font-size:13px;line-height:1.35;font-weight:bold;display:block">' + m.name + '</span></a>' +
-        (m.price ? '<span style="font-size:13px;color:' + brick + ';font-weight:bold">' + m.price + '</span>' : '') + '</td>';
+        '</td>';
     }).join('') +
     '</tr></table><p style="margin:16px 0 0;text-align:center">' + btn(LINKS.shop, TEXT.matButton, '#fdf1ea', ink) + '</p></td></tr>';
 
