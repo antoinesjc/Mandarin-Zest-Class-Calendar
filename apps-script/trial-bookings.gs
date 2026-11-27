@@ -143,7 +143,7 @@ function refundRepeat(cs) {
 }
 function sendRepeatEmail(email, name, refunded) {
   var first = String(name || '').split(' ')[0];
-  MailApp.sendEmail({
+  mzSend({
     to: email, name: 'Mandarin Zest',
     subject: 'About your Mandarin Zest Club trial booking',
     htmlBody: '<div style="font-family:Arial,sans-serif;font-size:15px;color:#2a2420;line-height:1.5;max-width:520px">' +
@@ -203,7 +203,7 @@ function sendConfirmation(email, name, ev, start) {
     '<p><a href="' + gcal + '" style="color:#a8431a">Add it to your calendar</a></p>' +
     '<p>Join a few minutes early with your camera and microphone on. Everyone is there to practise, so mistakes are welcome!</p>' +
     '<p>加油！<br>Mandarin Zest</p></div>';
-  MailApp.sendEmail({ to: email, subject: 'You\'re booked: ' + (ev.summary || 'Mandarin Zest Club trial') + ', ' + fmt(start, 'UTC') + ' UTC', htmlBody: html, name: 'Mandarin Zest' });
+  mzSend({ to: email, subject: 'You\'re booked: ' + (ev.summary || 'Mandarin Zest Club trial') + ', ' + fmt(start, 'UTC') + ' UTC', htmlBody: html, name: 'Mandarin Zest' });
 }
 function notify(subject, body) {
   var to = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL') || Session.getEffectiveUser().getEmail();
@@ -258,4 +258,16 @@ function diagnose() {
   }
   try { Calendar.Events.list(calId(), { maxResults: 1 }); console.log('Calendar: works'); }
   catch (e) { console.log('Calendar: ERROR ' + e.message); }
+}
+
+/* ---------- sender: every email to customers goes out as Mandarin Zest <mandarinzest@polylocal.eu> ---------- */
+var FROM = 'mandarinzest@polylocal.eu';
+function mzSend(o) {
+  var opts = { htmlBody: o.htmlBody, name: o.name || 'Mandarin Zest', replyTo: FROM };
+  if (o.attachments) opts.attachments = o.attachments;
+  // Only use the alias when this Google account has it under Gmail → Settings → Accounts → "Send mail as";
+  // otherwise the email still goes out (from the account itself) instead of failing.
+  try { if (GmailApp.getAliases().indexOf(FROM) >= 0) opts.from = FROM; } catch (e) {}
+  var text = String(o.htmlBody || '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n\n').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim();
+  GmailApp.sendEmail(o.to, o.subject, text, opts);
 }
