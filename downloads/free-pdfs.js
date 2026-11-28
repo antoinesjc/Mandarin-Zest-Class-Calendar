@@ -123,7 +123,7 @@ var FREE_PDFS = {
     done: "Your Countries of the World list is ready",
     after: "Find your own country and the ones you've visited, then say 我去过… out loud.",
     file: "downloads/guides/Countries-of-the-World-Chinese-Mandarin-Zest.pdf",
-    cover: "downloads/guides/cover-countries.jpg"
+    peek: "downloads/guides/peek-countries.jpg"
   }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" }
