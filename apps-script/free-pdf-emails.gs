@@ -140,6 +140,12 @@ function sendWelcome(email, pdfLabel, boot) {
   mzSend(opts);
 }
 
+// Adds Google Analytics tags to a link, so GA shows visits from this email and which link was clicked
+// (Acquisition → Traffic acquisition: source "welcome-email"; utm_content = the link).
+function tag(url, content) {
+  var slug = String(content).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'utm_source=welcome-email&utm_medium=email&utm_campaign=free-pdf-welcome&utm_content=' + slug;
+}
 function buildEmail(pdfLabel, boot, withPhoto, imgs) {
   imgs = imgs || {};
   var zt = function (f) { var k = 'zt_' + f.replace(/\W/g, '_'); return imgs[k] ? 'cid:' + k : ''; };
@@ -154,8 +160,8 @@ function buildEmail(pdfLabel, boot, withPhoto, imgs) {
     '<h2 style="margin:0 0 8px;font-size:22px;color:#fff">' + TEXT.clubTitle + '</h2>' +
     '<p style="margin:0 0 10px;font-size:15px;line-height:1.55;color:#fff">' + TEXT.clubText + '</p>' +
     '<p style="margin:0 0 16px;font-size:14px;line-height:1.5;color:#cfe5c7">' + TEXT.clubPrice + '</p>' +
-    btn(LINKS.trial, TEXT.trialButton, orange, ink) +
-    '&nbsp;&nbsp;<a href="' + LINKS.club + '" style="color:#fff;font-size:14px;font-weight:bold">' + TEXT.clubLink + '</a>' +
+    btn(tag(LINKS.trial, 'trial-button'), TEXT.trialButton, orange, ink) +
+    '&nbsp;&nbsp;<a href="' + tag(LINKS.club, 'club-link') + '" style="color:#fff;font-size:14px;font-weight:bold">' + TEXT.clubLink + '</a>' +
     '</td></tr>';
 
 
@@ -170,28 +176,28 @@ function buildEmail(pdfLabel, boot, withPhoto, imgs) {
       return '<tr><td width="40" valign="top" style="padding:5px 8px 5px 0">' + (zt(t.img) ? '<img src="' + zt(t.img) + '" alt="" width="36" style="display:block;width:36px;height:auto;image-rendering:pixelated">' : '') + '</td>' +
         '<td valign="top" style="padding:5px 0;font-size:13.5px;line-height:1.4;color:' + ink + '"><b>' + t.name + '</b><br><span style="color:' + muted + '">' + t.text + '</span></td></tr>';
     }).join('') +
-    '</table><p style="margin:12px 0 0"><a href="' + LINKS.app + '" style="display:inline-block;background:#1b6f1b;color:#fff;text-decoration:none;font-weight:bold;font-size:14px;padding:10px 18px;border-radius:999px">' + TEXT.townLink + ' →</a></p></td></tr></table></td></tr>';
+    '</table><p style="margin:12px 0 0"><a href="' + tag(LINKS.app, 'app-button') + '" style="display:inline-block;background:#1b6f1b;color:#fff;text-decoration:none;font-weight:bold;font-size:14px;padding:10px 18px;border-radius:999px">' + TEXT.townLink + ' →</a></p></td></tr></table></td></tr>';
   var bootRows = boot.length ? boot.map(function (b) {
     var price = b.datesTbd || !b.price ? 'Waitlist open' : (b.early && !earlyOver(b) ? 'From ' + b.early + ' (early bird)' : 'From ' + b.price) + (b.club ? ' · Club members ' + b.club : '');
     return '<tr><td style="padding:12px 0;border-top:1px solid #ecdcd2">' +
-      '<a href="' + b.url + '" style="font-size:16px;font-weight:bold;color:' + ink + ';text-decoration:none">' + b.title + '</a>' +
+      '<a href="' + tag(b.url, 'bootcamp-' + b.title) + '" style="font-size:16px;font-weight:bold;color:' + ink + ';text-decoration:none">' + b.title + '</a>' +
       '<div style="font-size:14px;color:' + muted + ';line-height:1.5;margin-top:2px">' + [b.dates, b.format, b.level].filter(Boolean).join(' · ') + '</div>' +
-      '<div style="font-size:14px;margin-top:4px"><span style="color:' + brick + ';font-weight:bold">' + price + '</span> &nbsp;<a href="' + b.url + '" style="color:' + brick + '">' + (b.datesTbd || !b.price ? 'Join the waitlist' : 'See the bootcamp') + ' →</a></div>' +
+      '<div style="font-size:14px;margin-top:4px"><span style="color:' + brick + ';font-weight:bold">' + price + '</span> &nbsp;<a href="' + tag(b.url, 'bootcamp-' + b.title) + '" style="color:' + brick + '">' + (b.datesTbd || !b.price ? 'Join the waitlist' : 'See the bootcamp') + ' →</a></div>' +
       '</td></tr>';
   }).join('') : '<tr><td style="padding:10px 0;font-size:14px;color:' + muted + '">' + TEXT.bootNone + '</td></tr>';
   var bootcamps = '<tr><td style="padding:26px 4px 0">' + h2(TEXT.bootTitle) + p(TEXT.bootText, 'color:' + muted) +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' + bootRows + '</table>' +
-    '<p style="margin:8px 0 0;font-size:14px"><a href="' + LINKS.bootcamps + '" style="color:' + brick + ';font-weight:bold">All bootcamps →</a></p></td></tr>';
+    '<p style="margin:8px 0 0;font-size:14px"><a href="' + tag(LINKS.bootcamps, 'all-bootcamps') + '" style="color:' + brick + ';font-weight:bold">All bootcamps →</a></p></td></tr>';
 
   var mats = '<tr><td style="padding:26px 4px 0">' + h2(TEXT.matTitle) + p(TEXT.matText, 'color:' + muted) +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
     MATERIALS.map(function (m) {
       return '<td width="33%" valign="top" style="padding:0 5px;text-align:center">' +
-        '<a href="' + m.url + '" style="text-decoration:none;color:' + ink + '"><img src="' + m.img + '" alt="" width="150" style="display:block;width:100%;max-width:150px;height:auto;margin:0 auto 8px;border-radius:10px;background:#fdf1ea">' +
+        '<a href="' + tag(m.url, 'book-' + m.name.split(':')[0]) + '" style="text-decoration:none;color:' + ink + '"><img src="' + m.img + '" alt="" width="150" style="display:block;width:100%;max-width:150px;height:auto;margin:0 auto 8px;border-radius:10px;background:#fdf1ea">' +
         '<span style="font-size:13px;line-height:1.35;font-weight:bold;display:block">' + m.name + '</span></a>' +
         '</td>';
     }).join('') +
-    '</tr></table><p style="margin:16px 0 0;text-align:center">' + btn(LINKS.shop, TEXT.matButton, '#fdf1ea', ink) + '</p></td></tr>';
+    '</tr></table><p style="margin:16px 0 0;text-align:center">' + btn(tag(LINKS.shop, 'shop-button'), TEXT.matButton, '#fdf1ea', ink) + '</p></td></tr>';
 
   return '<div style="background:#fffaf6;padding:20px 10px;font-family:Arial,Helvetica,sans-serif">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto"><tbody>' +
