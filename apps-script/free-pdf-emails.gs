@@ -23,6 +23,11 @@
 
 var SITE = 'https://antoinesjc.github.io/Mandarin-Zest-Class-Calendar/';   // only read by the script, never shown in the email
 var STATUS_HEAD = 'Welcome email';
+// Click tracking: every link goes through this redirect first (Supabase edge function "go"), which notes the click
+// under a random id (the "Click ID" column, no email address leaves the sheet) and opens the page right away.
+// The "Clicked" column is filled in from it every 10 minutes. Set to '' to switch tracking off.
+var GO = 'https://eypehvhcqzhwssydvrhn.supabase.co/functions/v1/go';
+var RID = '';   // id of the email being built
 
 /* ═══ TEXTS (edit freely; write \' for an apostrophe) ═══ */
 var TEXT = {
@@ -118,18 +123,49 @@ function sendPdfEmails() {
       if (budget <= 0) break;
       try {
         if (!boot) boot = upcomingBootcamps();
-        sendWelcome(email, name, boot);
+        var rid = Utilities.getUuid().replace(/-/g, '').slice(0, 20);
+        sendWelcome(email, name, boot, rid);
         done[email] = 1; budget--;
         cell.setValue('sent ' + Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy-MM-dd HH:mm'));
+        sh.getRange(i + 1, cols.rid).setValue(rid);
       } catch (e) {
         cell.setValue('error: ' + String(e.message || e).slice(0, 120));
       }
     }
+    try { updateClicks(sh, cols); } catch (e) { Logger.log('clicks: ' + e); }
   } finally { lock.releaseLock(); }
 }
 
+// Fills the "Clicked" column: which links each person clicked, and when (Taiwan time). Last 120 days of emails.
+function updateClicks(sh, cols) {
+  if (!GO) return;
+  var last = sh.getLastRow(); if (last < 2) return;
+  var data = sh.getRange(1, 1, last, sh.getLastColumn()).getValues(), rows = {}, rids = [];
+  var since = Utilities.formatDate(new Date(Date.now() - 120 * 864e5), 'Asia/Taipei', 'yyyy-MM-dd');
+  for (var i = 1; i < data.length; i++) {
+    var rid = String(data[i][cols.rid - 1] || ''), st = String(data[i][cols.status - 1] || '');
+    if (!rid || !/^sent /.test(st) || st.slice(5, 15) < since) continue;
+    rows[rid] = i; rids.push(rid);
+  }
+  for (var b = 0; b < rids.length; b += 500) {
+    var res = UrlFetchApp.fetch(GO, { method: 'post', contentType: 'application/json', payload: JSON.stringify({ rids: rids.slice(b, b + 500) }), muteHttpExceptions: true });
+    if (res.getResponseCode() !== 200) return;
+    var byRid = {};
+    JSON.parse(res.getContentText()).forEach(function (c) {
+      var key = c.l, list = byRid[c.r] = byRid[c.r] || [];
+      if (list.some(function (x) { return x.l === key; })) return;   // first click on each link only
+      list.push({ l: key, t: Utilities.formatDate(new Date(c.t), 'Asia/Taipei', 'd MMM HH:mm') });
+    });
+    Object.keys(byRid).forEach(function (rid) {
+      var txt = byRid[rid].map(function (x) { return x.l + ' (' + x.t + ')'; }).join(', '), i = rows[rid];
+      if (String(data[i][cols.clicked - 1] || '') !== txt) sh.getRange(i + 1, cols.clicked).setValue(txt);
+    });
+  }
+}
+
 /* ---------- the email ---------- */
-function sendWelcome(email, pdfLabel, boot) {
+function sendWelcome(email, pdfLabel, boot, rid) {
+  RID = rid || '';
   var photo = null;
   try { photo = UrlFetchApp.fetch(SITE + 'sessions/s02.jpg').getBlob().setName('club-session.jpg'); } catch (e) {}
   var imgs = {};
@@ -139,6 +175,7 @@ function sendWelcome(email, pdfLabel, boot) {
   });
   var opts = { to: email, subject: TEXT.subject, htmlBody: buildEmail(pdfLabel, boot, !!photo, imgs) };
   opts.inlineImages = imgs;
+  RID = '';
   mzSend(opts);
 }
 
@@ -146,7 +183,9 @@ function sendWelcome(email, pdfLabel, boot) {
 // (Acquisition → Traffic acquisition: source "welcome-email"; utm_content = the link).
 function tag(url, content) {
   var slug = String(content).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'utm_source=welcome-email&utm_medium=email&utm_campaign=free-pdf-welcome&utm_content=' + slug;
+  var full = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'utm_source=welcome-email&utm_medium=email&utm_campaign=free-pdf-welcome&utm_content=' + slug;
+  if (!GO || !RID) return full;
+  return GO + '?r=' + RID + '&l=' + slug + '&u=' + encodeURIComponent(full);
 }
 function buildEmail(pdfLabel, boot, withPhoto, imgs) {
   imgs = imgs || {};
@@ -262,9 +301,11 @@ function startHereSheet() {
 function columns(sh) {
   var lastCol = Math.max(1, sh.getLastColumn());
   var head = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(function (h) { return String(h).trim().toLowerCase(); });
-  var c = { email: 0, source: 0, status: 0 };
+  var c = { email: 0, source: 0, status: 0, rid: 0, clicked: 0 };
   head.forEach(function (h, i) {
     if (h === STATUS_HEAD.toLowerCase() || h === 'pdf email') { if (!c.status) c.status = i + 1; return; }
+    if (h === 'click id') { c.rid = i + 1; return; }
+    if (h === 'clicked') { c.clicked = i + 1; return; }
     if (!c.email && h.indexOf('email') >= 0) c.email = i + 1;
     if (!c.source && h.indexOf('source') >= 0) c.source = i + 1;
   });
@@ -277,7 +318,9 @@ function columns(sh) {
     });
   }
   if (!c.email || !c.source) throw new Error('Could not find the email and source columns. Give them a header ("Email", "Source") in row 1.');
-  if (!c.status) { c.status = lastCol + 1; sh.getRange(1, c.status).setValue(STATUS_HEAD).setFontWeight('bold'); }
+  if (!c.status) { c.status = ++lastCol; sh.getRange(1, c.status).setValue(STATUS_HEAD).setFontWeight('bold'); }
+  if (!c.clicked) { c.clicked = ++lastCol; sh.getRange(1, c.clicked).setValue('Clicked').setFontWeight('bold'); }
+  if (!c.rid) { c.rid = ++lastCol; sh.getRange(1, c.rid).setValue('Click ID').setFontWeight('bold'); }
   return c;
 }
 
