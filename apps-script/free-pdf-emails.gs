@@ -37,6 +37,7 @@ var TEXT = {
   townTag: 'INCLUDED IN THE CLUB',
   townTitle: 'Zest Town: keep practising between sessions',
   townText: 'The Club app turns your study time into a little town that grows with you.',
+  townLink: 'See everything the app can do',
   bootTitle: 'Upcoming bootcamps',
   bootText: 'Short, focused courses with live sessions and a small group.',
   bootNone: 'New bootcamps are coming soon. You\'ll find them on our bootcamps page.',
@@ -48,6 +49,7 @@ var TEXT = {
   footer: 'You\'re receiving this one-time email because you downloaded a free PDF on mandarinzest.com.'
 };
 var LINKS = {
+  app: 'https://www.mandarinzest.com/mandarin-zest-app',
   club: 'https://www.mandarinzest.com/mandarin-zest-club',
   trial: 'https://www.mandarinzest.com/mandarin-zest-club-trial-session',
   bootcamps: 'https://www.mandarinzest.com/bootcamps',
@@ -168,7 +170,7 @@ function buildEmail(pdfLabel, boot, withPhoto, imgs) {
       return '<tr><td width="40" valign="top" style="padding:5px 8px 5px 0">' + (zt(t.img) ? '<img src="' + zt(t.img) + '" alt="" width="36" style="display:block;width:36px;height:auto;image-rendering:pixelated">' : '') + '</td>' +
         '<td valign="top" style="padding:5px 0;font-size:13.5px;line-height:1.4;color:' + ink + '"><b>' + t.name + '</b><br><span style="color:' + muted + '">' + t.text + '</span></td></tr>';
     }).join('') +
-    '</table></td></tr></table></td></tr>';
+    '</table><p style="margin:12px 0 0"><a href="' + LINKS.app + '" style="display:inline-block;background:#1b6f1b;color:#fff;text-decoration:none;font-weight:bold;font-size:14px;padding:10px 18px;border-radius:999px">' + TEXT.townLink + ' →</a></p></td></tr></table></td></tr>';
   var bootRows = boot.length ? boot.map(function (b) {
     var price = b.datesTbd || !b.price ? 'Waitlist open' : (b.early && !earlyOver(b) ? 'From ' + b.early + ' (early bird)' : 'From ' + b.price) + (b.club ? ' · Club members ' + b.club : '');
     return '<tr><td style="padding:12px 0;border-top:1px solid #ecdcd2">' +
