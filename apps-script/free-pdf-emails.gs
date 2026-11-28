@@ -90,7 +90,7 @@ var PDF_SOURCES = [
   ['free-pdf | adult', 'downloading the Adult Vocabulary booklet'], ['free-pdf | slang', 'downloading the Chinese slang guide'],
   ['free-pdf | zodiac', 'downloading the Chinese Zodiac vocabulary guide'], ['free-pdf | radicals', 'downloading the 214 radicals list'],
   ['free-pdf | huang', 'downloading the huáng writing guide'], ['free-pdf | 100-characters', 'downloading the 100 most common characters'],
-  ['free-pdf | dorota-guide', 'downloading Dorota\'s learning guide'], ['free-pdf', 'downloading our free PDF'],
+  ['free-pdf | countries', 'downloading the Countries of the World list'], ['free-pdf | dorota-guide', 'downloading Dorota\'s learning guide'], ['free-pdf', 'downloading our free PDF'],
   ['hsk-vocab-pdfs', 'downloading the HSK vocabulary lists'], ['hsk-levels | all', 'downloading the HSK vocabulary lists'],
   ['tocfl-levels', 'downloading the TOCFL vocabulary lists'], ['start-here', 'downloading our beginner pack'],
   ['hsk-map', 'using our HSK Map']

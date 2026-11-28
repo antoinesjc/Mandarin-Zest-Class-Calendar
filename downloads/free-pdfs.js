@@ -115,6 +115,15 @@ var FREE_PDFS = {
     after: "Save it, print it, and tick off each character as you learn it.",
     file: "downloads/guides/100-Most-Common-Chinese-Characters-HSK1-Mandarin-Zest.pdf",
     peek: "downloads/guides/peek-100-characters.jpg"
+  },
+  "countries": {
+    tag: "Countries", color: "#2e7d32",
+    title: "Get the Countries of the World in Chinese",
+    text: "196 countries and regions with their flag, Chinese name, pinyin and English, organised by continent, plus the 7 continents and 4 oceans. 12 pages.",
+    done: "Your Countries of the World list is ready",
+    after: "Find your own country and the ones you've visited, then say 我去过… out loud.",
+    file: "downloads/guides/Countries-of-the-World-Chinese-Mandarin-Zest.pdf",
+    cover: "downloads/guides/cover-countries.jpg"
   }
   // "hsk-7-9": { tag: "HSK 7–9", color: "#d5602f", title: "Get the New HSK 7–9 vocabulary list", text: "…", done: "Your HSK 7–9 list is ready",
   //              file: "downloads/hsk/New-HSK-7-9-Vocab-List-Mandarin-Zest.pdf", cover: "downloads/hsk/cover-hsk-7-9.jpg" }
