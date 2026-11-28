@@ -28,7 +28,7 @@ var STATUS_HEAD = 'Welcome email';
 var TEXT = {
   subject: 'Welcome to Mandarin Zest: what to do next',
   hello: 'Hi,',
-  intro: 'Thanks for downloading %PDF% from Mandarin Zest! We\'re a small team of advanced learners and native teachers, and we build everything to help you actually use your Chinese. Here\'s what we do.',
+  intro: 'Thanks for %PDF% from Mandarin Zest! We\'re a small team of advanced learners and native teachers, and we build everything to help you actually use your Chinese. Here\'s what we do.',
   clubTitle: 'The Mandarin Zest Club',
   clubText: 'Live speaking sessions on Google Meet every week, in small groups by level, from HSK 1 to advanced. After each session you get the notes, and between sessions you keep practising in the Club app.',
   clubPrice: 'US$25 a month, cancel anytime. Club members also get 70% off our materials.',
@@ -46,7 +46,7 @@ var TEXT = {
   matButton: 'See all our materials',
   outro: 'Questions? Just reply to this email, it comes straight to us.',
   sign: '加油！<br>The Mandarin Zest team',
-  footer: 'You\'re receiving this one-time email because you downloaded a free PDF on mandarinzest.com.'
+  footer: 'You\'re receiving this one-time email because you used one of our free resources on mandarinzest.com.'
 };
 var LINKS = {
   app: 'https://www.mandarinzest.com/mandarin-zest-app',
@@ -81,13 +81,14 @@ var MATERIALS = [
 
 /* ═══ which sign-ups count as "free PDF" (start of the source written by each widget) ═══ */
 var PDF_SOURCES = [
-  ['free-pdf | hsk-', 'the HSK vocabulary list'], ['free-pdf | phrases', 'the Essential Mandarin Phrases guide'],
-  ['free-pdf | adult', 'the Adult Vocabulary booklet'], ['free-pdf | slang', 'the Chinese slang guide'],
-  ['free-pdf | zodiac', 'the Chinese Zodiac vocabulary guide'], ['free-pdf | radicals', 'the 214 radicals list'],
-  ['free-pdf | huang', 'the huáng writing guide'], ['free-pdf | 100-characters', 'the 100 most common characters'],
-  ['free-pdf | dorota-guide', 'Dorota\'s learning guide'], ['free-pdf', 'our free PDF'],
-  ['hsk-vocab-pdfs', 'the HSK vocabulary lists'], ['hsk-levels | all', 'the HSK vocabulary lists'],
-  ['tocfl-levels', 'the TOCFL vocabulary lists'], ['start-here', 'our beginner pack']
+  ['free-pdf | hsk-', 'downloading the HSK vocabulary list'], ['free-pdf | phrases', 'downloading the Essential Mandarin Phrases guide'],
+  ['free-pdf | adult', 'downloading the Adult Vocabulary booklet'], ['free-pdf | slang', 'downloading the Chinese slang guide'],
+  ['free-pdf | zodiac', 'downloading the Chinese Zodiac vocabulary guide'], ['free-pdf | radicals', 'downloading the 214 radicals list'],
+  ['free-pdf | huang', 'downloading the huáng writing guide'], ['free-pdf | 100-characters', 'downloading the 100 most common characters'],
+  ['free-pdf | dorota-guide', 'downloading Dorota\'s learning guide'], ['free-pdf', 'downloading our free PDF'],
+  ['hsk-vocab-pdfs', 'downloading the HSK vocabulary lists'], ['hsk-levels | all', 'downloading the HSK vocabulary lists'],
+  ['tocfl-levels', 'downloading the TOCFL vocabulary lists'], ['start-here', 'downloading our beginner pack'],
+  ['hsk-map', 'using our HSK Map']
 ];
 function pdfName(source) {
   var s = String(source || '').trim().toLowerCase();
@@ -107,7 +108,8 @@ function sendPdfEmails() {
     for (var r = 1; r < data.length; r++) if (/^sent/i.test(String(data[r][cols.status - 1] || ''))) done[String(data[r][cols.email - 1]).trim().toLowerCase()] = 1;
     var budget = 40, boot = null;   // max 40 per run, far below Gmail's daily limit
     for (var i = 1; i < data.length; i++) {
-      if (String(data[i][cols.status - 1] || '')) continue;
+      var st0 = String(data[i][cols.status - 1] || '');
+      if (st0 && !(st0 === 'not a PDF' && pdfName(data[i][cols.source - 1]))) continue;   // rows skipped before a source was added get another chance
       var email = String(data[i][cols.email - 1] || '').trim().toLowerCase(), name = pdfName(data[i][cols.source - 1]);
       var cell = sh.getRange(i + 1, cols.status);
       if (!name) { cell.setValue('not a PDF'); continue; }
@@ -236,7 +238,7 @@ function setup() {
     (aliasOk ? 'Emails will come from ' + FROM + '.' : 'WARNING: ' + FROM + ' is not under "Send mail as" for ' + Session.getEffectiveUser().getEmail() + ', emails will come from that account.'));
 }
 function sendTestToMe() {
-  sendWelcome(Session.getEffectiveUser().getEmail(), 'the New HSK 1 vocabulary list', upcomingBootcamps());
+  sendWelcome(Session.getEffectiveUser().getEmail(), 'downloading the New HSK 1 vocabulary list', upcomingBootcamps());
   Logger.log('Test sent to ' + Session.getEffectiveUser().getEmail());
 }
 function stop() {
