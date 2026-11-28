@@ -30,10 +30,13 @@ var TEXT = {
   hello: 'Hi,',
   intro: 'Thanks for downloading %PDF% from Mandarin Zest! We\'re a small team of advanced learners and native teachers, and we build everything to help you actually use your Chinese. Here\'s what we do.',
   clubTitle: 'The Mandarin Zest Club',
-  clubText: 'Live speaking sessions on Google Meet every week, in small groups by level, from HSK 1 to advanced. After each session you get the notes, and between sessions you keep practising in the Club app: flashcards, the HSK Temple and Zest Town.',
+  clubText: 'Live speaking sessions on Google Meet every week, in small groups by level, from HSK 1 to advanced. After each session you get the notes, and between sessions you keep practising in the Club app.',
   clubPrice: 'US$25 a month, cancel anytime. Club members also get 70% off our materials.',
   trialButton: 'Try one session for US$2.50',
   clubLink: 'Discover the Club',
+  townTag: 'INCLUDED IN THE CLUB',
+  townTitle: 'Zest Town: keep practising between sessions',
+  townText: 'The Club app turns your study time into a little town that grows with you.',
   bootTitle: 'Upcoming bootcamps',
   bootText: 'Short, focused courses with live sessions and a small group.',
   bootNone: 'New bootcamps are coming soon. You\'ll find them on our bootcamps page.',
@@ -50,6 +53,18 @@ var LINKS = {
   bootcamps: 'https://www.mandarinzest.com/bootcamps',
   shop: 'https://www.mandarinzest.com/shop'
 };
+// Zest Town buildings shown in the email (pictures from the app, enlarged in app/zt/email/)
+var TOWN = [
+  { img: 'tree-5.png', name: 'Streak tree', text: 'Join a session or review each day, and watch a seed grow into an orange tree.' },
+  { img: 'house.png', name: 'Flashcard Center', text: 'Review the words from your sessions and the HSK lists, a few new ones every day.' },
+  { img: 'temple.png', name: 'HSK Temple', text: 'Every New HSK 1–9 word, how well you know each one, and a map of your progress.' },
+  { img: 'library.png', name: 'Library', text: 'Graded readers and workbooks from HSK 1 to 6. Add a book\'s words to your flashcards.' },
+  { img: 'callig.png', name: 'Calligraphy School', text: 'Look up any character, watch its strokes and practise writing it.' },
+  { img: 'post.png', name: 'Post Office', text: 'Write short letters in Chinese to other members and hosts, and get letters back.' },
+  { img: 'arcade.png', name: 'Arcade (new)', text: 'Learning games, starting with Character Clash <span style="white-space:nowrap">字妖大战</span>: beat ink monsters by picking the right meaning.' },
+  { img: 'gallery.png', name: 'Sticker Gallery', text: 'Collect stickers from bootcamps, reading and Club life.' },
+  { img: 'sign-forest.png', name: 'Magical Forest', text: 'See who else studied in the last 24 hours, with their streaks.' }
+];
 var MATERIALS = [
   { name: 'NEW HSK 1: A Comprehensive Introduction to the Chinese Language',
     url: 'https://www.mandarinzest.com/shop/new-hsk-1-a-comprehensive-introduction-to-the-chinese-language-10',
@@ -113,12 +128,19 @@ function sendPdfEmails() {
 function sendWelcome(email, pdfLabel, boot) {
   var photo = null;
   try { photo = UrlFetchApp.fetch(SITE + 'sessions/s02.jpg').getBlob().setName('club-session.jpg'); } catch (e) {}
-  var opts = { to: email, subject: TEXT.subject, htmlBody: buildEmail(pdfLabel, boot, !!photo) };
-  if (photo) opts.inlineImages = { session: photo };
+  var imgs = {};
+  if (photo) imgs.session = photo;
+  ['town8-phone.png'].concat(TOWN.map(function (t) { return t.img; })).forEach(function (f) {
+    try { imgs['zt_' + f.replace(/\W/g, '_')] = UrlFetchApp.fetch(SITE + 'app/zt/email/' + f).getBlob().setName(f); } catch (e) {}
+  });
+  var opts = { to: email, subject: TEXT.subject, htmlBody: buildEmail(pdfLabel, boot, !!photo, imgs) };
+  opts.inlineImages = imgs;
   mzSend(opts);
 }
 
-function buildEmail(pdfLabel, boot, withPhoto) {
+function buildEmail(pdfLabel, boot, withPhoto, imgs) {
+  imgs = imgs || {};
+  var zt = function (f) { var k = 'zt_' + f.replace(/\W/g, '_'); return imgs[k] ? 'cid:' + k : ''; };
   var ink = '#2a2420', muted = '#5c4f47', orange = '#f37a48', brick = '#a8431a';
   var btn = function (href, label, bg, fg) { return '<a href="' + href + '" style="display:inline-block;background:' + bg + ';color:' + fg + ';text-decoration:none;font-weight:bold;font-size:15px;padding:12px 22px;border-radius:999px">' + label + '</a>'; };
   var h2 = function (t) { return '<h2 style="margin:0 0 6px;font-size:21px;line-height:1.25;color:' + ink + '">' + t + '</h2>'; };
@@ -134,6 +156,19 @@ function buildEmail(pdfLabel, boot, withPhoto) {
     '&nbsp;&nbsp;<a href="' + LINKS.club + '" style="color:#fff;font-size:14px;font-weight:bold">' + TEXT.clubLink + '</a>' +
     '</td></tr>';
 
+
+  var town = '<tr><td style="padding:14px 0 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e6f1e1;border-radius:18px"><tr>' +
+    (zt('town8-phone.png') ? '<td width="150" valign="top" style="padding:20px 0 20px 20px"><img src="' + zt('town8-phone.png') + '" alt="Zest Town" width="130" style="display:block;width:130px;height:auto;border-radius:12px;image-rendering:pixelated"></td>' : '') +
+    '<td valign="top" style="padding:20px">' +
+    '<div style="font-size:12px;font-weight:bold;letter-spacing:1.5px;color:#1b6f1b;margin-bottom:4px">' + TEXT.townTag + '</div>' +
+    '<h2 style="margin:0 0 6px;font-size:19px;line-height:1.25;color:' + ink + '">' + TEXT.townTitle + '</h2>' +
+    '<p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:' + muted + '">' + TEXT.townText + '</p>' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
+    TOWN.map(function (t) {
+      return '<tr><td width="40" valign="top" style="padding:5px 8px 5px 0">' + (zt(t.img) ? '<img src="' + zt(t.img) + '" alt="" width="36" style="display:block;width:36px;height:auto;image-rendering:pixelated">' : '') + '</td>' +
+        '<td valign="top" style="padding:5px 0;font-size:13.5px;line-height:1.4;color:' + ink + '"><b>' + t.name + '</b><br><span style="color:' + muted + '">' + t.text + '</span></td></tr>';
+    }).join('') +
+    '</table></td></tr></table></td></tr>';
   var bootRows = boot.length ? boot.map(function (b) {
     var price = b.datesTbd || !b.price ? 'Waitlist open' : (b.early && !earlyOver(b) ? 'From ' + b.early + ' (early bird)' : 'From ' + b.price) + (b.club ? ' · Club members ' + b.club : '');
     return '<tr><td style="padding:12px 0;border-top:1px solid #ecdcd2">' +
@@ -159,7 +194,7 @@ function buildEmail(pdfLabel, boot, withPhoto) {
   return '<div style="background:#fffaf6;padding:20px 10px;font-family:Arial,Helvetica,sans-serif">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto"><tbody>' +
     '<tr><td style="padding:0 4px 18px">' + p(TEXT.hello) + p(TEXT.intro.replace('%PDF%', pdfLabel)) + '</td></tr>' +
-    club + bootcamps + mats +
+    club + town + bootcamps + mats +
     '<tr><td style="padding:26px 4px 0">' + p(TEXT.outro) + p(TEXT.sign) +
     '<p style="margin:18px 0 0;padding-top:10px;border-top:1px solid #ecdcd2;font-size:12px;color:#8a7b72">' + TEXT.footer + '</p></td></tr>' +
     '</tbody></table></div>';
